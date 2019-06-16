@@ -4,7 +4,10 @@
       :key="`topic-${t}`"
       v-for="(topic, t) in toc">
       <nuxt-link
-        :class="`h${topic[0]}`"
+        :class="{
+          [`h${topic[0]}`]: true,
+          active: topic[2] === `${$route.path}${$route.hash}`
+        }"
         :to="topic[2]">
         {{ topic[1] }}
       </nuxt-link>
@@ -22,6 +25,7 @@ export default {
     }
   },
   async mounted() {
+    window.x = this
     const index = await this.$press.get('api/docs/index')
     this.toc = toc.map(item => index[item]).filter(Boolean)
   },
@@ -55,6 +59,9 @@ export default {
   margin: 0px;
   margin-bottom: 5px;
   padding: 0px;
+}
+li a.active {
+  font-weight: bold;
 }
 .h1 {
   font-size: 17px;
