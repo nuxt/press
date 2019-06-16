@@ -4,15 +4,59 @@
 
 TODO
 
+TODO
+
+TODO
+
+TODO
+
+TODO
+
+TODO
+
+TODO
+TODO
+
+TODO
+
+TODO
+TODO
+
+TODO
+
+TODO
+
 ## Templates
+
+TODO
+
+TODO
+
+TODO
+
+TODO
+
+TODO
+
+TODO
+
+TODO
+TODO
+
+TODO
+
+TODO
+TODO
+
+TODO
 
 TODO
 
 ## Data sources
 
-By default, `@nuxt/press` loads content from the file system. 
+By default, `@nuxt/press` loads content from the file system.
 
-For **`docs`** mode, it will load all Markdown files in the current directory 
+For **`docs`** mode, it will load all Markdown files in the current directory
 and sub directories recursively and group them in a _serial list of **topics**_.
 
 Their final URL follows the format:
@@ -21,8 +65,8 @@ Their final URL follows the format:
 /topic/<slugified-h1-from-markdown-file>
 ```
 
-For **`blogs`** mode, Markdown files are grouped as a *_chronological list of 
-entries_*. 
+For **`blogs`** mode, Markdown files are grouped as a *_chronological list of
+entries_*.
 
 Their final URL follows the format:
 
