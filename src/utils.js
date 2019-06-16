@@ -37,8 +37,8 @@ export function readFile(...paths) {
   return _readFile(join(...paths), 'utf-8')
 }
 
-export function writeFile(contents, ...paths) {
-  return _writeFile(join(...paths), contents, 'utf-8')
+export function writeFile(path, contents) {
+  return _writeFile(path, contents, 'utf-8')
 }
 
 export function isDir(path) {

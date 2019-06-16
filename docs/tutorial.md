@@ -1,12 +1,8 @@
 # Tutorial
 
-## Getting started
+## Publishing docs
 
-Getting started text
-
-## Publishing documentation
-
-Publishing documentation text
+Publishing docs text
 
 ## Publishing blogs
 

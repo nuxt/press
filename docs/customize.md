@@ -1,6 +1,14 @@
 # Customize
 
-## Custom data source
+## Basics
+
+TODO
+
+## Templates
+
+TODO
+
+## Data sources
 
 By default, `@nuxt/press` loads content from the file system. 
 
@@ -30,35 +38,6 @@ handlers for retrieving indexes and Markdown source files.
 | /api/docs/index                     | Index of documentation topics         |
 | /api/blog/index                     | Latest blog entries                   |
 | /api/blog/archive                   | Dated archive of blog entries         |
-| /api/slides/index                   | Index of slideshows |
-| /api/source/:source                 | Retrieve blog entry    |
-| /api/archive                        | Retrieve blog archive  |
-
-TODO: detail config options and expected JSON format of API handlers.
-
-## Taildwind CSS theme
-
-TODO: document how to provide custom Tailwind CSS theme.
-
-## Ejecting templates
-
-TODO: detail process of overriding default templates.
-
-### Blog components
-
-```
-nuxt press eject blog/layout (layout component)
-nuxt press eject blog/index (index page route component)
-nuxt press eject blog/entry (entry page route component)
-nuxt press eject blog/entry/cover (entry cover image template)
-nuxt press eject blog/archive (archive page route component)
-```
-
-### Docs components
-
-```
-nuxt press eject docs/layout (layout component)
-nuxt press eject docs/toc (sidebar summary component)
-nuxt press eject docs/index (index page route)
-nuxt press eject docs/entry (entry page route)
-```
+| /api/slides/index                   | Index of slideshows                   |
+| /api/source/:source                 | Retrieve blog entry                   |
+| /api/archive                        | Retrieve blog archive                 |

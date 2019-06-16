@@ -11,11 +11,16 @@ import PromisePool from '../pool'
 async function parseDoc(sourcePath) {
   const raw = await readFile(this.options.srcDir, sourcePath)
   const fileName = parse(sourcePath).name
-  const { toc, html: body } = await this
+  let { toc, html: body } = await this
     .$press.docs.source.markdown.call(this, raw)
   const title = this.$press.docs.source.title
     .call(this, fileName, raw)
-  toc[0][1] = title
+  if (toc[0]) {
+    toc[0][1] = title
+  } else if (['index', 'readme'].includes(fileName)) {
+    // Force intro toc item if not present
+    toc = [[1, 'Intro', '#intro']]
+  }
   const source = { body, title, type: 'topic' }
   source.path = `${
     this.$press.docs.prefix

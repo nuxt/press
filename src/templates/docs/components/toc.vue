@@ -23,9 +23,7 @@ export default {
   },
   async mounted() {
     const index = await this.$press.get('api/docs/index')
-    // console.log('index', index)
-    // console.log('toc', toc)
-    this.toc = toc.map(item => index[item])
+    this.toc = toc.map(item => index[item]).filter(Boolean)
   },
   watch: {
     $route({ hash }) {
@@ -40,13 +38,15 @@ export default {
 
 <style>
 .toc {
+  top: 30px;
   position: fixed;
-  width: calc(20% - 20px);
+  width: calc(18%);
   border-right: 1px solid #f6f6f6;
   margin: 0px;  
   margin-right: 10px;
   padding-top: 20px;
   padding-left: 15px;
+  padding-right: 15px;
   height: calc(100% - 20px);
   overflow-y: scroll;
 }
@@ -57,15 +57,15 @@ export default {
   padding: 0px;
 }
 .h1 {
-  font-size: 20px;
+  font-size: 17px;
   margin-left: 10px;
 }
 .h2 {
-  font-size: 18px;
+  font-size: 16px;
   margin-left: 20px;
 }
 .h3 {
-  font-size: 16px;
+  font-size: 15px;
   margin-left: 30px;
 }
 

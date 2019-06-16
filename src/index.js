@@ -3,11 +3,11 @@ import { dirname } from 'path'
 import { readdirSync } from 'fs'
 import { IgnorePlugin } from 'webpack'
 import defu from 'defu'
-import { writeJson, ensureDir } from 'fs-extra'
+import { writeJson, ensureDir, remove } from 'fs-extra'
 import defaults from './defaults'
 import PromisePool from './pool'
 
-import { resolve, join, exists } from './utils'
+import { resolve, join, exists, writeFile } from './utils'
 
 import * as routes from './routes'
 import * as api from './api'
@@ -42,6 +42,14 @@ function loadOptions(options) {
   const slidesDir = join(this.options.srcDir, this.$press.slides.dir)
   if (exists(slidesDir)) {
     this.$press.$slides = true
+  }
+}
+
+async function ensureNuxtPages() {
+  const pagesDir = join(this.options.srcDir, this.options.dir.pages)
+  if (!exists(pagesDir)) {
+    this.$press.$placeholderPagesDir = pagesDir
+    await ensureDir(pagesDir)
   }
 }
 
@@ -286,6 +294,7 @@ export default function (options) {
   setupAPI.call(this)
 
   this.nuxt.hook('build:before', async () => {
+    await ensureNuxtPages.call(this)
     await addTemplates.call(this)
     registerRoutes.call(this)
 
@@ -308,6 +317,10 @@ export default function (options) {
         await ensureNuxtPressJson.call(this, {
           toc: Object.keys(data.docs.topLevel.index)
         })
+      }
+
+      if (this.$press.$placeholderPagesDir) {
+        await remove(this.$press.$placeholderPagesDir)
       }
 
       this.nuxt.hook('generate:distCopied', async () => {
