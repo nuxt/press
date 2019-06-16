@@ -18,42 +18,10 @@
 <script>
 import { toc } from '~/nuxt.press.json'
 
-class ActiveHeadingsObserver {
-  static getEntryId(entry) {
-    return `${entry.target.tagName}${entry.target.id}`
-  }
-  constructor(entries, activeCallback) {
-    this.entryHash = {}
-    this.activeCallback = activeCallback
-    this.entries = []
-    for (const entry of entries) {
-      entry.$id = ActiveHeadingsObserver.getEntryId(entry)
-      this.entries.push(entry)
-    }
-    this.emitActive()
-  }
-  update(entries) {
-    for (const entry of entries) {
-      const entryId = ActiveHeadingsObserver.getEntryId(entry)
-      const oldEntryIndex = this.entries.findIndex(e => e.$id === entryId)
-      entry.$id = entryId
-      this.entries.splice(oldEntryIndex, 1, entry)
-    }
-    this.emitActive()
-  }
-  emitActive() {
-    for (const entry of this.entries) {
-      if (entry.intersectionRatio > 0) {
-        this.activeCallback(entry.target)
-        break
-      }
-    }
-  }
-}
-
 export default {
   data() {
     return {
+      headings: [],
       toc: []
     }
   },
@@ -61,46 +29,6 @@ export default {
     const index = await this.$press.get('api/docs/index')
     // TODO move to vuex for SSR prerender
     this.toc = toc.map(item => index[item]).filter(Boolean)
-    this.$nextTick(() => this.watchActiveHeadings())
-  },
-  watch: {
-    $route({ hash }) {
-      const heading = document.querySelector(hash)
-      if (heading) {
-        heading.scrollIntoView({behavior: 'smooth'})
-      }
-    }
-  },
-  methods: {
-    watchActiveHeadings() {
-      const headings = [...document.querySelectorAll(`
-        .topic h1,
-        .topic h2,
-        .topic h3,
-        .topic h4,
-        .topic h5,
-        .topic h6
-      `)]
-      let ahObserver
-      const observer = new IntersectionObserver((entries) => {
-        if (!ahObserver) {
-          ahObserver = new ActiveHeadingsObserver(entries, (target) => {
-            const hash = target.querySelector('a').attributes.href.value
-            for (const tocLink of [...document.querySelectorAll('.toc a')]) {
-              tocLink.classList.remove('active')
-            }
-            const currentHeading = `${this.$route.path}${hash}`
-            document.querySelector(`.toc a[href="${currentHeading}"`)
-              .classList.add('active')
-          })
-        } else {
-          ahObserver.update(entries)
-        }
-      })
-      for (const heading of headings) {
-        observer.observe(heading)
-      }
-    }
   }
 }
 </script>
