@@ -46,7 +46,7 @@ TODO: detail process of overriding default templates.
 
 ### Blog components
 
-```sh
+```
 nuxt press eject blog/layout (layout component)
 nuxt press eject blog/index (index page route component)
 nuxt press eject blog/entry (entry page route component)
@@ -56,7 +56,7 @@ nuxt press eject blog/archive (archive page route component)
 
 ### Docs components
 
-```sh
+```
 nuxt press eject docs/layout (layout component)
 nuxt press eject docs/toc (sidebar summary component)
 nuxt press eject docs/index (index page route)

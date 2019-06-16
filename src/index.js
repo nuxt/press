@@ -274,6 +274,14 @@ export default function (options) {
   // and will leave the Tailwindsurfing to you ;)
   //
 
+  this.options.css.push('prismjs/themes/prism.css')
+  this.options.watch.push(
+    '~/*.md',
+    '~/docs/*.md',
+    '~/blog/*.md',
+    '~/blog/**/*.md',
+    '~/slides/*.md'
+  )
   loadOptions.call(this, options)
   setupAPI.call(this)
 

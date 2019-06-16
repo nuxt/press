@@ -7,7 +7,7 @@ This is a **work in progress**. No usable package is available yet.
 **`@nuxt/press`** is a multi-mode natural extension to Nuxt.js.
 
 - Want a **documentation suite**?
-  Simply drop a bunch of **`md`** files in **`rootDir`** or **`rootDir/docs`**.
+  Simply drop a bunch of **`md`** files in **`srcDir`** or **`srcDir/docs`**.
 
 - Want to publish a **blog**?
   Simply drop a bunch of **`entry.md`** files in **`srcDir/blog`**.
