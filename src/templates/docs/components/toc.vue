@@ -35,7 +35,6 @@ export default {
       if (heading) {
         heading.scrollIntoView({behavior: 'smooth'})
       }
-      await this.watchActiveHeadings()
     }
   }
 }
