@@ -1,5 +1,6 @@
 <template>
-  <div class="sidebar">
+  <div />
+  <!--div class="sidebar">
     <a href="/">
       <img class="icon avatar" src="~/assets/avatar.jpg">
     </a>
@@ -18,5 +19,5 @@
     <a href="https://stored.com.br">
       <img class="icon" src="~/assets/icons/stored.svg">
     </a>
-  </div>
+  </div-->
 </template>
