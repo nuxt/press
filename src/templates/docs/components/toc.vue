@@ -21,7 +21,6 @@ import { toc } from '~/nuxt.press.json'
 export default {
   data() {
     return {
-      headings: [],
       toc: []
     }
   },
@@ -29,6 +28,15 @@ export default {
     const index = await this.$press.get('api/docs/index')
     // TODO move to vuex for SSR prerender
     this.toc = toc.map(item => index[item]).filter(Boolean)
+  },
+  watch: {
+    async $route({ hash }) {
+      const heading = document.querySelector(hash)
+      if (heading) {
+        heading.scrollIntoView({behavior: 'smooth'})
+      }
+      await this.watchActiveHeadings()
+    }
   }
 }
 </script>
