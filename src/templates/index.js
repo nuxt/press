@@ -23,6 +23,11 @@ export const blog = {
 }
 
 export const docs = {
+  'docs/plugin': {
+    src: 'docs/plugin.js',
+    fileName: 'plugins/docs.js',
+    ssr: false
+  },
   'docs/layout': {
     src: 'docs/layout.vue',
     fileName: 'layouts/docs.vue'
