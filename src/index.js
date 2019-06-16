@@ -270,7 +270,11 @@ async function addTemplates() {
 
 export default function (options) {
   // Automatically register modules
-  this.requireModule('@nuxt/http')
+  this.requireModule({
+    src: '@nuxt/http',
+    options: { browserBaseURL: '/' }
+  })
+
   // TODO @Atinux
   // this.requireModule('@nuxtjs/tailwindcss')
   //

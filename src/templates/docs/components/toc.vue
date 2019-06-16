@@ -35,7 +35,7 @@ export default {
       if (heading) {
         heading.scrollIntoView({behavior: 'smooth'})
       }
-      await this.watchActiveHeadings()
+      //await this.watchActiveHeadings()
     }
   }
 }
@@ -47,7 +47,7 @@ export default {
   position: fixed;
   width: calc(18%);
   border-right: 1px solid #f6f6f6;
-  margin: 0px;  
+  margin: 0px;
   margin-right: 10px;
   padding-top: 20px;
   padding-left: 15px;
