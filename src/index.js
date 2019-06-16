@@ -102,7 +102,7 @@ function registerGenerateRoutes(data) {
       Object.keys({
         ...this.$press.$docs && data.docs.sources,
         ...this.$press.$blog && data.blog.sources,
-        ...this.$press.$slides && data.slies.sources
+        ...this.$press.$slides && data.slides.sources
       }).map((route) => {
         return {
           route,
