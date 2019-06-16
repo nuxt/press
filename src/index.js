@@ -282,6 +282,7 @@ export default function (options) {
   // and will leave the Tailwindsurfing to you ;)
   //
 
+  this.options.build.postcss.preset.stage = 0
   this.options.css.push('prismjs/themes/prism.css')
   this.options.watch.push(
     '~/*.md',
