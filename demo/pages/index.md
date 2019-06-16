@@ -1,3 +1,7 @@
-# About page
+# @nuxt/press demo
 
-This is the content for the About page.
+Go to [/docs](/docs).
+
+Go to [/blog](/blog).
+
+Go to [/slides/hello](/slides/hello).
