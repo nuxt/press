@@ -1,0 +1,21 @@
+{
+  "toc": [
+    "/docs/topics/index#nuxtpress-documentation",
+    "/docs/topics/setup#setup",
+    "/docs/topics/tutorial#tutorial",
+    "/docs/topics/tutorial#getting-started",
+    "/docs/topics/tutorial#publishing-documentation",
+    "/docs/topics/tutorial#publishing-blogs",
+    "/docs/topics/tutorial#publishing-slides",
+    "/docs/topics/modes#modes",
+    "/docs/topics/modes#blog-mode",
+    "/docs/topics/modes#docs-mode",
+    "/docs/topics/modes#slides-mode",
+    "/docs/topics/customize#customize",
+    "/docs/topics/customize#custom-data-source",
+    "/docs/topics/customize#taildwind-css-theme",
+    "/docs/topics/customize#ejecting-templates",
+    "/docs/topics/customize#blog-components",
+    "/docs/topics/customize#docs-components"
+  ]
+}
