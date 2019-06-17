@@ -2,6 +2,7 @@
 import {
   lstatSync,
   existsSync,
+  stat as _statAsync,
   readFileSync as _readFileSync,
   readFile as _readFileAsync,
   writeFile as _writeFileAsync
@@ -16,6 +17,7 @@ import {
 import { promisify } from 'util'
 import klaw from 'klaw'
 
+const _stat = promisify(_statAsync)
 const _readFile = promisify(_readFileAsync)
 const _writeFile = promisify(_writeFileAsync)
 
@@ -23,6 +25,7 @@ export function exists(...paths) {
   return existsSync(join(...paths))
 }
 
+export const stat = _stat
 export const readFileSync = _readFileSync
 
 export function resolve(...paths) {
@@ -45,9 +48,9 @@ export function isDir(path) {
   return lstatSync(path).isDirectory()
 }
 
-export function walk(root, validate) {
+export function walk(root, validate, sliceAtRoot = false) {
   const matches = []
-  const sliceAt = this.options.srcDir.length + 1
+  const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1
   if (validate instanceof RegExp) {
     const pattern = validate
     validate = path => pattern.test(path)

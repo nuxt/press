@@ -1,9 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-  viewBox="0 0 8 8" width="24" height="24">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" width="40" height="40">
   <style>
   .button {
-    fill: #53350a;
-    fill: #53350a;
+    fill: #00c48d;
+    fill: #00c48d;
   }
   .symbol {
     stroke: none;

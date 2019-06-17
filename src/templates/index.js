@@ -1,5 +1,6 @@
 
 export const blog = {
+  'blog/assets': /\.svg$/,
   'blog/layout': {
     src: 'blog/layout.vue',
     fileName: 'layouts/blog.vue'

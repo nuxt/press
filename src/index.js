@@ -1,13 +1,13 @@
 
 import { dirname } from 'path'
-import { readdirSync } from 'fs'
+import { readdirSync, readFileSync } from 'fs'
 import { IgnorePlugin } from 'webpack'
 import defu from 'defu'
 import { writeJson, ensureDir, remove } from 'fs-extra'
 import defaults from './defaults'
 import PromisePool from './pool'
 
-import { resolve, join, exists, writeFile } from './utils'
+import { walk, stat, resolve, join, exists, writeFile } from './utils'
 
 import * as routes from './routes'
 import * as api from './api'
@@ -223,8 +223,43 @@ function setupAPI() {
   }
 }
 
-function addModeTemplates(mode) {
+async function addModeAssets(mode, pattern) {
+  const srcDir = resolve('templates', mode)
+  // const assetBasePath = `press/assets/${mode}/`
+  const srcList = await walk.call(this, srcDir, pattern, true)
+  // const srcStreams = {}
+  const pool = new PromisePool(srcList, async (src) => {
+    const srcPath = resolve('templates', mode, src)
+    this.addTemplate({
+      src: srcPath,
+      fileName: join('press', 'assets', mode, src.replace(`assets/`, ''))
+    })
+    // const srcInfo = await stat(srcPath)
+    // srcStreams[src.replace(`assets/`, '')] = {
+    //   size: () => srcInfo.size,
+    //   source: () => readFileSync(srcPath)
+    // }
+  })
+  await pool.done()
+  // this.options.build.plugins.push({
+  //   apply (compiler) {
+  //     compiler.hooks.emit.tap('nuxt-press', (compilation) => {
+  //       for (let path of Object.keys(srcStreams)) {
+  //         consola.info('Emitted asset: ', `${assetBasePath}${path}`)
+  //         compilation.assets[`${assetBasePath}${path}`] = srcStreams[path]
+  //       }
+  //       console.log(Object.keys(compilation.assets))
+  //     })
+  //   }
+  // })
+}
+
+async function addModeTemplates(mode) {
   for (const templateKey of Object.keys(templates[mode])) {
+    if (templateKey.endsWith('/assets')) {
+      await addModeAssets.call(this, mode, templates[mode][templateKey])
+      continue
+    }
     const template = templates[mode][templateKey]
     if (!exists(this.options.srcDir, template.src)) {
       template.src = resolve('templates', template.src)
