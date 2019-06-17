@@ -1,23 +1,27 @@
-June 5, 2019
+June 10, 2019
 
-Detailing basics about the blog mode.
+Detailing blog mode metadata configuration.
 
-# Organizing entries
+# Configuring metadata
 
-```
-blog/entry.md
-blog/another-entry.md
-blog/yet-another-entry.md
-```
+Hello from my `@nuxt/press` blog!
 
-As long as
-
-```
-June 5, 2019
-
-Detailing basics about the blog mode.
-
-# Title
+```js
+export default {
+  modules: ['@nuxt/press'],
+  press: {
+    blog: {
+      title: 'A @nuxt/press blog',
+      author: {
+        name: 'Nuxt.js Core Team',
+        github: 'http://github.com/nuxt/nuxt.js',
+        twitter: 'https://twitter.com/nuxt_js'
+      },
+      // Used in RFC4151-based RSS feed entry tags
+      tagDomain: 'nuxtjs.org'
+    }
+  }
+}
 ```
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a orci 
