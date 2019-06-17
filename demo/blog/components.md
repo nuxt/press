@@ -1,28 +1,20 @@
-June 10, 2019
+June 20, 2019
 
-Detailing blog mode metadata configuration.
+Detailing Vue component usage inside Markdown.
 
-# Configuring metadata
+# Using Vue components
 
-You can change the metadata displayed in the default blog template
-by setting some options in `nuxt.config.js`:
-
-```js
-export default {
-  modules: ['@nuxt/press'],
-  press: {
-    blog: {
-      title: 'My NuxtPress Blog',
-      author: {
-        github: 'http://github.com/nuxt/nuxt.js',
-        twitter: 'https://twitter.com/nuxt_js'
-      },
-      // Used in RFC4151-based RSS feed entry tags
-      tagDomain: 'nuxtjs.org'
-    }
-  }
-}
 ```
+# Here's some markdown
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+<my-component>
+</my-component>
+```
+
+<my-component>
+</my-component>
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a orci 
 sollicitudin diam ultrices varius. Ut sit amet bibendum leo. Donec nec enim 

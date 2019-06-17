@@ -25,7 +25,6 @@ body, #__nuxt, #__layout {
   /* prismjs override */
   & pre,
   & pre[class*="language-"] {
-    background: #fff;
     padding: 15px;
   }
   & code[class*="language-"],

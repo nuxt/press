@@ -1,4 +1,8 @@
-// import pressJson from '~~/nuxt.press.json'
+import Vue from 'vue'
+import pressJson from '~~/nuxt.press.json'
+import NuxtMarkdown from './components/nuxt-markdown'
+
+Vue.component('nuxt-markdown', NuxtMarkdown)
 
 const apiToStatic = {
   // Docs-only API endpoints

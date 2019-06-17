@@ -13,7 +13,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 .blog {
   width: 740px !important;
   display: flex;
@@ -23,6 +23,10 @@ export default {
     background: linear-gradient(90deg, rgba(244,244,244,1.0) 50%, rgba(255,255,255,1.0) 95%, rgba(255,255,255,1.0) 100%);
     flex-basis: 75%;
     padding: 20px;
+    & pre,
+    & pre[class*="language-"] {
+      background: #fff !important;
+    }
   }
 }
 </style>

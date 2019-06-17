@@ -11,14 +11,16 @@
     <a href="http://github.com/galvez">
       <img class="icon" src="../../assets/blog/icons/github.svg">
     </a>
+    <% if (options.blog.meta.linkedin) { %>
     <a href="http://linkedin.com/in/jonasgalvez">
       <img class="icon" src="../../assets/blog/icons/linkedin.svg">
     </a>
-    <a href="http://hire.jonasgalvez.com.br/atom.xml">
-      <img class="icon" src="../../assets/blog/icons/feed.svg">
-    </a>
+    <% } %>
     <a href="https://twitter.com/anothergalvez">
       <img class="icon" src="../../assets/blog/icons/twitter.svg">
+    </a>
+    <a href="http://hire.jonasgalvez.com.br/atom.xml">
+      <img class="icon" src="../../assets/blog/icons/feed.svg">
     </a>
   </div>
 </template>
@@ -40,6 +42,7 @@ export default {
   align-items: flex-end;
   & .about {
     margin: 15px 0px;
+    margin-bottom: 100px;
     font-size: 28px;
     display: table-caption;
     text-align: right;
@@ -49,8 +52,11 @@ export default {
     margin: 0px;
     margin-bottom: 5px;
     padding: 0px;
+    text-align: right;
     & img {
-      transform: scale(0.8);
+      display: inline-block;
+      width: 30px;
+      height: auto;
     }
   }
 }

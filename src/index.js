@@ -270,6 +270,12 @@ async function addTemplates() {
     options: this.$press
   })
 
+  this.addTemplate({
+    src: resolve('templates/components/nuxt-markdown.js'),
+    fileName: 'press/components/nuxt-markdown.js',
+    options: this.$press
+  })
+
   this.addPlugin({
     src: resolve('templates/source.vue'),
     fileName: 'press/pages/source.vue',
@@ -304,6 +310,10 @@ export default function (options) {
   // I'm wrapping up some base themes with vanila CSS for now
   // and will leave the Tailwindsurfing to you ;)
   //
+
+  this.extendBuild((config) => {
+    config.resolve.alias['vue$'] = 'vue/dist/vue.esm.js'
+  })
 
   this.options.build.postcss.preset.stage = 0
   this.options.css.push(
