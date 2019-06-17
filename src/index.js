@@ -7,7 +7,7 @@ import { writeJson, ensureDir, remove } from 'fs-extra'
 import defaults from './defaults'
 import PromisePool from './pool'
 
-import { walk, stat, resolve, join, exists, writeFile } from './utils'
+import { walk, resolve, join, exists, writeFile } from './utils'
 
 import * as routes from './routes'
 import * as api from './api'
@@ -234,24 +234,8 @@ async function addModeAssets(mode, pattern) {
       src: srcPath,
       fileName: join('press', 'assets', mode, src.replace(`assets/`, ''))
     })
-    // const srcInfo = await stat(srcPath)
-    // srcStreams[src.replace(`assets/`, '')] = {
-    //   size: () => srcInfo.size,
-    //   source: () => readFileSync(srcPath)
-    // }
   })
   await pool.done()
-  // this.options.build.plugins.push({
-  //   apply (compiler) {
-  //     compiler.hooks.emit.tap('nuxt-press', (compilation) => {
-  //       for (let path of Object.keys(srcStreams)) {
-  //         consola.info('Emitted asset: ', `${assetBasePath}${path}`)
-  //         compilation.assets[`${assetBasePath}${path}`] = srcStreams[path]
-  //       }
-  //       console.log(Object.keys(compilation.assets))
-  //     })
-  //   }
-  // })
 }
 
 async function addModeTemplates(mode) {

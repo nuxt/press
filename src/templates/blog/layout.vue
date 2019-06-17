@@ -15,13 +15,15 @@ export default {
 
 <style scoped>
 .blog {
-  width: 100%;
   height: 100%;
+  width: 740px !important;
+  display: flex;
+  justify-content: center;
   & .content {
-    width: calc(60% - 40px);
+    /*background: #f6f6f6;*/
+    background: linear-gradient(90deg, rgba(244,244,244,1.0) 50%, rgba(255,255,255,1.0) 95%, rgba(255,255,255,1.0) 100%);
+    flex-basis: 75%;
     padding: 20px;
-    margin-bottom: 40px;
-    margin-left: calc(30%);
   }
 }
 </style>

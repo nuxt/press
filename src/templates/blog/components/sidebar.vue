@@ -1,5 +1,8 @@
 <template>
   <div class="sidebar">
+    <div class="about">
+      My NuxtPress Blog
+    </div>
     <% if (options.blog.meta.avatar) { %>
     <a href="/">
       <img class="icon avatar" src="<%= blog.meta.avatar %>">
@@ -28,25 +31,27 @@ export default {
 
 <style>
 .sidebar {
-  top: 30px;
-  position: fixed;
-  width: calc(18%);
-  border-right: 1px solid #f6f6f6;
+  border-right: 1px solid #000;
+  flex-basis: 25%;
   margin: 0px;
-  margin-right: 10px;
-  padding-top: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
-  height: calc(100% - 20px);
-  overflow-y: scroll;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  & .about {
+    margin: 15px 0px;
+    font-size: 28px;
+    display: table-caption;
+    text-align: right;
+  }
   & a {
     display: block;
     margin: 0px;
     margin-bottom: 5px;
     padding: 0px;
+    & img {
+      transform: scale(0.8);
+    }
   }
 }
 .h1 {

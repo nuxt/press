@@ -1,6 +1,7 @@
 <template>
   <main>
-    <template v-for="entry in latest">
+    <div v-html="latest[0].body" />
+    <template v-for="entry in latest.slice(1)">
       <p class="title">
         <nuxt-link :to="entry.path">{{ entry.title }}</nuxt-link>
       </p>

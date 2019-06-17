@@ -1,6 +1,6 @@
 html {
-	margin: 0px;
-	padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 body, #__nuxt, #__layout {
@@ -11,38 +11,38 @@ body, #__nuxt, #__layout {
 }
 
 #nuxt-press {
-	width: 80%;
-	height: 100%;
-	margin: 0px auto;
-	& * {
-	  color: #555;
-	}
-	& code {
-	  font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-	  font-size: 0.8em;
-	  color: #669900;
-	  font-weight: bold;
-	}
-	/* prismjs override */
-	& code[class*="language-"],
-	& pre[class*="language-"] {
-	  font-size: 0.9em;
-	}
-	& table {
-	  width: 100%;
-	  border-collapse: collapse;
-	  border: 1px solid #999;
-	}
-	& table th,
-	& table td {
-	  padding: 5px;
-	  border: 1px solid #999;
-	}
-	& a, & a:active, & a:visited {
-	  color: #555;
-	  text-decoration: none;
-	}
-	& a:hover {
-	  color: #999;
-	}
+  width: 80%;
+  height: 100%;
+  margin: 0px auto;
+  & * {
+    color: #555;
+  }
+  & code {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    font-size: 0.8em;
+    color: #669900;
+    font-weight: bold;
+  }
+  /* prismjs override */
+  & code[class*="language-"],
+  & pre[class*="language-"] {
+    font-size: 0.9em;
+  }
+  & table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #999;
+  }
+  & table th,
+  & table td {
+    padding: 5px;
+    border: 1px solid #999;
+  }
+  & a, & a:active, & a:visited {
+    color: #555;
+    text-decoration: none;
+  }
+  & a:hover {
+    color: #999;
+  }
 }

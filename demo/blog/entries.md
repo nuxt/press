@@ -1,10 +1,8 @@
-May 22, 2019
+June 5, 2019
 
-My first blog entry!
+Detailing basics about the blog mode.
 
-# Hello World
-
-Hello from my `@nuxt/press` blog!
+# Organizing entries
 
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras a orci 
 sollicitudin diam ultrices varius. Ut sit amet bibendum leo. Donec nec enim 
