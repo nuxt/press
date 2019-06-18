@@ -1,10 +1,3 @@
-// let compiler
-// if (process.client) {
-//   compiler = require('vue-template-compiler/browser.js')
-// } else {
-//   compiler = require('vue-template-compiler')
-// }
-
 export default {
   props: {
     value: {
@@ -18,16 +11,6 @@ export default {
       template: `<div>${this.html}</div>`
     })
   },
-  // render(h) {
-  //   let render = compiler
-  //     .compile(`<div>${this.html}</div>`).render
-  //   render = render.replace('with (this')
-  //   return h({
-  //     render: eval(`(function() { ${
-  //       
-  //     } })`)()
-  //   })
-  // },
   created() {
     if (this.$slots.default) {
       this.html = ''
