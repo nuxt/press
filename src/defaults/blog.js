@@ -7,12 +7,16 @@ export default {
 
   // Blog metadata
   meta: {
-    title: 'A @nuxt/press blog',
-    author: {
-      name: 'Nuxt.js Core Team',
-      github: 'http://github.com/nuxt/nuxt.js',
-      twitter: 'https://twitter.com/nuxt_js'
-    },
+    title: 'My NuxtPress Blog',
+    links: [
+      {Home: '/blog'},
+      {Archive: '/blog/archive'},
+      {About: '/blog/about'},
+    ],
+    icons: [
+      {github: 'http://github.com/nuxt/nuxt.js'},
+      {twitter: 'https://twitter.com/nuxt_js'}
+    ],
     // Used in RFC4151-based RSS feed entry tags
     tagDomain: 'nuxtjs.org'
   },

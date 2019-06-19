@@ -2,26 +2,17 @@
   <div class="sidebar">
     <div class="about">
       My NuxtPress Blog
+      <div class="text-links">
+        <% for (const link of options.blog.meta.links) { %>
+        <nuxt-link to="<%= Object.values(link)[0] %>"><%= Object.keys(link)[0] %></nuxt-link>
+        <% } %>
+      </div>
     </div>
-    <% if (options.blog.meta.avatar) { %>
-    <a href="/">
-      <img class="icon avatar" src="<%= blog.meta.avatar %>">
+    <% for (const link of options.blog.meta.icons) { %>
+    <a href="<%= Object.values(link)[0] %>">
+      <img class="icon" src="../../assets/blog/icons/<%= Object.keys(link)[0] %>.svg">
     </a>
     <% } %>
-    <a href="http://github.com/galvez">
-      <img class="icon" src="../../assets/blog/icons/github.svg">
-    </a>
-    <% if (options.blog.meta.linkedin) { %>
-    <a href="http://linkedin.com/in/jonasgalvez">
-      <img class="icon" src="../../assets/blog/icons/linkedin.svg">
-    </a>
-    <% } %>
-    <a href="https://twitter.com/anothergalvez">
-      <img class="icon" src="../../assets/blog/icons/twitter.svg">
-    </a>
-    <a href="http://hire.jonasgalvez.com.br/atom.xml">
-      <img class="icon" src="../../assets/blog/icons/feed.svg">
-    </a>
   </div>
 </template>
 
@@ -46,6 +37,14 @@ export default {
     font-size: 28px;
     display: table-caption;
     text-align: right;
+    & .text-links {
+      margin-top: 100px;
+      & a {
+        font-size: 15px;
+        text-decoration: underline !important;
+        display: block;
+      }
+    }
   }
   & a {
     display: block;

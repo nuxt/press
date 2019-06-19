@@ -271,8 +271,8 @@ async function addTemplates() {
   })
 
   this.addTemplate({
-    src: resolve('templates/components/nuxt-markdown.js'),
-    fileName: 'press/components/nuxt-markdown.js',
+    src: resolve('templates/components/nuxt-template.js'),
+    fileName: 'press/components/nuxt-template.js',
     options: this.$press
   })
 
