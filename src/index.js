@@ -23,8 +23,6 @@ function loadOptions(options) {
   // Easy config access in helper functions
   this.$press = options
 
-  console.log('this.$press', this.$press)
-
   // Enable docs if srcDir/*.md files exists
   // or if the srcDir/docs/ folder exists
   if (
