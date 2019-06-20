@@ -3,7 +3,7 @@ import { dirname } from 'path'
 import { readdirSync, readFileSync } from 'fs'
 import { IgnorePlugin } from 'webpack'
 import defu from 'defu'
-import { writeJson, ensureDir, remove } from 'fs-extra'
+import { writeJson, ensureDir, remove, move } from 'fs-extra'
 import defaults from './defaults'
 import PromisePool from './pool'
 
@@ -22,6 +22,8 @@ function loadOptions(options) {
   options = defu(options, defaults)
   // Easy config access in helper functions
   this.$press = options
+
+  console.log('this.$press', this.$press)
 
   // Enable docs if srcDir/*.md files exists
   // or if the srcDir/docs/ folder exists
@@ -73,7 +75,7 @@ function registerRoutes() {
       modeRoutes.push(...routes.slides.call(this))
     }
     modeRoutes.push(...routes.common.call(this))
-    nuxtRoutes.splice(0, nuxtRoutes.length, ...modeRoutes)
+    nuxtRoutes.unshift(...modeRoutes)
   })
 }
 

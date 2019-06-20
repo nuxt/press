@@ -1,17 +1,57 @@
-my presentation!
+A NuxtPress
+<br>Presentation
 
-# slide 1
+# Bullet points
 
-text of slide 1
+- smart slide delimiters (h1)
+- use vue components in markdown
+- vue-awesome-swiper under the hood
 
-# slide 2
+# Code snippets
 
-text of slide 2
+Here's a code snippet in a slide:
 
-# slide 3
+```js
+export default {
+  modules: [`@nuxt/press`]
+}
+```
 
-text of slide 3
+# Theming
 
-# slide 4
+Say you want to display the<br>
+previous snippet in a yellow background.
 
-text of slide 4
+#
+
+Create a `~/assets/my-slides.css`:
+
+```css
+.slides-hello .slide-3 pre {
+  background: #f4e398 !important;
+}
+```
+
+#
+
+And include it in `nuxt.config.js`:
+
+```js
+export default {
+  css: [`~/assets/my-slides.css`]
+}
+```
+
+#
+
+Then it would look like this:
+
+```js
+export default {
+  modules: [`@nuxt/press`]
+}
+```
+
+Get a copy of the default theme [here].
+
+[here]: https://foobar.com

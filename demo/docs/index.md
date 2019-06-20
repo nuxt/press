@@ -1,16 +1,20 @@
 
-# Intro
+![nuxt-press][logo]
 
-Welcome to the alpha **`@nuxt/press`** docs!
+# Publishing the Nuxt way
+
+[logo]: https://user-images.githubusercontent.com/904724/59497906-a2d9d680-8e94-11e9-8fac-a7172827f349.png
+
+**NuxtPress** is a multi-mode natural extension to Nuxt.js.
+
+* Want a documentation suite?<br>Simply drop a bunch of md files in srcDir or srcDir/docs.
+* Want to publish a blog?<br>Simply drop a bunch of entry.md files in srcDir/blog.
+* Want to present some slides?<br>Simply drop your presentation.md file in srcDir/slides.
 
 ## Setup
 
 ```shell
-npm install @nuxt/press --save
-```
-
-```shell
-yarn add @nuxt/press
+$ npm install @nuxt/press --save
 ```
 
 This will also install Nuxt if you haven't yet. If you haven't defined a 

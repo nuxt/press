@@ -1,7 +1,8 @@
 <template>
   <component
     :is="`press-${source.type}`"
-    :data="source" />
+    :data="source"
+    :path="sourcePath" />
 </template>
 
 <script>
@@ -29,7 +30,7 @@ export default {
   },
   async asyncData ({ $press, params, payload }) {
     const source = payload || await $press.get(`api/source/${params.source}`)
-    return { source }
+    return { source, sourcePath: params.source }
   }
 }
 </script>

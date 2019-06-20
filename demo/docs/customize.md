@@ -2,55 +2,7 @@
 
 ## Basics
 
-TODO
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-TODO
-
-TODO
-
-TODO
-TODO
-
-TODO
-
-TODO
-
 ## Templates
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-
-TODO
-TODO
-
-TODO
-
-TODO
-TODO
-
-TODO
-
-TODO
 
 ## Data sources
 

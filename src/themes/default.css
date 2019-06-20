@@ -16,20 +16,34 @@ body, #__nuxt, #__layout {
   & * {
     color: #555;
   }
+  & ol {
+    padding-left: 0px;
+    & li {
+      list-style-position: inside;
+    }
+  }
+  & blockquote {
+    font-style: italic;
+    font-size: 0.9em;
+    margin-left: 0px;
+    padding-left: 10px;
+    margin-right: 0px;
+    border-left: 3px solid #555555;
+  }
   & code {
     font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    font-size: 0.8em;
+    font-size: 1em;
     color: #669900;
     font-weight: bold;
   }
   /* prismjs override */
   & pre,
   & pre[class*="language-"] {
+    background: #f5f2f0;
     padding: 15px;
-  }
-  & code[class*="language-"],
-  & pre[class*="language-"] {
-    font-size: 0.9em;
+    & > code {
+      font-size: 0.9em !important;
+    }
   }
   & table {
     width: 100%;
@@ -47,5 +61,84 @@ body, #__nuxt, #__layout {
   }
   & a:hover {
     color: #999;
+  }
+  & .content {
+    & h1, & h2, & h3, & h4, & h5, & h6 {
+      margin-top: 40px;
+    }
+  }
+}
+
+#nuxt-press.blog {
+  width: 740px !important;
+  display: flex;
+  flex-grow: 1;
+  justify-content: center;
+  & .content {
+    background: linear-gradient(90deg, rgba(244,244,244,1.0) 50%, rgba(255,255,255,1.0) 95%, rgba(255,255,255,1.0) 100%);
+    flex-basis: 75%;
+    padding: 20px;
+    & pre,
+    & pre[class*="language-"] {
+      background: #fff !important;
+    }
+  }
+}
+
+#nuxt-press.docs {
+  width: 100%;
+  height: 100%;
+  & .content {
+    width: calc(60% - 40px);
+    padding: 20px;
+    margin-bottom: 40px;
+    margin-left: calc(30%);
+    line-height: 1.5em;
+    & h3 {
+      user-select: none;
+      & span {
+        color: #2f495e !important;
+        text-shadow: 1px 1px #fff;
+        margin-bottom: 0px;
+        border-bottom: 2px solid #2f495e;
+      }
+      &:not(:first-of-type) {
+        margin-top: 50px;
+      }
+    }
+    & a {
+      font-weight: bold;
+      color: #669900 !important;
+      &:hover {
+        color: #93dd00 !important;
+      }
+    }
+  }
+}
+
+#nuxt-press.slides {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  & .swiper-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  & .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & > * {
+      font-size: 2em;
+      margin-bottom: 1.2em;
+    }
+  }
+  & .swiper-slide:first-of-type {
+    transform: scale(3.0);
   }
 }

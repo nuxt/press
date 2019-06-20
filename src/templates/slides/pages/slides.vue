@@ -1,8 +1,9 @@
 <template>
   <no-ssr>
-    <swiper ref="slides" :options="swiperOptions">
+    <swiper ref="slides" :options="swiperOptions" :class="`slides-${path.split('/')[1]}`">
       <swiper-slide
         :key="`slide-${slideIndex}`"
+        :class="`slide-${slideIndex+1}`"
         v-for="(item, slideIndex) in data.slides">
         <div v-html="item" />
       </swiper-slide>
@@ -20,7 +21,7 @@ if (process.client) {
 }
 
 export default {
-  props: ['data'],
+  props: ['data', 'path'],
   data: () => ({
     swiperOptions: {
       pagination: {

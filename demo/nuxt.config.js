@@ -1,5 +1,22 @@
 import NuxtPress from '../src'
 export default {
   modules: [NuxtPress],
-  plugins: ['~/plugins/my-component']
+  css: ['~/assets/hello.css'],
+  press: {
+    components: {
+    },
+    blog: {
+      meta: {
+        links: [
+          {Home: '/blog'},
+          {Archive: '/blog/archive'},
+          {About: '/blog/about'},
+        ],
+        icons: [
+          {github: 'http://github.com/nuxt/nuxt.js'},
+          {twitter: 'https://twitter.com/nuxt_js'}
+        ]
+      }
+    }
+  }
 }

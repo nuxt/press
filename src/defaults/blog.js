@@ -7,18 +7,11 @@ export default {
 
   // Blog metadata
   meta: {
-    title: 'My NuxtPress Blog',
-    links: [
-      {Home: '/blog'},
-      {Archive: '/blog/archive'},
-      {About: '/blog/about'},
-    ],
-    icons: [
-      {github: 'http://github.com/nuxt/nuxt.js'},
-      {twitter: 'https://twitter.com/nuxt_js'}
-    ],
+    title: 'A NuxtPress Blog',
+    links: [],
+    icons: [],
     // Used in RFC4151-based RSS feed entry tags
-    tagDomain: 'nuxtjs.org'
+    tagDomain: 'nuxt.press'
   },
 
   // If in Nuxt's SPA mode, setting custom API
