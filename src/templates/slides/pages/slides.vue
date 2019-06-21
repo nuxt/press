@@ -3,7 +3,7 @@
     <swiper ref="slides" :options="swiperOptions" :class="`slides-${path.split('/')[1]}`">
       <swiper-slide
         :key="`slide-${slideIndex}`"
-        :class="`slide-${slideIndex+1}`"
+        :class="`slide slide-${slideIndex+1}`"
         v-for="(item, slideIndex) in data.slides">
         <div v-html="item" />
       </swiper-slide>
