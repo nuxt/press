@@ -71,28 +71,6 @@ async function ensureNuxtPressJson(pressJson) {
   }
 }
 
-function setupAPI() {
-  const sourceHandler = this.$press.api.source ||
-    api.source(this.options.buildDir)
-  this.addServerMiddleware(api.base)
-  this.addServerMiddleware((req, res, next) => {
-    if (req.url.startsWith('/api/source/')) {
-      sourceHandler(req, res, next)
-    } else {
-      next()
-    }
-  })
-  if (this.$press.$docs) {
-    setupDocsAPI.call(this)
-  }
-  if (this.$press.$blog) {
-    setupBlogAPI.call(this)
-  }
-  if (this.$press.$slides) {
-    setupSlidesAPI.call(this)
-  }
-}
-
 export default function (options) {
   // Automatically register modules
   this.requireModule({

@@ -16,7 +16,21 @@ export default {
       }
     ]
   },
-  defaults: {
+  serverMiddleware() {
+    const api = this.$press.api()
+    const sourceHandler = this.$press.api.source || api.source.bind(this)
+    return [
+      api.base.bind(this),
+      (req, res, next) => {
+        if (req.url.startsWith('/api/source/')) {
+          sourceHandler(req, res, next)
+        } else {
+          next()
+        }
+      }
+    ]
+  },
+  options: {
     api() {
       const sourceCache = {}
       return {
