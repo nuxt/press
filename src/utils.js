@@ -2,8 +2,8 @@
 import {
   lstatSync,
   existsSync,
+  readFileSync,
   stat as _statAsync,
-  readFileSync as _readFileSync,
   readFile as _readFileAsync,
   writeFile as _writeFileAsync
 } from 'fs'
