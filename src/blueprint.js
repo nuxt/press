@@ -91,3 +91,74 @@ export async function saveStaticData(staticRoot, data) {
     await pool.done()
   }
 }
+
+
+async function addModeAssets(mode, pattern) {
+  const srcDir = resolve('templates', mode)
+  // const assetBasePath = `press/assets/${mode}/`
+  const srcList = await walk.call(this, srcDir, pattern, true)
+  // const srcStreams = {}
+  const pool = new PromisePool(srcList, async (src) => {
+    const srcPath = resolve('templates', mode, src)
+    this.addTemplate({
+      src: srcPath,
+      fileName: join('press', 'assets', mode, src.replace(`assets/`, ''))
+    })
+  })
+  await pool.done()
+}
+
+async function addModeTemplates(mode) {
+  for (const templateKey of Object.keys(templates[mode])) {
+    if (templateKey.endsWith('/assets')) {
+      await addModeAssets.call(this, mode, templates[mode][templateKey])
+      continue
+    }
+    const template = templates[mode][templateKey]
+    if (!exists(this.options.srcDir, template.src)) {
+      template.src = resolve('templates', template.src)
+      if (templateKey.endsWith('/plugin')) {
+        template.fileName = join('press', template.fileName)
+        this.addPlugin({ ...template, options: this.$press })
+        continue
+      }
+      if (templateKey.endsWith('/layout')) {
+        template.fileName = join('press', template.fileName)
+        this.addLayout({ ...template, options: this.$press }, mode)
+        continue
+      }
+      template.fileName = join('press', template.fileName)
+      this.addTemplate({ ...template, options: this.$press })
+    }
+  }
+}
+
+async function addTemplates() {
+  this.addPlugin({
+    src: resolve('templates/plugin.js'),
+    fileName: 'press/plugin.js',
+    options: this.$press
+  })
+
+  this.addTemplate({
+    src: resolve('templates/components/nuxt-template.js'),
+    fileName: 'press/components/nuxt-template.js',
+    options: this.$press
+  })
+
+  this.addPlugin({
+    src: resolve('templates/source.vue'),
+    fileName: 'press/pages/source.vue',
+    options: this.$press
+  })
+
+  if (this.$press.$docs) {
+    await addModeTemplates.call(this, 'docs')
+  }
+  if (this.$press.$blog) {
+    await addModeTemplates.call(this, 'blog')
+  }
+  if (this.$press.$slides) {
+    await addModeTemplates.call(this, 'slides')
+  }
+}

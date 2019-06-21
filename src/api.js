@@ -1,6 +1,5 @@
-import { readFileSync } from 'fs'
 import consola from 'consola'
-import { join } from './utils'
+import { join, readFileSync } from './utils'
 
 const dev = process.env.NODE_ENV !== 'production'
 
@@ -16,48 +15,6 @@ export function base(_, res, next) {
     res.end()
   }
   next()
-}
-
-export const docs = (rootDir) => {
-  const cache = {}
-  return {
-    index(req, res, next) {
-      if (dev || !cache.index) {
-        cache.index = readStaticJson(rootDir, 'docs', 'index.json')
-      }
-      res.json(cache.index)
-    }
-  }
-}
-
-export const blog = (rootDir) => {
-  const cache = {}
-  return {
-    index(req, res, next) {
-      if (dev || !cache.index) {
-        cache.index = readStaticJson(rootDir, 'blog', 'index.json')
-      }
-      res.json(cache.index)
-    },
-    archive(req, res, next) {
-      if (dev || !cache.archive) {
-        cache.archive = readStaticJson(rootDir, 'blog', 'archive.json')
-      }
-      res.json(cache.archive)
-    }
-  }
-}
-
-export const slides = (rootDir) => {
-  const cache = {}
-  return {
-    index(req, res, next) {
-      if (dev || !cache.index) {
-        cache.index = readStaticJson(rootDir, 'slides', 'index.json')
-      }
-      res.json(cache.index)
-    }
-  }
 }
 
 const sourceCache = {}

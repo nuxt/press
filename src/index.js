@@ -1,19 +1,30 @@
 
-import { dirname } from 'path'
-import { readdirSync, readFileSync } from 'fs'
 import { IgnorePlugin } from 'webpack'
 import defu from 'defu'
-import { writeJson, ensureDir, remove, move } from 'fs-extra'
-import defaults from './defaults'
+import blueprint from './blueprint'
 import PromisePool from './pool'
 
-import { walk, resolve, join, exists, writeFile } from './utils'
+import {
+  walk,
+  dirname,
+  readdirSync,
+  readFileSync,
+  resolve,
+  join,
+  exists,
+  writeFile,
+  writeJson,
+  ensureDir,
+  remove,
+  move
+} from './utils'
 
-import * as routes from './routes'
-import * as api from './api'
-import * as templates from './templates'
-
-import loadData from './loaders'
+import {
+  common,
+  docs,
+  blog,
+  slides
+} from './bluprints'
 
 function loadOptions(options) {
   // Prefer top-level press config key in nuxt.config.js
@@ -60,66 +71,6 @@ async function ensureNuxtPressJson(pressJson) {
   }
 }
 
-function setupDocsAPI() {
-  let indexHandler
-
-  const configAPI = this.$press.docs.api
-  if (configAPI.index) {
-    indexHandler = configAPI.index
-  } else {
-    indexHandler = api.docs(this.options.buildDir).index
-  }
-  this.addServerMiddleware((req, res, next) => {
-    if (req.url.startsWith('/api/docs/index')) {
-      indexHandler(req, res, next)
-    } else {
-      next()
-    }
-  })
-}
-
-function setupBlogAPI() {
-  let indexHandler
-  let archiveHandler
-
-  const configAPI = this.$press.blog.api
-  if (configAPI.index && configAPI.archive) {
-    indexHandler = configAPI.index
-    archiveHandler = configAPI.archive
-  } else {
-    const blogAPI = api.blog(this.options.buildDir)
-    indexHandler = blogAPI.index
-    archiveHandler = blogAPI.archive
-  }
-  this.addServerMiddleware((req, res, next) => {
-    if (req.url.startsWith('/api/blog/index')) {
-      indexHandler(req, res, next)
-    } else if (req.url.startsWith('/api/blog/archive')) {
-      archiveHandler(req, res, next)
-    } else {
-      next()
-    }
-  })
-}
-
-function setupSlidesAPI() {
-  let indexHandler
-
-  const configAPI = this.$press.slides.api
-  if (configAPI.index) {
-    indexHandler = configAPI.index
-  } else {
-    indexHandler = api.slides(this.options.buildDir).index
-  }
-  this.addServerMiddleware((req, res, next) => {
-    if (req.url.startsWith('/api/slides/index')) {
-      indexHandler(req, res, next)
-    } else {
-      next()
-    }
-  })
-}
-
 function setupAPI() {
   const sourceHandler = this.$press.api.source ||
     api.source(this.options.buildDir)
@@ -142,75 +93,6 @@ function setupAPI() {
   }
 }
 
-async function addModeAssets(mode, pattern) {
-  const srcDir = resolve('templates', mode)
-  // const assetBasePath = `press/assets/${mode}/`
-  const srcList = await walk.call(this, srcDir, pattern, true)
-  // const srcStreams = {}
-  const pool = new PromisePool(srcList, async (src) => {
-    const srcPath = resolve('templates', mode, src)
-    this.addTemplate({
-      src: srcPath,
-      fileName: join('press', 'assets', mode, src.replace(`assets/`, ''))
-    })
-  })
-  await pool.done()
-}
-
-async function addModeTemplates(mode) {
-  for (const templateKey of Object.keys(templates[mode])) {
-    if (templateKey.endsWith('/assets')) {
-      await addModeAssets.call(this, mode, templates[mode][templateKey])
-      continue
-    }
-    const template = templates[mode][templateKey]
-    if (!exists(this.options.srcDir, template.src)) {
-      template.src = resolve('templates', template.src)
-      if (templateKey.endsWith('/plugin')) {
-        template.fileName = join('press', template.fileName)
-        this.addPlugin({ ...template, options: this.$press })
-        continue
-      }
-      if (templateKey.endsWith('/layout')) {
-        template.fileName = join('press', template.fileName)
-        this.addLayout({ ...template, options: this.$press }, mode)
-        continue
-      }
-      template.fileName = join('press', template.fileName)
-      this.addTemplate({ ...template, options: this.$press })
-    }
-  }
-}
-
-async function addTemplates() {
-  this.addPlugin({
-    src: resolve('templates/plugin.js'),
-    fileName: 'press/plugin.js',
-    options: this.$press
-  })
-
-  this.addTemplate({
-    src: resolve('templates/components/nuxt-template.js'),
-    fileName: 'press/components/nuxt-template.js',
-    options: this.$press
-  })
-
-  this.addPlugin({
-    src: resolve('templates/source.vue'),
-    fileName: 'press/pages/source.vue',
-    options: this.$press
-  })
-
-  if (this.$press.$docs) {
-    await addModeTemplates.call(this, 'docs')
-  }
-  if (this.$press.$blog) {
-    await addModeTemplates.call(this, 'blog')
-  }
-  if (this.$press.$slides) {
-    await addModeTemplates.call(this, 'slides')
-  }
-}
 
 export default function (options) {
   // Automatically register modules

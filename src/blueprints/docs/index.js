@@ -1,33 +1,59 @@
 import Markdown from '@nuxt/markdown'
 import { slugify } from '../utils'
 
-export const templates = {
-  plugin: 'plugin.js'
-  layout: 'layout.vue',
-  toc: 'components/toc.vue',
-  index: 'pages/index.vue',
-  topic: 'pages/topic.vue'
-}
-
-export function routes() {
-  return [
-    {
-      name: 'docs_index',
-      path: this.$press.docs.prefix,
-      component: 'pages/docs/index.vue'
+export default {
+  templates: {
+    plugin: 'plugin.js'
+    layout: 'layout.vue',
+    toc: 'components/toc.vue',
+    index: 'pages/index.vue',
+    topic: 'pages/topic.vue'
+  },
+  routes(templates) {
+    return [
+      {
+        name: 'docs_index',
+        path: this.$press.docs.prefix,
+        component: templates.index
+      }
+    ]
+  },
+  serverMiddleware() {
+    let indexHandler
+    const configAPI = this.$press.docs.api
+    if (configAPI.index) {
+      indexHandler = configAPI.index
+    } else {
+      indexHandler = api.docs(this.options.buildDir).index
     }
-  ]
-}
-
-export const defaults = {
+    return [
+      (req, res, next) => {
+        if (req.url.startsWith('/api/docs/index')) {
+          indexHandler(req, res, next)
+        } else {
+          next()
+        }
+      }
+    ]
+  },
+  defaults: {
   dir: 'docs',
   prefix: '/docs',
   meta: {
     title: 'Documentation suite',
     github: 'https://github.com/...'
   },
-  api: {
-    index: null
+  api() {
+    const cache = {}
+    const rootDir = this.options.buildDir
+    return {
+      index(req, res, next) {
+        if (dev || !cache.index) {
+          cache.index = readStaticJson(rootDir, 'docs', 'index.json')
+        }
+        res.json(cache.index)
+      }
+    }
   },
   source: {
     markdown(source) {

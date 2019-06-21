@@ -67,18 +67,6 @@ export function walk(root, validate, sliceAtRoot = false) {
   })
 }
 
-// This function has had so many edits
-// by now it's become officially a hack
-export function slugify(text) {
-  const a = 'ãàáäâèéëêìíïîõòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;~'
-  const b = 'aaaaaeeeeiiiiooooouuuuncsyoarsnpwgnmuxzh-------'
-  const p = new RegExp(a.split('').join('|'), 'g')
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(p, c => b.charAt(a.indexOf(c)))
-    .replace(/&/g, '-e-')
-    .replace(/[.'"]/g, '')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '')
-    .replace(/-{2,}/g, '-')
-}
+export { writeJson, ensureDir, remove, move } from 'fs-extra'
+export { readdirSync, readFileSync } from 'fs'
+export { dirname } from 'path'
