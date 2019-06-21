@@ -73,3 +73,4 @@ export function walk(root, validate, sliceAtRoot = false) {
 export { writeJson, ensureDir, remove, move } from 'fs-extra'
 export { readdirSync, readFileSync } from 'fs'
 export { dirname } from 'path'
+export { default as slugify } from 'slug'

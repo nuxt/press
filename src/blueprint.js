@@ -1,4 +1,45 @@
-import { join, exists } from './utils'
+import defu from 'defu'
+import PromisePool from './pool'
+
+import {
+  join,
+  exists,
+  ensureDir,
+  writeJson,
+  ensureDir,
+  dirname,
+  writeJson,
+  resolve,
+  walk
+} from './utils'
+
+export async function registerBlueprint(id, options = {}, configKey = null) {
+  if (configKey === null) {
+    configKey = id
+  }
+
+  // Load blueprint specification
+  const blueprintPath = resolve(__dirname, `blueprints/${id}`)
+  const blueprint = await import(blueprintPath).then(m => m.default)
+
+  // Set flag to indicate blueprint was enabled
+  if (blueprint.enabled.call(this, blueprint.config)) {
+    if (!this[`$${configKey}`]) {
+      this[`$${configKey}`] = {}
+      this.options[configKey] = this[`$${configKey}`]
+    }
+    // Prefer top-level config key in nuxt.config.js
+    this.options[configKey] = defu(this.options[configKey], options)
+    this.options[configKey] = defu(this.options[configKey], blueprint.options)
+    this[`$${configKey}`][`$${id}`] = true
+
+  // Easy config access in helper functions
+  this[`$${configKey}`][id] = defu(options, blueprint.options)
+
+  }
+
+
+}
 
 function normalize(routes) {
   for (const route of routes) {

@@ -2,6 +2,10 @@ import Markdown from '@nuxt/markdown'
 import { slugify, readJsonSync } from '../../utils'
 
 export default {
+  // Enable blog if srcDir/blog/ exists
+  enabled() {
+    return exists(join(this.options.srcDir, this.$press.blog.dir))
+  },
   templates: {
     assets: /\.svg$/,
     layout: 'layout.vue',

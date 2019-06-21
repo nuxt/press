@@ -1,7 +1,15 @@
 import Markdown from '@nuxt/markdown'
-import { slugify, readJsonSync } from '../../utils'
+import { exists, readdirSync, readJsonSync, slugify } from '../../utils'
 
 export default {
+  // Enable docs blueprint if srcDir/*.md files exists
+  // or if the srcDir/docs/ folder exists
+  enabled() {
+    return (
+      readdirSync(this.options.srcDir).find(p => /\.md$/.test(p)) ||
+      exists(this.options.srcDir, this.$press.docs.dir)
+    )
+  },
   templates: {
     plugin: 'plugin.js'
     layout: 'layout.vue',
