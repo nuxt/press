@@ -9,6 +9,16 @@ export const templates = {
   topic: 'pages/topic.vue'
 }
 
+export function routes() {
+  return [
+    {
+      name: 'docs_index',
+      path: this.$press.docs.prefix,
+      component: 'pages/docs/index.vue'
+    }
+  ]
+}
+
 export const defaults = {
   dir: 'docs',
   prefix: '/docs',

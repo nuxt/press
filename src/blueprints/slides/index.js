@@ -7,6 +7,15 @@ export const templates = {
   slides: 'pages/slides.vue'
 }
 
+export function routes(templates) {
+  return [
+    {
+      name: 'slides_index',
+      path: this.$press.slides.prefix,
+      component: templates.index
+    }
+  ]
+}
 export const defaults = {
   dir: 'slides',
   prefix: '/slides',

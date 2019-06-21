@@ -10,6 +10,21 @@ export const templates = {
   archive: 'pages/archive.vue'
 }
 
+export function routes(templates) {
+  return [
+    {
+      name: 'blog_index',
+      path: this.$press.blog.prefix,
+      component: 'pages/blog/index.vue'
+    },
+    {
+      name: 'blog_archive',
+      path: `${this.$press.blog.prefix}/archive`,
+      component: 'pages/blog/archive.vue'
+    }
+  ]
+}
+
 export const defaults = {
   dir: 'blog',
   prefix: '/blog',

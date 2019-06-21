@@ -1,0 +1,93 @@
+import { join, exists } from './utils'
+
+function normalize(routes) {
+  for (const route of routes) {
+    if (exists(join(this.options.srcDir, route.component))) {
+      route.component = `~${route.component}`
+    } else {
+      route.component = join(this.options.buildDir, 'press', route.component)
+    }
+  }
+  return routes
+}
+
+function registerRoutes() {
+  this.extendRoutes((nuxtRoutes, resolve) => {
+    const modeRoutes = []
+    if (this.$press.$docs) {
+      modeRoutes.push(...routes.docs.call(this))
+    }
+    if (this.$press.$blog) {
+      modeRoutes.push(...routes.blog.call(this))
+    }
+    if (this.$press.$slides) {
+      modeRoutes.push(...routes.slides.call(this))
+    }
+    modeRoutes.push(...routes.common.call(this))
+    nuxtRoutes.unshift(...modeRoutes)
+  })
+}
+
+export function registerGenerateRoutes(data) {
+  const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
+
+  this.options.generate.routes = () => {
+    const genRoutes = []
+    if (this.$press.$docs) {
+      for (const topLevelRoute of Object.keys(data.blog.topLevel)) {
+        genRoutes.push({
+          route: `${this.$press.docs.prefix}${topLevelRoute}`,
+          payload: require(`${pressStaticRoot}/docs/${topLevelRoute}.json`)
+        })
+      }
+    }
+    if (this.$press.blog) {
+      for (const topLevelRoute of Object.keys(data.blog.topLevel)) {
+        genRoutes.push({
+          route: `${this.$press.blog.prefix}${topLevelRoute}`,
+          payload: require(`${pressStaticRoot}/blog/${topLevelRoute}.json`)
+        })
+      }
+    }
+    if (this.$press.slides) {
+      for (const topLevelRoute of Object.keys(data.slides.topLevel)) {
+        genRoutes.push({
+          route: `${this.$press.slides.prefix}${topLevelRoute}`,
+          payload: require(`${pressStaticRoot}/slides/${topLevelRoute}.json`)
+        })
+      }
+    }
+    genRoutes.push(
+      Object.keys({
+        ...this.$press.$docs && data.docs.sources,
+        ...this.$press.$blog && data.blog.sources,
+        ...this.$press.$slides && data.slides.sources
+      }).map((route) => {
+        return {
+          route,
+          payload: require(`${pressStaticRoot}/sources${route}`)
+        }
+      })
+    )
+    return genRoutes
+  }
+}
+
+export async function saveStaticData(staticRoot, data) {
+  for (const key of Object.keys(data)) {
+    await ensureDir(join(staticRoot, key))
+    const { topLevel, sources } = data[key]
+    for (const topLevelKey of Object.keys(topLevel)) {
+      await writeJson(join(staticRoot, key, `${topLevelKey}.json`), topLevel[topLevelKey])
+    }
+    const pool = new PromisePool(
+      Object.values(sources),
+      async (source) => {
+        const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
+        await ensureDir(dirname(sourcePath))
+        await writeJson(sourcePath, source)
+      }
+    )
+    await pool.done()
+  }
+}
