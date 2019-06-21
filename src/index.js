@@ -300,17 +300,6 @@ export default function (options) {
     options: { browserBaseURL: '/' }
   })
 
-  // TODO @Atinux
-  // this.requireModule('@nuxtjs/tailwindcss')
-  //
-  // Need to think this through, don't want to add
-  // a tailwind.config.js file unless we really need it.
-  // It seems a default file is added to srcDir no matter what.
-  //
-  // I'm wrapping up some base themes with vanila CSS for now
-  // and will leave the Tailwindsurfing to you ;)
-  //
-
   this.extendBuild((config) => {
     config.resolve.alias['vue$'] = 'vue/dist/vue.esm.js'
   })
@@ -336,13 +325,6 @@ export default function (options) {
     registerRoutes.call(this)
 
     const data = await loadData.call(this)
-    // console.log('data', data)
-    // process.exit()
-
-    // TODO fix
-    // if (this.$press.blog && !this.$press.index) {
-    //   generateFeeds.call(this, index)
-    // }
 
     this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
 

@@ -1,7 +1,16 @@
 import Markdown from '@nuxt/markdown'
 import { slugify } from '../utils'
 
-export default {
+export const templates = {
+  assets: /\.svg$/,
+  layout: 'layout.vue',
+  sidebar: 'components/sidebar.vue',
+  index: 'pages/index.vue',
+  entry: 'pages/entry.vue',
+  archive: 'pages/archive.vue'
+}
+
+export const defaults = {
   dir: 'blog',
   prefix: '/blog',
 

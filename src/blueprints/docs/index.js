@@ -1,7 +1,15 @@
 import Markdown from '@nuxt/markdown'
 import { slugify } from '../utils'
 
-export default {
+export const templates = {
+  plugin: 'plugin.js'
+  layout: 'layout.vue',
+  toc: 'components/toc.vue',
+  index: 'pages/index.vue',
+  topic: 'pages/topic.vue'
+}
+
+export const defaults = {
   dir: 'docs',
   prefix: '/docs',
   meta: {
