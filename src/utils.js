@@ -40,6 +40,10 @@ export function readFile(...paths) {
   return _readFile(join(...paths), 'utf-8')
 }
 
+export function readJsonSync(...path) {
+  return JSON.parse(readFileSync(join(...path)).toString())
+}
+
 export function writeFile(path, contents) {
   return _writeFile(path, contents, 'utf-8')
 }
