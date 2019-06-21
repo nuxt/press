@@ -14,7 +14,7 @@ export default {
   created() {
     if (this.$slots.default) {
       this.html = ''
-      for (let slot of this.$slots.default) {
+      for (const slot of this.$slots.default) {
         this.html += slot.text
       }
     } else {

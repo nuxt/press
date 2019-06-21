@@ -92,7 +92,6 @@ export async function saveStaticData(staticRoot, data) {
   }
 }
 
-
 async function addModeAssets(mode, pattern) {
   const srcDir = resolve('templates', mode)
   // const assetBasePath = `press/assets/${mode}/`
@@ -134,23 +133,7 @@ async function addModeTemplates(mode) {
 }
 
 async function addTemplates() {
-  this.addPlugin({
-    src: resolve('templates/plugin.js'),
-    fileName: 'press/plugin.js',
-    options: this.$press
-  })
-
-  this.addTemplate({
-    src: resolve('templates/components/nuxt-template.js'),
-    fileName: 'press/components/nuxt-template.js',
-    options: this.$press
-  })
-
-  this.addPlugin({
-    src: resolve('templates/source.vue'),
-    fileName: 'press/pages/source.vue',
-    options: this.$press
-  })
+  // add common
 
   if (this.$press.$docs) {
     await addModeTemplates.call(this, 'docs')

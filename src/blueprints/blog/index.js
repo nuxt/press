@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { slugify } from '../utils'
+import { slugify, readJsonSync } from '../../utils'
 
 export default {
   templates: {
@@ -10,17 +10,24 @@ export default {
     entry: 'pages/entry.vue',
     archive: 'pages/archive.vue'
   },
+  ejectable: [
+    'layout',
+    'sidebar',
+    'index',
+    'entry',
+    'archive'
+  ],
   routes(templates) {
     return [
       {
         name: 'blog_index',
         path: this.$press.blog.prefix,
-        component: 'pages/blog/index.vue'
+        component: templates.index
       },
       {
         name: 'blog_archive',
         path: `${this.$press.blog.prefix}/archive`,
-        component: 'pages/blog/archive.vue'
+        component: template.index
       }
     ]
   },
@@ -49,7 +56,7 @@ export default {
       }
     ]
   },
-  defaults = {
+  defaults: {
     dir: 'blog',
     prefix: '/blog',
 

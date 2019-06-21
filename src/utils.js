@@ -26,7 +26,6 @@ export function exists(...paths) {
 }
 
 export const stat = _stat
-export const readFileSync = _readFileSync
 
 export function resolve(...paths) {
   return _resolve(__dirname, join(...paths))

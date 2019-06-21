@@ -1,4 +1,12 @@
+import { readJsonSync } from '../../utils'
+
 export default {
+  templates: {
+    'plugin': 'plugin.js',
+    'nuxt-template': 'components/nuxt-template.js',
+    'source': 'pages/source.vue'
+  },
+  eject: ['plugin', 'source'],
   routes(templates) {
     return [
       {

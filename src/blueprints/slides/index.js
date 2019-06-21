@@ -1,4 +1,5 @@
 import Markdown from '@nuxt/markdown'
+import { readJsonSync } from '../../utils'
 
 export default {
   templates: {
