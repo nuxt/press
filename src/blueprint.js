@@ -53,9 +53,9 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
   this.nuxt.hook('build:before', async () => {
     const templates = await addTemplates.call(this, options, rootId, id, blueprint.templates)
-    const routes = await registerRoutes.call(this, blueprint.routes.call(this, templates))
-    
+    const routes = await blueprint.routes.call(this, templates)
     this.extendRoutes(nuxtRoutes => nuxtRoutes.push(...routes))
+    
     // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
     this.options.generate.routes = async () => {

@@ -7,12 +7,12 @@ export default {
     return exists(join(this.options.srcDir, config.blog.dir))
   },
   templates: {
-    assets: /\.svg$/,
-    layout: 'layout.vue',
-    sidebar: 'components/sidebar.vue',
-    index: 'pages/index.vue',
-    entry: 'pages/entry.vue',
-    archive: 'pages/archive.vue'
+    'assets': /\.svg$/,
+    'layout': 'layout.vue',
+    'sidebar': 'components/sidebar.vue',
+    'index': 'pages/index.vue',
+    'entry': 'pages/entry.vue',
+    'archive': 'pages/archive.vue'
   },
   ejectable: [
     'layout',

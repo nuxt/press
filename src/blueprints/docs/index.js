@@ -11,11 +11,11 @@ export default {
     )
   },
   templates: {
-    plugin: 'plugin.js',
-    layout: 'layout.vue',
-    toc: 'components/toc.vue',
-    index: 'pages/index.vue',
-    topic: 'pages/topic.vue'
+    'plugin': 'plugin.js',
+    'layout': 'layout.vue',
+    'toc': 'components/toc.vue',
+    'index': 'pages/index.vue',
+    'topic': 'pages/topic.vue'
   },
   routes(templates) {
     return [
