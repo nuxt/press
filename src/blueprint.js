@@ -18,27 +18,30 @@ export async function registerBlueprints(configKey, options, blueprints) {
 }
 
 export async function registerBlueprint(id, options = {}, configKey = null) {
-  if (configKey === null) {
-    configKey = id
-  }
-
   // Load blueprint specification
   const blueprintPath = resolve(__dirname, `blueprints/${id}`)
   const blueprint = await import(blueprintPath).then(m => m.default)
 
+  // Return if blueprint is not enabled
   if (!blueprint.enabled.call(this, blueprint.config)) {
     return
   }
-  if (!this[`$${configKey}`]) {
-    this[`$${configKey}`] = {}
-    this.options[configKey] = this[`$${configKey}`]
+
+  // Set global configKey if not set yet
+  if (!this[configKey]) {
+    this[configKey] = {}
+    this.options[configKey] = this[configKey]
   }
+
   // Prefer top-level config key in nuxt.config.js
   this.options[configKey] = defu(this.options[configKey], options)
   this.options[configKey] = defu(this.options[configKey], blueprint.options)
 
   // Set flag to indicate blueprint was enabled
-  this[`$${configKey}`][`$${id}`] = true
+  this[configKey[`$${id}`] = true
+
+  // For easy config acess in helper functions
+  const config = this.options[configKey]
 
   // Register serverMiddleware
   for (const sm of await blueprint.serverMiddleware.call(this)) {
@@ -46,10 +49,10 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
   }
 
   this.nuxt.hook('build:before', () => {
+    const templates = await addTemplates.call(this, config, id, blueprint.templates)
     // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
     this.options.generate.routes = async () => {
-      const templates = await addTemplates.call(this, blueprint.templates)
     }
   })
 }
@@ -116,7 +119,7 @@ async function addModeAssets(mode, pattern) {
   await pool.done()
 }
 
-async function addTemplates(templates) {
+async function addTemplates(config, id, templates) {
   for (const templateKey of Object.keys(templates)) {
     if (templateKey === 'assets') {
       await addTemplateAssets.call(this, mode, templates[templateKey])
