@@ -53,38 +53,13 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
   this.nuxt.hook('build:before', async () => {
     const templates = await addTemplates.call(this, options, rootId, id, blueprint.templates)
+    const routes = await registerRoutes.call(this, blueprint.routes.call(this, templates))
+    
+    this.extendRoutes(nuxtRoutes => nuxtRoutes.push(...routes))
     // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
     this.options.generate.routes = async () => {
     }
-  })
-}
-
-function normalize(routes) {
-  for (const route of routes) {
-    if (exists(join(this.options.srcDir, route.component))) {
-      route.component = `~${route.component}`
-    } else {
-      route.component = join(this.options.buildDir, 'press', route.component)
-    }
-  }
-  return routes
-}
-
-function registerRoutes() {
-  this.extendRoutes((nuxtRoutes, resolve) => {
-    const modeRoutes = []
-    if (this.$press.$docs) {
-      modeRoutes.push(...routes.docs.call(this))
-    }
-    if (this.$press.$blog) {
-      modeRoutes.push(...routes.blog.call(this))
-    }
-    if (this.$press.$slides) {
-      modeRoutes.push(...routes.slides.call(this))
-    }
-    modeRoutes.push(...routes.common.call(this))
-    nuxtRoutes.unshift(...modeRoutes)
   })
 }
 
@@ -123,6 +98,7 @@ async function addTemplateAssets(mode, pattern) {
 }
 
 async function addTemplates(options, rootId, id, templates) {
+  const finalTemplates = {}
   for (const templateKey of Object.keys(templates)) {
     if (templateKey === 'assets') {
       await addTemplateAssets.call(this, options, rootId, id, templates[templateKey])
@@ -150,7 +126,9 @@ async function addTemplates(options, rootId, id, templates) {
       this.addLayout({ ...template, options }, mode)
       continue
     }
-    template.fileName = join('press', template.fileName)
+    template.fileName = join(rootId, id, template.src)
     this.addTemplate({ ...template, options })
+    finalTemplates[templateKey] = template.fileName
   }
+  return finalTemplates
 }
