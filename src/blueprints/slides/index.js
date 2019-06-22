@@ -1,5 +1,9 @@
 import Markdown from '@nuxt/markdown'
-import { readJsonSync } from '../../utils'
+import {
+  exists,
+  join,
+  readJsonSync
+} from '../../utils'
 
 export default {
   enabled(config) {
@@ -24,22 +28,16 @@ export default {
   generateRoutes(data, _, staticRoot) {
     return Object.keys(data.sources).map(route => ({
       route,
-      payload: require(`${staticRoot}/sources${source}`)
+      payload: require(`${staticRoot}/sources${route}`)
     }))
   },
   // Register serverMiddleware
   serverMiddleware() {
-    let indexHandler
-    const configAPI = this.$press.slides.api
-    if (configAPI.index) {
-      indexHandler = configAPI.index
-    } else {
-      indexHandler = api.slides(this.options.buildDir).index
-    }
+    const { index } = this.$press.slides.api.call(this)
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/slides/index')) {
-          indexHandler(req, res, next)
+          index(req, res, next)
         } else {
           next()
         }
@@ -56,7 +54,7 @@ export default {
         const rootDir = this.options.buildDir
         return {
           index(req, res, next) {
-            if (dev || !cache.index) {
+            if (this.options.dev || !cache.index) {
               cache.index = readJsonSync(rootDir, 'slides', 'index.json')
             }
             res.json(cache.index)

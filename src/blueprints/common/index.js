@@ -1,4 +1,12 @@
-import { readJsonSync } from '../../utils'
+import { IgnorePlugin } from 'webpack'
+
+import {
+  ensureDir,
+  exists,
+  join,
+  readJsonSync,
+  remove
+} from '../../utils'
 
 export default {
   templates: {
@@ -60,7 +68,7 @@ export default {
           try {
             const source = req.url.slice(12)
             if (!sourceCache[source]) {
-              sourceCache[source] = readStaticJson(rootDir, 'sources', `${source}.json`)
+              sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
             }
             res.json(sourceCache[source])
           } catch (err) {

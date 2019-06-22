@@ -7,11 +7,9 @@ import {
   ensureDir,
   exists,
   writeJson,
-  writeJson,
   resolve,
   walk
 } from './utils'
-
 
 export async function registerBlueprints(configKey, options, blueprints) {
   for (const bp of blueprints) {
@@ -47,12 +45,13 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
     this.addServerMiddleware(sm)
   }
 
-  this.nuxt.hook('build:before', async () => {
-    const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
+  this.nuxt.hook('build:before', () => {
+    // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
     this.options.generate.routes = () => {
-      
+
     }
+  })
 }
 
 function normalize(routes) {

@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { slugify, readJsonSync } from '../../utils'
+import { exists, join, slugify, readJsonSync } from '../../utils'
 
 export default {
   // Enable blog if srcDir/blog/ exists
@@ -31,7 +31,7 @@ export default {
       {
         name: 'blog_archive',
         path: `${this.$press.blog.prefix}/archive`,
-        component: template.index
+        component: templates.archive
       }
     ]
   },
@@ -43,7 +43,7 @@ export default {
       })),
       ...Object.keys(data.sources).map(route => ({
         route,
-        payload: require(`${staticRoot}/sources${source}`)
+        payload: require(`${staticRoot}/sources${route}`)
       }))
     ]
   },
@@ -82,14 +82,14 @@ export default {
       const rootDir = this.options.buildDir
       return {
         index(req, res, next) {
-          if (dev || !cache.index) {
-            cache.index = readStaticJson(rootDir, 'blog', 'index.json')
+          if (this.options.dev || !cache.index) {
+            cache.index = readJsonSync(rootDir, 'blog', 'index.json')
           }
           res.json(cache.index)
         },
         archive(req, res, next) {
-          if (dev || !cache.archive) {
-            cache.archive = readStaticJson(rootDir, 'blog', 'archive.json')
+          if (this.options.dev || !cache.archive) {
+            cache.archive = readJsonSync(rootDir, 'blog', 'archive.json')
           }
           res.json(cache.archive)
         }

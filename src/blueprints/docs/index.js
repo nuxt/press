@@ -32,10 +32,10 @@ export default {
         route: prefix('index'),
         payload: require(`${staticRoot}/sources/index.json`)
       },
-      ...Object.keys(data.sources).map((route) => ({
+      ...Object.keys(data.sources).map(route => ({
         route,
-        payload: require(`${staticRoot}/sources${source}`)          
-      })
+        payload: require(`${staticRoot}/sources${route}`)
+      }))
     ]
   },
   serverMiddleware() {
@@ -50,7 +50,7 @@ export default {
       }
     ]
   },
-  defaults: {
+  options: {
     dir: 'docs',
     prefix: '/docs',
     meta: {
@@ -62,8 +62,8 @@ export default {
       const rootDir = this.options.buildDir
       return {
         index(req, res, next) {
-          if (dev || !cache.index) {
-            cache.index = readStaticJson(rootDir, 'docs', 'index.json')
+          if (this.options.dev || !cache.index) {
+            cache.index = readJsonSync(rootDir, 'docs', 'index.json')
           }
           res.json(cache.index)
         }

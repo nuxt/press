@@ -1,6 +1,5 @@
 
 import defu from 'defu'
-import { IgnorePlugin } from 'webpack'
 import { registerBlueprints } from './blueprint'
 
 import {
@@ -9,7 +8,6 @@ import {
   join,
   move,
   readdirSync,
-  remove,
   resolve,
   writeJson
 } from './utils'
