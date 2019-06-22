@@ -17,7 +17,10 @@ export async function registerBlueprints(configKey, options, blueprints) {
   }
 }
 
-export async function registerBlueprint(id, options = {}, configKey = null) {
+// TODO
+// possible enhancement if released as a standalone library:
+// refactor to allow registering a single, top-level blueprint
+export async function _registerBlueprint(id, rootId, options = {}) {
   // Load blueprint specification
   const blueprintPath = resolve(__dirname, `blueprints/${id}`)
   const blueprint = await import(blueprintPath).then(m => m.default)
@@ -28,20 +31,20 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
   }
 
   // Set global configKey if not set yet
-  if (!this[configKey]) {
-    this[configKey] = {}
-    this.options[configKey] = this[configKey]
+  if (!this[`$${rootId}`]) {
+    this[`$${rootId}`] = {}
+    this.options[`$${rootId}`] = this[`$${rootId}`]
   }
 
   // Prefer top-level config key in nuxt.config.js
-  this.options[configKey] = defu(this.options[configKey], options)
-  this.options[configKey] = defu(this.options[configKey], blueprint.options)
+  this.options[`$${rootId}`] = defu(this.options[`$${rootId}`], options)
+  this.options[`$${rootId}`] = defu(this.options[`$${rootId}`], blueprint.options)
 
   // Set flag to indicate blueprint was enabled
-  this[configKey[`$${id}`]] = true
+  this[`$${rootId}`][`$${id}`] = true
 
   // For easy config acess in helper functions
-  const config = this.options[configKey]
+  const config = this.options[`$${rootId}`]
 
   // Register serverMiddleware
   for (const sm of await blueprint.serverMiddleware.call(this)) {
@@ -49,7 +52,7 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
   }
 
   this.nuxt.hook('build:before', async () => {
-    const templates = await addTemplates.call(this, config, id, blueprint.templates)
+    const templates = await addTemplates.call(this, config, rootId, id, blueprint.templates)
     // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
     this.options.generate.routes = async () => {
@@ -119,7 +122,7 @@ async function addTemplateAssets(mode, pattern) {
   await pool.done()
 }
 
-async function addTemplates(config, id, templates) {
+async function addTemplates(config, rootId, id, templates) {
   for (const templateKey of Object.keys(templates)) {
     if (templateKey === 'assets') {
       await addTemplateAssets.call(this, mode, templates[templateKey])
