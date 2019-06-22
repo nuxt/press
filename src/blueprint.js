@@ -38,7 +38,7 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
   this.options[configKey] = defu(this.options[configKey], blueprint.options)
 
   // Set flag to indicate blueprint was enabled
-  this[configKey[`$${id}`] = true
+  this[configKey[`$${id}`]] = true
 
   // For easy config acess in helper functions
   const config = this.options[configKey]
@@ -48,7 +48,7 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
     this.addServerMiddleware(sm)
   }
 
-  this.nuxt.hook('build:before', () => {
+  this.nuxt.hook('build:before', async () => {
     const templates = await addTemplates.call(this, config, id, blueprint.templates)
     // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
@@ -104,7 +104,7 @@ export async function saveStaticData(staticRoot, data) {
   }
 }
 
-async function addModeAssets(mode, pattern) {
+async function addTemplateAssets(mode, pattern) {
   const srcDir = resolve('templates', mode)
   // const assetBasePath = `press/assets/${mode}/`
   const srcList = await walk.call(this, srcDir, pattern, true)
@@ -131,20 +131,23 @@ async function addTemplates(config, id, templates) {
       src: isTemplateArr ? templateSpec[0] : templateSpec,
       ...isTemplateArr && templateSpec[1]
     }
-    if (!exists(this.options.srcDir, template.src)) {
-      template.src = resolve('templates', template.src)
-      if (templateKey.endsWith('/plugin')) {
-        template.fileName = join('press', template.fileName)
-        this.addPlugin({ ...template, options: this.$press })
-        continue
-      }
-      if (templateKey.endsWith('/layout')) {
-        template.fileName = join('press', template.fileName)
-        this.addLayout({ ...template, options: this.$press }, mode)
-        continue
-      }
-      template.fileName = join('press', template.fileName)
-      this.addTemplate({ ...template, options: this.$press })
+    const userProvidedTemplate = join(this.options.srcDir, id, template.src)
+    if (exists(userProvidedTemplate)) {
+      template.src = userProvidedTemplate
+    } else {
+      template.src = resolve('blueprints', id, template.src)
     }
+    if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
+      template.fileName = join('press', template.fileName)
+      this.addPlugin({ ...template, options: this.$press })
+      continue
+    }
+    if (templateKey.endsWith('/layout')) {
+      template.fileName = join('press', template.fileName)
+      this.addLayout({ ...template, options: this.$press }, mode)
+      continue
+    }
+    template.fileName = join('press', template.fileName)
+    this.addTemplate({ ...template, options: this.$press })
   }
 }
