@@ -11,9 +11,9 @@ import {
   walk
 } from './utils'
 
-export async function registerBlueprints(configKey, options, blueprints) {
+export async function registerBlueprints(rootId, options, blueprints) {
   for (const bp of blueprints) {
-    await registerBlueprint(bp, options, configKey)
+    await _registerBlueprint(bp, rootId, options)
   }
 }
 
@@ -44,7 +44,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   this[`$${rootId}`][`$${id}`] = true
 
   // For easy config acess in helper functions
-  const config = this.options[`$${rootId}`]
+  options = this.options[`$${rootId}`]
 
   // Register serverMiddleware
   for (const sm of await blueprint.serverMiddleware.call(this)) {
@@ -52,7 +52,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   }
 
   this.nuxt.hook('build:before', async () => {
-    const templates = await addTemplates.call(this, config, rootId, id, blueprint.templates)
+    const templates = await addTemplates.call(this, options, rootId, id, blueprint.templates)
     // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
     this.options.generate.routes = async () => {
@@ -122,10 +122,10 @@ async function addTemplateAssets(mode, pattern) {
   await pool.done()
 }
 
-async function addTemplates(config, rootId, id, templates) {
+async function addTemplates(options, rootId, id, templates) {
   for (const templateKey of Object.keys(templates)) {
     if (templateKey === 'assets') {
-      await addTemplateAssets.call(this, mode, templates[templateKey])
+      await addTemplateAssets.call(this, options, rootId, id, templates[templateKey])
       continue
     }
     const templateSpec = templates[templateKey]
@@ -134,23 +134,23 @@ async function addTemplates(config, rootId, id, templates) {
       src: isTemplateArr ? templateSpec[0] : templateSpec,
       ...isTemplateArr && templateSpec[1]
     }
-    const userProvidedTemplate = join(this.options.srcDir, id, template.src)
+    const userProvidedTemplate = join(this.options.srcDir, rootId, id, template.src)
     if (exists(userProvidedTemplate)) {
       template.src = userProvidedTemplate
     } else {
       template.src = resolve('blueprints', id, template.src)
     }
     if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
-      template.fileName = join('press', template.fileName)
-      this.addPlugin({ ...template, options: this.$press })
+      template.fileName = join(rootId, id, template.src)
+      this.addPlugin({ ...template, options })
       continue
     }
-    if (templateKey.endsWith('/layout')) {
-      template.fileName = join('press', template.fileName)
-      this.addLayout({ ...template, options: this.$press }, mode)
+    if (templateKey === 'layout' || templateKey.endsWith('/layout')) {
+      template.fileName = join(rootId, id, template.src)
+      this.addLayout({ ...template, options }, mode)
       continue
     }
     template.fileName = join('press', template.fileName)
-    this.addTemplate({ ...template, options: this.$press })
+    this.addTemplate({ ...template, options })
   }
 }
