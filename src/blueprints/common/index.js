@@ -1,3 +1,4 @@
+import consola from 'consola'
 import { IgnorePlugin } from 'webpack'
 
 import {
@@ -54,6 +55,7 @@ export default {
   },
   options: {
     api() {
+      const rootDir = this.options.buildDir
       const sourceCache = {}
       return {
         base(_, res, next) {

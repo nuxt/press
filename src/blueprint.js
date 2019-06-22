@@ -48,8 +48,8 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
   this.nuxt.hook('build:before', () => {
     // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
 
-    this.options.generate.routes = () => {
-
+    this.options.generate.routes = async () => {
+      const templates = await addTemplates.call(this, blueprint.templates)
     }
   })
 }
@@ -138,19 +138,5 @@ async function addModeTemplates(mode) {
       template.fileName = join('press', template.fileName)
       this.addTemplate({ ...template, options: this.$press })
     }
-  }
-}
-
-async function addTemplates() {
-  // add common
-
-  if (this.$press.$docs) {
-    await addModeTemplates.call(this, 'docs')
-  }
-  if (this.$press.$blog) {
-    await addModeTemplates.call(this, 'blog')
-  }
-  if (this.$press.$slides) {
-    await addModeTemplates.call(this, 'slides')
   }
 }

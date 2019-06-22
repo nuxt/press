@@ -1,13 +1,10 @@
 
-import defu from 'defu'
 import { registerBlueprints } from './blueprint'
 
 import {
   ensureDir,
   exists,
   join,
-  move,
-  readdirSync,
   resolve,
   writeJson
 } from './utils'
