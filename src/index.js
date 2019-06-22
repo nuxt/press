@@ -312,7 +312,7 @@ export default function (options) {
   //
 
   this.extendBuild((config) => {
-    config.resolve.alias['vue$'] = 'vue/dist/vue.esm.js'
+    config.resolve.alias.vue$ = 'vue/dist/vue.esm.js'
   })
 
   this.options.build.postcss.preset.stage = 0
