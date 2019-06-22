@@ -116,13 +116,18 @@ async function addModeAssets(mode, pattern) {
   await pool.done()
 }
 
-async function addModeTemplates(mode) {
-  for (const templateKey of Object.keys(templates[mode])) {
-    if (templateKey.endsWith('/assets')) {
-      await addModeAssets.call(this, mode, templates[mode][templateKey])
+async function addTemplates(templates) {
+  for (const templateKey of Object.keys(templates)) {
+    if (templateKey === 'assets') {
+      await addTemplateAssets.call(this, mode, templates[templateKey])
       continue
     }
-    const template = templates[mode][templateKey]
+    const templateSpec = templates[templateKey]
+    const isTemplateArr = Array.isArray(templateSpec)
+    const template = {
+      src: isTemplateArr ? templateSpec[0] : templateSpec,
+      ...isTemplateArr && templateSpec[1]
+    }
     if (!exists(this.options.srcDir, template.src)) {
       template.src = resolve('templates', template.src)
       if (templateKey.endsWith('/plugin')) {
