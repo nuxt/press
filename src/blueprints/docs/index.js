@@ -26,18 +26,24 @@ export default {
       }
     ]
   },
+  generateRoutes(data, prefix, staticRoot) {
+    return [
+      {
+        route: prefix('index'),
+        payload: require(`${staticRoot}/sources/index.json`)
+      },
+      ...Object.keys(data.sources).map((route) => ({
+        route,
+        payload: require(`${staticRoot}/sources${source}`)          
+      })
+    ]
+  },
   serverMiddleware() {
-    let indexHandler
-    const configAPI = this.$press.docs.api
-    if (configAPI.index) {
-      indexHandler = configAPI.index
-    } else {
-      indexHandler = api.docs(this.options.buildDir).index
-    }
+    const { index } = this.$press.docs.api.call(this)
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/docs/index')) {
-          indexHandler(req, res, next)
+          index(req, res, next)
         } else {
           next()
         }

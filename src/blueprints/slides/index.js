@@ -21,6 +21,12 @@ export default {
       }
     ]
   },
+  generateRoutes(data, _, staticRoot) {
+    return Object.keys(data.sources).map((route) => ({
+      route,
+      payload: require(`${staticRoot}/sources${source}`)          
+    })
+  },
   // Register serverMiddleware
   serverMiddleware() {
     let indexHandler

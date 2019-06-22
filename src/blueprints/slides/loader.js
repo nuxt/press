@@ -48,7 +48,7 @@ async function parseSlides(sourcePath) {
   return source
 }
 
-export default async function loadSlides(data) {
+export default async function (data) {
   const sources = {}
 
   const srcRoot = join(

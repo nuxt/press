@@ -32,7 +32,7 @@ async function parseDoc(sourcePath) {
   return { toc, source }
 }
 
-export default async function loadDocs(data) {
+export default async function (data) {
   const sources = {}
 
   let srcRoot = join(

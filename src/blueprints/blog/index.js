@@ -35,6 +35,18 @@ export default {
       }
     ]
   },
+  generateRoutes(data, prefix, staticRoot) {
+    return [
+      ...Object.keys(data.topLevel).map((route) => ({
+          route: prefix(route),
+          payload: require(`${staticRoot}/blog/${route}.json`)
+        }),
+      ...Object.keys(data.sources).map((route) => ({
+          route,
+          payload: require(`${staticRoot}/sources${source}`)          
+        })
+    ]
+  },
   serverMiddleware() {
     let indexHandler
     let archiveHandler

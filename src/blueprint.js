@@ -42,6 +42,18 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
 
   // Set flag to indicate blueprint was enabled
   this[`$${configKey}`][`$${id}`] = true
+
+  // Register serverMiddleware
+  for (const sm of await blueprint.serverMiddleware.call(this)) {
+    this.addServerMiddleware(sm)
+  }
+
+  this.nuxt.hook('build:before', async () => {
+    const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
+
+    this.options.generate.routes = () => {
+      
+    }
 }
 
 function normalize(routes) {
@@ -70,51 +82,6 @@ function registerRoutes() {
     modeRoutes.push(...routes.common.call(this))
     nuxtRoutes.unshift(...modeRoutes)
   })
-}
-
-export function registerGenerateRoutes(data) {
-  const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
-
-  this.options.generate.routes = () => {
-    const genRoutes = []
-    if (this.$press.$docs) {
-      for (const topLevelRoute of Object.keys(data.blog.topLevel)) {
-        genRoutes.push({
-          route: `${this.$press.docs.prefix}${topLevelRoute}`,
-          payload: require(`${pressStaticRoot}/docs/${topLevelRoute}.json`)
-        })
-      }
-    }
-    if (this.$press.blog) {
-      for (const topLevelRoute of Object.keys(data.blog.topLevel)) {
-        genRoutes.push({
-          route: `${this.$press.blog.prefix}${topLevelRoute}`,
-          payload: require(`${pressStaticRoot}/blog/${topLevelRoute}.json`)
-        })
-      }
-    }
-    if (this.$press.slides) {
-      for (const topLevelRoute of Object.keys(data.slides.topLevel)) {
-        genRoutes.push({
-          route: `${this.$press.slides.prefix}${topLevelRoute}`,
-          payload: require(`${pressStaticRoot}/slides/${topLevelRoute}.json`)
-        })
-      }
-    }
-    genRoutes.push(
-      Object.keys({
-        ...this.$press.$docs && data.docs.sources,
-        ...this.$press.$blog && data.blog.sources,
-        ...this.$press.$slides && data.slides.sources
-      }).map((route) => {
-        return {
-          route,
-          payload: require(`${pressStaticRoot}/sources${route}`)
-        }
-      })
-    )
-    return genRoutes
-  }
 }
 
 export async function saveStaticData(staticRoot, data) {
