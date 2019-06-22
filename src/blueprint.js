@@ -2,12 +2,11 @@ import defu from 'defu'
 import PromisePool from './pool'
 
 import {
-  join,
-  exists,
-  ensureDir,
-  writeJson,
-  ensureDir,
   dirname,
+  join,
+  ensureDir,
+  exists,
+  writeJson,
   writeJson,
   resolve,
   walk

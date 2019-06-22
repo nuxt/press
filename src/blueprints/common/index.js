@@ -17,13 +17,12 @@ export default {
     ]
   },
   serverMiddleware() {
-    const api = this.$press.api()
-    const sourceHandler = this.$press.api.source || api.source.bind(this)
+    const { source, base } = this.$press.api.call(this)
     return [
-      api.base.bind(this),
+      base,
       (req, res, next) => {
         if (req.url.startsWith('/api/source/')) {
-          sourceHandler(req, res, next)
+          source(req, res, next)
         } else {
           next()
         }

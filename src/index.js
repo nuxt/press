@@ -11,7 +11,6 @@ import {
   readdirSync,
   remove,
   resolve,
-  writeFile,
   writeJson
 } from './utils'
 

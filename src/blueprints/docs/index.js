@@ -11,7 +11,7 @@ export default {
     )
   },
   templates: {
-    plugin: 'plugin.js'
+    plugin: 'plugin.js',
     layout: 'layout.vue',
     toc: 'components/toc.vue',
     index: 'pages/index.vue',

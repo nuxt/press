@@ -37,35 +37,24 @@ export default {
   },
   generateRoutes(data, prefix, staticRoot) {
     return [
-      ...Object.keys(data.topLevel).map((route) => ({
-          route: prefix(route),
-          payload: require(`${staticRoot}/blog/${route}.json`)
-        }),
-      ...Object.keys(data.sources).map((route) => ({
-          route,
-          payload: require(`${staticRoot}/sources${source}`)          
-        })
+      ...Object.keys(data.topLevel).map(route => ({
+        route: prefix(route),
+        payload: require(`${staticRoot}/blog/${route}.json`)
+      })),
+      ...Object.keys(data.sources).map(route => ({
+        route,
+        payload: require(`${staticRoot}/sources${source}`)
+      }))
     ]
   },
   serverMiddleware() {
-    let indexHandler
-    let archiveHandler
-
-    const configAPI = this.$press.blog.api
-    if (configAPI.index && configAPI.archive) {
-      indexHandler = configAPI.index
-      archiveHandler = configAPI.archive
-    } else {
-      const blogAPI = api.blog(this.options.buildDir)
-      indexHandler = blogAPI.index
-      archiveHandler = blogAPI.archive
-    }
+    const { index, archive } = this.$press.blog.api.call(this)
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/blog/index')) {
-          indexHandler(req, res, next)
+          index(req, res, next)
         } else if (req.url.startsWith('/api/blog/archive')) {
-          archiveHandler(req, res, next)
+          archive(req, res, next)
         } else {
           next()
         }

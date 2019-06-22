@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import pressJson from '~~/nuxt.press.json'
 import NuxtTemplate from './components/nuxt-template'
 
 Vue.component('nuxt-template', NuxtTemplate)
