@@ -25,13 +25,17 @@ export const blog = {
 
 export const docs = {
   'docs/plugin': {
-    src: 'docs/plugin.js',
+    src: 'components/scroll-plugin.js',
     fileName: 'plugins/docs.js',
     ssr: false
   },
   'docs/layout': {
     src: 'docs/layout.vue',
     fileName: 'layouts/docs.vue'
+  },
+  'docs/observer': {
+    src: 'components/observer.js',
+    fileName: 'components/observer.js'
   },
   'docs/toc': {
     src: 'docs/components/toc.vue',
