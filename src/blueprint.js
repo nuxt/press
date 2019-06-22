@@ -13,6 +13,13 @@ import {
   walk
 } from './utils'
 
+
+export async function registerBlueprints(configKey, options, blueprints) {
+  for (const bp of blueprints) {
+    await registerBlueprint(bp, options, configKey)
+  }
+}
+
 export async function registerBlueprint(id, options = {}, configKey = null) {
   if (configKey === null) {
     configKey = id
@@ -22,23 +29,19 @@ export async function registerBlueprint(id, options = {}, configKey = null) {
   const blueprintPath = resolve(__dirname, `blueprints/${id}`)
   const blueprint = await import(blueprintPath).then(m => m.default)
 
-  // Set flag to indicate blueprint was enabled
-  if (blueprint.enabled.call(this, blueprint.config)) {
-    if (!this[`$${configKey}`]) {
-      this[`$${configKey}`] = {}
-      this.options[configKey] = this[`$${configKey}`]
-    }
-    // Prefer top-level config key in nuxt.config.js
-    this.options[configKey] = defu(this.options[configKey], options)
-    this.options[configKey] = defu(this.options[configKey], blueprint.options)
-    this[`$${configKey}`][`$${id}`] = true
-
-  // Easy config access in helper functions
-  this[`$${configKey}`][id] = defu(options, blueprint.options)
-
+  if (!blueprint.enabled.call(this, blueprint.config)) {
+    return
   }
+  if (!this[`$${configKey}`]) {
+    this[`$${configKey}`] = {}
+    this.options[configKey] = this[`$${configKey}`]
+  }
+  // Prefer top-level config key in nuxt.config.js
+  this.options[configKey] = defu(this.options[configKey], options)
+  this.options[configKey] = defu(this.options[configKey], blueprint.options)
 
-
+  // Set flag to indicate blueprint was enabled
+  this[`$${configKey}`][`$${id}`] = true
 }
 
 function normalize(routes) {
