@@ -30,6 +30,21 @@ export default {
       }
     ]
   },
+  hooks: {
+    async beforeBuild() {
+      this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
+      const pagesDir = join(this.options.srcDir, this.options.dir.pages)
+      if (!exists(pagesDir)) {
+        this.$press.$placeholderPagesDir = pagesDir
+        await ensureDir(pagesDir)
+      }
+    },
+    async compileBuild() {
+      if (this.$press.$placeholderPagesDir) {
+        await remove(this.$press.$placeholderPagesDir)
+      }
+    }
+  },
   options: {
     api() {
       const sourceCache = {}

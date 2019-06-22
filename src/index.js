@@ -15,14 +15,6 @@ import {
   writeJson
 } from './utils'
 
-async function ensureNuxtPages() {
-  const pagesDir = join(this.options.srcDir, this.options.dir.pages)
-  if (!exists(pagesDir)) {
-    this.$press.$placeholderPagesDir = pagesDir
-    await ensureDir(pagesDir)
-  }
-}
-
 async function ensureNuxtPressJson(pressJson) {
   const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
   if (!exists(pressJsonPath)) {
@@ -61,13 +53,10 @@ export default function (options) {
   // setupAPI.call(this)
 
   this.nuxt.hook('build:before', async () => {
-    await ensureNuxtPages.call(this)
     // await addTemplates.call(this)
     // registerRoutes.call(this)
 
     const data = await loadData.call(this)
-
-    this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
 
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, 'press', 'static')
@@ -77,10 +66,6 @@ export default function (options) {
         await ensureNuxtPressJson.call(this, {
           toc: Object.keys(data.docs.topLevel.index)
         })
-      }
-
-      if (this.$press.$placeholderPagesDir) {
-        await remove(this.$press.$placeholderPagesDir)
       }
 
       this.nuxt.hook('generate:distCopied', async () => {
