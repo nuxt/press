@@ -9,6 +9,7 @@
       <swiper-slide
         v-for="(item, slideIndex) in data.slides"
         :key="`slide-${slideIndex}`"
+        class="slide"
         :class="`slide-${slideIndex+1}`"
       >
         <div v-html="item" />
