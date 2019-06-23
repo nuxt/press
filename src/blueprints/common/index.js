@@ -1,5 +1,6 @@
 import consola from 'consola'
 import { IgnorePlugin } from 'webpack'
+import Markdown from '@nuxt/markdown'
 import { ensureDir, exists, join, readJsonSync, remove } from '../../utils'
 import data from './data'
 
@@ -77,6 +78,15 @@ export default {
             consola.warn(err)
           }
         }
+      }
+    },
+    source: {
+      markdown(source) {
+        const md = new Markdown(source, { sanitize: false })
+        return md.toHTML().then(html => html.contents)
+      },
+      title(body) {
+        return body.substr(body.indexOf('#')).match(/^#\s+(.*)/)[1]
       }
     }
   }
