@@ -1,7 +1,10 @@
 import Markdown from '@nuxt/markdown'
 import { exists, join, slugify, readJsonSync } from '../../utils'
+import data from './data'
 
 export default {
+  // Include data loader
+  data,
   // Enable blog if srcDir/blog/ exists
   enabled(config) {
     return exists(join(this.options.srcDir, config.blog.dir))

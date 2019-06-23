@@ -1,14 +1,10 @@
 import Markdown from '@nuxt/markdown'
-import {
-  exists,
-  join,
-  readdirSync,
-  readJsonSync,
-  slugify,
-  writeJson
-} from '../../utils'
+import { exists, join, readdirSync, readJsonSync, slugify, writeJson } from '../../utils'
+import data from './data'
 
 export default {
+  // Include data loader
+  data,
   // Enable docs blueprint if srcDir/*.md files exists
   // or if the srcDir/docs/ folder exists
   enabled() {
