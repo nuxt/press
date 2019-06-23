@@ -6,6 +6,8 @@ import data from './data'
 export default {
   // Include data loader
   data,
+  // Main blueprint, enabled by default
+  enabled: () => true,
   templates: {
     'plugin': 'plugin.js',
     'scroll/plugin': 'plugins/scroll.js',

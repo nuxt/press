@@ -7,7 +7,7 @@ export default {
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(config) {
-    return exists(join(this.options.srcDir, config.slides.dir))
+    return exists(join(this.options.srcDir, config.dir))
   },
   templates: {
     plugin: ['plugin.js', { ssr: false }],
