@@ -9,17 +9,17 @@
 const components = {}
 
 <% if (options.$docs) { %> 
-import PressTopic from '../docs/pages/topic'
+import PressTopic from '../../docs/pages/topic'
 components['press-topic'] = PressTopic
 <% } %>
 
 <% if (options.$blog) { %> 
-import PressEntry from '../blog/pages/entry'
+import PressEntry from '../../blog/pages/entry'
 components['press-entry'] = PressEntry
 <% } %>
 
 <% if (options.$slides) { %> 
-import PressSlides from '../slides/pages/slides'
+import PressSlides from '../../slides/pages/slides'
 components['press-slides'] = PressSlides
 <% } %>
 

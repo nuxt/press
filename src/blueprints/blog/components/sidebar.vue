@@ -16,12 +16,6 @@
   </div>
 </template>
 
-<script>
-export default {
-
-}
-</script>
-
 <style>
 .sidebar {
   border-right: 1px solid #000;

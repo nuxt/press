@@ -76,7 +76,11 @@ export async function _registerBlueprint(id, rootId, options = {}) {
       const routes = await blueprint.routes.call(this, templates)
       this.extendRoutes((nuxtRoutes, resolve) => {
         for (const route of routes) {
-          route.path = resolve(route.path)
+          if (exists(join(this.options.srcDir, route.component))) {
+            route.component = join('~', route.component)
+          } else {
+            route.component = join(this.options.buildDir, route.component)
+          }
         }
         nuxtRoutes.push(...routes)
       })

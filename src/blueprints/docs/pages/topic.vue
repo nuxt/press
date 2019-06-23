@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { startObserver } from '../../components/observer'
+import { startObserver } from '../../common/components/observer'
 
 export default {
   props: ['data'],
