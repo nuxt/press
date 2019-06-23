@@ -159,5 +159,6 @@ async function addTemplates({ options, rootId, id }, templates) {
     this.addTemplate({ ...template, options })
     finalTemplates[templateKey] = template.fileName
   }
+
   return finalTemplates
 }
