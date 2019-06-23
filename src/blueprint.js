@@ -77,6 +77,11 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, rootId, 'static')
       await saveStaticData.call(this, staticRoot, context.data)
+      
+      if (blueprint.hooks && blueprint.hooks.buildCompile) {
+        await blueprint.hooks.buildCompile.call(this, context)
+      }
+
       this.nuxt.hook('generate:distCopied', async () => {
         const staticRootGenerate = join(this.options.generate.dir, rootId)
         await ensureDir(staticRootGenerate)
