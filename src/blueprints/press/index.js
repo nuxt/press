@@ -8,6 +8,8 @@ export default {
   data,
   templates: {
     'plugin': 'plugin.js',
+    'scroll/plugin': 'plugins/scroll.js',
+    'observer': 'components/observer.js',
     'nuxt-template': 'components/nuxt-template.js',
     'source': 'pages/source.vue'
   },
