@@ -163,25 +163,20 @@ async function addTemplates({ options, rootId, id }, templates) {
     }
 
     template.fileName = join(rootId, template.src.slice(sliceAt))
+    console.log(rootId, id, 'template.fileName', template.fileName)
     finalTemplates[templateKey] = template.fileName
 
-    // console.log('template.fileName', template.fileName)
-    // process.exit()
-
     if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
-      template.fileName = join(rootId, id, template.src)
       this.addPlugin({ ...template, options })
       continue
     }
 
     if (templateKey === 'layout' || templateKey.endsWith('/layout')) {
-      template.fileName = join(rootId, id, template.src)
       this.addLayout({ ...template, options }, id)
       continue
     }
 
     // Regular Vue templates (also usable as routes)
-    template.fileName = join(rootId, id, template.src)
     this.addTemplate({ ...template, options })
   }
   // console.log('finalTemplates', finalTemplates)

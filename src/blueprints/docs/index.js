@@ -31,7 +31,6 @@ export default {
     ]
   },
   generateRoutes(data, prefix, staticRoot) {
-    console.log('data, prefix, staticRoot', data, prefix, staticRoot)
     return [
       {
         route: prefix('index'),
