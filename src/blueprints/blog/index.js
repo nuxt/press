@@ -5,9 +5,9 @@ import data from './data'
 export default {
   // Include data loader
   data,
-  enabled(config) {
+  enabled(options) {
     // Enable blog if srcDir/blog/ exists
-    return exists(join(this.options.srcDir, config.dir))
+    return exists(join(this.options.srcDir, options.dir))
   },
   templates: {
     'assets': /\.svg$/,

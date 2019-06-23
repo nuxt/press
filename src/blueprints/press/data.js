@@ -1,7 +1,6 @@
 import { parse } from 'path'
-import markdown from '../markdown'
-import { walk, exists, join, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, exists, join, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // PAGES
 // Markdown files under pages/ are treated as individual
@@ -23,7 +22,7 @@ async function loadPage(pagePath) {
   return { body, title, path }
 }
 
-export async function loadPages() {
+export default async function() {
   const pagesRoot = join(
     this.options.srcDir,
     this.options.dir.pages

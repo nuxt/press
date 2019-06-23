@@ -6,8 +6,8 @@ export default {
   // Include data loader
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
-  enabled(config) {
-    return exists(join(this.options.srcDir, config.dir))
+  enabled(options) {
+    return exists(join(this.options.srcDir, options.dir))
   },
   templates: {
     plugin: ['plugin.js', { ssr: false }],
@@ -33,6 +33,7 @@ export default {
   },
   // Register serverMiddleware
   serverMiddleware() {
+    console.log('this.$press', this.$press)
     const { index } = this.$press.slides.api.call(this)
     return [
       (req, res, next) => {
@@ -46,35 +47,30 @@ export default {
   },
   // Options are merged into the parent module default options
   options: {
-    slides: {
-      dir: 'slides',
-      prefix: '/slides',
-      api() {
-        const cache = {}
-        const rootDir = this.options.buildDir
-        return {
-          index(req, res, next) {
-            if (this.options.dev || !cache.index) {
-              cache.index = readJsonSync(rootDir, 'slides', 'index.json')
-            }
-            res.json(cache.index)
+    dir: 'slides',
+    prefix: '/slides',
+    api() {
+      const cache = {}
+      const rootDir = this.options.buildDir
+      return {
+        index(req, res, next) {
+          if (this.options.dev || !cache.index) {
+            cache.index = readJsonSync(rootDir, 'slides', 'index.json')
           }
+          res.json(cache.index)
         }
+      }
+    },
+    source: {
+      async markdown(source) {
+        const md = new Markdown(source, { sanitize: false })
+        const html = await md.toHTML()
+        return html.contents
       },
-      source: {
-        async markdown(source) {
-          const md = new Markdown(source, {
-            skipToc: true,
-            sanitize: false
-          })
-          const html = await md.toHTML()
-          return html.contents
-        },
-        // path() determines the final URL path of a Markdown source
-        // In 'slides' mode, the default format is <prefix>/slides/<slug>
-        path(fileName) {
-          return `/slides/${fileName.toLowerCase()}`
-        }
+      // path() determines the final URL path of a Markdown source
+      // In 'slides' mode, the default format is <prefix>/slides/<slug>
+      path(fileName) {
+        return `/slides/${fileName.toLowerCase()}`
       }
     }
   }

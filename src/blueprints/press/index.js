@@ -25,8 +25,8 @@ export default {
       }
     ]
   },
-  serverMiddleware() {
-    const { source, base } = this.$press.api.call(this)
+  serverMiddleware(options) {
+    const { source, base } = options.press.api.call(this)
     return [
       base,
       (req, res, next) => {

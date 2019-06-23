@@ -1,7 +1,7 @@
 
 import { parse } from 'path'
-import { walk, join, exists, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, join, exists, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // SLIDES MODE
 // Markdown files are loaded from the slides/ directory.

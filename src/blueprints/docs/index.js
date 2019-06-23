@@ -5,12 +5,12 @@ import data from './data'
 export default {
   // Include data loader
   data,
-  enabled(config) {
+  enabled(options) {
     // Enable docs blueprint if srcDir/*.md files exists
     // or if the srcDir/docs/ folder exists
     return (
       readdirSync(this.options.srcDir).find(p => /\.md$/.test(p)) ||
-      exists(this.options.srcDir, config.dir)
+      exists(this.options.srcDir, options.dir)
     )
   },
   templates: {
@@ -42,8 +42,8 @@ export default {
       }))
     ]
   },
-  serverMiddleware() {
-    const { index } = this.$press.docs.api.call(this)
+  serverMiddleware(options) {
+    const { index } = options.docs.api.call(this)
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/docs/index')) {

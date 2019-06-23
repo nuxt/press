@@ -36,21 +36,29 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   // Set global configKey if unset
   if (!this[`$${rootId}`]) {
     this[`$${rootId}`] = {}
-    this.options[`$${rootId}`] = this[`$${rootId}`]
   }
 
   // Prefer top-level config key in nuxt.config.js
-  this.options[`$${rootId}`] = defu(this.options[`$${rootId}`], options)
-  this.options[`$${rootId}`] = defu(this.options[`$${rootId}`], blueprint.options)
+  Object.assign(
+    this[`$${rootId}`],
+    defu(this.options[`$${rootId}`], options)
+  )
+  if (!this[`$${rootId}`][id]) {
+    this[`$${rootId}`][id] = {}
+  }
+  Object.assign(
+    this[`$${rootId}`],
+    defu(this[`$${rootId}`], { [id]: blueprint.options })
+  )
 
   // Set flag to indicate blueprint was enabled
   this[`$${rootId}`][`$${id}`] = true
 
   // For easy config acess in helper functions
-  options = this.options[`$${rootId}`]
+  options = this[`$${rootId}`]
 
   // Register serverMiddleware
-  for (const sm of await blueprint.serverMiddleware.call(this)) {
+  for (const sm of await blueprint.serverMiddleware.call(this, options)) {
     this.addServerMiddleware(sm)
   }
 

@@ -1,6 +1,6 @@
 
-import { walk, join, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, join, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // BLOG MODE
 // Markdown files are loaded from the blog/ directory.
