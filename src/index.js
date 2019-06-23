@@ -29,9 +29,9 @@ export default async function (options) {
   // Register Markdown watchers
   this.options.watch.push(
     '~/*.md',
-    `~/${this.$press.docs.dir}*.md`,
-    `~/${this.$press.blog.dir}*.md`,
-    `~/${this.$press.blog.dir}**/*.md`,
+    // `~/${this.$press.docs.dir}*.md`,
+    // `~/${this.$press.blog.dir}*.md`,
+    // `~/${this.$press.blog.dir}**/*.md`,
     `~/${this.$press.slides.dir}*.md`
   )
 }

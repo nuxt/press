@@ -44,7 +44,7 @@ async function parseSlides(sourcePath) {
   )
   const source = { slides, type: 'slides' }
   source.path = this.$press.slides.source.path
-    .call(this, parse(sourcePath).name)
+    .call(this, parse(sourcePath).name.toLowerCase())
   return source
 }
 

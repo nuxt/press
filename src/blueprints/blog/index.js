@@ -122,9 +122,9 @@ export default {
       // path() determines the final URL path of a Markdown source
       // In `blog` mode, the default format is /YYYY/MM/DD/<slug>
       path({ title, published }) {
-        const slug = title.replace(/\s+/g, '-')
+        const slug = slugify(title.replace(/\s+/g, '-')).toLowerCase()
         const date = published.toString().split(/\s+/).slice(1, 4).reverse()
-        return `/${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slugify(slug)}`
+        return `/${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}`
       },
 
       // id() determines the unique RSS ID of a Markdown source

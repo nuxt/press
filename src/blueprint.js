@@ -15,7 +15,7 @@ export async function registerBlueprints(rootId, options, blueprints) {
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
-  for (const bp of blueprints) {
+  for (const bp of blueprints) { // ['slides', 'common']) {
     await _registerBlueprint.call(this, bp, rootId, options)
   }
 }
@@ -104,21 +104,25 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 async function saveStaticData(staticRoot, id, data) {
   console.log('staticRoot', typeof staticRoot)
   console.log('id', typeof id)
-  console.log('data', typeof data)
+  console.log('data', data)
   await ensureDir(join(staticRoot, id))
   const { topLevel, sources } = data
-  for (const topLevelKey of Object.keys(topLevel)) {
-    await writeJson(join(staticRoot, id, `${topLevelKey}.json`), topLevel[topLevelKey])
-  }
-  const pool = new PromisePool(
-    Object.values(sources),
-    async (source) => {
-      const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
-      await ensureDir(dirname(sourcePath))
-      await writeJson(sourcePath, source)
+  if (topLevel) {
+    for (const topLevelKey of Object.keys(topLevel)) {
+      await writeJson(join(staticRoot, id, `${topLevelKey}.json`), topLevel[topLevelKey])
     }
-  )
-  await pool.done()
+  }
+  if (sources && sources.length) {
+    const pool = new PromisePool(
+      Object.values(sources),
+      async (source) => {
+        const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
+        await ensureDir(dirname(sourcePath))
+        await writeJson(sourcePath, source)
+      }
+    )
+    await pool.done()
+  }
 }
 
 async function addTemplateAssets({ options, rootId, id }, pattern) {
