@@ -16,11 +16,10 @@ async function loadPage(pagePath) {
   let body = await readFile(this.options.srcDir, pagePath)
   const titleMatch = body.match(/^#\s+(.*)/)
   const title = titleMatch ? titleMatch[1] : ''
-  body = await this.$press.common.source.markdown.call(this, raw)
-  body = await markdown.call(this, body, true)
+  body = await this.$press.common.source.markdown.call(this, body)
   const parsed = parse(pagePath)
   parsed.name = (parsed.name === 'index') ? '' : `/${parsed.name}`
-  const path = `${parsed.dir.slice(sliceAt)}/${parsedPath.name}`
+  const path = `${parsed.dir.slice(sliceAt)}/${parsed.name}`
   return { body, title, path }
 }
 

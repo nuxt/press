@@ -32,9 +32,8 @@ export default {
     }))
   },
   // Register serverMiddleware
-  serverMiddleware() {
-    console.log('this.$press', this.$press)
-    const { index } = this.$press.slides.api.call(this)
+  serverMiddleware(options) {
+    const { index } = options.slides.api.call(this)
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/slides/index')) {

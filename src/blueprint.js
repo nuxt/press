@@ -74,12 +74,15 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
     if (blueprint.routes) {
       const routes = await blueprint.routes.call(this, templates)
-      this.extendRoutes(nuxtRoutes => nuxtRoutes.push(...routes))
+      this.extendRoutes(nuxtRoutes => {
+        console.log('nuxtRoutes', nuxtRoutes)
+        nuxtRoutes.push(...routes)
+      })
     }
 
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, rootId, 'static')
-      await saveStaticData.call(this, staticRoot, context.data)
+      await saveStaticData.call(this, staticRoot, id, context.data)
 
       if (blueprint.hooks && blueprint.hooks.compileBuild) {
         await blueprint.hooks.compileBuild.call(this, context)
@@ -92,13 +95,16 @@ export async function _registerBlueprint(id, rootId, options = {}) {
       this.nuxt.hook('generate:distCopied', async () => {
         const staticRootGenerate = join(this.options.generate.dir, rootId)
         await ensureDir(staticRootGenerate)
-        await saveStaticData.call(this, staticRootGenerate, context.data)
+        await saveStaticData.call(this, staticRootGenerate, id, context.data)
       })
     })
   })
 }
 
 async function saveStaticData(staticRoot, id, data) {
+  console.log('staticRoot', typeof staticRoot)
+  console.log('id', typeof id)
+  console.log('data', typeof data)
   await ensureDir(join(staticRoot, id))
   const { topLevel, sources } = data
   for (const topLevelKey of Object.keys(topLevel)) {

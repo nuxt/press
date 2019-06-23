@@ -1,5 +1,5 @@
 <template>
   <div>
-    <%= Object.keys(options.blog) %>
+    Foobar
   </div>
 </template>
