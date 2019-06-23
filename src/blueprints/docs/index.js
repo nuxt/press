@@ -7,10 +7,11 @@ export default {
   data,
   // Enable docs blueprint if srcDir/*.md files exists
   // or if the srcDir/docs/ folder exists
-  enabled() {
+  enabled(config) {
+    console.log('config', config)
     return (
       readdirSync(this.options.srcDir).find(p => /\.md$/.test(p)) ||
-      exists(this.options.srcDir, this.$press.docs.dir)
+      exists(this.options.srcDir, config.docs.dir)
     )
   },
   templates: {

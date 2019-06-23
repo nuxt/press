@@ -16,7 +16,7 @@ export async function registerBlueprints(rootId, options, blueprints) {
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
   for (const bp of blueprints) {
-    await _registerBlueprint(bp, rootId, options)
+    await _registerBlueprint.call(this, bp, rootId, options)
   }
 }
 
@@ -29,7 +29,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   const blueprint = await import(blueprintPath).then(m => m.default)
 
   // Return if blueprint is not enabled
-  if (!blueprint.enabled.call(this, blueprint.config)) {
+  if (!blueprint.enabled.call(this, blueprint.options)) {
     return
   }
 

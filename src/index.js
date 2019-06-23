@@ -24,7 +24,7 @@ export default async function (options) {
   )
 
   // Load and register blueprints from './blueprints'
-  await registerBlueprints('press', options, ['docs', 'blog', 'slides', 'press'])
+  await registerBlueprints.call(this, 'press', options, ['docs', 'blog', 'slides', 'press'])
 
   // Register Markdown watchers
   this.options.watch.push(

@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-press-alpha",
+  "name": "@nuxt/press",
   "version": "0.0.1",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
   "bin": {
@@ -12,7 +12,7 @@
     "start": "nuxt start",
     "lint": "eslint --fix --ext .js src"
   },
-  "author": "Jonas Galvez",
+  "author": "Jonas Galvez <jonasgalvez@gmail.com>",
   "dependencies": {
     "@nuxt/http": "^0.3.2",
     "@nuxt/markdown": "^0.0.4",

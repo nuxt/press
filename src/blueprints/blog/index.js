@@ -64,7 +64,7 @@ export default {
       }
     ]
   },
-  defaults: {
+  options: {
     dir: 'blog',
     prefix: '/blog',
 

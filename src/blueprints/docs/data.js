@@ -1,7 +1,7 @@
 
 import { parse } from 'path'
-import { walk, join, exists, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, join, exists, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // DOCS MODE
 // Markdown files can be placed in
