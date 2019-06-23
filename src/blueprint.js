@@ -46,6 +46,11 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   // For easy config acess in helper functions
   options = this.options[`$${rootId}`]
 
+  if (!options.$routes) {
+    options.$routes = []
+    options.$generateRoutes = []
+  }
+
   // Register serverMiddleware
   for (const sm of await blueprint.serverMiddleware.call(this)) {
     this.addServerMiddleware(sm)
@@ -53,33 +58,29 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
   this.nuxt.hook('build:before', async () => {
     const templates = await addTemplates.call(this, options, rootId, id, blueprint.templates)
-    const routes = await blueprint.routes.call(this, templates)
-    this.extendRoutes(nuxtRoutes => nuxtRoutes.push(...routes))
-    
-    // const pressStaticRoot = join(this.options.buildDir, 'press', 'static')
+    options.$routes.push(...await blueprint.routes.call(this, templates))
+    const pressStaticRoot = join(this.options.buildDir, rootId, 'static')
 
     this.options.generate.routes = async () => {
     }
   })
 }
 
-export async function saveStaticData(staticRoot, data) {
-  for (const key of Object.keys(data)) {
-    await ensureDir(join(staticRoot, key))
-    const { topLevel, sources } = data[key]
-    for (const topLevelKey of Object.keys(topLevel)) {
-      await writeJson(join(staticRoot, key, `${topLevelKey}.json`), topLevel[topLevelKey])
-    }
-    const pool = new PromisePool(
-      Object.values(sources),
-      async (source) => {
-        const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
-        await ensureDir(dirname(sourcePath))
-        await writeJson(sourcePath, source)
-      }
-    )
-    await pool.done()
+async function saveStaticData(staticRoot, id, data) {
+  await ensureDir(join(staticRoot, key))
+  const { topLevel, sources } = data[key]
+  for (const topLevelKey of Object.keys(topLevel)) {
+    await writeJson(join(staticRoot, key, `${topLevelKey}.json`), topLevel[topLevelKey])
   }
+  const pool = new PromisePool(
+    Object.values(sources),
+    async (source) => {
+      const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
+      await ensureDir(dirname(sourcePath))
+      await writeJson(sourcePath, source)
+    }
+  )
+  await pool.done()
 }
 
 async function addTemplateAssets(mode, pattern) {

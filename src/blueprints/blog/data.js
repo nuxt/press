@@ -1,5 +1,5 @@
 
-import { walk, join, exists, readFile } from '../utils'
+import { walk, join, readFile } from '../utils'
 import PromisePool from '../pool'
 
 // BLOG MODE
@@ -38,7 +38,7 @@ function addArchiveEntry(archive, entry) {
   archive[year][month].push(entry)
 }
 
-export default async function() {
+export default async function () {
   const srcRoot = join(
     this.options.srcDir,
     this.$press.blog.dir
