@@ -62,5 +62,5 @@ export default async function (data) {
   )
   await queue.done()
 
-  data.docs = { topLevel: { index }, sources }
+  return { topLevel: { index }, sources }
 }

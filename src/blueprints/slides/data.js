@@ -75,5 +75,5 @@ export default async function (data) {
 
   const index = Object.values(sources)
 
-  data.slides = { topLevel: { index }, sources }
+  return { topLevel: { index }, sources }
 }
