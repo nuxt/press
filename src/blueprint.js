@@ -74,8 +74,10 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
     if (blueprint.routes) {
       const routes = await blueprint.routes.call(this, templates)
-      this.extendRoutes(nuxtRoutes => {
-        console.log('nuxtRoutes', nuxtRoutes)
+      this.extendRoutes((nuxtRoutes, resolve) => {
+        for (const route of routes) {
+          route.path = resolve(route.path)
+        }
         nuxtRoutes.push(...routes)
       })
     }
@@ -88,9 +90,11 @@ export async function _registerBlueprint(id, rootId, options = {}) {
         await blueprint.hooks.compileBuild.call(this, context)
       }
 
-      const pathPrefix = path => `${blueprint.options.prefix}${path}`
-      const generateRoutes = await blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
-      this.options.generate.routes.push(...generateRoutes)
+      if (blueprint.generateRoutes) {
+        const pathPrefix = path => `${blueprint.options.prefix}${path}`
+        const generateRoutes = await blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
+        this.options.generate.routes.push(...generateRoutes)
+      }
 
       this.nuxt.hook('generate:distCopied', async () => {
         const staticRootGenerate = join(this.options.generate.dir, rootId)
@@ -102,9 +106,6 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 }
 
 async function saveStaticData(staticRoot, id, data) {
-  console.log('staticRoot', typeof staticRoot)
-  console.log('id', typeof id)
-  console.log('data', data)
   await ensureDir(join(staticRoot, id))
   const { topLevel, sources } = data
   if (topLevel) {
@@ -112,7 +113,7 @@ async function saveStaticData(staticRoot, id, data) {
       await writeJson(join(staticRoot, id, `${topLevelKey}.json`), topLevel[topLevelKey])
     }
   }
-  if (sources && sources.length) {
+  if (sources) {
     const pool = new PromisePool(
       Object.values(sources),
       async (source) => {
@@ -140,6 +141,7 @@ async function addTemplateAssets({ options, rootId, id }, pattern) {
 
 async function addTemplates({ options, rootId, id }, templates) {
   const finalTemplates = {}
+  const sliceAt = resolve('blueprints').length + 1
   for (const templateKey of Object.keys(templates)) {
     if (templateKey === 'assets') {
       await addTemplateAssets.call(this, { options, rootId, id }, templates[templateKey])
@@ -160,6 +162,12 @@ async function addTemplates({ options, rootId, id }, templates) {
       template.src = resolve('blueprints', id, template.src)
     }
 
+    template.fileName = join(rootId, template.src.slice(sliceAt))
+    finalTemplates[templateKey] = template.fileName
+
+    // console.log('template.fileName', template.fileName)
+    // process.exit()
+
     if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
       template.fileName = join(rootId, id, template.src)
       this.addPlugin({ ...template, options })
@@ -175,8 +183,9 @@ async function addTemplates({ options, rootId, id }, templates) {
     // Regular Vue templates (also usable as routes)
     template.fileName = join(rootId, id, template.src)
     this.addTemplate({ ...template, options })
-    finalTemplates[templateKey] = template.fileName
   }
+  // console.log('finalTemplates', finalTemplates)
+  // process.exit()
 
   return finalTemplates
 }
