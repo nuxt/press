@@ -76,11 +76,6 @@ export async function _registerBlueprint(id, rootId, options = {}) {
       nuxtRoutes.push(...await blueprint.routes.call(this, templates))
     })
 
-    const pathPrefix = path => `${blueprint.options.prefix}${path}`
-    const generateRoutes = await blueprint.generateRoutes
-      .call(this, context, pathPrefix, context.data)
-    this.options.generate.routes.push(...generateRoutes)
-
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, rootId, 'static')
       await saveStaticData.call(this, staticRoot, context.data)
@@ -88,6 +83,10 @@ export async function _registerBlueprint(id, rootId, options = {}) {
       if (blueprint.hooks && blueprint.hooks.compileBuild) {
         await blueprint.hooks.compileBuild.call(this, context)
       }
+
+      const pathPrefix = path => `${blueprint.options.prefix}${path}`
+      const generateRoutes = await blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
+      this.options.generate.routes.push(...generateRoutes)
 
       this.nuxt.hook('generate:distCopied', async () => {
         const staticRootGenerate = join(this.options.generate.dir, rootId)
