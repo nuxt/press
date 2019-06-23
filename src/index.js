@@ -6,33 +6,26 @@ import {
   exists,
   join,
   resolve,
-  writeJson
 } from './utils'
 
-async function ensureNuxtPressJson(pressJson) {
-  const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
-  if (!exists(pressJsonPath)) {
-    await writeJson(pressJsonPath, pressJson, { spaces: 2 })
-  }
-}
+export default async function (options) {
+  // Load and register blueprints from './blueprints' 
+  await registerBlueprints('press', options, ['docs', 'blog', 'slides', 'press'])
 
-export default function (options) {
+  // Use the full Vue build for client-side template compilation
+  this.extendBuild((config) => {
+    config.resolve.alias.vue$ = 'vue/dist/vue.esm.js'
+  })
+
+  // Enable all of https://preset-env.cssdb.org/features
+  this.options.build.postcss.preset.stage = 0
+
   // Automatically register modules
   this.requireModule({
     src: '@nuxt/http',
     options: { browserBaseURL: '/' }
   })
 
-  // Load and register blueprints from './blueprints',
-  // where the first argument is the top-level Nuxt configuration key
-  // and the second argument is the loading order of blueprints
-  registerBlueprints('press', ['common', 'docs', 'blog', 'slides'])
-
-  this.extendBuild((config) => {
-    config.resolve.alias.vue$ = 'vue/dist/vue.esm.js'
-  })
-
-  this.options.build.postcss.preset.stage = 0
   this.options.css.push(
     'prismjs/themes/prism.css',
     resolve('themes/default.css')
@@ -44,31 +37,4 @@ export default function (options) {
     '~/blog/**/*.md',
     '~/slides/*.md'
   )
-  // setupAPI.call(this)
-
-  this.nuxt.hook('build:before', async () => {
-    // await addTemplates.call(this)
-    // registerRoutes.call(this)
-
-    const data = await loadData.call(this)
-
-    this.nuxt.hook('build:compile', async () => {
-      const staticRoot = join(this.options.buildDir, 'press', 'static')
-      await saveStaticData.call(this, staticRoot, data)
-
-      if (this.$press.$docs) {
-        await ensureNuxtPressJson.call(this, {
-          toc: Object.keys(data.docs.topLevel.index)
-        })
-      }
-
-      this.nuxt.hook('generate:distCopied', async () => {
-        const staticRootGenerate = join(this.options.generate.dir, 'press')
-        await ensureDir(staticRootGenerate)
-        await saveStaticData.call(this, staticRootGenerate, data)
-      })
-
-      registerGenerateRoutes.call(this)
-    })
-  })
 }

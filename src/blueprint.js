@@ -12,6 +12,9 @@ import {
 } from './utils'
 
 export async function registerBlueprints(rootId, options, blueprints) {
+  // rootId: root id (used to define directory and config key) 
+  // options: module options (as captured by the module function)
+  // blueprints: blueprint loading order
   for (const bp of blueprints) {
     await _registerBlueprint(bp, rootId, options)
   }
@@ -57,12 +60,29 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   }
 
   this.nuxt.hook('build:before', async () => {
-    const templates = await addTemplates.call(this, options, rootId, id, blueprint.templates)
-    options.$routes.push(...await blueprint.routes.call(this, templates))
-    const pressStaticRoot = join(this.options.buildDir, rootId, 'static')
+    const context = { options, rootId, id }
+    const templates = await addTemplates.call(this, context, blueprint.templates)
 
-    this.options.generate.routes = async () => {
+    context.data = await blueprint.data.call(this)
+
+    if (blueprint.hooks && blueprint.hooks.beforeBuild) {
+      await blueprint.hooks.beforeBuild.call(this, context)
     }
+
+    this.extendRoutes(async (nuxtRoutes) => {
+      nuxtRoutes.push(...await blueprint.routes.call(this, templates))
+    })
+    this.options.generate.routes.push(...await blueprint.generateRoutes.call(this))
+
+    this.nuxt.hook('build:compile', async () => {
+      const staticRoot = join(this.options.buildDir, rootId, 'static')
+      await saveStaticData.call(this, staticRoot, context.data)
+      this.nuxt.hook('generate:distCopied', async () => {
+        const staticRootGenerate = join(this.options.generate.dir, rootId)
+        await ensureDir(staticRootGenerate)
+        await saveStaticData.call(this, staticRootGenerate, context.data)
+      })
+    })
   })
 }
 

@@ -50,6 +50,17 @@ export default {
       }
     ]
   },
+  hooks: {
+    compileBuild({ data }) {
+      const pressJson = {
+        toc: Object.keys(data.topLevel.index)
+      }
+      const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
+      if (!exists(pressJsonPath)) {
+        await writeJson(pressJsonPath, pressJson, { spaces: 2 })
+      }
+    }
+  },
   options: {
     dir: 'docs',
     prefix: '/docs',
