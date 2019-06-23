@@ -35,7 +35,7 @@ export default {
     return [
       {
         route: prefix('index'),
-        payload: require(`${staticRoot}/sources/index.json`)
+        payload: require(`${staticRoot}/sources/docs/topics/index.json`)
       },
       ...Object.keys(data.sources).map(route => ({
         route,
@@ -97,7 +97,7 @@ export default {
           return '/topics/index'
         }
         const slug = title.replace(/\s+/g, '-')
-        return `/topics/${slugify(slug)}`
+        return `/topics/${slugify(slug).toLowerCase()}`
       },
       title(fileName, body) {
         if (['index', 'README'].includes(fileName)) {
