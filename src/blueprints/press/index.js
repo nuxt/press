@@ -1,15 +1,11 @@
 import consola from 'consola'
 import { IgnorePlugin } from 'webpack'
-
-import {
-  ensureDir,
-  exists,
-  join,
-  readJsonSync,
-  remove
-} from '../../utils'
+import { ensureDir, exists, join, readJsonSync, remove } from '../../utils'
+import data from './data'
 
 export default {
+  // Include data loader
+  data,
   templates: {
     'plugin': 'plugin.js',
     'nuxt-template': 'components/nuxt-template.js',

@@ -1,11 +1,11 @@
 import Markdown from '@nuxt/markdown'
-import {
-  exists,
-  join,
-  readJsonSync
-} from '../../utils'
+import { exists, join, readJsonSync } from '../../utils'
+import data from './data'
 
 export default {
+  // Include data loader
+  data,
+  // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(config) {
     return exists(join(this.options.srcDir, config.slides.dir))
   },
