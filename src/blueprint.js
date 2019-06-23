@@ -25,7 +25,7 @@ export async function registerBlueprints(rootId, options, blueprints) {
 // refactor to allow registering a single, top-level blueprint
 export async function _registerBlueprint(id, rootId, options = {}) {
   // Load blueprint specification
-  const blueprintPath = resolve(__dirname, `blueprints/${id}`)
+  const blueprintPath = resolve(`blueprints/${id}`)
   const blueprint = await import(blueprintPath).then(m => m.default)
 
   // Return if blueprint is not enabled
@@ -33,7 +33,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     return
   }
 
-  // Set global configKey if not set yet
+  // Set global configKey if unset
   if (!this[`$${rootId}`]) {
     this[`$${rootId}`] = {}
     this.options[`$${rootId}`] = this[`$${rootId}`]
@@ -48,11 +48,6 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
   // For easy config acess in helper functions
   options = this.options[`$${rootId}`]
-
-  if (!options.$routes) {
-    options.$routes = []
-    options.$generateRoutes = []
-  }
 
   // Register serverMiddleware
   for (const sm of await blueprint.serverMiddleware.call(this)) {
