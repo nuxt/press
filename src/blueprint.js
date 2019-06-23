@@ -72,12 +72,16 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     this.extendRoutes(async (nuxtRoutes) => {
       nuxtRoutes.push(...await blueprint.routes.call(this, templates))
     })
-    this.options.generate.routes.push(...await blueprint.generateRoutes.call(this))
+
+    const pathPrefix = path => `${blueprint.options.prefix}${path}`
+    const generateRoutes = await blueprint.generateRoutes
+      .call(this, context, pathPrefix, context.data)
+    this.options.generate.routes.push(...generateRoutes)
 
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, rootId, 'static')
       await saveStaticData.call(this, staticRoot, context.data)
-      
+
       if (blueprint.hooks && blueprint.hooks.buildCompile) {
         await blueprint.hooks.buildCompile.call(this, context)
       }
@@ -134,22 +138,28 @@ async function addTemplates({ options, rootId, id }, templates) {
       src: isTemplateArr ? templateSpec[0] : templateSpec,
       ...isTemplateArr && templateSpec[1]
     }
+
+    // Pick up user-provide template replacements
     const userProvidedTemplate = join(this.options.srcDir, rootId, id, template.src)
     if (exists(userProvidedTemplate)) {
       template.src = userProvidedTemplate
     } else {
       template.src = resolve('blueprints', id, template.src)
     }
+
     if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
       template.fileName = join(rootId, id, template.src)
       this.addPlugin({ ...template, options })
       continue
     }
+
     if (templateKey === 'layout' || templateKey.endsWith('/layout')) {
       template.fileName = join(rootId, id, template.src)
       this.addLayout({ ...template, options }, id)
       continue
     }
+
+    // Regular Vue templates (also usable as routes)
     template.fileName = join(rootId, id, template.src)
     this.addTemplate({ ...template, options })
     finalTemplates[templateKey] = template.fileName

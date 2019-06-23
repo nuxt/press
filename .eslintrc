@@ -6,6 +6,7 @@
     "@nuxtjs"
   ],
   "rules": {
+    "import/default": 0,
     "import/namespace": 0,
     "no-useless-escape": 0,
     "no-useless-call": 0,
