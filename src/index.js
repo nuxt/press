@@ -1,15 +1,9 @@
 
 import { registerBlueprints } from './blueprint'
-
-import {
-  ensureDir,
-  exists,
-  join,
-  resolve,
-} from './utils'
+import { resolve } from './utils'
 
 export default async function (options) {
-  // Load and register blueprints from './blueprints' 
+  // Load and register blueprints from './blueprints'
   await registerBlueprints('press', options, ['docs', 'blog', 'slides', 'press'])
 
   // Use the full Vue build for client-side template compilation
@@ -30,6 +24,7 @@ export default async function (options) {
     'prismjs/themes/prism.css',
     resolve('themes/default.css')
   )
+
   this.options.watch.push(
     '~/*.md',
     '~/docs/*.md',

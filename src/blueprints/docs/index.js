@@ -1,5 +1,12 @@
 import Markdown from '@nuxt/markdown'
-import { exists, readdirSync, readJsonSync, slugify } from '../../utils'
+import {
+  exists,
+  join,
+  readdirSync,
+  readJsonSync,
+  slugify,
+  writeJson
+} from '../../utils'
 
 export default {
   // Enable docs blueprint if srcDir/*.md files exists
@@ -51,7 +58,7 @@ export default {
     ]
   },
   hooks: {
-    compileBuild({ data }) {
+    async compileBuild({ data }) {
       const pressJson = {
         toc: Object.keys(data.topLevel.index)
       }

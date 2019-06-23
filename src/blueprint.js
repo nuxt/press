@@ -12,7 +12,7 @@ import {
 } from './utils'
 
 export async function registerBlueprints(rootId, options, blueprints) {
-  // rootId: root id (used to define directory and config key) 
+  // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
   for (const bp of blueprints) {
@@ -87,10 +87,10 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 }
 
 async function saveStaticData(staticRoot, id, data) {
-  await ensureDir(join(staticRoot, key))
-  const { topLevel, sources } = data[key]
+  await ensureDir(join(staticRoot, id))
+  const { topLevel, sources } = data
   for (const topLevelKey of Object.keys(topLevel)) {
-    await writeJson(join(staticRoot, key, `${topLevelKey}.json`), topLevel[topLevelKey])
+    await writeJson(join(staticRoot, id, `${topLevelKey}.json`), topLevel[topLevelKey])
   }
   const pool = new PromisePool(
     Object.values(sources),
@@ -103,26 +103,24 @@ async function saveStaticData(staticRoot, id, data) {
   await pool.done()
 }
 
-async function addTemplateAssets(mode, pattern) {
-  const srcDir = resolve('templates', mode)
-  // const assetBasePath = `press/assets/${mode}/`
+async function addTemplateAssets({ options, rootId, id }, pattern) {
+  const srcDir = resolve('blueprints', id)
   const srcList = await walk.call(this, srcDir, pattern, true)
-  // const srcStreams = {}
-  const pool = new PromisePool(srcList, async (src) => {
-    const srcPath = resolve('templates', mode, src)
+  const pool = new PromisePool(srcList, (src) => {
+    const srcPath = resolve('blueprints', id, src)
     this.addTemplate({
       src: srcPath,
-      fileName: join('press', 'assets', mode, src.replace(`assets/`, ''))
+      fileName: join(rootId, 'assets', id, src.replace(`assets/`, ''))
     })
   })
   await pool.done()
 }
 
-async function addTemplates(options, rootId, id, templates) {
+async function addTemplates({ options, rootId, id }, templates) {
   const finalTemplates = {}
   for (const templateKey of Object.keys(templates)) {
     if (templateKey === 'assets') {
-      await addTemplateAssets.call(this, options, rootId, id, templates[templateKey])
+      await addTemplateAssets.call(this, { options, rootId, id }, templates[templateKey])
       continue
     }
     const templateSpec = templates[templateKey]
@@ -144,7 +142,7 @@ async function addTemplates(options, rootId, id, templates) {
     }
     if (templateKey === 'layout' || templateKey.endsWith('/layout')) {
       template.fileName = join(rootId, id, template.src)
-      this.addLayout({ ...template, options }, mode)
+      this.addLayout({ ...template, options }, id)
       continue
     }
     template.fileName = join(rootId, id, template.src)
