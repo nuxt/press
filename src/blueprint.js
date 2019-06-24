@@ -167,7 +167,6 @@ async function addTemplates({ options, rootId, id }, templates) {
     }
 
     template.fileName = join(rootId, template.src.slice(sliceAt))
-    console.log(rootId, id, 'template.fileName', template.fileName)
     finalTemplates[templateKey] = template.fileName
 
     if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {

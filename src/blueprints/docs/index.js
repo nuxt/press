@@ -54,13 +54,19 @@ export default {
     ]
   },
   hooks: {
-    async compileBuild({ data }) {
-      const pressJson = {
-        toc: Object.keys(data.topLevel.index)
-      }
-      const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
-      if (!exists(pressJsonPath)) {
-        await writeJson(pressJsonPath, pressJson, { spaces: 2 })
+    build: {
+      async compile({ data }) {
+        const pressJson = {
+          toc: Object.keys(data.topLevel.index)
+        }
+        const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
+        if (!exists(pressJsonPath)) {
+          await writeJson(pressJsonPath, pressJson, { spaces: 2 })
+        }
+      },
+      done() {
+        this.options.watch.push('~/*.md')
+        this.options.watch.push(`~/${this.$press.docs.dir}*.md`)
       }
     }
   },

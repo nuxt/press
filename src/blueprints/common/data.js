@@ -23,7 +23,7 @@ async function loadPage(pagePath) {
   return { body, title, path }
 }
 
-export default async function() {
+export default async function () {
   const pagesRoot = join(
     this.options.srcDir,
     this.options.dir.pages

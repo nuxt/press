@@ -11,7 +11,7 @@ export default {
   enabled: () => true,
   templates: {
     'plugin': 'plugin.js',
-    'scroll/plugin': ['plugins/scroll.js', {ssr: false}],
+    'scroll/plugin': ['plugins/scroll.js', { ssr: false }],
     'observer': 'components/observer.js',
     'nuxt-template': 'components/nuxt-template.js',
     'source': 'pages/source.vue'
@@ -42,17 +42,22 @@ export default {
     ]
   },
   hooks: {
-    async beforeBuild() {
-      this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
-      const pagesDir = join(this.options.srcDir, this.options.dir.pages)
-      if (!exists(pagesDir)) {
-        this.$press.$placeholderPagesDir = pagesDir
-        await ensureDir(pagesDir)
-      }
-    },
-    async compileBuild() {
-      if (this.$press.$placeholderPagesDir) {
-        await remove(this.$press.$placeholderPagesDir)
+    build: {
+      async before() {
+        this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
+        const pagesDir = join(this.options.srcDir, this.options.dir.pages)
+        if (!exists(pagesDir)) {
+          this.$press.$placeholderPagesDir = pagesDir
+          await ensureDir(pagesDir)
+        }
+      },
+      async compile() {
+        if (this.$press.$placeholderPagesDir) {
+          await remove(this.$press.$placeholderPagesDir)
+        }
+      },
+      done() {
+        this.options.watch.push('~/pages/*.md')
       }
     }
   },

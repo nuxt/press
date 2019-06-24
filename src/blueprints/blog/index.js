@@ -64,6 +64,14 @@ export default {
       }
     ]
   },
+  hooks: {
+    build: {
+      done({ options }) {
+        this.options.watch.push(`~/${options.blog.dir}*.md`)
+        this.options.watch.push(`~/${options.blog.dir}**/*.md`)
+      }
+    }
+  },
   options: {
     dir: 'blog',
     prefix: '/blog',

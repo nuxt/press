@@ -25,13 +25,4 @@ export default async function (options) {
 
   // Load and register blueprints from './blueprints'
   await registerBlueprints.call(this, 'press', options, ['docs', 'blog', 'slides', 'common'])
-
-  // Register Markdown watchers
-  this.options.watch.push(
-    '~/*.md',
-    // `~/${this.$press.docs.dir}*.md`,
-    // `~/${this.$press.blog.dir}*.md`,
-    // `~/${this.$press.blog.dir}**/*.md`,
-    `~/${this.$press.slides.dir}*.md`
-  )
 }

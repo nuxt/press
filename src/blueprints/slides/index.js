@@ -44,6 +44,13 @@ export default {
       }
     ]
   },
+  hooks: {
+    build: {
+      done({ options }) {
+        this.options.watch.push(`~/${options.slides.dir}*.md`)
+      }
+    }
+  },
   // Options are merged into the parent module default options
   options: {
     dir: 'slides',
