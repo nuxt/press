@@ -76,8 +76,8 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
     context.data = await blueprint.data.call(this)
 
-    if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.build) {
-      await blueprint.hooks.build.call(this, context)
+    if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.before) {
+      await blueprint.hooks.build.before.call(this, context)
     }
 
     if (blueprint.routes) {
@@ -110,8 +110,8 @@ export async function _registerBlueprint(id, rootId, options = {}) {
         })
       }
 
-      if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.compile) {
-        await blueprint.hooks.compile.call(this, context)
+      if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.compile) {
+        await blueprint.hooks.build.compile.call(this, context)
       }
 
       if (blueprint.generateRoutes) {
