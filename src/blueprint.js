@@ -90,6 +90,9 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     await saveStaticData.call(this, staticRoot, id, context.data)
 
     this.nuxt.hook('build:compile', async () => {
+      const staticRoot = join(this.options.buildDir, rootId, 'static')
+      await saveStaticData.call(this, staticRoot, id, context.data)
+      
       if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.done) {
         this.nuxt.hook('build:done', async () => {
           await blueprint.hooks.build.done.call(this, context)
@@ -137,8 +140,9 @@ async function saveStaticData(staticRoot, id, data) {
       Object.values(sources),
       async (source) => {
         const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
-        await ensureDir(dirname(sourcePath))
-        console.log('sourcePath', sourcePath)
+        if (!exists(dirname(sourcePath))) {
+          await ensureDir(dirname(sourcePath))
+        }
         await writeJson(sourcePath, source)
       }
     )
