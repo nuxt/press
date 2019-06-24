@@ -39,6 +39,7 @@ function addArchiveEntry(archive, entry) {
 }
 
 export default async function () {
+  console.log('this.$press', this.$press)
   const srcRoot = join(
     this.options.srcDir,
     this.$press.blog.dir

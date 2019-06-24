@@ -33,29 +33,30 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     return
   }
 
-  // Set global configKey if unset
+  // Set global rootId if unset
+  if (!this.options[rootId]) {
+    this.options[rootId] = {}
+  }
   if (!this[`$${rootId}`]) {
-    this[`$${rootId}`] = {}
+    this[`$${rootId}`] = this.options[rootId]
   }
 
   // Prefer top-level config key in nuxt.config.js
-  Object.assign(
-    this[`$${rootId}`],
-    defu(this.options[`$${rootId}`], options)
-  )
-  if (!this[`$${rootId}`][id]) {
-    this[`$${rootId}`][id] = {}
-  }
-  Object.assign(
-    this[`$${rootId}`],
-    defu(this[`$${rootId}`], { [id]: blueprint.options })
-  )
+  Object.assign(this.options[rootId], defu(this.options[rootId], options))
 
+  if (blueprint.options) {
+    if (this.options[rootId][id]) {
+      Object.assign(this.options[rootId][id], defu(this.options[rootId][id], blueprint.options))
+    } else {
+      this.options[rootId][id] = blueprint.options
+    }
+  }
+  
   // Set flag to indicate blueprint was enabled
-  this[`$${rootId}`][`$${id}`] = true
+  this.options[rootId][`$${id}`] = true
 
   // For easy config acess in helper functions
-  options = this[`$${rootId}`]
+  options = this.options[rootId]
 
   // Register serverMiddleware
   for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
@@ -99,7 +100,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, rootId, 'static')
       await saveStaticData.call(this, staticRoot, id, context.data)
-      
+
       if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.done) {
         this.nuxt.hook('build:done', async () => {
           await blueprint.hooks.build.done.call(this, context)

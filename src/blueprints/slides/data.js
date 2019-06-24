@@ -1,6 +1,6 @@
 
 import { parse } from 'path'
-import { walk, join, exists, readFile } from '../../utils'
+import { walk, join, readFile } from '../../utils'
 import PromisePool from '../../pool'
 
 // SLIDES MODE
