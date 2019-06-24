@@ -1,5 +1,3 @@
-<template>
-  <div>
-    Foobar
-  </div>
-</template>
+# Foobar
+
+Hey, this works!

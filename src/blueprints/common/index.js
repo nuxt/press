@@ -27,6 +27,17 @@ export default {
       }
     ]
   },
+  generateRoutes(data, _, staticRoot) {
+    return Object.keys(data.sources).map(route => {
+      if (route.endsWith('/index')) {
+        route = route.slice(0, route.indexOf('/index'))
+      }
+      return {
+        route,
+        payload: require(`${staticRoot}/sources${route}`)
+      }
+    })
+  },
   serverMiddleware({ options, rootId, id }) {
     const { source } = options.common.api.call(this, { rootId, id })
     return [

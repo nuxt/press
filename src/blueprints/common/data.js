@@ -18,7 +18,6 @@ async function loadPage(pagePath) {
   const title = titleMatch ? titleMatch[1] : ''
   body = await this.$press.common.source.markdown.call(this, body)
   const parsed = parse(pagePath)
-  parsed.name = (parsed.name === 'index') ? '' : `/${parsed.name}`
   const path = `${parsed.dir.slice(sliceAt)}/${parsed.name}`
   return { body, title, path }
 }
