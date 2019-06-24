@@ -51,7 +51,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
       this.options[rootId][id] = blueprint.options
     }
   }
-  
+
   // Set flag to indicate blueprint was enabled
   this.options[rootId][`$${id}`] = true
 
