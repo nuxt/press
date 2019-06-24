@@ -11,17 +11,19 @@ export default {
   enabled: () => true,
   templates: {
     'plugin': 'plugin.js',
-    'scroll/plugin': 'plugins/scroll.js',
+    'scroll/plugin': ['plugins/scroll.js', {ssr: false}],
     'observer': 'components/observer.js',
     'nuxt-template': 'components/nuxt-template.js',
     'source': 'pages/source.vue'
   },
-  eject: ['plugin', 'source'],
   routes(templates) {
     return [
       {
         name: 'source',
         path: '/:source(.+)',
+        // Final path might be under srcDir or buildDir
+        // Depends on presence of user-provided template
+        // And is the reason why templates is passed to this function
         component: templates.source
       }
     ]
