@@ -1,4 +1,3 @@
-import consola from 'consola'
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
 import { ensureDir, exists, join, readJsonSync, remove } from '../../utils'
@@ -28,13 +27,12 @@ export default {
       }
     ]
   },
-  serverMiddleware(options) {
-    const { source, base } = options.common.api.call(this)
+  serverMiddleware({ options, rootId, id }) {
+    const { source } = options.common.api.call(this, { rootId, id })
     return [
-      base,
       (req, res, next) => {
         if (req.url.startsWith('/api/source/')) {
-          source(req, res, next)
+          source.call(this, req, res, next)
         } else {
           next()
         }
@@ -62,28 +60,16 @@ export default {
     }
   },
   options: {
-    api() {
-      const rootDir = this.options.buildDir
+    api({ rootId }) {
+      const rootDir = join(this.options.buildDir, rootId, 'static')
       const sourceCache = {}
       return {
-        base(_, res, next) {
-          res.json = (data) => {
-            res.type = 'application/json'
-            res.write(JSON.stringify(data))
-            res.end()
-          }
-          next()
-        },
         source(req, res, next) {
-          try {
-            const source = req.url.slice(12)
-            if (!sourceCache[source]) {
-              sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
-            }
-            res.json(sourceCache[source])
-          } catch (err) {
-            consola.warn(err)
+          const source = req.url.slice(12)
+          if (!sourceCache[source]) {
+            sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
           }
+          res.json(sourceCache[source])
         }
       }
     },

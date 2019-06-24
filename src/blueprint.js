@@ -58,8 +58,15 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   options = this[`$${rootId}`]
 
   // Register serverMiddleware
-  for (const sm of await blueprint.serverMiddleware.call(this, options)) {
-    this.addServerMiddleware(sm)
+  for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
+    sm = sm.bind(this)
+    this.addServerMiddleware(async (req, res, next) => {
+      try {
+        await sm(req, res, next)
+      } catch (err) {
+        next(err)
+      }
+    })
   }
 
   this.nuxt.hook('build:before', async () => {

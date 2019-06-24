@@ -41,8 +41,8 @@ export default {
       }))
     ]
   },
-  serverMiddleware(options) {
-    const { index } = options.docs.api.call(this)
+  serverMiddleware({ options, rootId, id }) {
+    const { index } = options.docs.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/docs/index')) {
@@ -64,9 +64,9 @@ export default {
           await writeJson(pressJsonPath, pressJson, { spaces: 2 })
         }
       },
-      done() {
+      done({ options }) {
         this.options.watch.push('~/*.md')
-        this.options.watch.push(`~/${this.$press.docs.dir}*.md`)
+        this.options.watch.push(`~/${options.docs.dir}/*.md`)
       }
     }
   },
@@ -77,11 +77,11 @@ export default {
       title: 'Documentation suite',
       github: 'https://github.com/...'
     },
-    api() {
+    api({ rootId, id }) {
       const cache = {}
-      const rootDir = this.options.buildDir
+      const rootDir = join(this.options.buildDir, rootId, 'static')
       return {
-        index(req, res, next) {
+        index: (req, res, next) => {
           if (this.options.dev || !cache.index) {
             cache.index = readJsonSync(rootDir, 'docs', 'index.json')
           }

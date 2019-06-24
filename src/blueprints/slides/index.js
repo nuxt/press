@@ -32,8 +32,8 @@ export default {
     }))
   },
   // Register serverMiddleware
-  serverMiddleware(options) {
-    const { index } = options.slides.api.call(this)
+  serverMiddleware({ options, rootId, id }) {
+    const { index } = options.slides.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/slides/index')) {
@@ -55,11 +55,11 @@ export default {
   options: {
     dir: 'slides',
     prefix: '/slides',
-    api() {
+    api({ rootId }) {
       const cache = {}
-      const rootDir = this.options.buildDir
+      const rootDir = join(this.options.buildDir, rootId, 'static')
       return {
-        index(req, res, next) {
+        index: (req, res, next) => {
           if (this.options.dev || !cache.index) {
             cache.index = readJsonSync(rootDir, 'slides', 'index.json')
           }

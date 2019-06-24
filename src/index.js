@@ -23,6 +23,16 @@ export default async function (options) {
     resolve('themes/default.css')
   )
 
+  // Common helper for writing JSON responses
+  this.addServerMiddleware((_, res, next) => {
+    res.json = (data) => {
+      res.type = 'application/json'
+      res.write(JSON.stringify(data))
+      res.end()
+    }
+    next()
+  })
+
   // Load and register blueprints from './blueprints'
   await registerBlueprints.call(this, 'press', options, ['docs', 'blog', 'slides', 'common'])
 }

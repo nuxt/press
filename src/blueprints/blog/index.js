@@ -50,14 +50,14 @@ export default {
       }))
     ]
   },
-  serverMiddleware() {
-    const { index, archive } = this.$press.blog.api.call(this)
+  serverMiddleware({ options, rootId, id }) {
+    const { index, archive } = this.$press.blog.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/blog/index')) {
-          index(req, res, next)
+          index.call(this, req, res, next)
         } else if (req.url.startsWith('/api/blog/archive')) {
-          archive(req, res, next)
+          archive.call(this, req, res, next)
         } else {
           next()
         }
@@ -88,17 +88,17 @@ export default {
     // If in Nuxt's SPA mode, setting custom API
     // handlers also disables bundling of index.json
     // and source/*.json files into the static/ folder
-    api() {
+    api({ rootId }) {
       const cache = {}
-      const rootDir = this.options.buildDir
+      const rootDir = join(this.options.buildDir, rootId, 'static')
       return {
-        index(req, res, next) {
+        index: (req, res, next) => {
           if (this.options.dev || !cache.index) {
             cache.index = readJsonSync(rootDir, 'blog', 'index.json')
           }
           res.json(cache.index)
         },
-        archive(req, res, next) {
+        archive: (req, res, next) => {
           if (this.options.dev || !cache.archive) {
             cache.archive = readJsonSync(rootDir, 'blog', 'archive.json')
           }
