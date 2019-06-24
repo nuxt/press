@@ -48,16 +48,13 @@ async function parseSlides(sourcePath) {
   return source
 }
 
-export default async function (data) {
+export default async function () {
   const sources = {}
 
   const srcRoot = join(
     this.options.srcDir,
     this.$press.slides.dir
   )
-  if (!exists(srcRoot)) {
-    return
-  }
 
   const pool = new PromisePool(
     await walk.call(this, srcRoot, (path) => {

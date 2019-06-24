@@ -86,24 +86,31 @@ export async function _registerBlueprint(id, rootId, options = {}) {
       })
     }
 
-    this.nuxt.hook('build:compile', async () => {
-      this.nuxt.hook('build:done', async () => {
-        if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.done) {
-          await blueprint.hooks.done.call(this, context)
-        }
-      })
+    const staticRoot = join(this.options.buildDir, rootId, 'static')
+    await saveStaticData.call(this, staticRoot, id, context.data)
 
-      const staticRoot = join(this.options.buildDir, rootId, 'static')
-      await saveStaticData.call(this, staticRoot, id, context.data)
+    this.nuxt.hook('build:compile', async () => {
+      if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.done) {
+        this.nuxt.hook('build:done', async () => {
+          await blueprint.hooks.build.done.call(this, context)
+          this.options.generate.routes = () => {
+            return options.$generateRoutes.reduce((routes, route) => [...routes, ...route()])
+          }
+        })
+      }
 
       if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.compile) {
         await blueprint.hooks.compile.call(this, context)
       }
 
       if (blueprint.generateRoutes) {
+        if (!options.$generateRoutes) {
+          options.$generateRoutes = []
+        }
         const pathPrefix = path => `${blueprint.options.prefix}${path}`
-        const generateRoutes = await blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
-        this.options.generate.routes.push(...generateRoutes)
+        options.$generateRoutes.push(() => {
+          return blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
+        })
       }
 
       this.nuxt.hook('generate:distCopied', async () => {
@@ -120,7 +127,9 @@ async function saveStaticData(staticRoot, id, data) {
   const { topLevel, sources } = data
   if (topLevel) {
     for (const topLevelKey of Object.keys(topLevel)) {
-      await writeJson(join(staticRoot, id, `${topLevelKey}.json`), topLevel[topLevelKey])
+      const topLevelPath = join(staticRoot, id, `${topLevelKey}.json`)
+      await ensureDir(dirname(topLevelPath))
+      await writeJson(topLevelPath, topLevel[topLevelKey])
     }
   }
   if (sources) {
@@ -129,6 +138,7 @@ async function saveStaticData(staticRoot, id, data) {
       async (source) => {
         const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
         await ensureDir(dirname(sourcePath))
+        console.log('sourcePath', sourcePath)
         await writeJson(sourcePath, source)
       }
     )
