@@ -68,8 +68,8 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
     context.data = await blueprint.data.call(this)
 
-    if (blueprint.hooks && blueprint.hooks.beforeBuild) {
-      await blueprint.hooks.beforeBuild.call(this, context)
+    if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.build) {
+      await blueprint.hooks.build.call(this, context)
     }
 
     if (blueprint.routes) {
@@ -87,11 +87,17 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     }
 
     this.nuxt.hook('build:compile', async () => {
+      this.nuxt.hook('build:done', async () => {
+        if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.done) {
+          await blueprint.hooks.done.call(this, context)
+        }
+      })
+
       const staticRoot = join(this.options.buildDir, rootId, 'static')
       await saveStaticData.call(this, staticRoot, id, context.data)
 
-      if (blueprint.hooks && blueprint.hooks.compileBuild) {
-        await blueprint.hooks.compileBuild.call(this, context)
+      if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.compile) {
+        await blueprint.hooks.compile.call(this, context)
       }
 
       if (blueprint.generateRoutes) {

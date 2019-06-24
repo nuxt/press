@@ -1,5 +1,5 @@
 import { parse } from 'path'
-import { walk, exists, join, readFile } from '../../utils'
+import { walk, join, readFile } from '../../utils'
 import PromisePool from '../../pool'
 
 // PAGES
