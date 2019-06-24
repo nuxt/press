@@ -3,7 +3,7 @@ import consola from 'consola'
 
 const failureInterval = 3000
 const maxRetries = 0 // use 0 for debugging
-const pool = new Array(os.cpus().length * 4).fill(null)
+const pool = new Array(os.cpus().length).fill(null)
 
 export default class PromisePool {
   constructor(jobs, handler) {

@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import toc from '../components/docs/toc'
+import toc from './components/toc'
 
 export default {
   components: { toc }

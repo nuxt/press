@@ -2,8 +2,8 @@
 import {
   lstatSync,
   existsSync,
+  readFileSync,
   stat as _statAsync,
-  readFileSync as _readFileSync,
   readFile as _readFileAsync,
   writeFile as _writeFileAsync
 } from 'fs'
@@ -26,7 +26,6 @@ export function exists(...paths) {
 }
 
 export const stat = _stat
-export const readFileSync = _readFileSync
 
 export function resolve(...paths) {
   return _resolve(__dirname, join(...paths))
@@ -38,6 +37,10 @@ export function join(...paths) {
 
 export function readFile(...paths) {
   return _readFile(join(...paths), 'utf-8')
+}
+
+export function readJsonSync(...path) {
+  return JSON.parse(readFileSync(join(...path)).toString())
 }
 
 export function writeFile(path, contents) {
@@ -67,18 +70,7 @@ export function walk(root, validate, sliceAtRoot = false) {
   })
 }
 
-// This function has had so many edits
-// by now it's become officially a hack
-export function slugify(text) {
-  const a = 'ãàáäâèéëêìíïîõòóöôùúüûñçßÿœæŕśńṕẃǵǹḿǘẍźḧ·/_,:;~'
-  const b = 'aaaaaeeeeiiiiooooouuuuncsyoarsnpwgnmuxzh-------'
-  const p = new RegExp(a.split('').join('|'), 'g')
-  return text.toString().toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(p, c => b.charAt(a.indexOf(c)))
-    .replace(/&/g, '-e-')
-    .replace(/[.'"]/g, '')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '')
-    .replace(/-{2,}/g, '-')
-}
+export { writeJson, ensureDir, remove, move } from 'fs-extra'
+export { readdirSync, readFileSync } from 'fs'
+export { dirname } from 'path'
+export { default as slugify } from 'slug'

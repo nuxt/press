@@ -1,7 +1,7 @@
 
 import { parse } from 'path'
-import { walk, join, exists, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, join, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // SLIDES MODE
 // Markdown files are loaded from the slides/ directory.
@@ -44,20 +44,17 @@ async function parseSlides(sourcePath) {
   )
   const source = { slides, type: 'slides' }
   source.path = this.$press.slides.source.path
-    .call(this, parse(sourcePath).name)
+    .call(this, parse(sourcePath).name.toLowerCase())
   return source
 }
 
-export default async function loadSlides(data) {
+export default async function () {
   const sources = {}
 
   const srcRoot = join(
     this.options.srcDir,
     this.$press.slides.dir
   )
-  if (!exists(srcRoot)) {
-    return
-  }
 
   const pool = new PromisePool(
     await walk.call(this, srcRoot, (path) => {
@@ -75,5 +72,5 @@ export default async function loadSlides(data) {
 
   const index = Object.values(sources)
 
-  data.slides = { topLevel: { index }, sources }
+  return { topLevel: { index }, sources }
 }

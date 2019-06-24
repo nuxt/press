@@ -1,6 +1,6 @@
 
-import { walk, join, exists, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, join, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // BLOG MODE
 // Markdown files are loaded from the blog/ directory.
@@ -38,15 +38,11 @@ function addArchiveEntry(archive, entry) {
   archive[year][month].push(entry)
 }
 
-export default async function loadBlog(data) {
+export default async function () {
   const srcRoot = join(
     this.options.srcDir,
     this.$press.blog.dir
   )
-
-  if (!exists(srcRoot)) {
-    return
-  }
 
   const sources = {}
   const archive = {}
@@ -70,5 +66,5 @@ export default async function loadBlog(data) {
     .sort((a, b) => b.published - a.published)
     .slice(0, 10)
 
-  data.blog = { topLevel: { index, archive }, sources }
+  return { topLevel: { index, archive }, sources }
 }

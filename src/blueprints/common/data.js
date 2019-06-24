@@ -1,7 +1,6 @@
 import { parse } from 'path'
-import markdown from '../markdown'
-import { walk, exists, join, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, join, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // PAGES
 // Markdown files under pages/ are treated as individual
@@ -17,20 +16,18 @@ async function loadPage(pagePath) {
   let body = await readFile(this.options.srcDir, pagePath)
   const titleMatch = body.match(/^#\s+(.*)/)
   const title = titleMatch ? titleMatch[1] : ''
-  body = await markdown.call(this, body, true)
+  body = await this.$press.common.source.markdown.call(this, body)
   const parsed = parse(pagePath)
+  parsed.name = (parsed.name === 'index') ? '' : `/${parsed.name}`
   const path = `${parsed.dir.slice(sliceAt)}/${parsed.name}`
   return { body, title, path }
 }
 
-export async function loadPages() {
+export default async function () {
   const pagesRoot = join(
     this.options.srcDir,
     this.options.dir.pages
   )
-  if (!exists(pagesRoot)) {
-    return {}
-  }
   const pages = {}
   const queue = new PromisePool(
     await walk.call(this, pagesRoot, /\.md$/),
@@ -42,5 +39,5 @@ export async function loadPages() {
     }
   )
   await queue.done()
-  return pages
+  return { sources: pages }
 }

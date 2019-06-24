@@ -1,7 +1,7 @@
 
 import { parse } from 'path'
-import { walk, join, exists, readFile } from '../utils'
-import PromisePool from '../pool'
+import { walk, join, exists, readFile } from '../../utils'
+import PromisePool from '../../pool'
 
 // DOCS MODE
 // Markdown files can be placed in
@@ -11,8 +11,10 @@ import PromisePool from '../pool'
 async function parseDoc(sourcePath) {
   const raw = await readFile(this.options.srcDir, sourcePath)
   const fileName = parse(sourcePath).name
-  let { toc, html: body } = await this
+  const markdownResult = await this
     .$press.docs.source.markdown.call(this, raw)
+  let { toc } = markdownResult
+  const { html: body } = markdownResult
   const title = this.$press.docs.source.title
     .call(this, fileName, raw)
   if (toc[0]) {
@@ -30,7 +32,7 @@ async function parseDoc(sourcePath) {
   return { toc, source }
 }
 
-export default async function loadDocs(data) {
+export default async function (data) {
   const sources = {}
 
   let srcRoot = join(
@@ -60,5 +62,5 @@ export default async function loadDocs(data) {
   )
   await queue.done()
 
-  data.docs = { topLevel: { index }, sources }
+  return { topLevel: { index }, sources }
 }

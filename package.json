@@ -1,5 +1,5 @@
 {
-  "name": "nuxt-press-alpha",
+  "name": "@nuxt/press",
   "version": "0.0.1",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
   "bin": {
@@ -12,7 +12,7 @@
     "start": "nuxt start",
     "lint": "eslint --fix --ext .js src"
   },
-  "author": "Jonas Galvez",
+  "author": "Jonas Galvez <jonasgalvez@gmail.com>",
   "dependencies": {
     "@nuxt/http": "^0.3.2",
     "@nuxt/markdown": "^0.0.4",
@@ -25,11 +25,13 @@
     "klaw": "^3.0.0",
     "nuxt-imagemin": "^1.0.0",
     "prismjs": "^1.16.0",
+    "slug": "^1.1.0",
     "swiper": "^4.5.0",
     "vue-awesome-swiper": "^3.1.3"
   },
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
+    "babel-eslint": "^10.0.2",
     "eslint": "^5.16.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-import": "^2.17.3",
