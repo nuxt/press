@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "nuxt dev",
     "build": "nuxt build",
+    "dist": "rollup -c rollup.config.js",
     "generate": "nuxt generate",
     "start": "nuxt start",
     "lint": "eslint --fix --ext .js src"
@@ -40,6 +41,10 @@
     "eslint-plugin-promise": "^4.1.1",
     "eslint-plugin-standard": "^4.0.0",
     "eslint-plugin-vue": "^5.2.2",
-    "nuxt": "^2.8.1"
+    "nuxt": "^2.8.1",
+    "rollup": "^1.16.2",
+    "rollup-plugin-auto-external": "^2.0.0",
+    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-copy": "^3.0.0"
   }
 }
