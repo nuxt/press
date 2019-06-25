@@ -1,12 +1,24 @@
 import Markdown from '@nuxt/markdown'
-import { _import, resolve, exists, join, slugify, readJsonSync } from '../../utils'
+import {
+  _import,
+  resolve,
+  exists,
+  join,
+  slugify,
+  readJsonSync,
+  isSingleMode
+} from '../../utils'
+
 import data from './data'
 
 export default {
   // Include data loader
   data,
+  // Enable blog if srcDir/blog/ exists
   enabled(options) {
-    // Enable blog if srcDir/blog/ exists
+    if (isSingleMode.call(this, ['docs', 'slides'])) {
+      options.prefix = '/'
+    }
     return exists(join(this.options.srcDir, options.dir))
   },
   templates: {
@@ -75,7 +87,7 @@ export default {
   },
   options: {
     dir: 'blog',
-    prefix: '/blog',
+    prefix: '/blog/',
 
     // Blog metadata
     meta: {
@@ -133,7 +145,7 @@ export default {
       path({ title, published }) {
         const slug = slugify(title)
         const date = published.toString().split(/\s+/).slice(1, 4).reverse()
-        return `/${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}`
+        return `${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}`
       },
 
       // id() determines the unique RSS ID of a Markdown source

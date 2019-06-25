@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { _import, resolve, exists, join, readJsonSync } from '../../utils'
+import { _import, resolve, exists, join, readJsonSync, isSingleMode } from '../../utils'
 import data from './data'
 
 export default {
@@ -7,14 +7,10 @@ export default {
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(options) {
-    const slides = exists(join(this.options.srcDir, options.dir))
-    const docs = exists(join(this.options.srcDir, 'docs'))
-    const blog = exists(join(this.options.srcDir, 'blog'))
-    // const pages = exists(join(this.options.srcDir, this.options.dir.pages))
-    if (slides && (!docs && !blog)) {
+    if (isSingleMode.call(this, ['docs', 'blog'])) {
       options.prefix = '/'
     }
-    return slides
+    return exists(join(this.options.srcDir, options.dir))
   },
   templates: {
     plugin: ['plugin.js', { ssr: false }],
@@ -62,7 +58,7 @@ export default {
   // Options are merged into the parent module default options
   options: {
     dir: 'slides',
-    prefix: '/slides',
+    prefix: '/slides/',
     api({ rootId }) {
       const cache = {}
       const rootDir = join(this.options.buildDir, rootId, 'static')
@@ -84,7 +80,7 @@ export default {
       // path() determines the final URL path of a Markdown source
       // In 'slides' mode, the default format is <prefix>/slides/<slug>
       path(fileName) {
-        return `${this.$press.slides.prefix}/${fileName.toLowerCase()}`
+        return `${this.$press.slides.prefix}${fileName.toLowerCase()}`
       }
     }
   }

@@ -77,6 +77,17 @@ export function walk(root, validate, sliceAtRoot = false) {
   })
 }
 
+export function isSingleMode(otherModes) {
+  if (otherModes.every(m => !exists(join(this.options.srcDir, m)))) {
+    const pagesDir = join(this.options.srcDir, this.options.dir.pages)
+    if (!exists(pagesDir)) {
+      return true
+    } else if (!readdirSync(pagesDir).length) {
+      return true
+    }
+  }
+}
+
 export function slugify(str) {
   return slug(str, { lower: true })
 }

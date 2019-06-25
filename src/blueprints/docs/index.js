@@ -8,7 +8,8 @@ import {
   readdirSync,
   readJsonSync,
   slugify,
-  writeJson
+  writeJson,
+  isSingleMode
 } from '../../utils'
 
 import data from './data'
@@ -17,17 +18,16 @@ export default {
   // Include data loader
   data,
   enabled(options) {
+    if (isSingleMode.call(this, ['blog', 'slides'])) {
+      options.prefix = '/'
+    }
+
     // Enable docs blueprint if srcDir/*.md files exists
     // or if the srcDir/docs/ folder exists
     if (readdirSync(this.options.srcDir).find(p => /\.md$/.test(p))) {
       return true
     }
-
-    if (exists(this.options.srcDir, options.dir)) {
-      return true
-    }
-
-    return false
+    return exists(this.options.srcDir, options.dir))
   },
   templates: {
     'plugin': 'plugin.js',
@@ -89,7 +89,7 @@ export default {
   },
   options: {
     dir: 'docs',
-    prefix: '/docs',
+    prefix: '/docs/',
     meta: {
       title: 'Documentation suite',
       github: 'https://github.com/...'
@@ -115,10 +115,10 @@ export default {
       },
       path(fileName, { title, published }) {
         if (['index', 'README'].includes(fileName)) {
-          return '/topics/index'
+          return 'topics/index'
         }
 
-        return `/topics/${slugify(title)}`
+        return `topics/${slugify(title)}`
       },
       title(fileName, body) {
         if (['index', 'README'].includes(fileName)) {
