@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+	<channel>
+		<title>Jonas Galvez</title>
+		<link>http://hire.jonasgalvez.com.br/</link>
+		<description>Jonas Galvez</description>
+		<% entries.forEach((entry) => { %><item>
+			<link>http://<%= domain %>/<%= entry.permalink %></link>
+            <guid><%= entry.id %></guid>
+	        <pubDate><%= entry.published.toString() %></pubDate>
+	        <description><%= entry.title %></description>
+	    </item>
+	    <% }) %>
+	</channel>
+</rss>
