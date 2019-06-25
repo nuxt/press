@@ -1,5 +1,5 @@
 <template>
-  <main class="topic" v-html="data.body" />
+  <article class="topic" v-html="data.body" />
 </template>
 
 <script>
