@@ -125,8 +125,14 @@ export async function _registerBlueprint(id, rootId, options = {}) {
           options.$generateRoutes = []
         }
         const pathPrefix = path => `${blueprint.options.prefix}${path}`
-        options.$generateRoutes.push(() => {
-          return blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
+        options.$generateRoutes.push(async () => {
+          const routes = await blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
+
+          if (Array.isArray(routes)) {
+            return Promise.all(routes)
+          }
+
+          return routes
         })
       }
 

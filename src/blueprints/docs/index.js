@@ -46,7 +46,7 @@ export default {
     ]
   },
   async generateRoutes(data, prefix, staticRoot) {
-    return Promise.all([
+    return [
       {
         route: prefix('index'),
         payload: await _import(`${staticRoot}/sources/docs/topics/index.json`)
@@ -55,7 +55,7 @@ export default {
         route,
         payload: await _import(`${staticRoot}/sources${route}`)
       }))
-    ])
+    ]
   },
   serverMiddleware({ options, rootId, id }) {
     const { index } = options.docs.api.call(this, { rootId, id })

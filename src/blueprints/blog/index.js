@@ -39,7 +39,7 @@ export default {
     ]
   },
   generateRoutes(data, prefix, staticRoot) {
-    return Promise.all([
+    return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(route),
         payload: await _import(`${staticRoot}/blog/${route}.json`)
@@ -48,7 +48,7 @@ export default {
         route,
         payload: await _import(`${staticRoot}/sources${route}`)
       }))
-    ])
+    ]
   },
   serverMiddleware({ options, rootId, id }) {
     const { index, archive } = this.$press.blog.api.call(this, { rootId, id })

@@ -26,12 +26,10 @@ export default {
     ]
   },
   generateRoutes(data, _, staticRoot) {
-    return Promise.all(
-      Object.keys(data.sources).map(async route => ({
-        route,
-        payload: await _import(`${staticRoot}/sources${route}`)
-      }))
-    )
+    return Object.keys(data.sources).map(async route => ({
+      route,
+      payload: await _import(`${staticRoot}/sources${route}`)
+    }))
   },
   // Register serverMiddleware
   serverMiddleware({ options, rootId, id }) {
