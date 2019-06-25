@@ -7,7 +7,14 @@ export default {
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(options) {
-    return exists(join(this.options.srcDir, options.dir))
+    const slides = exists(join(this.options.srcDir, options.dir))
+    const docs = exists(join(this.options.srcDir, 'docs'))
+    const blog = exists(join(this.options.srcDir, 'blog'))
+    const pages = exists(join(this.options.srcDir, this.options.dir.pages))
+    if (slides && (!docs && !blog && !pages)) {
+      options.prefix = '/'
+    }
+    return slides
   },
   templates: {
     plugin: ['plugin.js', { ssr: false }],
@@ -77,7 +84,7 @@ export default {
       // path() determines the final URL path of a Markdown source
       // In 'slides' mode, the default format is <prefix>/slides/<slug>
       path(fileName) {
-        return `/slides/${fileName.toLowerCase()}`
+        return `${this.$press.slides.prefix}/${fileName.toLowerCase()}`
       }
     }
   }

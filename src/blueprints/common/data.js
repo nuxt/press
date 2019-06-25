@@ -1,5 +1,5 @@
 import { parse } from 'path'
-import { walk, join, readFile } from '../../utils'
+import { exists, walk, join, readFile } from '../../utils'
 import PromisePool from '../../pool'
 
 // PAGES
@@ -27,6 +27,9 @@ export default async function () {
     this.options.srcDir,
     this.options.dir.pages
   )
+  if (!exists(pagesRoot)) {
+    return {}
+  }
   const pages = {}
   const queue = new PromisePool(
     await walk.call(this, pagesRoot, /\.md$/),
