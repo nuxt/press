@@ -4,17 +4,5 @@
   },
   "extends": [
     "@nuxtjs"
-  ],
-  "rules": {
-    "import/default": 0,
-    "import/namespace": 0,
-    "no-useless-escape": 0,
-    "no-useless-call": 0,
-    "new-cap": 0,
-    "vue/html-closing-bracket-newline": 0,
-    "vue/require-prop-types": 0,
-    "vue/require-default-prop": 0,
-    "vue/return-in-computed-property": 0,
-    "vue/multiline-html-element-content-newline": 0
-  }
+  ]
 }

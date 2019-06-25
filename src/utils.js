@@ -9,13 +9,16 @@ import {
 } from 'fs'
 
 import {
+  dirname,
   resolve as _resolve,
   join as _join,
   sep
 } from 'path'
 
 import { promisify } from 'util'
+import { writeJson, ensureDir as _ensureDir, remove, move } from 'fs-extra'
 import klaw from 'klaw'
+import slug from 'slug'
 
 const _stat = promisify(_statAsync)
 const _readFile = promisify(_readFileAsync)
@@ -51,6 +54,10 @@ export function isDir(path) {
   return lstatSync(path).isDirectory()
 }
 
+export function ensureDir(...paths) {
+  return _ensureDir(join(...paths))
+}
+
 export function walk(root, validate, sliceAtRoot = false) {
   const matches = []
   const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1
@@ -70,7 +77,22 @@ export function walk(root, validate, sliceAtRoot = false) {
   })
 }
 
-export { writeJson, ensureDir, remove, move } from 'fs-extra'
+export function slugify(str) {
+  return slug(str, { lower: true })
+}
+
+export function interopDefault(m) {
+  return m.default || m
+}
+
+export async function _import(modulePath) {
+  return interopDefault(await import(modulePath))
+}
+
 export { readdirSync, readFileSync } from 'fs'
-export { dirname } from 'path'
-export { default as slugify } from 'slug'
+export {
+  dirname,
+  writeJson,
+  remove,
+  move
+}

@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { resolve, exists, join, slugify, readJsonSync } from '../../utils'
+import { _import, resolve, exists, join, slugify, readJsonSync } from '../../utils'
 import data from './data'
 
 export default {
@@ -40,13 +40,13 @@ export default {
   },
   generateRoutes(data, prefix, staticRoot) {
     return [
-      ...Object.keys(data.topLevel).map(route => ({
+      ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(route),
-        payload: require(`${staticRoot}/blog/${route}.json`)
+        payload: await _import(`${staticRoot}/blog/${route}.json`)
       })),
-      ...Object.keys(data.sources).map(route => ({
+      ...Object.keys(data.sources).map(async route => ({
         route,
-        payload: require(`${staticRoot}/sources${route}`)
+        payload: await _import(`${staticRoot}/sources${route}`)
       }))
     ]
   },
@@ -131,7 +131,7 @@ export default {
       // path() determines the final URL path of a Markdown source
       // In `blog` mode, the default format is /YYYY/MM/DD/<slug>
       path({ title, published }) {
-        const slug = slugify(title.replace(/\s+/g, '-')).toLowerCase()
+        const slug = slugify(title)
         const date = published.toString().split(/\s+/).slice(1, 4).reverse()
         return `/${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}`
       },
