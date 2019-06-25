@@ -33,6 +33,7 @@ export default {
     'plugin': 'plugin.js',
     'layout': 'layout.vue',
     'toc': 'components/toc.vue',
+    'header': 'components/header.vue',
     'index': 'pages/index.vue',
     'topic': 'pages/topic.vue'
   },

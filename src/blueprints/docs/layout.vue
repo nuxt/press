@@ -1,14 +1,20 @@
 <template>
   <div id="nuxt-press" class="docs">
-    <toc />
-    <nuxt class="content" />
+    <top />
+
+    <main>
+      <toc />
+
+      <nuxt class="content" />
+    </main>
   </div>
 </template>
 
 <script>
+import top from './components/header'
 import toc from './components/toc'
 
 export default {
-  components: { toc }
+  components: { top, toc }
 }
 </script>

@@ -1,18 +1,20 @@
 <template>
-  <ul class="toc">
-    <li
-      :key="`topic-${t}`"
-      v-for="(topic, t) in toc">
-      <nuxt-link
-        :class="{
-          [`h${topic[0]}`]: true,
-          active: topic[2] === `${$route.path}${$route.hash}`
-        }"
-        :to="topic[2]">
-        {{ topic[1] }}
-      </nuxt-link>
-    </li>
-  </ul>
+  <nav class="toc">
+    <ul>
+      <li
+        :key="`topic-${t}`"
+        v-for="(topic, t) in toc">
+        <nuxt-link
+          :class="{
+            [`h${topic[0]}`]: true,
+            active: topic[2] === `${$route.path}${$route.hash}`
+          }"
+          :to="topic[2]">
+          {{ topic[1] }}
+        </nuxt-link>
+      </li>
+    </ul>
+  </nav>
 </template>
 
 <script>
@@ -42,17 +44,12 @@ export default {
 
 <style>
 .toc {
-  top: 30px;
-  position: fixed;
-  width: calc(18%);
+  width: 18vw;
   border-right: 1px solid #f6f6f6;
-  margin: 0px;
-  margin-right: 10px;
-  padding-top: 20px;
-  padding-left: 15px;
-  padding-right: 15px;
-  height: calc(100% - 20px);
-  overflow-y: scroll;
+  margin: 0;
+  padding: 1.4em 1.1em 0 1.1em;
+  overflow-y: auto;
+
   & li {
     list-style-type: none;
     margin: 0px;
@@ -63,17 +60,20 @@ export default {
     }
   }
 }
+
 .h1 {
-  font-size: 17px;
-  margin-left: 10px;
+  font-size: 1.3em;
+  margin-left: .7em;
 }
+
 .h2 {
-  font-size: 16px;
-  margin-left: 20px;
+  font-size: 1.2em;
+  margin-left: 1.4em;
 }
+
 .h3 {
-  font-size: 15px;
-  margin-left: 30px;
+  font-size: 1.1em;
+  margin-left: 2.1em;
 }
 
 </style>

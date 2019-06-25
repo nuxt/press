@@ -1,4 +1,12 @@
 {
+  "name": "Demo",
+  "topMenu": [{
+    "name": "github",
+    "url": "https://github"
+  },{
+    "name": "github",
+    "url": "https://github"
+  }],
   "toc": [
     "/docs/topics/index#publishing-the-nuxt-way",
     "/docs/topics/index#setup",
