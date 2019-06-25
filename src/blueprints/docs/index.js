@@ -27,7 +27,7 @@ export default {
     if (readdirSync(this.options.srcDir).find(p => /\.md$/.test(p))) {
       return true
     }
-    return exists(this.options.srcDir, options.dir))
+    return exists(this.options.srcDir, options.dir)
   },
   templates: {
     'plugin': 'plugin.js',

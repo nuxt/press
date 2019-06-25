@@ -2,7 +2,6 @@ import defu from 'defu'
 import PromisePool from './pool'
 
 import {
-  _import,
   dirname,
   join,
   ensureDir,
@@ -28,12 +27,8 @@ export async function registerBlueprints(rootId, options, blueprints) {
   }
 }
 
-// TODO
-// possible enhancement if released as a standalone library:
-// refactor to allow registering a single, top-level blueprint
 export async function _registerBlueprint(id, rootId, options = {}) {
   // Load blueprint specification
-  const blueprintPath = resolve(`blueprints/${id}`)
   const blueprint = blueprints[id]
 
   // Return if blueprint is not enabled
