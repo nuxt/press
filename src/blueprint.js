@@ -11,6 +11,13 @@ import {
   walk
 } from './utils'
 
+import docs from './blueprints/docs'
+import blog from './blueprints/blog'
+import slides from './blueprints/slides'
+import common from './blueprints/common'
+
+const blueprints = { docs, blog, slides, common }
+
 export async function registerBlueprints(rootId, options, blueprints) {
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
@@ -26,8 +33,9 @@ export async function registerBlueprints(rootId, options, blueprints) {
 export async function _registerBlueprint(id, rootId, options = {}) {
   // Load blueprint specification
   const blueprintPath = resolve(`blueprints/${id}`)
-  const blueprint = await import(blueprintPath).then(m => m.default)
-
+  // TODO This line was breaking the rollup build, figure out workaround
+  // const blueprint = await blueprints[ import(blueprintPath).then(m => m.default)]
+  const blueprint = blueprints[id]
   // Return if blueprint is not enabled
   if (!blueprint.enabled.call(this, blueprint.options)) {
     return
