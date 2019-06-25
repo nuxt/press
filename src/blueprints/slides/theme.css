@@ -1,0 +1,27 @@
+
+#nuxt-press.slides {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  & .swiper-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  & .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    & > * {
+      font-size: 2em;
+      margin-bottom: 1.2em;
+    }
+  }
+  & .swiper-slide:first-of-type {
+    transform: scale(3.0);
+  }
+}

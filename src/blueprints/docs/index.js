@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { exists, join, readdirSync, readJsonSync, slugify, writeJson } from '../../utils'
+import { resolve, exists, join, readdirSync, readJsonSync, slugify, writeJson } from '../../utils'
 import data from './data'
 
 export default {
@@ -53,21 +53,22 @@ export default {
       }
     ]
   },
-  hooks: {
-    build: {
-      async compile({ data }) {
-        const pressJson = {
-          toc: Object.keys(data.topLevel.index)
-        }
-        const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
-        if (!exists(pressJsonPath)) {
-          await writeJson(pressJsonPath, pressJson, { spaces: 2 })
-        }
-      },
-      done({ options }) {
-        this.options.watch.push('~/*.md')
-        this.options.watch.push(`~/${options.docs.dir}/*.md`)
+  build: {
+    before() {
+      this.options.css.push(resolve('blueprints/docs/theme.css'))
+    },
+    async compile({ data }) {
+      const pressJson = {
+        toc: Object.keys(data.topLevel.index)
       }
+      const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
+      if (!exists(pressJsonPath)) {
+        await writeJson(pressJsonPath, pressJson, { spaces: 2 })
+      }
+    },
+    done({ options }) {
+      this.options.watch.push('~/*.md')
+      this.options.watch.push(`~/${options.docs.dir}/*.md`)
     }
   },
   options: {

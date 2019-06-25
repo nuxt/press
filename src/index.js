@@ -20,7 +20,7 @@ export default async function (options) {
   // Register stylesheets
   this.options.css.push(
     'prismjs/themes/prism.css',
-    resolve('themes/default.css')
+    resolve('blueprints/common/default.css')
   )
 
   // Common helper for writing JSON responses

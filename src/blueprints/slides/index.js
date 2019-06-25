@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { exists, join, readJsonSync } from '../../utils'
+import { resolve, exists, join, readJsonSync } from '../../utils'
 import data from './data'
 
 export default {
@@ -44,11 +44,12 @@ export default {
       }
     ]
   },
-  hooks: {
-    build: {
-      done({ options }) {
-        this.options.watch.push(`~/${options.slides.dir}*.md`)
-      }
+  build: {
+    before() {
+      this.options.css.push(resolve('blueprints/slides/theme.css'))
+    },
+    done({ options }) {
+      this.options.watch.push(`~/${options.slides.dir}*.md`)
     }
   },
   // Options are merged into the parent module default options
