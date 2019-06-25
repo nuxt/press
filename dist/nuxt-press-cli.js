@@ -9,7 +9,8 @@ const cli = {
   description: 'CLI for @nuxt/press',
   usage: 'press <cmd>',
   run(cmd) {
-    consola.info(cmd.argv);
+    consola.info('argv', cmd.argv._);
+    // const cstr = cmd.argv._[0]
   }
 };
 
