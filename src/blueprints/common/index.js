@@ -28,7 +28,7 @@ export default {
     ]
   },
   generateRoutes(data, _, staticRoot) {
-    return Object.keys(data.sources).map(route => {
+    return Object.keys(data.sources).map((route) => {
       if (route.endsWith('/index')) {
         route = route.slice(0, route.indexOf('/index'))
       }
