@@ -2,6 +2,7 @@ import defu from 'defu'
 import PromisePool from './pool'
 
 import {
+  _import,
   dirname,
   join,
   ensureDir,
@@ -22,8 +23,8 @@ export async function registerBlueprints(rootId, options, blueprints) {
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
-  for (const bp of blueprints) { // ['slides', 'common']) {
-    await _registerBlueprint.call(this, bp, rootId, options)
+  for (const id of blueprints) { // ['slides', 'common']) {
+    await _registerBlueprint.call(this, id, rootId, options)
   }
 }
 
@@ -33,9 +34,8 @@ export async function registerBlueprints(rootId, options, blueprints) {
 export async function _registerBlueprint(id, rootId, options = {}) {
   // Load blueprint specification
   const blueprintPath = resolve(`blueprints/${id}`)
-  // TODO This line was breaking the rollup build, figure out workaround
-  // const blueprint = await blueprints[ import(blueprintPath).then(m => m.default)]
   const blueprint = blueprints[id]
+
   // Return if blueprint is not enabled
   if (!blueprint.enabled.call(this, blueprint.options)) {
     return
@@ -45,6 +45,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   if (!this.options[rootId]) {
     this.options[rootId] = {}
   }
+
   if (!this[`$${rootId}`]) {
     this[`$${rootId}`] = this.options[rootId]
   }
@@ -90,10 +91,12 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
     if (blueprint.routes) {
       const routes = await blueprint.routes.call(this, templates)
+
       this.extendRoutes((nuxtRoutes, resolve) => {
         for (const route of routes) {
-          if (exists(join(this.options.srcDir, route.component))) {
-            route.component = join('~', route.component)
+          const path = join(this.options.srcDir, route.component)
+          if (exists(path)) {
+            route.component = path
           } else {
             route.component = join(this.options.buildDir, route.component)
           }
@@ -112,8 +115,9 @@ export async function _registerBlueprint(id, rootId, options = {}) {
       if (blueprint.build && blueprint.build.done) {
         this.nuxt.hook('build:done', async () => {
           await blueprint.build.done.call(this, context)
-          this.options.generate.routes = () => {
-            return options.$generateRoutes.reduce((routes, route) => [...routes, ...route()])
+          this.options.generate.routes = async () => {
+            const routes = await Promise.all(options.$generateRoutes.map(route => route()))
+            return routes.reduce((routes, route) => [...routes, ...route])
           }
         })
       }
@@ -127,38 +131,49 @@ export async function _registerBlueprint(id, rootId, options = {}) {
           options.$generateRoutes = []
         }
         const pathPrefix = path => `${blueprint.options.prefix}${path}`
-        options.$generateRoutes.push(() => {
-          return blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
+        options.$generateRoutes.push(async () => {
+          const routes = await blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
+
+          if (Array.isArray(routes)) {
+            return Promise.all(routes)
+          }
+
+          return routes
         })
       }
 
       this.nuxt.hook('generate:distCopied', async () => {
         const staticRootGenerate = join(this.options.generate.dir, rootId)
         await ensureDir(staticRootGenerate)
-        await saveStaticData.call(this, staticRootGenerate, id, context.data)
+        await saveStaticData(staticRootGenerate, id, context.data)
       })
     })
   })
 }
 
-async function saveStaticData(staticRoot, id, data) {
-  await ensureDir(join(staticRoot, id))
-  const { topLevel, sources } = data
+async function saveStaticData(staticRoot, id, { topLevel, sources } = {}) {
+  await ensureDir(staticRoot, id)
+
   if (topLevel) {
-    for (const topLevelKey of Object.keys(topLevel)) {
+    for (const topLevelKey in topLevel) {
       const topLevelPath = join(staticRoot, id, `${topLevelKey}.json`)
+
       await ensureDir(dirname(topLevelPath))
       await writeJson(topLevelPath, topLevel[topLevelKey])
     }
   }
+
   if (sources) {
     const pool = new PromisePool(
       Object.values(sources),
       async (source) => {
         const sourcePath = join(staticRoot, 'sources', `${source.path}.json`)
-        if (!exists(dirname(sourcePath))) {
-          await ensureDir(dirname(sourcePath))
+        const sourceDir = dirname(sourcePath)
+
+        if (!exists(sourceDir)) {
+          await ensureDir(sourceDir)
         }
+
         await writeJson(sourcePath, source)
       }
     )
@@ -169,8 +184,10 @@ async function saveStaticData(staticRoot, id, data) {
 async function addTemplateAssets({ options, rootId, id }, pattern) {
   const srcDir = resolve('blueprints', id)
   const srcList = await walk.call(this, srcDir, pattern, true)
+
   const pool = new PromisePool(srcList, (src) => {
     const srcPath = resolve('blueprints', id, src)
+
     this.addTemplate({
       src: srcPath,
       fileName: join(rootId, 'assets', id, src.replace(`assets/`, ''))
@@ -182,11 +199,13 @@ async function addTemplateAssets({ options, rootId, id }, pattern) {
 async function addTemplates({ options, rootId, id }, templates) {
   const finalTemplates = {}
   const sliceAt = resolve('blueprints').length + 1
-  for (const templateKey of Object.keys(templates)) {
+
+  for (const templateKey in templates) {
     if (templateKey === 'assets') {
       await addTemplateAssets.call(this, { options, rootId, id }, templates[templateKey])
       continue
     }
+
     const templateSpec = templates[templateKey]
     const isTemplateArr = Array.isArray(templateSpec)
     const template = {

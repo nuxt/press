@@ -47,24 +47,31 @@ export default async function () {
   const sources = {}
   const archive = {}
 
-  const queue = new PromisePool(
-    await walk.call(this, srcRoot, (path) => {
-      if (path.startsWith('pages')) {
-        return false
-      }
-      return /\.md$/.test(path)
-    }),
-    async (path) => {
-      const entry = await parseEntry.call(this, path)
-      addArchiveEntry(archive, entry)
-      sources[entry.path] = entry
+  const jobs = await walk.call(this, srcRoot, (path) => {
+    if (path.startsWith('pages')) {
+      return false
     }
-  )
+    return /\.md$/.test(path)
+  })
+
+  const handler = async (path) => {
+    const entry = await parseEntry.call(this, path)
+    addArchiveEntry(archive, entry)
+    sources[entry.path] = entry
+  }
+
+  const queue = new PromisePool(jobs, handler)
   await queue.done()
 
   const index = Object.values(sources)
     .sort((a, b) => b.published - a.published)
     .slice(0, 10)
 
-  return { topLevel: { index, archive }, sources }
+  return {
+    topLevel: {
+      index,
+      archive
+    },
+    sources
+  }
 }

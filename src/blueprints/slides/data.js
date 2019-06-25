@@ -56,21 +56,27 @@ export default async function () {
     this.$press.slides.dir
   )
 
-  const pool = new PromisePool(
-    await walk.call(this, srcRoot, (path) => {
-      if (path.startsWith('pages')) {
-        return false
-      }
-      return /\.md$/.test(path)
-    }),
-    async (path) => {
-      const slides = await parseSlides.call(this, path)
-      sources[slides.path] = slides
+  const jobs = await walk.call(this, srcRoot, (path) => {
+    if (path.startsWith('pages')) {
+      return false
     }
-  )
+    return /\.md$/.test(path)
+  })
+
+  const handler = async (path) => {
+    const slides = await parseSlides.call(this, path)
+    sources[slides.path] = slides
+  }
+
+  const pool = new PromisePool(jobs, handler)
   await pool.done()
 
   const index = Object.values(sources)
 
-  return { topLevel: { index }, sources }
+  return {
+    topLevel: {
+      index
+    },
+    sources
+  }
 }

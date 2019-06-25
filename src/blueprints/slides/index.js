@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { resolve, exists, join, readJsonSync } from '../../utils'
+import { _import, resolve, exists, join, readJsonSync } from '../../utils'
 import data from './data'
 
 export default {
@@ -33,9 +33,9 @@ export default {
     ]
   },
   generateRoutes(data, _, staticRoot) {
-    return Object.keys(data.sources).map(route => ({
+    return Object.keys(data.sources).map(async route => ({
       route,
-      payload: require(`${staticRoot}/sources${route}`)
+      payload: await _import(`${staticRoot}/sources${route}`)
     }))
   },
   // Register serverMiddleware
@@ -56,7 +56,7 @@ export default {
       this.options.css.push(resolve('blueprints/slides/theme.css'))
     },
     done({ options }) {
-      this.options.watch.push(`~/${options.slides.dir}*.md`)
+      this.options.watch.push(`~/${options.slides.dir}/*.md`)
     }
   },
   // Options are merged into the parent module default options

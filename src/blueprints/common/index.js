@@ -1,6 +1,6 @@
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
-import { ensureDir, exists, join, readJsonSync, remove } from '../../utils'
+import { _import, ensureDir, exists, join, readJsonSync, remove } from '../../utils'
 import data from './data'
 
 export default {
@@ -28,13 +28,14 @@ export default {
     ]
   },
   generateRoutes(data, _, staticRoot) {
-    return Object.keys(data.sources).map((route) => {
+    return Object.keys(data.sources).map(async (route) => {
       if (route.endsWith('/index')) {
         route = route.slice(0, route.indexOf('/index'))
       }
+
       return {
         route,
-        payload: require(`${staticRoot}/sources${route}`)
+        payload: await _import(`${staticRoot}/sources${route}`)
       }
     })
   },

@@ -10,9 +10,21 @@ const scripts = {
 }
 
 function updatePackageJson() {
-  const packageJson = JSON.parse(
-    readFileSync(join(packageRoot, 'package.json')).toString()
-  )
+  if (!existsSync(join(packageRoot, 'package.json'))) {
+    writeFileSync(
+      join(packageRoot, 'package.json'),
+      JSON.stringify({ scripts }, null, 2)
+    )
+    return
+  }
+  let packageJson
+  try {
+    packageJson = JSON.parse(
+      readFileSync(join(packageRoot, 'package.json')).toString()
+    )
+  } catch(_) {
+    packageJson = {}
+  }
   if (!packageJson.scripts) {
     packageJson.scripts = {}
     for (const script in scripts) {
