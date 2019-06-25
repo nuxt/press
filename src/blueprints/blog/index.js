@@ -67,11 +67,11 @@ export default {
   build: {
     before() {
       this.options.css.push(resolve('blueprints/blog/theme.css'))
+    },
+    done({ options }) {
+      this.options.watch.push(`~/${options.blog.dir}/*.md`)
+      this.options.watch.push(`~/${options.blog.dir}/**/*.md`)
     }
-  },
-  buildDone({ options }) {
-    this.options.watch.push(`~/${options.blog.dir}*.md`)
-    this.options.watch.push(`~/${options.blog.dir}**/*.md`)
   },
   options: {
     dir: 'blog',
