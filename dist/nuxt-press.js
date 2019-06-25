@@ -164,8 +164,8 @@ async function _registerBlueprint(id, rootId, options = {}) {
 
     context.data = await blueprint.data.call(this);
 
-    if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.before) {
-      await blueprint.hooks.build.before.call(this, context);
+    if (blueprint.build && blueprint.build.before) {
+      await blueprint.build.before.call(this, context);
     }
 
     if (blueprint.routes) {
@@ -189,17 +189,17 @@ async function _registerBlueprint(id, rootId, options = {}) {
       const staticRoot = join(this.options.buildDir, rootId, 'static');
       await saveStaticData.call(this, staticRoot, id, context.data);
 
-      if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.done) {
+      if (blueprint.build && blueprint.build.done) {
         this.nuxt.hook('build:done', async () => {
-          await blueprint.hooks.build.done.call(this, context);
+          await blueprint.build.done.call(this, context);
           this.options.generate.routes = () => {
             return options.$generateRoutes.reduce((routes, route) => [...routes, ...route()])
           };
         });
       }
 
-      if (blueprint.hooks && blueprint.hooks.build && blueprint.hooks.build.compile) {
-        await blueprint.hooks.build.compile.call(this, context);
+      if (blueprint.build && blueprint.build.compile) {
+        await blueprint.build.compile.call(this, context);
       }
 
       if (blueprint.generateRoutes) {
@@ -322,7 +322,7 @@ async function index (options) {
   // Register stylesheets
   this.options.css.push(
     'prismjs/themes/prism.css',
-    resolve('themes/default.css')
+    resolve('blueprints/common/default.css')
   );
 
   // Common helper for writing JSON responses
