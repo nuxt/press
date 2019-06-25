@@ -26,7 +26,12 @@ components['press-slides'] = PressSlides
 export default {
   components,
   layout({ params }) {
-    return params.source.slice(0, params.source.indexOf('/'))
+    const cKeys = Object.keys(components)
+    if (cKeys.length === 1) { // single-mode
+      return cKeys[0].slice(cKeys[0].indexOf('-') + 1)
+    } else {
+      return params.source.slice(0, params.source.indexOf('/'))
+    }
   },
   async asyncData ({ $press, params, payload }) {
     const source = payload || await $press.get(`api/source/${params.source}`)

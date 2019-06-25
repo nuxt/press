@@ -10,8 +10,8 @@ export default {
     const slides = exists(join(this.options.srcDir, options.dir))
     const docs = exists(join(this.options.srcDir, 'docs'))
     const blog = exists(join(this.options.srcDir, 'blog'))
-    const pages = exists(join(this.options.srcDir, this.options.dir.pages))
-    if (slides && (!docs && !blog && !pages)) {
+    // const pages = exists(join(this.options.srcDir, this.options.dir.pages))
+    if (slides && (!docs && !blog)) {
       options.prefix = '/'
     }
     return slides
