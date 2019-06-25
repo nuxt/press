@@ -23,9 +23,10 @@ function $json(url) {
 
 export default (ctx, inject) => {
   let press
+
   if (process.static && process.client) {
     press = {
-      get: (url) => {
+      get(url) {
         for (const apiPath of apiToStaticPaths) {
           if (url.startsWith(apiPath)) {
             if (typeof apiToStatic[apiPath] === 'function') {
@@ -44,6 +45,7 @@ export default (ctx, inject) => {
       }
     }
   }
+
   ctx.$press = press
   inject('press', press)
 }

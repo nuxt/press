@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { resolve, exists, join, readJsonSync } from '../../utils'
+import { _import, resolve, exists, join, readJsonSync } from '../../utils'
 import data from './data'
 
 export default {
@@ -26,10 +26,12 @@ export default {
     ]
   },
   generateRoutes(data, _, staticRoot) {
-    return Object.keys(data.sources).map(route => ({
-      route,
-      payload: require(`${staticRoot}/sources${route}`)
-    }))
+    return Promise.all(
+      Object.keys(data.sources).map(async route => ({
+        route,
+        payload: await _import(`${staticRoot}/sources${route}`)
+      }))
+    )
   },
   // Register serverMiddleware
   serverMiddleware({ options, rootId, id }) {

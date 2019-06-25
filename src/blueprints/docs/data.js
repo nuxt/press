@@ -10,26 +10,35 @@ import PromisePool from '../../pool'
 
 async function parseDoc(sourcePath) {
   const raw = await readFile(this.options.srcDir, sourcePath)
-  const fileName = parse(sourcePath).name
-  const markdownResult = await this
-    .$press.docs.source.markdown.call(this, raw)
-  let { toc } = markdownResult
-  const { html: body } = markdownResult
-  const title = this.$press.docs.source.title
-    .call(this, fileName, raw)
-  if (toc[0]) {
+  const { name: fileName } = parse(sourcePath)
+
+  // eslint-disable-next-line prefer-const
+  let { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw)
+  const title = this.$press.docs.source.title.call(this, fileName, raw)
+
+  if (toc.length && toc[0]) {
     toc[0][1] = title
   } else if (['index', 'readme'].includes(fileName)) {
     // Force intro toc item if not present
     toc = [[1, 'Intro', '#intro']]
   }
-  const source = { body, title, type: 'topic' }
-  source.path = `${
-    this.$press.docs.prefix
-  }${
-    this.$press.docs.source.path.call(this, fileName, source)
-  }`
-  return { toc, source }
+
+  const source = {
+    type: 'topic',
+    title,
+    body
+  }
+
+  const pathPrefix = this.$press.docs.prefix
+  const path = this.$press.docs.source.path.call(this, fileName, source)
+
+  return {
+    toc,
+    source: {
+      ...source,
+      path: `${pathPrefix}${path}`
+    }
+  }
 }
 
 export default async function (data) {
@@ -39,28 +48,37 @@ export default async function (data) {
     this.options.srcDir,
     this.$press.docs.dir
   )
+
   if (!exists(srcRoot)) {
     srcRoot = this.options.srcDir
   }
 
   const index = {}
-  const queue = new PromisePool(
-    await walk.call(this, srcRoot, (path) => {
-      if (path.startsWith('pages')) {
-        return false
-      }
-      return /\.md$/.test(path)
-    }),
-    async (path) => {
-      const { toc, source } = await parseDoc.call(this, path)
-      for (const tocItem of toc) {
-        tocItem[2] = `${source.path}${tocItem[2]}`
-        index[tocItem[2]] = tocItem
-      }
-      sources[source.path] = source
+
+  const jobs = await walk.call(this, srcRoot, (path) => {
+    if (path.startsWith('pages')) {
+      return false
     }
-  )
+    return /\.md$/.test(path)
+  })
+
+  const handler = async (path) => {
+    const { toc, source } = await parseDoc.call(this, path)
+
+    for (const tocItem of toc) {
+      tocItem[2] = `${source.path}${tocItem[2]}`
+      index[tocItem[2]] = tocItem
+    }
+    sources[source.path] = source
+  }
+
+  const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  return { topLevel: { index }, sources }
+  return {
+    topLevel: {
+      index
+    },
+    sources
+  }
 }

@@ -1,5 +1,16 @@
 import Markdown from '@nuxt/markdown'
-import { resolve, exists, join, readdirSync, readJsonSync, slugify, writeJson } from '../../utils'
+
+import {
+  _import,
+  resolve,
+  exists,
+  join,
+  readdirSync,
+  readJsonSync,
+  slugify,
+  writeJson
+} from '../../utils'
+
 import data from './data'
 
 export default {
@@ -8,10 +19,15 @@ export default {
   enabled(options) {
     // Enable docs blueprint if srcDir/*.md files exists
     // or if the srcDir/docs/ folder exists
-    return (
-      readdirSync(this.options.srcDir).find(p => /\.md$/.test(p)) ||
-      exists(this.options.srcDir, options.dir)
-    )
+    if (readdirSync(this.options.srcDir).find(p => /\.md$/.test(p))) {
+      return true
+    }
+
+    if (exists(this.options.srcDir, options.dir)) {
+      return true
+    }
+
+    return false
   },
   templates: {
     'plugin': 'plugin.js',
@@ -29,17 +45,17 @@ export default {
       }
     ]
   },
-  generateRoutes(data, prefix, staticRoot) {
-    return [
+  async generateRoutes(data, prefix, staticRoot) {
+    return Promise.all([
       {
         route: prefix('index'),
-        payload: require(`${staticRoot}/sources/docs/topics/index.json`)
+        payload: await _import(`${staticRoot}/sources/docs/topics/index.json`)
       },
-      ...Object.keys(data.sources).map(route => ({
+      ...Object.keys(data.sources).map(async route => ({
         route,
-        payload: require(`${staticRoot}/sources${route}`)
+        payload: await _import(`${staticRoot}/sources${route}`)
       }))
-    ]
+    ])
   },
   serverMiddleware({ options, rootId, id }) {
     const { index } = options.docs.api.call(this, { rootId, id })
@@ -101,8 +117,8 @@ export default {
         if (['index', 'README'].includes(fileName)) {
           return '/topics/index'
         }
-        const slug = title.replace(/\s+/g, '-')
-        return `/topics/${slugify(slug).toLowerCase()}`
+
+        return `/topics/${slugify(title)}`
       },
       title(fileName, body) {
         if (['index', 'README'].includes(fileName)) {
