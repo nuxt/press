@@ -52,9 +52,9 @@ export default {
   name: 'press',
   description: 'CLI for NuxtPress',
   usage: 'press <cmd>',
-  async run(cmd) {
+  run(cmd) {
     if (cmd.argv._.length && cmd.argv._[0] in commands) {
-      await commands[cmd.argv._[0]](cmd.argv._.slice(1))
+      return commands[cmd.argv._[0]](cmd.argv._.slice(1))
     } else {
       consola.fatal('Unrecognized command -- please see docs at https://nuxt.press/')
     }
