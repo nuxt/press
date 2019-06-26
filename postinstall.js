@@ -2,6 +2,10 @@ const { existsSync, readFileSync, writeFileSync } = require('fs')
 const { join, resolve } = require('path')
 const packageRoot = resolve(join(process.cwd(), '..', '..', '..'))
 
+if (!process.cwd().includes('/node_modules/')) {
+  return
+}
+
 const scripts = {
   'dev': 'nuxt dev',
   'build': 'nuxt build',
