@@ -1,6 +1,6 @@
-Jun 20, 2019
-
--
+---
+date: Jun 20, 2019
+---
 
 # A sample old entry
 

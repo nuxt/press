@@ -1,4 +1,5 @@
 import Markdown from '@nuxt/markdown'
+import graymatter from 'gray-matter'
 import {
   _import,
   resolve,
@@ -134,10 +135,18 @@ export default {
       // considering the first and (optionally) second lines as
       // publishing date and summary respectively
       head(source) {
-        const parsed = source
-          .substr(0, source.indexOf('#')).trim().split(/\n\n/)
-        const published = new Date(Date.parse(parsed[0]))
-        return { published, summary: parsed[1] }
+        if (source.trimLeft().startsWith('---')) {
+          const { content, data } = graymatter(source)
+          if (data.date) {
+            data.published = new Date(Date.parse(data.date))
+          }
+          delete data.date
+          return { ...data, content }
+        }
+        const published = source.substr(0, source.indexOf('#')).trim()
+        return {
+          published: new Date(Date.parse(published))
+        }
       },
 
       // path() determines the final URL path of a Markdown source

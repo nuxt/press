@@ -1,6 +1,6 @@
-April 20, 2019
-
--
+---
+date: April 20, 2019
+---
 
 # Publishing blogs
 
