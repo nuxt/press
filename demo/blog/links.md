@@ -1,7 +1,5 @@
 June 20, 2019
 
--
-
 # Adding sidebar links
 
 > This content comes from the `docs` suite. It used here to exemplify

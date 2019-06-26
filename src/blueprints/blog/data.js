@@ -12,9 +12,10 @@ async function parseEntry(sourcePath) {
   const headData = parse.head.call(this, raw)
   const title = headData.title || parse.title.call(this, raw)
   const slug = headData.slug
-  const body = headData.body || await parse.markdown.call(this, raw.substr(raw.indexOf('#')))
+  const body = await parse.markdown.call(this, headData.content || raw.substr(raw.indexOf('#')))
   const published = headData.published
-  const source = { body, title, slug, published }
+  delete headData.content
+  const source = { ...headData, body, title, slug, published }
   source.path = `${
     this.$press.blog.prefix
   }${

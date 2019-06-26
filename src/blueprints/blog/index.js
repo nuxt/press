@@ -136,11 +136,12 @@ export default {
       // publishing date and summary respectively
       head(source) {
         if (source.trimLeft().startsWith('---')) {
-          const { data } = graymatter(source)
+          const { content, data } = graymatter(source)
           if (data.date) {
-            data.published = data.date
+            data.published = new Date(Date.parse(data.date))
           }
-          return data
+          delete data.date
+          return { ...data, content }
         }
         const published = source.substr(0, source.indexOf('#')).trim()
         return {
