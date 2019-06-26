@@ -193,7 +193,7 @@ async function addTemplateAssets({ options, rootId, id }, pattern) {
 
 async function addTemplates({ options, rootId, id }, templates) {
   const finalTemplates = {}
-  const sliceAt = resolve('blueprints').length + 1
+  let sliceAt = resolve('blueprints').length + 1
 
   for (const templateKey in templates) {
     if (templateKey === 'assets') {
@@ -212,6 +212,7 @@ async function addTemplates({ options, rootId, id }, templates) {
     const userProvidedTemplate = join(this.options.srcDir, rootId, id, template.src)
     if (exists(userProvidedTemplate)) {
       template.src = userProvidedTemplate
+      sliceAt = join(this.options.srcDir, rootId).length + 1
     } else {
       template.src = resolve('blueprints', id, template.src)
     }
