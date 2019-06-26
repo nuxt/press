@@ -1,4 +1,5 @@
 import Markdown from '@nuxt/markdown'
+import graymatter from 'gray-matter'
 import {
   _import,
   resolve,
@@ -134,6 +135,13 @@ export default {
       // considering the first and (optionally) second lines as
       // publishing date and summary respectively
       head(source) {
+        if (source.trimLeft().startsWith('---')) {
+          const { data } = graymatter(source)
+          if (data.date) {
+            data.published = data.date
+          }
+          return data
+        }
         const parsed = source
           .substr(0, source.indexOf('#')).trim().split(/\n\n/)
         const published = new Date(Date.parse(parsed[0]))
