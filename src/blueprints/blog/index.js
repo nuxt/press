@@ -45,7 +45,7 @@ export default {
       },
       {
         name: 'blog_archive',
-        path: `${this.$press.blog.prefix}/archive`,
+        path: `${this.$press.blog.prefix}archive`,
         component: templates.archive
       }
     ]
@@ -54,7 +54,7 @@ export default {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(route),
-        payload: await _import(`${staticRoot}/blog/${route}.json`)
+        payload: await _import(`${staticRoot}${this.options.blog.prefix}${route}.json`)
       })),
       ...Object.keys(data.sources).map(async route => ({
         route,
