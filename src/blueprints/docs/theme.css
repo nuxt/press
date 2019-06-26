@@ -28,7 +28,8 @@ body {
     & article.content {
       flex: 1;
       padding: 1.4em;
-      overflow-y: auto;
+      height: calc(100vh - 64px - 2.8em);
+      overflow-y: scroll;
 
       & h3 {
         user-select: none;
