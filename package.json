@@ -1,6 +1,6 @@
 {
   "name": "@nuxt/press",
-  "version": "0.0.1-alpha.29",
+  "version": "0.0.1-alpha.30",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
   "bin": {
     "nuxt-press": "./bin/cli.js"
@@ -22,7 +22,7 @@
     "generate": "nuxt generate",
     "start": "nuxt start",
     "lint": "eslint --fix --ext .js src",
-    "postinstall": "node postinstall.js > error.log"
+    "postinstall": "node postinstall.js"
   },
   "author": "Jonas Galvez <jonasgalvez@gmail.com>",
   "contributors": [
