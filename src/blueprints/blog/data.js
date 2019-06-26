@@ -7,13 +7,14 @@ import PromisePool from '../../pool'
 // Configurable via press.blog.dir
 
 async function parseEntry(sourcePath) {
+  const parse = this.$press.blog.source
   const raw = await readFile(this.options.srcDir, sourcePath)
-  const { published, summary } = this
-    .$press.blog.source.head.call(this, raw)
-  const title = this.$press.blog.source.title.call(this, raw)
-  const body = await this.$press.blog.source.markdown
-    .call(this, raw.substr(raw.indexOf('#')))
-  const source = { body, title, published, summary }
+  const headData = parse.head.call(this, raw)
+  const title = headData.title || parse.title.call(this, raw)
+  const slug = headData.slug
+  const body = headData.body || await parse.markdown.call(this, raw.substr(raw.indexOf('#')))
+  const published = headData.published
+  const source = { body, title, slug, published }
   source.path = `${
     this.$press.blog.prefix
   }${

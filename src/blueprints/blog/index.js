@@ -142,10 +142,10 @@ export default {
           }
           return data
         }
-        const parsed = source
-          .substr(0, source.indexOf('#')).trim().split(/\n\n/)
-        const published = new Date(Date.parse(parsed[0]))
-        return { published, summary: parsed[1] }
+        const published = source.substr(0, source.indexOf('#')).trim()
+        return {
+          published: new Date(Date.parse(published))
+        }
       },
 
       // path() determines the final URL path of a Markdown source
