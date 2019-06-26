@@ -89,6 +89,11 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
       this.extendRoutes((nuxtRoutes, resolve) => {
         for (const route of routes) {
+          if (exists(route.component)) {
+            // this is a fix for hmr, it already has full path set
+            continue
+          }
+
           const path = join(this.options.srcDir, route.component)
           if (exists(path)) {
             route.component = path
