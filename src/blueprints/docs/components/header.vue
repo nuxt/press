@@ -1,6 +1,6 @@
 <template>
   <header class="top-menu">
-    <h1 class="title">{{ config.name }}</h1>
+    <nuxt-link to="/" class="home-link">{{ config.name }}</nuxt-link>
 
     <nav class="links">
       <ul v-if="config.topMenu">
@@ -36,19 +36,23 @@ export default {
 .top-menu {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #e5e5e5;
+  padding: .7rem 1rem;
 
-  & .title {
-    padding-left: 1em;
+  & .home-link {
+    font-size: 1.5rem;
+    font-weight: bold;
+    vertical-align: middle;
+    line-height: 1.6rem;
+    padding-left: 1rem;
   }
 
   & nav.links {
     position: relative;
-    right: 1em;
+    right: 1rem;
 
     & ul {
       display: flex;
-      margin: 11px auto;
+      margin: 0;
       list-style-type: none;
 
       & li {
@@ -56,8 +60,8 @@ export default {
       }
 
       & .nav-item {
-        line-height: 3em;
-        padding: 0 .5em 0 .5em;
+        line-height: 1.5rem;
+        padding: 0 .5rem 0 .5rem;
       }
     }
   }

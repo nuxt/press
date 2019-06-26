@@ -2,11 +2,9 @@
   <div id="nuxt-press" class="docs">
     <top />
 
-    <main>
-      <toc />
+    <toc />
 
-      <nuxt class="content" />
-    </main>
+    <nuxt class="content" />
   </div>
 </template>
 

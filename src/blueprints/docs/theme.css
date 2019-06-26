@@ -3,6 +3,10 @@ body {
   margin: 0;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 #nuxt-press.docs {
   display: flex;
   height: 100vh;
@@ -12,43 +16,44 @@ body {
   margin: 0;
 
   & header {
-    display: flex;
-    flex: 0 64px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    background-color: #fff;
+    border-bottom: 1px solid #e5e5e5;
+    z-index: 3;
   }
 
-  & main {
-    display: flex;
-    flex: 1;
+  & > nav {
+    position: fixed;
+    width: 18rem;
+    top: 3rem;
+    bottom: 0;
+  }
 
-    & nav {
-      flex: 0 0 256px;
-      order: -1;
+  & article.content {
+    padding: 1.4rem 1.4rem 1.4rem 19.4rem;
+
+    & h3 {
+      user-select: none;
+      & span {
+        color: #2f495e !important;
+        text-shadow: 1px 1px #fff;
+        margin-bottom: 0px;
+        border-bottom: 2px solid #2f495e;
+      }
+
+      &:not(:first-of-type) {
+        margin-top: 50px;
+      }
     }
 
-    & article.content {
-      flex: 1;
-      padding: 1.4em;
-      height: calc(100vh - 64px - 1.4em);
-      overflow-y: scroll;
-
-      & h3 {
-        user-select: none;
-        & span {
-          color: #2f495e !important;
-          text-shadow: 1px 1px #fff;
-          margin-bottom: 0px;
-          border-bottom: 2px solid #2f495e;
-        }
-        &:not(:first-of-type) {
-          margin-top: 50px;
-        }
-      }
-      & a {
-        font-weight: bold;
-        color: #669900 !important;
-        &:hover {
-          color: #93dd00 !important;
-        }
+    & a {
+      font-weight: bold;
+      color: #669900 !important;
+      &:hover {
+        color: #93dd00 !important;
       }
     }
   }

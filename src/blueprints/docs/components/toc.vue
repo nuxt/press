@@ -50,6 +50,11 @@ export default {
   padding: 1.4em 1.1em 0 1.1em;
   overflow-y: auto;
 
+  & ul {
+    margin: 0;
+    padding: 0;
+  }
+
   & li {
     list-style-type: none;
     margin: 0px;

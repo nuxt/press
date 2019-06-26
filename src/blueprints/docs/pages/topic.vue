@@ -20,14 +20,10 @@ export default {
 
     const initialId = this.$route.hash.substr(1)
 
-    this._observer = startObserver({
-      vm: this,
-      elements,
-      initialId
-    },
-    (target) => {
+    const observedCallback = (target) => {
       const targetHeading = `${this.$route.path}#${target.id}`
       const heading = document.querySelector(`.toc a[href="${targetHeading}"`)
+
       if (heading) {
         const tocLinks = [...document.querySelectorAll('.toc a.active')]
         for (const tocLink of tocLinks) {
@@ -40,9 +36,17 @@ export default {
           this.$nextTick(() => {
             this.$press.disableScrollBehavior = false
           })
+        }, () => {
+          this.$press.disableScrollBehavior = false
         })
       }
-    })
+    }
+
+    this._observer = startObserver({
+      vm: this,
+      elements,
+      initialId
+    }, observedCallback)
   }
 }
 </script>
