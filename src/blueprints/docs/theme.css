@@ -28,7 +28,7 @@ body {
     & article.content {
       flex: 1;
       padding: 1.4em;
-      height: calc(100vh - 64px - 2.8em);
+      height: calc(100vh - 64px - 1.4em);
       overflow-y: scroll;
 
       & h3 {

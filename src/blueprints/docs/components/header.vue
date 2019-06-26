@@ -36,7 +36,7 @@ export default {
 .top-menu {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #f6f6f6;
+  border-bottom: 1px solid #e5e5e5;
 
   & .title {
     padding-left: 1em;

@@ -45,7 +45,7 @@ export default {
 <style>
 .toc {
   width: 18vw;
-  border-right: 1px solid #f6f6f6;
+  border-right: 1px solid #e5e5e5;
   margin: 0;
   padding: 1.4em 1.1em 0 1.1em;
   overflow-y: auto;
