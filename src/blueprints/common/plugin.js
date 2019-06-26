@@ -1,3 +1,4 @@
+import consola from 'consola'
 import Vue from 'vue'
 import NuxtTemplate from './components/nuxt-template'
 
@@ -41,7 +42,7 @@ export default (ctx, inject) => {
   } else {
     press = {
       get(url) {
-        return ctx.$http.$get(url)
+        return ctx.$http.$get(url).catch(err => consola.warn(err))
       }
     }
   }

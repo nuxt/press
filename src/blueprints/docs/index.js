@@ -50,7 +50,7 @@ export default {
     return [
       {
         route: prefix('index'),
-        payload: await _import(`${staticRoot}/sources/docs/topics/index.json`)
+        payload: await _import(`${staticRoot}/sources${this.options.docs.prefix}topics/index.json`)
       },
       ...Object.keys(data.sources).map(async route => ({
         route,

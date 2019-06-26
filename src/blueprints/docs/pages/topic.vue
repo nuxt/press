@@ -6,6 +6,7 @@
 import { startObserver } from '../../common/components/observer'
 
 export default {
+  layout: 'docs',
   props: ['data'],
   mounted() {
     const elements = `

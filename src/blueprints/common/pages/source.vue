@@ -8,14 +8,17 @@
 <script>
 const components = {}
 
+// The component key differs from the actual component name
+// because the key is also used to determine the layout
+
 <% if (options.$docs) { %> 
 import PressTopic from '../../docs/pages/topic'
-components['press-topic'] = PressTopic
+components['press-docs'] = PressTopic
 <% } %>
 
 <% if (options.$blog) { %> 
 import PressEntry from '../../blog/pages/entry'
-components['press-entry'] = PressEntry
+components['press-blog'] = PressEntry
 <% } %>
 
 <% if (options.$slides) { %> 
