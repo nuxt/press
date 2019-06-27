@@ -1,10 +1,11 @@
 const { existsSync, readFileSync, writeFileSync } = require('fs')
 const { join, resolve } = require('path')
-const packageRoot = resolve(join(process.cwd(), '..', '..', '..'))
 
-if (!process.cwd().includes('/node_modules/')) {
+if (!process.env.INIT_CWD) {
   return
 }
+
+const initCwd = resolve(process.env.INIT_CWD)
 
 const scripts = {
   'dev': 'nuxt dev',
@@ -14,9 +15,9 @@ const scripts = {
 }
 
 function updatePackageJson() {
-  if (!existsSync(join(packageRoot, 'package.json'))) {
+  if (!existsSync(join(initCwd, 'package.json'))) {
     writeFileSync(
-      join(packageRoot, 'package.json'),
+      join(initCwd, 'package.json'),
       JSON.stringify({ scripts }, null, 2)
     )
     return
@@ -24,7 +25,7 @@ function updatePackageJson() {
   let packageJson
   try {
     packageJson = JSON.parse(
-      readFileSync(join(packageRoot, 'package.json')).toString()
+      readFileSync(join(initCwd, 'package.json')).toString()
     )
   } catch(_) {
     packageJson = {}
@@ -37,14 +38,14 @@ function updatePackageJson() {
       }
     }
     writeFileSync(
-      join(packageRoot, 'package.json'),
+      join(initCwd, 'package.json'),
       JSON.stringify(packageJson, null, 2)
     )
   }
 }
 
 function writeNuxtConfig() {
-  const nuxtConfig = join(packageRoot, 'nuxt.config.js')
+  const nuxtConfig = join(initCwd, 'nuxt.config.js')
   if (!existsSync(nuxtConfig)) {
     writeFileSync(
       nuxtConfig,
