@@ -1,6 +1,6 @@
 <template>
   <header class="top-menu">
-    <nuxt-link to="/" class="home-link">{{ config.name }}</nuxt-link>
+    <nuxt-link to="/" class="home-link">{{ config.title }}</nuxt-link>
 
     <nav class="links">
       <!-- internal links, starting with /... -->
