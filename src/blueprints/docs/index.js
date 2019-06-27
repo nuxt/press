@@ -8,7 +8,7 @@ import {
   readdirSync,
   readJsonSync,
   slugify,
-  writeJson,
+  updateJson,
   isSingleMode
 } from '../../utils'
 
@@ -75,13 +75,15 @@ export default {
       this.options.css.push(resolve('blueprints/docs/theme.css'))
     },
     async compile({ data }) {
-      const pressJson = {
-        toc: Object.keys(data.topLevel.index)
-      }
-      const pressJsonPath = join(this.options.srcDir, 'nuxt.press.json')
-      if (!exists(pressJsonPath)) {
-        await writeJson(pressJsonPath, pressJson, { spaces: 2 })
-      }
+      updateJson(
+        join(this.options.srcDir, 'nuxt.press.json'),
+        {
+          docs: {
+            ...this.$press.docs.meta,
+            toc: Object.keys(data.topLevel.index)
+          }
+        }
+      )
     },
     done({ options }) {
       this.options.watch.push('~/*.md')
@@ -92,8 +94,11 @@ export default {
     dir: 'docs',
     prefix: '/docs/',
     meta: {
-      title: 'Documentation suite',
-      github: 'https://github.com/...'
+      title: "Demo",
+      top: {
+        external: [],
+        links: []
+      }
     },
     api({ rootId, id }) {
       const cache = {}

@@ -6,6 +6,7 @@ import {
   exists,
   join,
   slugify,
+  updateJson,
   readJsonSync,
   isSingleMode
 } from '../../utils'
@@ -80,6 +81,14 @@ export default {
   build: {
     before() {
       this.options.css.push(resolve('blueprints/blog/theme.css'))
+    },
+    async compile({ data }) {
+      updateJson(
+        join(this.options.srcDir, 'nuxt.press.json'),
+        {
+          blog: this.$press.blog.meta
+        }
+      )
     },
     done({ options }) {
       this.options.watch.push(`~/${options.blog.dir}/*.md`)

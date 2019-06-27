@@ -3,17 +3,32 @@
     <nuxt-link to="/" class="home-link">{{ config.name }}</nuxt-link>
 
     <nav class="links">
-      <ul v-if="config.topMenu">
+      <!-- internal links, starting with /... -->
+      <ul v-if="links">
         <li
-          v-for="({ name, url }, t) in config.topMenu"
+          v-for="(link, t) in config.top.links"
           :key="`topmenu-${t}`"
           class="nav-item"
         >
           <nuxt-link
-            :class="[url === `${$route.path}${$route.hash}` ? 'active' : '']"
-            :to="url">
-            {{ name }}
+            :class="[Object.values(link)[0] === `${$route.path}${$route.hash}` ? 'active' : '']"
+            :to="Object.values(link)[0]">
+            {{ Object.keys(link)[0] }}
           </nuxt-link>
+        </li>
+      </ul>
+      <!-- external links, starting with http... -->
+      <ul v-if="external">
+        <li
+          v-for="(link, t) in config.top.external"
+          :key="`topmenu-${t}`"
+          class="nav-item"
+        >
+          <a
+            :class="[Object.values(link)[0] === `${$route.path}${$route.hash}` ? 'active' : '']"
+            :href="Object.values(link)[0]">
+            {{ Object.keys(link)[0] }}
+          </a>
         </li>
       </ul>
     </nav>
@@ -21,14 +36,14 @@
 </template>
 
 <script>
-import config from '~/nuxt.press.json'
+import { docs as config } from '~/nuxt.press.json'
 
 export default {
-  data() {
-    return {
-      config
-    }
-  }
+  data: () => ({
+    config,
+    external: config.top.external && config.top.external.length,
+    links: config.top.links && config.top.links.length
+  })
 }
 </script>
 
