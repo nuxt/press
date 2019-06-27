@@ -64,6 +64,7 @@ export function ensureDir(...paths) {
 export async function updateJson(path, obj) {
   if (!exists(path)) {
     await writeJson(path, obj, { spaces: 2 })
+    return
   }
   const json = JSON.parse(await readFile(path))
   await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
