@@ -3,17 +3,32 @@
     <nuxt-link to="/" class="home-link">{{ config.name }}</nuxt-link>
 
     <nav class="links">
-      <ul v-if="config.topMenu">
+      <!-- internal links, starting with /... -->
+      <ul v-if="config.topMenu && config.topMenu.links">
         <li
-          v-for="({ name, url }, t) in config.topMenu"
+          v-for="(link, t) in config.topMenu.links"
           :key="`topmenu-${t}`"
           class="nav-item"
         >
           <nuxt-link
-            :class="[url === `${$route.path}${$route.hash}` ? 'active' : '']"
-            :to="url">
-            {{ name }}
+            :class="[Object.values(link)[0] === `${$route.path}${$route.hash}` ? 'active' : '']"
+            :to="Object.values(link)[0]">
+            {{ Object.keys(link)[0] }}
           </nuxt-link>
+        </li>
+      </ul>
+      <!-- external links, starting with http... -->
+      <ul v-if="config.topMenu && config.topMenu.externalLinks">
+        <li
+          v-for="(link, t) in config.topMenu.externalLinks"
+          :key="`topmenu-${t}`"
+          class="nav-item"
+        >
+          <a
+            :class="[Object.values(link)[0] === `${$route.path}${$route.hash}` ? 'active' : '']"
+            :href="Object.values(link)[0]">
+            {{ Object.keys(link)[0] }}
+          </a>
         </li>
       </ul>
     </nav>
