@@ -1,6 +1,10 @@
 import consola from 'consola'
 import Vue from 'vue'
 import NuxtTemplate from './components/nuxt-template'
+import middleware from '../../middleware'
+import pressMiddleware from './middleware'
+
+middleware['press'] = pressMiddleware
 
 Vue.component('nuxt-template', NuxtTemplate)
 
@@ -27,6 +31,7 @@ export default (ctx, inject) => {
 
   if (process.static && process.client) {
     press = {
+      sources: {},
       get(url) {
         for (const apiPath of apiToStaticPaths) {
           if (url.startsWith(apiPath)) {
@@ -41,6 +46,7 @@ export default (ctx, inject) => {
     }
   } else {
     press = {
+      sources: {},
       get(url) {
         return ctx.$http.$get(url).catch(err => consola.warn(err))
       }
