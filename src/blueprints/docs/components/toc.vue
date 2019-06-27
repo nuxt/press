@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { toc } from '~/nuxt.press.json'
+import { docs } from '~/nuxt.press.json'
 
 export default {
   data() {
@@ -29,7 +29,7 @@ export default {
   async mounted() {
     const index = await this.$press.get('api/docs/index')
     // TODO move to vuex for SSR prerender
-    this.toc = toc.map(item => index[item]).filter(Boolean)
+    this.toc = docs.toc.map(item => index[item]).filter(Boolean)
   },
   watch: {
     async $route({ hash }) {

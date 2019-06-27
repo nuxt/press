@@ -1,23 +1,27 @@
 {
-  "name": "Demo",
-  "topMenu": {
-    "externalLinks": [
-      {"github": "https://github.com/nuxt/press"}
+  "docs": {
+    "title": "Demo",
+    "top": {
+      "external": [
+        {
+          "github": "https://github.com/nuxt/press"
+        }
+      ],
+      "links": []
+    },
+    "toc": [
+      "/topics/index#publishing-the-nuxt-way",
+      "/topics/index#setup",
+      "/topics/guide#guide",
+      "/topics/guide#enabling-modes",
+      "/topics/guide#publishing-docs",
+      "/topics/guide#publishing-blogs",
+      "/topics/guide#adding-sidebar-links",
+      "/topics/guide#publishing-slides",
+      "/topics/guide#using-components",
+      "/topics/customize#customize",
+      "/topics/customize#theming",
+      "/topics/customize#templates"
     ]
-  },
-  "toc": [
-    "/topics/index#publishing-the-nuxt-way",
-    "/topics/index#setup",
-    "/topics/guide#guide",
-    "/topics/guide#enabling-modes",
-    "/topics/guide#publishing-docs",
-    "/topics/guide#publishing-blogs",
-    "/topics/guide#adding-sidebar-links",
-    "/topics/guide#publishing-slides",
-    "/topics/guide#using-components",
-    "/topics/customize#customize",
-    "/topics/customize#basics",
-    "/topics/customize#templates",
-    "/topics/customize#data-sources"
-  ]
+  }
 }

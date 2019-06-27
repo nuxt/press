@@ -4,9 +4,9 @@
 
     <nav class="links">
       <!-- internal links, starting with /... -->
-      <ul v-if="config.topMenu && config.topMenu.links">
+      <ul v-if="links">
         <li
-          v-for="(link, t) in config.topMenu.links"
+          v-for="(link, t) in config.top.links"
           :key="`topmenu-${t}`"
           class="nav-item"
         >
@@ -18,9 +18,9 @@
         </li>
       </ul>
       <!-- external links, starting with http... -->
-      <ul v-if="config.topMenu && config.topMenu.externalLinks">
+      <ul v-if="external">
         <li
-          v-for="(link, t) in config.topMenu.externalLinks"
+          v-for="(link, t) in config.top.external"
           :key="`topmenu-${t}`"
           class="nav-item"
         >
@@ -36,14 +36,14 @@
 </template>
 
 <script>
-import config from '~/nuxt.press.json'
+import { docs as config } from '~/nuxt.press.json'
 
 export default {
-  data() {
-    return {
-      config
-    }
-  }
+  data: () => ({
+    config,
+    external: config.top.external && config.top.external.length,
+    links: config.top.links && config.top.links.length
+  })
 }
 </script>
 

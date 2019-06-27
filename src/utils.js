@@ -1,4 +1,6 @@
 
+import defu from 'defu'
+
 import {
   lstatSync,
   existsSync,
@@ -57,6 +59,14 @@ export function isDir(path) {
 
 export function ensureDir(...paths) {
   return _ensureDir(join(...paths))
+}
+
+export async function updateJson(path, obj) {
+  if (!exists(path)) {
+    await writeJson(path, obj, { spaces: 2 })
+  }
+  const json = JSON.parse(await readFile(path))
+  await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
 }
 
 export function walk(root, validate, sliceAtRoot = false) {
