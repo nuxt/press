@@ -1,11 +1,5 @@
 # Customize
 
-## Basics
-
-## Templates
-
-## Data sources
-
 By default, `@nuxt/press` loads content from the file system.
 
 For **`docs`** mode, it will load all Markdown files in the current directory
@@ -37,3 +31,11 @@ handlers for retrieving indexes and Markdown source files.
 | /api/slides/index                   | Index of slideshows                   |
 | /api/source/:source                 | Retrieve blog entry                   |
 | /api/archive                        | Retrieve blog archive                 |
+
+## Theming
+
+The easiest to customize NuxtPress apps..
+
+## Templates
+
+NuxtPress app templates are ejectable...
