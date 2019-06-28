@@ -9,7 +9,6 @@ export default {
   // Main blueprint, enabled by default
   enabled: () => true,
   templates: {
-    'middleware': 'middleware.js',
     'plugin': 'plugin.js',
     'scroll/plugin': ['plugins/scroll.js', { ssr: false }],
     'observer': 'components/observer.js',
@@ -20,7 +19,7 @@ export default {
     return [
       {
         name: 'source',
-        path: '/:source(.+)',
+        path: '/:source(.*)',
         // Final path might be under srcDir or buildDir
         // Depends on presence of user-provided template
         // And is the reason why templates is passed to this function
@@ -33,7 +32,9 @@ export default {
       let routePath = route
       if (routePath.endsWith('/index')) {
         routePath = routePath.slice(0, route.indexOf('/index'))
+        console.log('routePath', route, routePath)
       }
+      console.log('routePath', route, routePath)
 
       return {
         route: routePath,

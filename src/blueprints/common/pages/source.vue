@@ -29,9 +29,17 @@ components['press-slides'] = PressSlides
 
 export default {
   components,
-  middleware: 'press',
   async asyncData ({ $press, params, payload, error }) {
-    const source = payload || await $press.get(`api/source/${params.source}`)
+    let source = payload
+    if (params.source === '') {
+      params.source = 'index'
+    }
+    if (!source) {
+      source = await $press.get(`api/source/${params.source}`)
+    }
+    if (!source) {
+      source = await $press.get(`api/source/${params.source}/index`)
+    }
     if (!source) {
       return error({ statusCode: 404 })
     }
