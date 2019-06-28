@@ -66,7 +66,11 @@ export async function updateJson(path, obj) {
     await writeJson(path, obj, { spaces: 2 })
     return
   }
-  const json = JSON.parse(await readFile(path))
+  const jsonFile = await readFile(path)
+  let json = {}
+  try {
+    json = JSON.parse(jsonFile)
+  } catch(_) {}
   await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
 }
 
