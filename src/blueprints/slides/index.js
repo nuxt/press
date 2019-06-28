@@ -28,9 +28,9 @@ export default {
       }
     ]
   },
-  generateRoutes(data, _, staticRoot) {
+  generateRoutes(data, prefix, staticRoot) {
     return Object.keys(data.sources).map(async route => ({
-      route,
+      route: prefix(route),
       payload: await _import(`${staticRoot}/sources${route}`)
     }))
   },
