@@ -1,3 +1,4 @@
+import NuxtPress from '../src'
 export default {
-  modules: ['@nuxt/press']
+  modules: [NuxtPress]
 }

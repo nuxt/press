@@ -9,6 +9,7 @@ export default {
   // Main blueprint, enabled by default
   enabled: () => true,
   templates: {
+    'middleware': 'middleware.js',
     'plugin': 'plugin.js',
     'scroll/plugin': ['plugins/scroll.js', { ssr: false }],
     'observer': 'components/observer.js',
@@ -29,12 +30,13 @@ export default {
   },
   generateRoutes(data, _, staticRoot) {
     return Object.keys(data.sources).map(async (route) => {
-      if (route.endsWith('/index')) {
-        route = route.slice(0, route.indexOf('/index'))
+      let routePath = route
+      if (routePath.endsWith('/index')) {
+        routePath = routePath.slice(0, route.indexOf('/index'))
       }
 
       return {
-        route,
+        route: routePath,
         payload: await _import(`${staticRoot}/sources${route}`)
       }
     })
@@ -66,7 +68,7 @@ export default {
       }
     },
     done() {
-      this.options.watch.push('~/pages/*.md')
+      this.options.watch.push('~/pages /*.md')
     }
   },
   options: {
