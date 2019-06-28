@@ -13,7 +13,7 @@
 const components = {}
 
 <% if (options.$docs) { %>
-import PressTopic from '../../docs/pages/_topic'
+import PressTopic from '../../docs/pages/topic'
 components['press-topic'] = PressTopic
 <% } %>
 

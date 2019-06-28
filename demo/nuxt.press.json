@@ -21,9 +21,5 @@
       }
     ],
     "tagDomain": "nuxt.press"
-  },
-  "docs": {
-    "title": "My Documentation",
-    "nav": []
   }
 }
