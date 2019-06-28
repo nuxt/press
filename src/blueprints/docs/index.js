@@ -59,13 +59,10 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/docs/theme.css'))
     },
-    compile({ rootId, id }) {
-      updateJson(
-        join(this.options.srcDir, 'nuxt.press.json'),
-        {
-          [id]: { ...this.$press.docs.meta }
-        }
-      )
+    compile({ id }) {
+      updatePressJson.call(this, {
+        docs: { ...this.$press.docs }
+      })
     },
     done({ options }) {
       this.options.watch.push('~/**/*.md')

@@ -28,7 +28,7 @@
 </template>
 
 <script>
-const config = JSON.parse('<%=JSON.stringify({ title: options.docs.title, nav: options.docs.nav })%>')
+import { docs as config } from '~/nuxt.press'
 
 export default {
   data: () => ({
