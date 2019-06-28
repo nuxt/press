@@ -1,8 +1,12 @@
 <template>
   <component
+    v-if="['entry', 'topic', 'slides'].includes(source.type)"
     :is="`press-${source.type}`"
     :data="source"
     :path="sourcePath" />
+  <nuxt-template
+    v-else
+    v-model="source.body" />
 </template>
 
 <script>
@@ -23,24 +27,22 @@ import PressSlides from '../../slides/pages/slides'
 components['press-slides'] = PressSlides
 <% } %>
 
-const layoutTypeMap = {
-  'press-topic': 'docs',
-  'press-entry': 'blog',
-  'press-slides': 'slides'
-}
-
 export default {
   components,
-  layout({ params }) {
-    const cKeys = Object.keys(components)
-    if (cKeys.length === 1) { // single-mode
-      return layoutTypeMap[cKeys[0]]
-    } else {
-      return params.source.slice(0, params.source.indexOf('/'))
+  async asyncData ({ $press, params, payload, error }) {
+    let source = payload
+    if (params.source === '') {
+      params.source = 'index'
     }
-  },
-  async asyncData ({ $press, params, payload }) {
-    const source = payload || await $press.get(`api/source/${params.source}`)
+    if (!source) {
+      source = await $press.get(`api/source/${params.source}`)
+    }
+    if (!source) {
+      source = await $press.get(`api/source/${params.source}/index`)
+    }
+    if (!source) {
+      return error({ statusCode: 404 })
+    }
     return { source, sourcePath: params.source }
   }
 }

@@ -12,7 +12,7 @@ import PromisePool from '../../pool'
 // in the custom Vue component for the page
 
 async function loadPage(pagePath) {
-  const sliceAt = join(this.options.srcDir, this.options.dir.pages).length
+  const sliceAt = this.options.dir.pages.length
   let body = await readFile(this.options.srcDir, pagePath)
   const titleMatch = body.match(/^#\s+(.*)/)
   const title = titleMatch ? titleMatch[1] : ''

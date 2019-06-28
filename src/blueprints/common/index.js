@@ -19,7 +19,7 @@ export default {
     return [
       {
         name: 'source',
-        path: '/:source(.+)',
+        path: '/:source(.*)',
         // Final path might be under srcDir or buildDir
         // Depends on presence of user-provided template
         // And is the reason why templates is passed to this function
@@ -29,12 +29,13 @@ export default {
   },
   generateRoutes(data, _, staticRoot) {
     return Object.keys(data.sources).map(async (route) => {
-      if (route.endsWith('/index')) {
-        route = route.slice(0, route.indexOf('/index'))
+      let routePath = route
+      if (routePath.endsWith('/index')) {
+        routePath = routePath.slice(0, route.indexOf('/index'))
       }
 
       return {
-        route,
+        route: routePath,
         payload: await _import(`${staticRoot}/sources${route}`)
       }
     })
@@ -67,6 +68,11 @@ export default {
     },
     done() {
       this.options.watch.push('~/pages/*.md')
+      this.nuxt.hook('vue-renderer:ssr:context', (ctx) => {
+        if (ctx.nuxt.data.source) {
+          ctx.nuxt.layout = ctx.nuxt.data.source.type || 'default'
+        }
+      })
     }
   },
   options: {

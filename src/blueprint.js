@@ -238,8 +238,6 @@ async function addTemplates({ options, rootId, id }, templates) {
     // Regular Vue templates (also usable as routes)
     this.addTemplate({ ...template, options })
   }
-  // console.log('finalTemplates', finalTemplates)
-  // process.exit()
 
   return finalTemplates
 }

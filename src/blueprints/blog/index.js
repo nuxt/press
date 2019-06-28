@@ -82,7 +82,7 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/blog/theme.css'))
     },
-    async compile({ data }) {
+    compile({ data }) {
       updateJson(
         join(this.options.srcDir, 'nuxt.press.json'),
         {
