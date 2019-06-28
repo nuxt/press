@@ -68,7 +68,12 @@ export default {
       }
     },
     done() {
-      this.options.watch.push('~/pages /*.md')
+      this.options.watch.push('~/pages/*.md')
+      this.nuxt.hook('vue-renderer:ssr:context', async (ctx) => {
+        if (ctx.nuxt.data.source) {
+          ctx.nuxt.layout = ctx.nuxt.data.source.type || 'default'
+        }
+      })
     }
   },
   options: {

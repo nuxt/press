@@ -1,6 +1,6 @@
 <template>
   <component
-    v-if="source.type !== 'page'"
+    v-if="['entry', 'topic', 'slides'].includes(source.type)"
     :is="`press-${source.type}`"
     :data="source"
     :path="sourcePath" />
@@ -27,37 +27,14 @@ import PressSlides from '../../slides/pages/slides'
 components['press-slides'] = PressSlides
 <% } %>
 
-const layoutTypeMap = {
-  'press-topic': 'docs',
-  'press-entry': 'blog',
-  'press-slides': 'slides'
-}
-
-const layoutTypeMapValues = Object.values(layoutTypeMap)
-
 export default {
   components,
   middleware: 'press',
-  layout({ params }) {
-    const cKeys = Object.keys(components)
-    if (cKeys.length === 1) { // single-mode
-      return layoutTypeMap[cKeys[0]]
-    } else {
-      const layout = params.source.slice(0, params.source.indexOf('/'))
-      if (layoutTypeMapValues.includes(layout)) {
-        console.log('layout: ', layout)
-        return layout
-      } else {
-        console.log('layout: default')
-        return 'default'
-      }
-    }
-  },
-  async asyncData ({ $press, params, payload }) {
-    console.log('$press.sources', $press.sources)
-    console.log('params.source', params.source)
+  async asyncData ({ $press, params, payload, error }) {
     const source = payload || await $press.get(`api/source/${params.source}`)
-    console.log('source', source)
+    if (!source) {
+      return error({ statusCode: 404 })
+    }
     return { source, sourcePath: params.source }
   }
 }

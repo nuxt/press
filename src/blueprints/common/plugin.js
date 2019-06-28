@@ -1,10 +1,6 @@
 import consola from 'consola'
 import Vue from 'vue'
 import NuxtTemplate from './components/nuxt-template'
-import middleware from '../../middleware'
-import pressMiddleware from './middleware'
-
-middleware['press'] = pressMiddleware
 
 Vue.component('nuxt-template', NuxtTemplate)
 
