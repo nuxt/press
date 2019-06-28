@@ -1,6 +1,4 @@
 
-import defu from 'defu'
-
 import {
   lstatSync,
   existsSync,
@@ -19,6 +17,7 @@ import {
 } from 'path'
 
 import { promisify } from 'util'
+import defu from 'defu'
 import { writeJson, ensureDir as _ensureDir, remove, move } from 'fs-extra'
 import klaw from 'klaw'
 import slug from 'slug'
@@ -70,7 +69,7 @@ export async function updateJson(path, obj) {
   let json = {}
   try {
     json = JSON.parse(jsonFile)
-  } catch(_) {}
+  } catch (_) {}
   await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
 }
 

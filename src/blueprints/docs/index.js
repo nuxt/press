@@ -74,7 +74,7 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/docs/theme.css'))
     },
-    async compile({ data }) {
+    compile({ data }) {
       updateJson(
         join(this.options.srcDir, 'nuxt.press.json'),
         {
@@ -94,7 +94,7 @@ export default {
     dir: 'docs',
     prefix: '/docs/',
     meta: {
-      title: "Demo",
+      title: 'Demo',
       top: {
         external: [],
         links: []
