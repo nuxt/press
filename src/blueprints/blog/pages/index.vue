@@ -20,7 +20,6 @@ export default {
   layout: 'blog',
   async asyncData ({ $press, payload }) {
     const entries = payload || await $press.get('api/blog/index')
-    console.log('entries', entries)
     return { entries }
   }
 }

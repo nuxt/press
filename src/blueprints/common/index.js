@@ -32,9 +32,7 @@ export default {
       let routePath = route
       if (routePath.endsWith('/index')) {
         routePath = routePath.slice(0, route.indexOf('/index'))
-        console.log('routePath', route, routePath)
       }
-      console.log('routePath', route, routePath)
 
       return {
         route: routePath,
