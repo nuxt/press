@@ -33,6 +33,9 @@ export default {
       if (routePath.endsWith('/index')) {
         routePath = routePath.slice(0, route.indexOf('/index'))
       }
+      if (routePath === '') {
+        routePath = '/'
+      }
       return {
         route: routePath,
         payload: await _import(`${staticRoot}/sources${route}`)
