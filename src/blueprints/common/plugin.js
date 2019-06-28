@@ -27,7 +27,7 @@ function $json(url) {
   return fetch(url).then(r => r.json())
 }
 
-export default async (ctx, inject) => {
+export default (ctx, inject) => {
   let press  
   if (process.static && process.client) {
     press = {
@@ -54,7 +54,7 @@ export default async (ctx, inject) => {
   ctx.$press = press
   inject('press', press)
 
-  if (process.client) {
-    await pressMiddleware(ctx)
+  if (process.static) {
+    pressMiddleware(ctx).then()
   }
 }
