@@ -37,6 +37,7 @@ export default {
     if ($press.error) {
       error($press.error)
     }
+    console.log('$press.source', $press.source)
     return { source: $press.source, sourcePath: params.source }
   }
 }
