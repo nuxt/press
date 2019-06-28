@@ -27,7 +27,6 @@ export default (ctx, inject) => {
 
   if (process.static && process.client) {
     press = {
-      sources: {},
       get(url) {
         for (const apiPath of apiToStaticPaths) {
           if (url.startsWith(apiPath)) {
@@ -42,7 +41,6 @@ export default (ctx, inject) => {
     }
   } else {
     press = {
-      sources: {},
       get(url) {
         return ctx.$http.$get(url).catch(err => consola.warn(err))
       }
