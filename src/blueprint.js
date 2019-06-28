@@ -129,11 +129,11 @@ export async function _registerBlueprint(id, rootId, options = {}) {
                 pathPrefix,
                 staticRootGenerate
               )
-    
+
               if (Array.isArray(routes)) {
                 return Promise.all(routes)
               }
-    
+
               return routes
             })
           }
@@ -142,14 +142,13 @@ export async function _registerBlueprint(id, rootId, options = {}) {
             this.options.generate.routes = async () => {
               const routes = {}
               const routeSets = await Promise.all(
-                options.$generateRoutes.map((route) => route())
+                options.$generateRoutes.map(route => route())
               )
               for (const routeSet of routeSets) {
                 for (const route of routeSet) {
                   routes[route.route] = route
                 }
               }
-              console.log('Object.values(routes)', Object.values(routes))
               return Object.values(routes)
             }
           }

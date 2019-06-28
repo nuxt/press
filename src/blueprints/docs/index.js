@@ -9,7 +9,8 @@ import {
   readJsonSync,
   slugify,
   updateJson,
-  isSingleMode
+  isSingleMode,
+  routePath
 } from '../../utils'
 
 import data from './data'
