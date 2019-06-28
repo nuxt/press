@@ -73,6 +73,16 @@ export async function updateJson(path, obj) {
   await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
 }
 
+export function routePath(routePath) {
+  if (routePath.endsWith('/index')) {
+    return routePath.slice(0, route.indexOf('/index'))
+  }
+  if (routePath === 'index') {
+    return ''
+  }
+  return routePath
+}
+
 export function walk(root, validate, sliceAtRoot = false) {
   const matches = []
   const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1

@@ -1,0 +1,33 @@
+{
+  "blog": {
+    "title": "A NuxtPress Blog",
+    "links": [
+      {
+        "Home": "/blog"
+      },
+      {
+        "Archive": "/blog/archive"
+      },
+      {
+        "About": "/blog/about"
+      }
+    ],
+    "icons": [
+      {
+        "github": "http://github.com/nuxt/nuxt.js"
+      },
+      {
+        "twitter": "https://twitter.com/nuxt_js"
+      }
+    ],
+    "tagDomain": "nuxt.press"
+  },
+  "docs": {
+    "title": "Demo",
+    "top": {
+      "external": [],
+      "links": []
+    },
+    "toc": []
+  }
+}

@@ -110,14 +110,48 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, rootId, 'static')
+      const staticRootGenerate = join(this.options.generate.dir, rootId)
       await saveStaticData.call(this, staticRoot, id, context.data)
 
       if (blueprint.build && blueprint.build.done) {
         this.nuxt.hook('build:done', async () => {
           await blueprint.build.done.call(this, context)
-          this.options.generate.routes = async () => {
-            const routes = await Promise.all(options.$generateRoutes.map(route => route()))
-            return routes.reduce((routes, route) => [...routes, ...route])
+
+          if (blueprint.generateRoutes) {
+            if (!options.$generateRoutes) {
+              options.$generateRoutes = []
+            }
+            const pathPrefix = path => `${blueprint.options.prefix}${path}`
+            options.$generateRoutes.push(async () => {
+              const routes = await blueprint.generateRoutes.call(
+                this,
+                context.data,
+                pathPrefix,
+                staticRootGenerate
+              )
+    
+              if (Array.isArray(routes)) {
+                return Promise.all(routes)
+              }
+    
+              return routes
+            })
+          }
+
+          if (options.$generateRoutes) {
+            this.options.generate.routes = async () => {
+              const routes = {}
+              const routeSets = await Promise.all(
+                options.$generateRoutes.map((route) => route())
+              )
+              for (const routeSet of routeSets) {
+                for (const route of routeSet) {
+                  routes[route.route] = route
+                }
+              }
+              console.log('Object.values(routes)', Object.values(routes))
+              return Object.values(routes)
+            }
           }
         })
       }
@@ -126,24 +160,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
         await blueprint.build.compile.call(this, context)
       }
 
-      if (blueprint.generateRoutes) {
-        if (!options.$generateRoutes) {
-          options.$generateRoutes = []
-        }
-        const pathPrefix = path => `${blueprint.options.prefix}${path}`
-        options.$generateRoutes.push(async () => {
-          const routes = await blueprint.generateRoutes.call(this, context.data, pathPrefix, staticRoot)
-
-          if (Array.isArray(routes)) {
-            return Promise.all(routes)
-          }
-
-          return routes
-        })
-      }
-
       this.nuxt.hook('generate:distCopied', async () => {
-        const staticRootGenerate = join(this.options.generate.dir, rootId)
         await ensureDir(staticRootGenerate)
         await saveStaticData(staticRootGenerate, id, context.data)
       })

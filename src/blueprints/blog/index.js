@@ -8,7 +8,8 @@ import {
   slugify,
   updateJson,
   readJsonSync,
-  isSingleMode
+  isSingleMode,
+  routePath
 } from '../../utils'
 
 import data from './data'
@@ -55,11 +56,11 @@ export default {
   generateRoutes(data, prefix, staticRoot) {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
-        route: prefix(route),
-        payload: await _import(`${staticRoot}${this.options.blog.prefix}${route}.json`)
+        route: prefix(routePath(route)),
+        payload: await _import(`${staticRoot}${this.$press.blog.prefix}${route}.json`)
       })),
       ...Object.keys(data.sources).map(async route => ({
-        route,
+        route: routePath(route),
         payload: await _import(`${staticRoot}/sources${route}`)
       }))
     ]
