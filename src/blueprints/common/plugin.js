@@ -11,14 +11,14 @@ Vue.component('nuxt-template', NuxtTemplate)
 
 const apiToStatic = {
   // Docs-only API endpoints
-  'api/docs/index': '/press/docs/index.json',
+  'api/docs/index': '/_press/docs/index.json',
   // Blog-only API endpoints
-  'api/blog/index': '/press/blog/index.json',
-  'api/blog/archive': '/press/blog/archive.json',
+  'api/blog/index': '/_press/blog/index.json',
+  'api/blog/archive': '/_press/blog/archive.json',
   // Slides-only API endpoints
-  'api/slides/index': '/press/slides/index.json',
+  'api/slides/index': '/_press/slides/index.json',
   // Common API endpoints
-  'api/source': path => `/press/sources/${path}.json`
+  'api/source': path => `/_press/sources/${path}.json`
 }
 
 const apiToStaticPaths = Object.keys(apiToStatic)
