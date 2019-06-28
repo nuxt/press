@@ -2,6 +2,11 @@ import consola from 'consola'
 import Vue from 'vue'
 import NuxtTemplate from './components/nuxt-template'
 
+import middleware from '../../middleware'
+import pressMiddleware from './middleware'
+
+middleware['press'] = pressMiddleware
+
 Vue.component('nuxt-template', NuxtTemplate)
 
 const apiToStatic = {
@@ -22,9 +27,8 @@ function $json(url) {
   return fetch(url).then(r => r.json())
 }
 
-export default (ctx, inject) => {
-  let press
-
+export default async (ctx, inject) => {
+  let press  
   if (process.static && process.client) {
     press = {
       get(url) {
@@ -49,4 +53,8 @@ export default (ctx, inject) => {
 
   ctx.$press = press
   inject('press', press)
+
+  if (process.client) {
+    await pressMiddleware(ctx)
+  }
 }

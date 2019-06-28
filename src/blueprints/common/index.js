@@ -9,6 +9,7 @@ export default {
   // Main blueprint, enabled by default
   enabled: () => true,
   templates: {
+    'middleware': 'middleware.js',
     'plugin': 'plugin.js',
     'scroll/plugin': ['plugins/scroll.js', { ssr: false }],
     'observer': 'components/observer.js',
@@ -70,11 +71,6 @@ export default {
     },
     done() {
       this.options.watch.push('~/pages/*.md')
-      this.nuxt.hook('vue-renderer:ssr:context', (ctx) => {
-        if (ctx.nuxt.data.source) {
-          ctx.nuxt.layout = ctx.nuxt.data.source.type || 'default'
-        }
-      })
     }
   },
   options: {
