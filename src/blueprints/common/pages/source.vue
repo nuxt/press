@@ -12,17 +12,17 @@
 <script>
 const components = {}
 
-<% if (options.$docs) { %> 
-import PressTopic from '../../docs/pages/topic'
+<% if (options.$docs) { %>
+import PressTopic from '../../docs/pages/_topic'
 components['press-topic'] = PressTopic
 <% } %>
 
-<% if (options.$blog) { %> 
+<% if (options.$blog) { %>
 import PressEntry from '../../blog/pages/entry'
 components['press-entry'] = PressEntry
 <% } %>
 
-<% if (options.$slides) { %> 
+<% if (options.$slides) { %>
 import PressSlides from '../../slides/pages/slides'
 components['press-slides'] = PressSlides
 <% } %>

@@ -63,22 +63,24 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   options = this.options[rootId]
 
   // Register serverMiddleware
-  for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
-    sm = sm.bind(this)
-    this.addServerMiddleware(async (req, res, next) => {
-      try {
-        await sm(req, res, next)
-      } catch (err) {
-        next(err)
-      }
-    })
+  if (blueprint.serverMiddleware) {
+    for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
+      sm = sm.bind(this)
+      this.addServerMiddleware(async (req, res, next) => {
+        try {
+          await sm(req, res, next)
+        } catch (err) {
+          next(err)
+        }
+      })
+    }
   }
 
   this.nuxt.hook('build:before', async () => {
     const context = { options, rootId, id }
     const templates = await addTemplates.call(this, context, blueprint.templates)
 
-    context.data = await blueprint.data.call(this)
+    context.data = await blueprint.data(this, context)
 
     if (blueprint.build && blueprint.build.before) {
       await blueprint.build.before.call(this, context)

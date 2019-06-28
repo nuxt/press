@@ -16,7 +16,9 @@ import data from './data'
 
 export default {
   // Include data loader
-  data,
+  data(nuxt, ...args) {
+    return data.call(nuxt, ...args)
+  },
   // Enable blog if srcDir/blog/ exists
   enabled(options) {
     if (isSingleMode.call(this, ['docs', 'slides'])) {

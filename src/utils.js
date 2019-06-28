@@ -40,6 +40,14 @@ export function join(...paths) {
   return _join(...paths.map(p => p.replace(/\//g, sep)))
 }
 
+export function trimEnd(str, chr = '') {
+  if (!chr) {
+    return str.trimEnd()
+  }
+
+  return str.replace(new RegExp(`${chr}+$`), '')
+}
+
 export function readFile(...paths) {
   return _readFile(join(...paths), 'utf-8')
 }
@@ -86,14 +94,17 @@ export function routePath(routePath) {
 export function walk(root, validate, sliceAtRoot = false) {
   const matches = []
   const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1
+
   if (validate instanceof RegExp) {
     const pattern = validate
     validate = path => pattern.test(path)
   }
+
   return new Promise((resolve) => {
     klaw(root)
       .on('data', (match) => {
         const path = match.path.slice(sliceAt)
+
         if (validate(path)) {
           matches.push(path)
         }

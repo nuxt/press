@@ -1,5 +1,7 @@
 <template>
-  <article class="topic" v-html="data.body" />
+  <main>
+    <article class="topic" v-html="data.body" />
+  </main>
 </template>
 
 <script>
@@ -21,11 +23,17 @@ export default {
     const initialId = this.$route.hash.substr(1)
 
     const observedCallback = (target) => {
-      const targetHeading = `${this.$route.path}#${target.id}`
-      const heading = document.querySelector(`.toc a[href="${targetHeading}"`)
+      const targetId = target.id ? `#${target.id}` : ``
+      let targetHeading = `${this.$route.path}${targetId}`
+
+      let heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
+      if (!heading && target.tagName === 'H1') {
+        targetHeading = this.$route.path
+        heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
+      }
 
       if (heading) {
-        const tocLinks = [...document.querySelectorAll('.toc a.active')]
+        const tocLinks = [...document.querySelectorAll('.sidebar a.active')]
         for (const tocLink of tocLinks) {
           tocLink.classList.remove('active')
         }

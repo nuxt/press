@@ -17,7 +17,7 @@
 </template>
 
 <style>
-.sidebar {
+.blog .sidebar {
   border-right: 1px solid #000;
   flex-basis: 25%;
   margin: 0px;

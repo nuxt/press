@@ -17,6 +17,24 @@ export default {
           {twitter: 'https://twitter.com/nuxt_js'}
         ]
       }
+    },
+    docs: {
+      title: 'Demo',
+      nav: [
+        { text: 'Guide', link: '/docs' },
+        { text: 'API', link: '/docs/api/' },
+        { text: 'Github', link: 'https://github.com/nuxt/press' },
+      ],
+      sidebar: [
+        "/",
+        "/guide",
+        "/customize",
+        [
+          "/test",
+          "Testttttttt"
+        ],
+        "/test/test"
+      ]
     }
   }
 }

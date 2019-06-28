@@ -23,11 +23,7 @@
     "tagDomain": "nuxt.press"
   },
   "docs": {
-    "title": "Demo",
-    "top": {
-      "external": [],
-      "links": []
-    },
-    "toc": []
+    "title": "My Documentation",
+    "nav": []
   }
 }

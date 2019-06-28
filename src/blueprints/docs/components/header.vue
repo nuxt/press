@@ -1,34 +1,26 @@
 <template>
   <header class="top-menu">
-    <nuxt-link to="/" class="home-link">{{ config.title }}</nuxt-link>
+    <nuxt-link to="<%= options.docs.prefix %>" class="home-link">{{ config.title }}</nuxt-link>
 
     <nav class="links">
-      <!-- internal links, starting with /... -->
-      <ul v-if="links">
+      <ul>
         <li
-          v-for="(link, t) in config.top.links"
-          :key="`topmenu-${t}`"
-          class="nav-item"
-        >
-          <nuxt-link
-            :class="[Object.values(link)[0] === `${$route.path}${$route.hash}` ? 'active' : '']"
-            :to="Object.values(link)[0]">
-            {{ Object.keys(link)[0] }}
-          </nuxt-link>
-        </li>
-      </ul>
-      <!-- external links, starting with http... -->
-      <ul v-if="external">
-        <li
-          v-for="(link, t) in config.top.external"
-          :key="`topmenu-${t}`"
+          v-for="({ text, link }, idx) in config.nav"
+          :key="`topmenu-${idx}`"
           class="nav-item"
         >
           <a
-            :class="[Object.values(link)[0] === `${$route.path}${$route.hash}` ? 'active' : '']"
-            :href="Object.values(link)[0]">
-            {{ Object.keys(link)[0] }}
+            v-if="isExternal(link)"
+            :href="link"
+            target="_blank">
+            {{ text }}
           </a>
+          <nuxt-link
+            v-else
+            :class="activeClass"
+            :to="link">
+            {{ text }}
+          </nuxt-link>
         </li>
       </ul>
     </nav>
@@ -36,14 +28,20 @@
 </template>
 
 <script>
-import { docs as config } from '~/nuxt.press.json'
+const config = JSON.parse('<%=JSON.stringify({ title: options.docs.title, nav: options.docs.nav })%>')
 
 export default {
   data: () => ({
-    config,
-    external: config.top.external && config.top.external.length,
-    links: config.top.links && config.top.links.length
-  })
+    config
+  }),
+  methods: {
+    activeClass(link) {
+      return this.$route.path.startsWith(link) ? 'active' : ''
+    },
+    isExternal(link) {
+      return link.startsWith('http') || link.startsWith('//')
+    }
+  }
 }
 </script>
 

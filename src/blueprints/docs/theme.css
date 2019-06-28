@@ -32,28 +32,34 @@ body {
     bottom: 0;
   }
 
-  & article.content {
-    padding: 1.4rem 1.4rem 1.4rem 19.4rem;
+  & main.content {
+    padding: 3rem 1.4rem 1.4rem 19.4rem;
 
-    & h3 {
-      user-select: none;
-      & span {
-        color: #2f495e !important;
-        text-shadow: 1px 1px #fff;
-        margin-bottom: 0px;
-        border-bottom: 2px solid #2f495e;
+    & article {
+      line-height: 1.4rem;
+      margin: 0 auto;
+      max-width: 760px;
+
+      & h3 {
+        user-select: none;
+        & span {
+          color: #2f495e !important;
+          text-shadow: 1px 1px #fff;
+          margin-bottom: 0px;
+          border-bottom: 2px solid #2f495e;
+        }
+
+        &:not(:first-of-type) {
+          margin-top: 50px;
+        }
       }
 
-      &:not(:first-of-type) {
-        margin-top: 50px;
-      }
-    }
-
-    & a {
-      font-weight: bold;
-      color: #669900 !important;
-      &:hover {
-        color: #93dd00 !important;
+      & a {
+        font-weight: bold;
+        color: #669900 !important;
+        &:hover {
+          color: #93dd00 !important;
+        }
       }
     }
   }
