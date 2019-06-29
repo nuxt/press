@@ -73,8 +73,9 @@ function removePrivateKeys(obj) {
     if (prop === '__proto__' || prop === 'constructor') {
       continue
     }
-    if (typeof prop === 'object' && prop !== null && !Array.isArray(obj)) {
-      removePrivateKeys(obj[prop])
+    const value = obj[prop]
+    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+      removePrivateKeys(value)
     }
     if (prop.startsWith('$')) {
       delete obj[prop]

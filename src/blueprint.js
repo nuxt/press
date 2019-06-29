@@ -83,11 +83,12 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     context.data = await blueprint.data.call(this, context)
 
     if (context.data.options) {
-      await updatePressJson.call(this, { [id]: context.data.options })
       Object.assign(options[id], context.data.options)
     }
 
     const templates = await addTemplates.call(this, context, blueprint.templates)
+
+    await updatePressJson.call(this, { [id]: context.data.options })
 
     if (blueprint.build && blueprint.build.before) {
       await blueprint.build.before.call(this, context)
