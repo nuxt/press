@@ -68,12 +68,31 @@ export function ensureDir(...paths) {
   return _ensureDir(join(...paths))
 }
 
+function removePrivateKeys(obj) {
+  for (const prop in obj) {
+    if (prop === '__proto__' || prop === 'constructor') {
+      continue
+    }
+    if (typeof prop === 'object' && prop !== null && !Array.isArray(obj)) {
+      removePrivateKeys(obj[prop])
+    }
+    if (prop.startsWith('$')) {
+      delete obj[prop]
+    }
+  }
+}
+
 export async function updatePressJson(obj) {
   // If .js config found, do nothing:
   // we only update JSON files, not JavaScript
   if (exists(join(this.options.srcDir, 'nuxt.press.js'))) {
     return
   }
+
+  // Remove props that start with $
+  // These can be used for internal processing
+  removePrivateKeys(obj)
+
   const path = join(this.options.srcDir, 'nuxt.press.json')
   if (!exists(path)) {
     await writeJson(path, obj, { spaces: 2 })

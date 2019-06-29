@@ -20,6 +20,8 @@
 <script>
 import config from '~/nuxt.press'
 
+const $sidebars = <%= JSON.stringify(options.docs.$sidebars, null, 2) %>
+
 export default {
   data() {
     return {
@@ -29,7 +31,7 @@ export default {
   },
   async beforeMount() {
     // extract all sidebar paths in reverse order of length
-    this._sidebarPaths = Object.keys(config.docs.sidebars).sort((a, b) => {
+    this._sidebarPaths = Object.keys($sidebars).sort((a, b) => {
       return b.length - a.length
     })
     this.setSidebar()
@@ -67,7 +69,7 @@ export default {
 
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
-          this.sidebar = config.docs.sidebars[sidebarPath]
+          this.sidebar = $sidebars[sidebarPath]
           break
         }
       }

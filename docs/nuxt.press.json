@@ -5,7 +5,7 @@
     "title": "My Documentation",
     "nav": [],
     "source": {},
-    "sidebars": {
+    "$sidebars": {
       "/test/test": [
         [
           1,
@@ -20,11 +20,28 @@
           "#test"
         ]
       ],
+      "/index": [
+        [
+          1,
+          "Publishing the Nuxt way",
+          "#publishing-the-nuxt-way"
+        ],
+        [
+          2,
+          "Setup",
+          "#setup"
+        ]
+      ],
       "/guide": [
         [
           1,
           "Guide",
           "#guide"
+        ],
+        [
+          2,
+          "Configuration",
+          "#configuration"
         ],
         [
           2,
@@ -55,18 +72,6 @@
           2,
           "Using components",
           "#using-components"
-        ]
-      ],
-      "/index": [
-        [
-          1,
-          "Publishing the Nuxt way",
-          "#publishing-the-nuxt-way"
-        ],
-        [
-          2,
-          "Setup",
-          "#setup"
         ]
       ],
       "/customize": [

@@ -64,18 +64,16 @@
         "link": "https://github.com/nuxt/press"
       }
     ],
-    "sidebar": {
-      "/": [
-        "/",
-        "/guide",
-        "/customize",
-        [
-          "/test",
-          "Testttttttt"
-        ],
-        "/test/test"
-      ]
-    },
+    "sidebar": [
+      "/",
+      "/guide",
+      "/customize",
+      [
+        "/test",
+        "Testttttttt"
+      ],
+      "/test/test"
+    ],
     "dir": "docs",
     "prefix": "/docs/",
     "meta": {

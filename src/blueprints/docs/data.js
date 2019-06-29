@@ -123,11 +123,9 @@ export default async function ({ options }) {
     sidebars[path] = sidebar
   }
 
-  console.log('sidebars', sidebars)
-
   return {
     options: {
-      sidebars
+      $sidebars: sidebars
     },
     sources
   }
