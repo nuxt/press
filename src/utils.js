@@ -89,11 +89,10 @@ function removePrivateKeys(source, target = null) {
   return target
 }
 
-export async function updatePressJson(obj) {
-  // If .js config found, do nothing:
-  // we only update JSON files, not JavaScript
-  if (exists(join(this.options.srcDir, 'nuxt.press.js'))) {
-    return
+function loadConfig(rootId, moduleOptions = {}) {
+  const jsConfig = join(this.options.srcDir, 'nuxt.press.js')
+  if (exists(jsConfig)) {
+    return defu()
   }
 
   // Copy object and remove props that start with $
@@ -101,6 +100,30 @@ export async function updatePressJson(obj) {
   obj = removePrivateKeys(obj)
 
   const path = join(this.options.srcDir, 'nuxt.press.json')
+  if (!exists(path)) {
+    await writeJson(path, obj, { spaces: 2 })
+    return
+  }
+  const jsonFile = await readFile(path)
+  let json = {}
+  try {
+    json = JSON.parse(jsonFile)
+  } catch (_) {}
+  await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
+}
+
+export async function updateConfig(rootId, obj) {
+  // If .js config found, do nothing:
+  // we only update JSON files, not JavaScript
+  if (exists(join(this.options.srcDir, `nuxt.${rootId}.js`))) {
+    return
+  }
+
+  // Copy object and remove props that start with $
+  // (These can be used for internal template pre-processing)
+  obj = removePrivateKeys(obj)
+
+  const path = join(this.options.srcDir, `nuxt.${rootId}.json`)
   if (!exists(path)) {
     await writeJson(path, obj, { spaces: 2 })
     return

@@ -5,7 +5,7 @@ import {
   resolve,
   exists,
   readdirSync,
-  updatePressJson,
+  updateConfig,
   isSingleMode,
   routePath
 } from '../../utils'
@@ -52,8 +52,8 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/docs/theme.css'))
     },
-    async compile({ id }) {
-      await updatePressJson.call(this, { docs: this.$press.docs })
+    async compile({ rootId }) {
+      await updateConfig.call(this, rootId, { docs: this.$press.docs })
     },
     done({ options }) {
       this.options.watch.push('~/**/*.md')

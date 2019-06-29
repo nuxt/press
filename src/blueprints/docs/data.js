@@ -1,6 +1,6 @@
 import { parse } from 'path'
 import graymatter from 'gray-matter'
-import { walk, join, exists, readFile, trimEnd } from '../../utils'
+import { walk, join, exists, readFile, trimEnd, routePath } from '../../utils'
 import PromisePool from '../../pool'
 import { indexKeys } from './constants'
 
@@ -65,7 +65,7 @@ export default async function ({ options }) {
   const handler = async (path) => {
     const { meta, toc, source } = await parseDoc.call(this, path)
 
-    const sourcePath = source.path
+    const sourcePath = routePath(source.path) || '/'
 
     if (![0, false].includes(meta.sidebar)) {
       sidebars[sourcePath] = toc
@@ -86,7 +86,7 @@ export default async function ({ options }) {
 
   const docPrefix = trimSlash(options.docs.prefix)
 
-  for (const path in options.docs.sidebars) {
+  for (const path in options.docs.sidebar) {
     const sidebar = []
 
     options.docs.sidebar[path].forEach((sourcePath) => {

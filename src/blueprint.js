@@ -7,7 +7,8 @@ import {
   ensureDir,
   exists,
   writeJson,
-  updatePressJson,
+  loadConfig,
+  updateConfig,
   resolve,
   walk
 } from './utils'
@@ -88,7 +89,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
     const templates = await addTemplates.call(this, context, blueprint.templates)
 
-    await updatePressJson.call(this, { [id]: context.data.options })
+    await updateConfig.call(this, rootId, { [id]: context.data.options })
 
     if (blueprint.build && blueprint.build.before) {
       await blueprint.build.before.call(this, context)

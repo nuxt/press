@@ -6,7 +6,7 @@ import {
   exists,
   join,
   slugify,
-  updatePressJson,
+  updateConfig,
   readJsonSync,
   isSingleMode,
   routePath
@@ -83,8 +83,8 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/blog/theme.css'))
     },
-    async compile({ data }) {
-      await updatePressJson.call(this, { blog: this.$press.blog })
+    async compile({ rootId }) {
+      await updateConfig.call(this, rootId, { blog: this.$press.blog })
     },
     done({ options }) {
       this.options.watch.push(`~/${options.blog.dir}/*.md`)
