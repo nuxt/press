@@ -1,64 +1,85 @@
 ![nuxt-press](https://user-images.githubusercontent.com/904724/59497906-a2d9d680-8e94-11e9-8fac-a7172827f349.png)
 
-This is a **work in progress**. No usable package is available yet.
+This is a **work in progress**.
+
+Current alpha release: **0.0.1-alpha.40**
+
+Package currently used for development purposes only.
 
 ## Publishing the Nuxt way
 
-**`@nuxt/press`** is a multi-mode natural extension to Nuxt.js.
+**NuxtPress** is a multi-mode natural extension to Nuxt.js.
 
-- Want a **documentation suite**?
-  Simply drop a bunch of **`md`** files in **`srcDir`** or **`srcDir/docs`**.
+_Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
 
-- Want to publish a **blog**?
-  Simply drop a bunch of **`entry.md`** files in **`srcDir/blog`**.
+Works in `universal` and `spa` modes, as well as with `nuxt generate`.
 
-- Want to present some **slides**?
-  Simply drop your **`presentation.md`** file in **`srcDir/slides`**.
+# Markdown pages
 
-## Markdown + Vue components
-
-**`@nuxt/press`** uses a [specially curated version][nmd] of 
-[`@dimerapp/markdown`][md] (**huge thanks to** [Harminder Virk][virk]), which 
-features modifications to retain custom tags (i.e., Vue components) and 
-automatically render Markdown links as **`<nuxt-link>`**.
-
-[md]: https://github.com/dimerapp/markdown
-[nmd]: https://github.com/nuxt/markdown
-[virk]: https://github.com/thetutlage
-
-## Static or otherwise
-
-Each of **`@nuxt/press`**'s modes (`docs`, `blog` and `slides`) have their own 
-simple HTTP API endpoints which can be overriden via [serverMiddleware][sm]. By
-default, **`@nuxt/press`** will load Markdown files via static JSON `fetch()`.
-
-[sm]: https://nuxtjs.org/api/configuration-servermiddleware/
-
-## And more ⭐
+At its core, **NuxtPress** enables you to use Markdown files as Nuxt pages. A
+directory layout like the one below (left column) would result in the routes
+from the right column being made available (just like you'd expect if 
+they were .vue files):
 
 <table>
 <tr>
 <td>
-&nbsp;
-<ul>
-<li>
-Supports <code>universal</code> and <code>spa</code> Nuxt.js modes
-</li>
-<li>
-Supports build via <code>nuxt generate</code>
-</li>
-</ul>
+<code>
+pages/index.md<br>
+pages/foo/index.md<br>
+pages/foo/bar.md<br>
+</code>
 </td>
 <td>
-&nbsp;
-<ul>
-<li>
-Automatic injection of <b>Markdown Nuxt.js pages</b>
-</li>
-<li>
-Easy <b>theming</b> and <b>template customization</b>
-</li>
-</ul>
+<code>
+/<br>
+/foo<br>
+/foo/bar<br>
+</code>
 </td>
 </tr>
 </table>
+
+## Bundled apps
+
+**NuxtPress** comes with three bundled **apps** that can preprocess Markdown 
+files in different ways and are only added to your app's build if enabled.
+
+See the Internals section to learn more about how it works under the hood.
+
+## Publishing docs
+
+To enable the `docs` bundled app, place your Markdown files in your Nuxt app's 
+`srcDir` or `srcDir/docs`. In `docs` mode, tables of contents are automatically
+generated and can be displayed in a sidebar via configuration. You get all core
+features of [VuePress][vp], but in a minimalistic Nuxt app.
+
+[vp]: https://vuepress.vuejs.org
+
+## Publishing blogs
+
+To enable the `blog` bundled app, place your Markdown files in your Nuxt app's 
+`srcDir/blog` dir. In `blog` mode, Markdown entry metadata is loaded via 
+[gray-matter][gm] and used to sort entries by date. Learn more.
+
+[gm]: https://github.com/jonschlinkert/gray-matter
+
+## Publishing slides
+
+To enable the `slides` bundled app, place your Markdown files in your Nuxt app's 
+`srcDir/slides` dir. In `slides` mode, Markdown is especially processed to
+generate slideshows. Similar to [mdx-deck][]. Learn more.
+
+[mdx-deck]: https://github.com/jxnblk/mdx-deck
+
+## Highly customizable
+
+- All bundled apps have clean stylesheets which **can be easily themed**.
+
+- All bundled apps use a simple REST API which **can be overriden**.
+
+- Loading of Markdown files can be customized **with custom functions**.
+
+- The actual source templates for each bundled app **can be ejected**.
+
+- Can be added to any existing Nuxt app.
