@@ -68,18 +68,21 @@ export function ensureDir(...paths) {
   return _ensureDir(join(...paths))
 }
 
-function removePrivateKeys(source, target = {}) {
+function removePrivateKeys(source, target = null) {
+  if (target === null) {
+    target = {}
+  }
   for (const prop in source) {
     if (prop === '__proto__' || prop === 'constructor') {
       continue
     }
     const value = source[prop]
-    if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      target[prop] = {}
-      removePrivateKeys(value, target[prop])
-      continue
-    }
     if (!prop.startsWith('$')) {
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        target[prop] = {}
+        removePrivateKeys(value, target[prop])
+        continue
+      }
       target[prop] = value
     }
   }
