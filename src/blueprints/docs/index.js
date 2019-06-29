@@ -4,9 +4,8 @@ import {
   _import,
   resolve,
   exists,
-  join,
   readdirSync,
-  updateJson,
+  updatePressJson,
   isSingleMode,
   routePath
 } from '../../utils'

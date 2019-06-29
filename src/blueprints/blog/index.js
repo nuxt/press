@@ -6,7 +6,7 @@ import {
   exists,
   join,
   slugify,
-  updateJson,
+  updatePressJson,
   readJsonSync,
   isSingleMode,
   routePath
