@@ -77,7 +77,6 @@ export default async function ({ options }) {
 
   const queue = new PromisePool(jobs, handler)
   await queue.done()
-  // console.log(sources, index)
 
   if (Array.isArray(options.docs.sidebar)) {
     options.docs.sidebar = {

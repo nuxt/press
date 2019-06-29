@@ -31,8 +31,6 @@
 <script>
 import config from '~/nuxt.press'
 
-console.log('config', config)
-
 export default {
   data: () => ({
     config: config.docs

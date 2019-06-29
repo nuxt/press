@@ -68,19 +68,22 @@ export function ensureDir(...paths) {
   return _ensureDir(join(...paths))
 }
 
-function removePrivateKeys(obj) {
-  for (const prop in obj) {
+function removePrivateKeys(source, target = {}) {
+  for (const prop in source) {
     if (prop === '__proto__' || prop === 'constructor') {
       continue
     }
-    const value = obj[prop]
+    const value = source[prop]
     if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
-      removePrivateKeys(value)
+      target[prop] = {}
+      removePrivateKeys(value, target[prop])
+      continue
     }
-    if (prop.startsWith('$')) {
-      delete obj[prop]
+    if (!prop.startsWith('$')) {
+      target[prop] = value
     }
   }
+  return target
 }
 
 export async function updatePressJson(obj) {
@@ -90,9 +93,9 @@ export async function updatePressJson(obj) {
     return
   }
 
-  // Remove props that start with $
-  // These can be used for internal processing
-  removePrivateKeys(obj)
+  // Copy object and remove props that start with $
+  // (These can be used for internal template pre-processing)
+  obj = removePrivateKeys(obj)
 
   const path = join(this.options.srcDir, 'nuxt.press.json')
   if (!exists(path)) {
