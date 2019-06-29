@@ -114,7 +114,6 @@ export default async function ({ options }) {
           t[2] = `${sourcePath}${t[2]}`
           return t
         }))
-
       }
     }
 
