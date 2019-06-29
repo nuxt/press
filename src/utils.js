@@ -89,8 +89,9 @@ function removePrivateKeys(source, target = null) {
   return target
 }
 
-function loadConfig(rootId, config = {}) {
+export function loadConfig(rootId, config = {}) {
   const jsConfigPath = join(this.options.srcDir, `nuxt.${rootId}.js`)
+  // JavaScript config has precedence over JSON config
   if (exists(jsConfigPath)) {
     config = defu(await _import(jsConfigPath), config)
   } else if (exists(`${jsConfigPath}on`)) {

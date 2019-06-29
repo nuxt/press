@@ -24,6 +24,8 @@ export async function registerBlueprints(rootId, options, blueprints) {
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
+ 
+  options = await loadConfig(rootid, options)
   for (const id of blueprints) { // ['slides', 'common']) {
     await _registerBlueprint.call(this, id, rootId, options)
   }
@@ -40,15 +42,12 @@ export async function _registerBlueprint(id, rootId, options = {}) {
 
   // Set global rootId if unset
   if (!this.options[rootId]) {
-    this.options[rootId] = {}
+    this.options[rootId] = options
   }
 
   if (!this[`$${rootId}`]) {
     this[`$${rootId}`] = this.options[rootId]
   }
-
-  // Prefer top-level config key in nuxt.config.js
-  Object.assign(this.options[rootId], defu(this.options[rootId], options))
 
   if (blueprint.options) {
     if (this.options[rootId][id]) {
