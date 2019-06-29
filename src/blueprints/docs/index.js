@@ -23,6 +23,7 @@ export default {
     // Enable docs blueprint if srcDir/*.md files exists
     // or if the srcDir/docs/ folder exists
     if (readdirSync(this.options.srcDir).find(p => /\.md$/.test(p))) {
+      options.dir = './'
       return true
     }
     return exists(this.options.srcDir, options.dir)

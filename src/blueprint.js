@@ -250,7 +250,12 @@ async function addTemplates({ options, rootId, id }, templates) {
     finalTemplates[templateKey] = template.fileName
 
     if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
-      this.addPlugin({ ...template, options })
+      const { dst } = this.addTemplate({ ...template, options })
+      this.options.plugins.push({
+        src: join(this.options.buildDir, dst),
+        ssr: template.ssr,
+        mode: template.mode
+      })
       continue
     }
 

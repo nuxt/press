@@ -54,7 +54,5 @@ export default async (ctx, inject) => {
   ctx.$press = press
   inject('press', press)
 
-  if (process.static) {
-    await pressMiddleware(ctx)
-  }
+  await pressMiddleware(ctx)
 }

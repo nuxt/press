@@ -79,9 +79,9 @@ export default async function ({ options }) {
   await queue.done()
 
   if (Array.isArray(options.docs.sidebar)) {
-    options.docs.sidebar = {
-      '/': options.docs.sidebar
-    }
+    options.docs.sidebar = options.docs.sidebar.reduce((obj, path) => {
+      return { ...obj, [path]: options.docs.sidebar }
+    }, {})
   }
 
   const docPrefix = trimSlash(options.docs.prefix)
