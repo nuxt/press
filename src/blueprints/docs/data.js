@@ -67,7 +67,7 @@ export default async function ({ options }) {
 
     const sourcePath = source.path
 
-    if (meta.sidebar === 'auto') {
+    if (![0, false].includes(meta.sidebar)) {
       sidebars[sourcePath] = toc
     }
 
@@ -87,7 +87,7 @@ export default async function ({ options }) {
 
   const docPrefix = trimSlash(options.docs.prefix)
 
-  for (const path in options.docs.sidebar) {
+  for (const path in options.docs.sidebars) {
     const sidebar = []
 
     options.docs.sidebar[path].forEach((sourcePath) => {
@@ -122,6 +122,8 @@ export default async function ({ options }) {
 
     sidebars[path] = sidebar
   }
+
+  console.log('sidebars', sidebars)
 
   return {
     options: {

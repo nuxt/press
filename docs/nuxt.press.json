@@ -6,6 +6,86 @@
     "nav": [],
     "source": {},
     "sidebars": {
+      "/test/test": [
+        [
+          1,
+          "test test toeter",
+          "#test-test-toeter"
+        ]
+      ],
+      "/test": [
+        [
+          1,
+          "TEST",
+          "#test"
+        ]
+      ],
+      "/guide": [
+        [
+          1,
+          "Guide",
+          "#guide"
+        ],
+        [
+          2,
+          "Enabling modes",
+          "#enabling-modes"
+        ],
+        [
+          2,
+          "Publishing docs",
+          "#publishing-docs"
+        ],
+        [
+          2,
+          "Publishing blogs",
+          "#publishing-blogs"
+        ],
+        [
+          3,
+          "Adding sidebar links",
+          "#adding-sidebar-links"
+        ],
+        [
+          2,
+          "Publishing slides",
+          "#publishing-slides"
+        ],
+        [
+          2,
+          "Using components",
+          "#using-components"
+        ]
+      ],
+      "/index": [
+        [
+          1,
+          "Publishing the Nuxt way",
+          "#publishing-the-nuxt-way"
+        ],
+        [
+          2,
+          "Setup",
+          "#setup"
+        ]
+      ],
+      "/customize": [
+        [
+          1,
+          "Customize",
+          "#customize"
+        ],
+        [
+          2,
+          "Theming",
+          "#theming"
+        ],
+        [
+          2,
+          "Templates",
+          "#templates"
+        ]
+      ],
       "/api": [
         [
           1,

@@ -7,8 +7,11 @@
 <script>
 export default {
   layout: 'docs',
-  async asyncData ({ $press, payload }) {
+  async asyncData ({ $press, payload, error }) {
     const index = payload || await $press.get('api/source<%= options.docs.prefix || '/' %>index')
+    if (!index) {
+      return error({ statusCode: 404 })
+    }
     return { index }
   }
 }

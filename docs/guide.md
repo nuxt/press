@@ -1,6 +1,3 @@
----
-title: This is my guide, there are many like it but this one is mine
----
 
 # Guide
 
@@ -16,6 +13,19 @@ static files available.
 Before moving forward, make sure you've read the [setup instructions][2].
 
 [2]: /docs/topics/intro#setup
+
+## Configuration
+
+First, **NuxtPress** needs to be enabled via `nuxt.config.js`:
+
+```js
+export default {
+  modules: ['@nuxt/press']
+}
+```
+
+In a freshly started project, `npm install` (or `yarn add`) will automatically
+create that `nuxt.config.js` file for you if you haven't already.
 
 ## Enabling modes
 
