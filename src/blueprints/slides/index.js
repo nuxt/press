@@ -4,9 +4,7 @@ import data from './data'
 
 export default {
   // Include data loader
-  data(nuxt, ...args) {
-    return data.call(nuxt, ...args)
-  },
+  data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(options) {
     if (isSingleMode.call(this, ['docs', 'blog'])) {

@@ -5,9 +5,7 @@ import data from './data'
 
 export default {
   // Include data loader
-  data(nuxt, ...args) {
-    return data.call(nuxt, ...args)
-  },
+  data,
   // Main blueprint, enabled by default
   enabled: () => true,
   templates: {

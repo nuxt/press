@@ -81,7 +81,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     const context = { options, rootId, id }
     const templates = await addTemplates.call(this, context, blueprint.templates)
 
-    context.data = await blueprint.data(this, context)
+    context.data = await blueprint.data.call(this, context)
 
     if (context.data.options) {
       await updatePressJson.call(this, { [id]: context.data.options })
