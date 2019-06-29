@@ -3,18 +3,32 @@
     <div class="about">
       My NuxtPress Blog
       <div class="text-links">
-        <% for (const link of options.blog.meta.links) { %>
-        <nuxt-link to="<%= Object.values(link)[0] %>"><%= Object.keys(link)[0] %></nuxt-link>
-        <% } %>
+        <nuxt-link 
+          v-for="(link, i) in links"
+          :key="`link-${i}`"
+          :to="Object.values(link)[0]">
+          {{ Object.keys(link)[0] }}
+        </nuxt-link>
       </div>
     </div>
-    <% for (const link of options.blog.meta.icons) { %>
-    <a href="<%= Object.values(link)[0] %>">
-      <img class="icon" src="../../assets/blog/icons/<%= Object.keys(link)[0] %>.svg">
+    <a
+      v-for="(link, i) in icons"
+      :href="Object.values(link)[0]">
+      <img class="icon" :src="require(`../../assets/blog/icons/${Object.keys(link)[0]}.svg`)">
     </a>
-    <% } %>
   </div>
 </template>
+
+<script>
+import config from '~/nuxt.press'
+
+export default {
+  data: () => ({
+    links: config.blog.links,
+    icons: config.blog.icons
+  })
+}
+</script>
 
 <style>
 .blog .sidebar {

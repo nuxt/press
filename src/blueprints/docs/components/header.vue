@@ -1,14 +1,15 @@
 <template>
   <header class="top-menu">
-    <nuxt-link to="<%= options.docs.prefix %>" class="home-link">{{ config.title }}</nuxt-link>
+    <nuxt-link :to="config.prefix" class="home-link">
+      {{ config.title }}
+    </nuxt-link>
 
     <nav class="links">
       <ul>
         <li
           v-for="({ text, link }, idx) in config.nav"
           :key="`topmenu-${idx}`"
-          class="nav-item"
-        >
+          class="nav-item">
           <a
             v-if="isExternal(link)"
             :href="link"
@@ -28,11 +29,11 @@
 </template>
 
 <script>
-import { docs as config } from '~/nuxt.press'
+import config from '~/nuxt.press'
 
 export default {
   data: () => ({
-    config
+    config: config.docs
   }),
   methods: {
     activeClass(link) {

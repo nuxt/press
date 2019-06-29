@@ -15,17 +15,12 @@ import { templates } from './constants'
 import data from './data'
 
 export default {
-  // Include data loader
-  data: async (nuxt, ...args) => {
-    const { sidebars, sources } = await data.call(nuxt, ...args)
-    this.sidebars = sidebars
-    return { sources }
-  },
+  data,
+  templates,
   enabled(options) {
     if (isSingleMode.call(this, ['blog', 'slides'])) {
       options.prefix = '/'
     }
-
     // Enable docs blueprint if srcDir/*.md files exists
     // or if the srcDir/docs/ folder exists
     if (readdirSync(this.options.srcDir).find(p => /\.md$/.test(p))) {
@@ -33,7 +28,6 @@ export default {
     }
     return exists(this.options.srcDir, options.dir)
   },
-  templates,
   routes(templates) {
     return [
       {

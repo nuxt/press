@@ -31,7 +31,7 @@ export default {
     'layout': 'layout.vue',
     'sidebar': 'components/sidebar.vue',
     'index': 'pages/index.vue',
-    'entry': 'pages/entry.vue',
+    'entry': 'components/source.vue',
     'archive': 'pages/archive.vue'
   },
   ejectable: [

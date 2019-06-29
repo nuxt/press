@@ -18,7 +18,7 @@
 </template>
 
 <script>
-const sidebars = JSON.parse('<%=JSON.stringify(options.docs.source.sidebars())%>')
+import config from '~/nuxt.press'
 
 export default {
   data() {
@@ -28,9 +28,8 @@ export default {
     }
   },
   async beforeMount() {
-    console.log('sidebars', sidebars)
     // extract all sidebar paths in reverse order of length
-    this._sidebarPaths = Object.keys(sidebars).sort((a, b) => {
+    this._sidebarPaths = Object.keys(config.docs.sidebars).sort((a, b) => {
       return b.length - a.length
     })
     this.setSidebar()
