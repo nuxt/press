@@ -1,9 +1,7 @@
 <template>
   <div id="nuxt-press" class="docs">
     <top />
-
     <sidebar />
-
     <nuxt class="content" />
   </div>
 </template>

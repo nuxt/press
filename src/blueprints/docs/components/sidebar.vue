@@ -67,7 +67,7 @@ export default {
 
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
-          this.sidebar = sidebars[sidebarPath]
+          this.sidebar = config.docs.sidebars[sidebarPath]
           break
         }
       }

@@ -13,17 +13,17 @@
 const components = {}
 
 <% if (options.$docs) { %>
-import PressTopic from '../../docs/pages/topic'
+import PressTopic from '../../docs/components/source'
 components['press-topic'] = PressTopic
 <% } %>
 
 <% if (options.$blog) { %>
-import PressEntry from '../../blog/pages/entry'
+import PressEntry from '../../blog/components/source'
 components['press-entry'] = PressEntry
 <% } %>
 
 <% if (options.$slides) { %>
-import PressSlides from '../../slides/pages/slides'
+import PressSlides from '../../slides/components/source'
 components['press-slides'] = PressSlides
 <% } %>
 
@@ -37,7 +37,6 @@ export default {
     if ($press.error) {
       error($press.error)
     }
-    console.log('$press.source', $press.source)
     return { source: $press.source, sourcePath: params.source }
   }
 }
