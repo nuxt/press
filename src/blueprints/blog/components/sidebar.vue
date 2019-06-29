@@ -31,7 +31,7 @@ export default {
 </script>
 
 <style>
-.blog .sidebar {
+#nuxt-press.blog .sidebar {
   border-right: 1px solid #000;
   flex-basis: 25%;
   margin: 0px;

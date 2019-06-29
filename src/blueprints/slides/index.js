@@ -18,7 +18,7 @@ export default {
     plugin: ['plugin.js', { ssr: false }],
     layout: 'layout.vue',
     index: 'pages/index.vue',
-    slides: 'pages/slides.vue'
+    slides: 'components/source.vue'
   },
   // Register routes once templates have been added
   routes(templates) {
