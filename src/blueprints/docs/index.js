@@ -59,10 +59,8 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/docs/theme.css'))
     },
-    compile({ id }) {
-      updatePressJson.call(this, {
-        docs: { ...this.$press.docs }
-      })
+    async compile({ id }) {
+      await updatePressJson.call(this, { docs: this.$press.docs })
     },
     done({ options }) {
       this.options.watch.push('~/**/*.md')
@@ -77,22 +75,14 @@ export default {
       nav: []
     },
     source: {
-      sidebars: () => {
-        return this.sidebars
-      },
-
       markdown(source) {
-        const md = new Markdown(source, {
-          sanitize: false
-        })
+        const md = new Markdown(source, { sanitize: false })
         return md.getTocAndMarkup()
       },
-
       title(fileName, body, toc) {
         if (toc && toc[0]) {
           return toc[0][1]
         }
-
         return body.substr(body.indexOf('#')).match(/^#\s+(.*)/)[1]
       }
     }

@@ -68,7 +68,7 @@ export default {
     ]
   },
   serverMiddleware({ options, rootId, id }) {
-    const { index, archive } = this.$press.blog.api.call(this, { rootId, id })
+    const { index, archive } = options.blog.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/blog/index')) {
@@ -85,13 +85,8 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/blog/theme.css'))
     },
-    compile({ data }) {
-      updateJson(
-        join(this.options.srcDir, 'nuxt.press.json'),
-        {
-          blog: this.$press.blog.meta
-        }
-      )
+    async compile({ data }) {
+      await updatePressJson.call(this, { blog: this.$press.blog })
     },
     done({ options }) {
       this.options.watch.push(`~/${options.blog.dir}/*.md`)

@@ -68,7 +68,13 @@ export function ensureDir(...paths) {
   return _ensureDir(join(...paths))
 }
 
-export async function updateJson(path, obj) {
+export async function updatePressJson(obj) {
+  // If .js config found, do nothing:
+  // we only update JSON files, not JavaScript
+  if (exists(join(this.options.srcDir, 'nuxt.press.js'))) {
+    return
+  }
+  const path = join(this.options.srcDir, 'nuxt.press.json')
   if (!exists(path)) {
     await writeJson(path, obj, { spaces: 2 })
     return

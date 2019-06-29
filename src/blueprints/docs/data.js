@@ -123,10 +123,10 @@ export default async function ({ options }) {
     sidebars[path] = sidebar
   }
 
-  this.sidebars = sidebars
-
   return {
-    sidebars,
+    options: {
+      sidebars
+    },
     sources
   }
 }
