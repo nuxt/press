@@ -1,5 +1,31 @@
 {
   "blog": {
+    "meta": {
+      "title": "A NuxtPress Blog",
+      "links": [
+        {
+          "Home": "/blog"
+        },
+        {
+          "Archive": "/blog/archive"
+        },
+        {
+          "About": "/blog/about"
+        }
+      ],
+      "icons": [
+        {
+          "github": "http://github.com/nuxt/nuxt.js"
+        },
+        {
+          "twitter": "https://twitter.com/nuxt_js"
+        }
+      ],
+      "tagDomain": "nuxt.press"
+    },
+    "dir": "blog",
+    "prefix": "/blog/",
+    "source": {},
     "title": "A NuxtPress Blog",
     "links": [
       {
@@ -21,5 +47,132 @@
       }
     ],
     "tagDomain": "nuxt.press"
+  },
+  "docs": {
+    "title": "Demo",
+    "nav": [
+      {
+        "text": "Guide",
+        "link": "/docs"
+      },
+      {
+        "text": "API",
+        "link": "/docs/api/"
+      },
+      {
+        "text": "Github",
+        "link": "https://github.com/nuxt/press"
+      }
+    ],
+    "sidebar": {
+      "/": [
+        "/",
+        "/guide",
+        "/customize",
+        [
+          "/test",
+          "Testttttttt"
+        ],
+        "/test/test"
+      ]
+    },
+    "dir": "docs",
+    "prefix": "/docs/",
+    "meta": {
+      "title": "My Documentation",
+      "nav": []
+    },
+    "source": {},
+    "sidebars": {
+      "/docs/api": [
+        [
+          1,
+          "What?",
+          "#what"
+        ],
+        [
+          1,
+          "That!",
+          "#that"
+        ],
+        [
+          1,
+          "B",
+          "#b"
+        ]
+      ],
+      "/": [
+        [
+          1,
+          "Publishing the Nuxt way",
+          "/docs"
+        ],
+        [
+          2,
+          "Setup",
+          "/docs#setup"
+        ],
+        [
+          1,
+          "This is my guide, there are many like it but this one is mine",
+          "/docs/guide"
+        ],
+        [
+          2,
+          "Enabling modes",
+          "/docs/guide#enabling-modes"
+        ],
+        [
+          2,
+          "Publishing docs",
+          "/docs/guide#publishing-docs"
+        ],
+        [
+          2,
+          "Publishing blogs",
+          "/docs/guide#publishing-blogs"
+        ],
+        [
+          3,
+          "Adding sidebar links",
+          "/docs/guide#adding-sidebar-links"
+        ],
+        [
+          2,
+          "Publishing slides",
+          "/docs/guide#publishing-slides"
+        ],
+        [
+          2,
+          "Using components",
+          "/docs/guide#using-components"
+        ],
+        [
+          1,
+          "Customize",
+          "/docs/customize"
+        ],
+        [
+          2,
+          "Theming",
+          "/docs/customize#theming"
+        ],
+        [
+          2,
+          "Templates",
+          "/docs/customize#templates"
+        ],
+        [
+          1,
+          "Testttttttt",
+          "/docs/test"
+        ],
+        [
+          1,
+          "test test toeter",
+          "/docs/test/test"
+        ]
+      ]
+    }
   }
 }
