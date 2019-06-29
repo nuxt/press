@@ -72,7 +72,7 @@ generate slideshows. Similar to [mdx-deck][]. Learn more.
 
 - All bundled apps use a simple REST API which **can be overriden**.
 
-- Loading of Markdown files can be customized **with custom functions**.
+- Loading of Markdown files can be done **with custom functions**.
 
 - The actual source templates for each bundled app **can be ejected**.
 
