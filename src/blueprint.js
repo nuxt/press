@@ -24,25 +24,23 @@ export async function registerBlueprints(rootId, options, blueprints) {
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
- 
-  options = await loadConfig(rootid, options)
+
+  // Sets this.options[rootId] ensuring
+  // external config files have precendence
+  await loadConfig.call(this, rootId, options)
+
   for (const id of blueprints) { // ['slides', 'common']) {
-    await _registerBlueprint.call(this, id, rootId, options)
+    await _registerBlueprint.call(this, id, rootId)
   }
 }
 
-export async function _registerBlueprint(id, rootId, options = {}) {
+export async function _registerBlueprint(id, rootId) {
   // Load blueprint specification
   const blueprint = blueprints[id]
 
   // Return if blueprint is not enabled
   if (!blueprint.enabled.call(this, blueprint.options)) {
     return
-  }
-
-  // Set global rootId if unset
-  if (!this.options[rootId]) {
-    this.options[rootId] = options
   }
 
   if (!this[`$${rootId}`]) {
@@ -61,7 +59,7 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   this.options[rootId][`$${id}`] = true
 
   // For easy config acess in helper functions
-  options = this.options[rootId]
+  const options = this.options[rootId]
 
   // Register serverMiddleware
   if (blueprint.serverMiddleware) {
