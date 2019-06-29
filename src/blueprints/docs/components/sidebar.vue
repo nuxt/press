@@ -20,7 +20,9 @@
 <script>
 import config from '~/nuxt.press'
 
-const $sidebars = <%= JSON.stringify(options.docs.$sidebars, null, 2) %>
+// Parsing data payloads is faster with JSON.parse, see:
+// https://twitter.com/mathias/status/1143551692732030979
+const $sidebars = <%= JSON.parse(JSON.stringify(options.docs.$sidebars, null, 2)) %>
 
 export default {
   data() {
