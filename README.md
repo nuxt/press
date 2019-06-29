@@ -14,7 +14,7 @@ _Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
 
 Works in `universal` and `spa` modes, as well as with `nuxt generate`.
 
-# Markdown pages
+## Markdown pages
 
 At its core, **NuxtPress** enables you to use Markdown files as Nuxt pages:
 
