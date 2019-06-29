@@ -63,10 +63,24 @@ export default {
   options: {
     dir: 'docs',
     prefix: '/docs/',
-    meta: {
-      title: 'My Documentation',
-      nav: []
-    },
+    title: 'My Documentation',
+    nav: [],
+
+    // If in Nuxt's SPA mode, setting custom API
+    // handlers also disables bundling of index.json
+    // and source/*.json files into the static/ folder
+    // api({ rootId }) {
+    //   const cache = {}
+    //   const rootDir = join(this.options.buildDir, rootId, 'static')
+    //   return {
+    //     index: (req, res, next) => {
+    //       if (this.options.dev || !cache.index) {
+    //         cache.index = readJsonSync(rootDir, 'sources', 'docs', 'index.json')
+    //       }
+    //       res.json(cache.index)
+    //     }
+    //   }
+    // },
     source: {
       markdown(source) {
         const md = new Markdown(source, { sanitize: false })

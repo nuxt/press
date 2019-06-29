@@ -8,7 +8,7 @@
 export default {
   layout: 'docs',
   async asyncData ({ $press, payload }) {
-    const index = payload || await $press.get('api/source<%= options.docs.prefix || '/' %>')
+    const index = payload || await $press.get('api/source<%= options.docs.prefix || '/' %>index')
     return { index }
   }
 }
