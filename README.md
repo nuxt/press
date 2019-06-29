@@ -23,20 +23,16 @@ they were .vue files):
 
 <table>
 <tr>
-<td>
-<code>
-pages/index.md<br>
-pages/foo/index.md<br>
-pages/foo/bar.md<br>
-</code>
-</td>
-<td>
-<code>
-/<br>
-/foo<br>
-/foo/bar<br>
-</code>
-</td>
+<td><code>pages/index.md</code></td>
+<td><code>/</code></td>
+</tr>
+<tr>
+<td><code>pages/foo/index.md</code></td>
+<td><code>/foo</code></td>
+</tr>
+<tr>
+<td><code>pages/foo/bar.md</code></td>
+<td><code>/foo/bar</code></td>
 </tr>
 </table>
 
