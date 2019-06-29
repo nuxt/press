@@ -35,10 +35,11 @@ At its core, **NuxtPress** enables you to use Markdown files as Nuxt pages:
 
 ## Bundled apps
 
-**NuxtPress** comes with three bundled **apps** that can preprocess Markdown 
-files in different ways and are only added to your app's build if enabled.
+**NuxtPress** comes with three bundled **apps**: **docs**, **blog** and **slides**.
 
-See the Internals section to learn more about how it works under the hood.
+They preprocess Markdown files in different ways and are only added to your app's build if enabled.
+
+See the **Internals** section to learn more about how it works under the hood.
 
 ## Publishing docs
 
