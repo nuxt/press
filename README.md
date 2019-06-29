@@ -16,10 +16,7 @@ Works in `universal` and `spa` modes, as well as with `nuxt generate`.
 
 # Markdown pages
 
-At its core, **NuxtPress** enables you to use Markdown files as Nuxt pages. A
-directory layout like the one below (left column) would result in the routes
-from the right column being made available (just like you'd expect if 
-they were .vue files):
+At its core, **NuxtPress** enables you to use Markdown files as Nuxt pages:
 
 <table>
 <tr>
