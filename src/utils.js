@@ -89,27 +89,14 @@ function removePrivateKeys(source, target = null) {
   return target
 }
 
-function loadConfig(rootId, moduleOptions = {}) {
-  const jsConfig = join(this.options.srcDir, 'nuxt.press.js')
-  if (exists(jsConfig)) {
-    return defu()
+function loadConfig(rootId, config = {}) {
+  const jsConfigPath = join(this.options.srcDir, `nuxt.${rootId}.js`)
+  if (exists(jsConfigPath)) {
+    config = defu(await _import(jsConfigPath), config)
+  } else if (exists(`${jsConfigPath}on`)) {
+    config = defu(await _import(`${jsConfigPath}on`), config)
   }
-
-  // Copy object and remove props that start with $
-  // (These can be used for internal template pre-processing)
-  obj = removePrivateKeys(obj)
-
-  const path = join(this.options.srcDir, 'nuxt.press.json')
-  if (!exists(path)) {
-    await writeJson(path, obj, { spaces: 2 })
-    return
-  }
-  const jsonFile = await readFile(path)
-  let json = {}
-  try {
-    json = JSON.parse(jsonFile)
-  } catch (_) {}
-  await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
+  return defu(config, this.options[rootId] || {})
 }
 
 export async function updateConfig(rootId, obj) {
