@@ -89,18 +89,16 @@ export default async function ({ options }) {
   for (const path in options.docs.sidebar) {
     const sidebar = []
 
-    options.docs.sidebar[path].forEach((sourcePath) => {
+    for (let sourcePath of options.docs.sidebar[path]) {
       let title
 
       if (Array.isArray(sourcePath)) {
         [sourcePath, title] = sourcePath
       }
 
-      if (typeof sourcePath === 'object') {
-        // todo
+      if (sourcePath !== '/') {
+        sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
       }
-
-      sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
 
       if (docs[sourcePath]) {
         const { meta, toc } = docs[sourcePath]
@@ -116,8 +114,9 @@ export default async function ({ options }) {
           t[2] = `${sourcePath}${t[2]}`
           return t
         }))
+
       }
-    })
+    }
 
     sidebars[path] = sidebar
   }
