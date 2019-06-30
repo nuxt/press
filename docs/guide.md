@@ -52,15 +52,9 @@ can be seen below. The `nav` key is initially empty and must be filled out.
     "prefix": "/",
     "title": "NuxtPress documentation",
     "nav": [
-      {
-        "Home": "/"
-      },
-      {
-        "Internals": "/internals"
-      },
-      {
-        "GitHub": "https://github.com/nuxt/press"
-      }
+      { "Home": "/" },
+      { "Internals": "/internals" },
+      { "GitHub": "https://github.com/nuxt/press" }
     ],
     "sidebar": [
       "/",
@@ -169,22 +163,22 @@ NuxtPress' default blog template makes it easy to automatically include
 sidebar text links, and also includes some predefined SVG icons for common
 links like *RSS feed*, *Twitter*, *GitHub* and *LinkedIn*.
 
+Here's `nuxt.press.json` from [`examples/blog`][examples-blog].
+
+[examples-blog]:  https://github.com/nuxt/press/tree/master/examples/blog
+
 ```js
-export default {
-  press: {
-    blog: {
-      meta: {
-        links: [
-          {Home: '/blog'},
-          {Archive: '/blog/archive'},
-          {About: '/blog/about'},
-        ],
-        icons: [
-          {github: 'http://github.com/nuxt/nuxt.js'},
-          {twitter: 'https://twitter.com/nuxt_js'}
-        ]
-      }
-    }
+{
+  "blog": {
+    "links": [
+      {"Home": "/blog"},
+      {"Archive": "/blog/archive"},
+      {"About": "/blog/about"},
+    ],
+    "icons": [
+      {"github": "http://github.com/nuxt/nuxt.js"},
+      {"twitter": "https://twitter.com/nuxt_js"}
+    ]
   }
 }
 ```

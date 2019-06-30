@@ -96,13 +96,11 @@ export default {
     prefix: '/blog/',
 
     // Blog metadata
-    meta: {
-      title: 'A NuxtPress Blog',
-      links: [],
-      icons: [],
-      // Used in RFC4151-based RSS feed entry tags
-      tagDomain: 'nuxt.press'
-    },
+    title: 'A NuxtPress Blog',
+    links: [],
+    icons: [],
+    // Used in RFC4151-based RSS feed entry tags
+    tagDomain: 'nuxt.press',
 
     // If in Nuxt's SPA mode, setting custom API
     // handlers also disables bundling of index.json
@@ -165,7 +163,7 @@ export default {
       // id() determines the unique RSS ID of a Markdown source
       // Default RFC4151-based format is used. See https://tools.ietf.org/html/rfc4151
       id({ published, path }) {
-        const tagDomain = this.$press.blog.meta.tagDomain
+        const tagDomain = this.$press.blog.tagDomain
         const year = published.getFullYear()
         return `tag:${tagDomain},${year}:${path}`
       },

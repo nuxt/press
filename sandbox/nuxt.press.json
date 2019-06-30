@@ -3,6 +3,14 @@
     "title": "A NuxtPress Blog",
     "links": [],
     "icons": [],
-    "tagDomain": "nuxt.press"
+    "tagDomain": "nuxt.press",
+    "dir": "blog",
+    "prefix": "/blog/",
+    "meta": {
+      "title": "A NuxtPress Blog",
+      "links": [],
+      "icons": [],
+      "tagDomain": "nuxt.press"
+    }
   }
 }

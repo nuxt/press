@@ -1,0 +1,27 @@
+{
+  "blog": {
+    "links": [
+      {
+        "Home": "/blog"
+      },
+      {
+        "Archive": "/blog/archive"
+      },
+      {
+        "About": "/blog/about"
+      }
+    ],
+    "icons": [
+      {
+        "github": "http://github.com/nuxt/nuxt.js"
+      },
+      {
+        "twitter": "https://twitter.com/nuxt_js"
+      }
+    ],
+    "dir": "blog",
+    "prefix": "/blog/",
+    "title": "A NuxtPress Blog",
+    "tagDomain": "nuxt.press"
+  }
+}
