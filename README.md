@@ -45,8 +45,7 @@ See the **Internals** section to learn more about how it works under the hood.
 
 ## Publishing docs
 
-To enable the `docs` bundled app, place your Markdown files in your Nuxt app's 
-`srcDir` or `srcDir/docs`.
+To enable the `docs` bundled app, place your Markdown files in `<srcDir>/` or `<srcDir>/docs`.
 
 In `docs` mode, tables of contents are automatically generated and can be
 displayed in a sidebar via configuration. You get all core features of 
@@ -56,8 +55,7 @@ displayed in a sidebar via configuration. You get all core features of
 
 ## Publishing blogs
 
-To enable the `blog` bundled app, place your Markdown files in your Nuxt app's 
-`srcDir/blog` dir. 
+To enable the `blog` bundled app, place your Markdown files in `<srcDir>/blog`.
 
 In `blog` mode, Markdown entry metadata is loaded via [gray-matter][gm] and used to sort entries by date. Learn more.
 
@@ -65,8 +63,7 @@ In `blog` mode, Markdown entry metadata is loaded via [gray-matter][gm] and used
 
 ## Publishing slides
 
-To enable the `slides` bundled app, place your Markdown files in your Nuxt app's 
-`srcDir/slides` dir. 
+To enable the `slides` bundled app, place your Markdown files in `<srcDir>/slides`.
 
 In `slides` mode, Markdown is especially processed to generate slideshows.
 
