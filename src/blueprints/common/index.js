@@ -30,7 +30,7 @@ export default {
   },
   generateRoutes(data, _, staticRoot) {
     if (!data || !data.sources) {
-      return {}
+      return []
     }
     return Object.keys(data.sources).map(async (route) => {
       let routePath = route
