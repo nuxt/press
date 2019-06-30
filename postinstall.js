@@ -7,6 +7,10 @@ if (!process.env.INIT_CWD) {
 
 const initCwd = resolve(process.env.INIT_CWD)
 
+if (!existsSync(join(initCwd, 'node_modules'))) {
+  return
+}
+
 const scripts = {
   'dev': 'nuxt dev',
   'build': 'nuxt build',
