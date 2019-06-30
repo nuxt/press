@@ -78,12 +78,11 @@ app**. As long as it's the last enabled module, it won't interfere with
 existing functionality.
 
 To add new routes to a Nuxt application, you can use the **`pages/`** folder.
-Nuxt will dynamically build your routes based on the subdirectory hierarchy
-of this folder.
+Nuxt will dynamically build your routes based on the hierarchy of this folder.
 
-In NuxtPress, in addition to now being able to add Markdown files directly to 
-`pages/`, **you have three new route folders to work with**: **`docs/`**,
-**`blog/`** and **`slides/`**. 
+In addition to now being able to add Markdown files directly to `pages/`, 
+**you have three new route folders to work with**: **`docs/`**, **`blog/`** 
+and **`slides/`**. 
 
 The presence of any of these directories in the **`srcDir`** of a Nuxt project 
 will enable their corresponding NuxtPress modes. You can customize these 
