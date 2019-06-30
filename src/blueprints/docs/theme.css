@@ -41,6 +41,12 @@ body {
       margin: 0 auto;
       max-width: 660px;
 
+      & h2 {
+        &:not(:first-of-type) {
+          margin-top: 70px;
+        }
+      }
+
       & h3 {
         user-select: none;
         & span {
@@ -51,7 +57,7 @@ body {
         }
 
         &:not(:first-of-type) {
-          margin-top: 50px;
+          margin-top: 70px;
         }
       }
 
