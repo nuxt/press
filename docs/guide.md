@@ -224,19 +224,14 @@ This is a simplification from [MDX][mdx], which uses `---` as delimiter.
 
 ## Using components
 
-First list the components in `nuxt.config.js` as follows:
+To use custom Vue components in your Markdown sources, just create a plugin to 
+import and register the component globally:
 
 ```js
-export default {
-  press: {
-    components: {
-      ColorPicker: '@radial-color-picker/vue-color-picker'
-    }
-  }
-}
-```
+import ColorPicker from '@radial-color-picker/vue-color-picker'
 
-> If needed, you can enable the `sanitize` option for `@nuxt/markdown` globally.
+Vue.component('color-picker', ColorPicker)
+```
 
 Since NuxtPress operates under the assumption all Markdown is provided by the
 author (and not via third-party user submission), sources are processed in full
@@ -286,3 +281,45 @@ This last example works because `<span>` is not a block-level tag.
 > Under the hood, NuxtPress uses [rehype-raw][rehype-raw] for this.
 
 [rehype-raw]: https://github.com/rehypejs/rehype-raw
+
+## Filesystem loader
+
+By default, **NuxtPress** loads content from the file system.
+
+For **`docs`** mode, it will load all Markdown files in the current directory
+and sub directories recursively and group them in a _serial list of **topics**_.
+
+Their final URL follows the format:
+
+```
+/topic/<slugified-h1-from-markdown-file>
+```
+
+For **`blogs`** mode, Markdown files are grouped as a *_chronological list of
+entries_*.
+
+Their final URL follows the format:
+
+```
+/<year>/<month>/<slugified-h1-from-markdown-file>
+```
+
+You can **disable filesystem loading** altogether by providing custom API
+handlers for retrieving indexes and Markdown source files.
+
+| API method                          | Role                                  |
+| ----------------------------------- | ------------------------------------- |
+| /api/docs/index                     | Index of documentation topics         |
+| /api/blog/index                     | Latest blog entries                   |
+| /api/blog/archive                   | Dated archive of blog entries         |
+| /api/slides/index                   | Index of slideshows                   |
+| /api/source/:source                 | Retrieve blog entry                   |
+| /api/archive                        | Retrieve blog archive                 |
+
+## Custom stylesheets
+
+The easiest to customize NuxtPress apps..
+
+## Ejectable templates
+
+NuxtPress app templates are ejectable...
