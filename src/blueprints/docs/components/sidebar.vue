@@ -38,6 +38,9 @@ export default {
     })
     this.setSidebar()
   },
+  mounted() {
+    window.x = this
+  },
   computed: {
     path() {
       return this.$route.path

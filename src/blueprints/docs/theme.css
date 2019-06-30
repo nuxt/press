@@ -34,11 +34,12 @@ body {
 
   & main.content {
     padding: 3rem 1.4rem 1.4rem 19.4rem;
+    font-size: 1.1rem;
 
     & article {
       line-height: 1.4rem;
       margin: 0 auto;
-      max-width: 760px;
+      max-width: 660px;
 
       & h3 {
         user-select: none;

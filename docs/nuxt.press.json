@@ -3,11 +3,26 @@
     "dir": "docs",
     "prefix": "/",
     "title": "My Documentation",
-    "nav": [],
-    "source": {},
-    "sidebar": [
-      "/",
-      "/guide"
-    ]
+    "nav": [
+      {
+        "Home": "/"
+      },
+      {
+        "Internals": "/internals"
+      },
+      {
+        "GitHub": "https://github.com/nuxt/press"
+      }
+    ],
+    "sidebar": {
+      "/": [
+        "/",
+        "/guide"
+      ],
+      "/guide": [
+        "/",
+        "/guide"
+      ]
+    }
   }
 }

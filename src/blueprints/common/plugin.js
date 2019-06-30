@@ -54,5 +54,5 @@ export default async (ctx, inject) => {
   ctx.$press = press
   inject('press', press)
 
-  await pressMiddleware(ctx)
+  await pressMiddleware(ctx, true)
 }

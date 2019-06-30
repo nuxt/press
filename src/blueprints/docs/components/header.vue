@@ -29,12 +29,19 @@
 </template>
 
 <script>
-import config from '~/nuxt.press'
+import _config from '~/nuxt.press'
+
+const config = _config.docs
+
+config.nav.forEach((link, i) => {
+  config.nav[i] = {
+    text: Object.keys(link)[0],
+    link: Object.values(link)[0]
+  }
+})
 
 export default {
-  data: () => ({
-    config: config.docs
-  }),
+  data: () => ({ config }),
   methods: {
     activeClass(link) {
       return this.$route.path.startsWith(link) ? 'active' : ''

@@ -77,7 +77,7 @@ function removePrivateKeys(source, target = null) {
       continue
     }
     const value = source[prop]
-    if (!prop.startsWith('$')) {
+    if ((!prop.startsWith('$')) && prop !== 'source') {
       if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
         target[prop] = {}
         removePrivateKeys(value, target[prop])

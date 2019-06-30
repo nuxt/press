@@ -88,7 +88,6 @@ export default async function ({ options }) {
 
   for (const path in options.docs.sidebar) {
     const sidebar = []
-
     for (let sourcePath of options.docs.sidebar[path]) {
       let title
 
@@ -101,22 +100,24 @@ export default async function ({ options }) {
       }
 
       if (docs[sourcePath]) {
-        const { meta, toc } = docs[sourcePath]
+        const { meta, toc: _toc } = docs[sourcePath]
 
         if (!title && meta.title) {
           title = meta.title
         }
 
-        const first = toc.shift()
-        sidebar.push([1, title || first[1], sourcePath])
+        const toc = [..._toc]
 
-        Array.prototype.push.apply(sidebar, toc.map((t) => {
-          t[2] = `${sourcePath}${t[2]}`
-          return t
+        const first = toc.shift()
+        sidebar.push([1, title || first[1], `${sourcePath}${first[2]}`])
+
+        sidebar.push(...toc.map((tocItem, i) => {
+          tocItem = [...tocItem]
+          tocItem[2] = `${sourcePath}${tocItem[2]}`
+          return tocItem
         }))
       }
     }
-
     sidebars[path] = sidebar
   }
 

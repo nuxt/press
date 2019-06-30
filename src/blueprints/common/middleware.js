@@ -6,7 +6,11 @@ const typeToLayout = {
 
 const trimSlashRE = /\/+$/
 
-export default async function ({ $press, params, payload }) {
+export default async function ({ $press, params, payload }, plugin = false) {
+  if (process.server && !plugin) {
+    return
+  }
+
   $press.layout = 'default'
 
   if (typeof params.source === 'string') {

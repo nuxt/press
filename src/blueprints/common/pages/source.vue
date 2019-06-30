@@ -31,14 +31,12 @@ export default {
   components,
   middleware: 'press',
   layout({ $press }) {
-    console.log('$press.layout', $press.layout)
     return $press.layout
   },
   async asyncData ({ $press, params, error }) {
     if ($press.error) {
       error($press.error)
     }
-    console.log('$press.source', $press.source)
     return { source: $press.source, sourcePath: params.source }
   }
 }
