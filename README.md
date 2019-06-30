@@ -16,7 +16,9 @@ Works in `universal` and `spa` modes, as well as with `nuxt generate`.
 
 ## Markdown pages
 
-At its core, **NuxtPress** enables you to use Markdown files as Nuxt pages:
+At its core, **NuxtPress** enables you to use Markdown files as [Nuxt pages][np]:
+
+[np]: https://nuxtjs.org/guide/views/#pages
 
 <table>
 <tr>
@@ -44,25 +46,31 @@ See the **Internals** section to learn more about how it works under the hood.
 ## Publishing docs
 
 To enable the `docs` bundled app, place your Markdown files in your Nuxt app's 
-`srcDir` or `srcDir/docs`. In `docs` mode, tables of contents are automatically
-generated and can be displayed in a sidebar via configuration. You get all core
-features of [VuePress][vp], but in a minimalistic Nuxt app.
+`srcDir` or `srcDir/docs`.
+
+In `docs` mode, tables of contents are automatically generated and can be
+displayed in a sidebar via configuration. You get all core features of 
+[VuePress][vp], but in a minimalistic Nuxt app.
 
 [vp]: https://vuepress.vuejs.org
 
 ## Publishing blogs
 
 To enable the `blog` bundled app, place your Markdown files in your Nuxt app's 
-`srcDir/blog` dir. In `blog` mode, Markdown entry metadata is loaded via 
-[gray-matter][gm] and used to sort entries by date. Learn more.
+`srcDir/blog` dir. 
+
+In `blog` mode, Markdown entry metadata is loaded via [gray-matter][gm] and used to sort entries by date. Learn more.
 
 [gm]: https://github.com/jonschlinkert/gray-matter
 
 ## Publishing slides
 
 To enable the `slides` bundled app, place your Markdown files in your Nuxt app's 
-`srcDir/slides` dir. In `slides` mode, Markdown is especially processed to
-generate slideshows. Similar to [mdx-deck][]. Learn more.
+`srcDir/slides` dir. 
+
+In `slides` mode, Markdown is especially processed to generate slideshows.
+
+Similar to [mdx-deck][]. Learn more.
 
 [mdx-deck]: https://github.com/jxnblk/mdx-deck
 
