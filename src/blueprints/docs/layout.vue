@@ -1,18 +1,16 @@
 <template>
   <div id="nuxt-press" class="docs">
     <top />
-
-    <toc />
-
+    <sidebar />
     <nuxt class="content" />
   </div>
 </template>
 
 <script>
 import top from './components/header'
-import toc from './components/toc'
+import sidebar from './components/sidebar'
 
 export default {
-  components: { top, toc }
+  components: { top, sidebar }
 }
 </script>

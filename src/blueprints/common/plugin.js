@@ -1,11 +1,11 @@
 import consola from 'consola'
 import Vue from 'vue'
+import middleware from '../../middleware'
 import NuxtTemplate from './components/nuxt-template'
 
-import middleware from '../../middleware'
 import pressMiddleware from './middleware'
 
-middleware['press'] = pressMiddleware
+middleware.press = pressMiddleware
 
 Vue.component('nuxt-template', NuxtTemplate)
 
@@ -54,7 +54,5 @@ export default async (ctx, inject) => {
   ctx.$press = press
   inject('press', press)
 
-  if (process.static) {
-    await pressMiddleware(ctx)
-  }
+  await pressMiddleware(ctx, true)
 }

@@ -1,3 +1,6 @@
+---
+title: Intro
+---
 
 ![nuxt-press][logo]
 

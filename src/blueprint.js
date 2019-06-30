@@ -7,6 +7,8 @@ import {
   ensureDir,
   exists,
   writeJson,
+  loadConfig,
+  updateConfig,
   resolve,
   walk
 } from './utils'
@@ -22,12 +24,17 @@ export async function registerBlueprints(rootId, options, blueprints) {
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
+
+  // Sets this.options[rootId] ensuring
+  // external config files have precendence
+  await loadConfig.call(this, rootId, options)
+
   for (const id of blueprints) { // ['slides', 'common']) {
-    await _registerBlueprint.call(this, id, rootId, options)
+    await _registerBlueprint.call(this, id, rootId)
   }
 }
 
-export async function _registerBlueprint(id, rootId, options = {}) {
+export async function _registerBlueprint(id, rootId) {
   // Load blueprint specification
   const blueprint = blueprints[id]
 
@@ -36,17 +43,9 @@ export async function _registerBlueprint(id, rootId, options = {}) {
     return
   }
 
-  // Set global rootId if unset
-  if (!this.options[rootId]) {
-    this.options[rootId] = {}
-  }
-
   if (!this[`$${rootId}`]) {
     this[`$${rootId}`] = this.options[rootId]
   }
-
-  // Prefer top-level config key in nuxt.config.js
-  Object.assign(this.options[rootId], defu(this.options[rootId], options))
 
   if (blueprint.options) {
     if (this.options[rootId][id]) {
@@ -60,25 +59,34 @@ export async function _registerBlueprint(id, rootId, options = {}) {
   this.options[rootId][`$${id}`] = true
 
   // For easy config acess in helper functions
-  options = this.options[rootId]
+  const options = this.options[rootId]
 
   // Register serverMiddleware
-  for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
-    sm = sm.bind(this)
-    this.addServerMiddleware(async (req, res, next) => {
-      try {
-        await sm(req, res, next)
-      } catch (err) {
-        next(err)
-      }
-    })
+  if (blueprint.serverMiddleware) {
+    for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
+      sm = sm.bind(this)
+      this.addServerMiddleware(async (req, res, next) => {
+        try {
+          await sm(req, res, next)
+        } catch (err) {
+          next(err)
+        }
+      })
+    }
   }
 
   this.nuxt.hook('build:before', async () => {
     const context = { options, rootId, id }
+
+    context.data = await blueprint.data.call(this, context)
+
+    if (context.data.options) {
+      Object.assign(options[id], context.data.options)
+    }
+
     const templates = await addTemplates.call(this, context, blueprint.templates)
 
-    context.data = await blueprint.data.call(this)
+    await updateConfig.call(this, rootId, { [id]: context.data.options })
 
     if (blueprint.build && blueprint.build.before) {
       await blueprint.build.before.call(this, context)
@@ -242,7 +250,12 @@ async function addTemplates({ options, rootId, id }, templates) {
     finalTemplates[templateKey] = template.fileName
 
     if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
-      this.addPlugin({ ...template, options })
+      const { dst } = this.addTemplate({ ...template, options })
+      this.options.plugins.push({
+        src: join(this.options.buildDir, dst),
+        ssr: template.ssr,
+        mode: template.mode
+      })
       continue
     }
 

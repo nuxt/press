@@ -1,23 +1,28 @@
 {
   "docs": {
-    "title": "Demo",
-    "top": {
-      "external": [],
-      "links": []
-    },
-    "toc": [
-      "/topics/index#publishing-the-nuxt-way",
-      "/topics/index#setup",
-      "/topics/customize#customize",
-      "/topics/customize#theming",
-      "/topics/customize#templates",
-      "/topics/guide#guide",
-      "/topics/guide#enabling-modes",
-      "/topics/guide#publishing-docs",
-      "/topics/guide#publishing-blogs",
-      "/topics/guide#adding-sidebar-links",
-      "/topics/guide#publishing-slides",
-      "/topics/guide#using-components"
-    ]
+    "dir": "docs",
+    "prefix": "/",
+    "title": "My Documentation",
+    "nav": [
+      {
+        "Home": "/"
+      },
+      {
+        "Internals": "/internals"
+      },
+      {
+        "GitHub": "https://github.com/nuxt/press"
+      }
+    ],
+    "sidebar": {
+      "/": [
+        "/",
+        "/guide"
+      ],
+      "/guide": [
+        "/",
+        "/guide"
+      ]
+    }
   }
 }

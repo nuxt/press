@@ -6,7 +6,7 @@ import {
   exists,
   join,
   slugify,
-  updateJson,
+  updateConfig,
   readJsonSync,
   isSingleMode,
   routePath
@@ -29,7 +29,7 @@ export default {
     'layout': 'layout.vue',
     'sidebar': 'components/sidebar.vue',
     'index': 'pages/index.vue',
-    'entry': 'pages/entry.vue',
+    'entry': 'components/source.vue',
     'archive': 'pages/archive.vue'
   },
   ejectable: [
@@ -66,7 +66,7 @@ export default {
     ]
   },
   serverMiddleware({ options, rootId, id }) {
-    const { index, archive } = this.$press.blog.api.call(this, { rootId, id })
+    const { index, archive } = options.blog.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/blog/index')) {
@@ -83,13 +83,8 @@ export default {
     before() {
       this.options.css.push(resolve('blueprints/blog/theme.css'))
     },
-    compile({ data }) {
-      updateJson(
-        join(this.options.srcDir, 'nuxt.press.json'),
-        {
-          blog: this.$press.blog.meta
-        }
-      )
+    async compile({ rootId }) {
+      await updateConfig.call(this, rootId, { blog: this.$press.blog })
     },
     done({ options }) {
       this.options.watch.push(`~/${options.blog.dir}/*.md`)

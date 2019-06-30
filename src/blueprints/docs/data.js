@@ -1,27 +1,30 @@
-
 import { parse } from 'path'
-import { walk, join, exists, readFile } from '../../utils'
+import graymatter from 'gray-matter'
+import { walk, join, exists, readFile, trimEnd, routePath } from '../../utils'
 import PromisePool from '../../pool'
+import { indexKeys } from './constants'
 
 // DOCS MODE
 // Markdown files can be placed in
 // Nuxt's srcDir or the docs/ directory.
 // Directory configurable via press.docs.dir
 
+const trimSlash = str => trimEnd(str, '/')
+const isIndexRE = new RegExp(`/(${indexKeys.join('|')})$`, 'i')
+
 async function parseDoc(sourcePath) {
-  const raw = await readFile(this.options.srcDir, sourcePath)
+  let raw = await readFile(this.options.srcDir, sourcePath)
   const { name: fileName } = parse(sourcePath)
 
-  // eslint-disable-next-line prefer-const
-  let { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw)
-  const title = this.$press.docs.source.title.call(this, fileName, raw)
-
-  if (toc.length && toc[0]) {
-    toc[0][1] = title
-  } else if (['index', 'readme'].includes(fileName)) {
-    // Force intro toc item if not present
-    toc = [[1, 'Intro', '#intro']]
+  let meta = {}
+  if (raw.trimLeft().startsWith('---')) {
+    const { content, data } = graymatter(raw)
+    raw = content
+    meta = data
   }
+
+  const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw)
+  const title = this.$press.docs.source.title.call(this, fileName, raw)
 
   const source = {
     type: 'topic',
@@ -29,21 +32,16 @@ async function parseDoc(sourcePath) {
     body
   }
 
-  const pathPrefix = this.$press.docs.prefix
-  const path = this.$press.docs.source.path.call(this, fileName, source)
+  source.path = '/' + sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '')
 
   return {
     toc,
-    source: {
-      ...source,
-      path: `${pathPrefix}${path}`
-    }
+    meta,
+    source
   }
 }
 
-export default async function (data) {
-  const sources = {}
-
+export default async function ({ options }) {
   let srcRoot = join(
     this.options.srcDir,
     this.$press.docs.dir
@@ -53,31 +51,79 @@ export default async function (data) {
     srcRoot = this.options.srcDir
   }
 
-  const index = {}
-
   const jobs = await walk.call(this, srcRoot, (path) => {
     if (path.startsWith('pages')) {
       return false
     }
-    return /\.md$/.test(path)
+    return path.endsWith('.md')
   })
 
-  const handler = async (path) => {
-    const { toc, source } = await parseDoc.call(this, path)
+  const sidebars = {}
+  const sources = {}
+  const docs = {}
 
-    for (const tocItem of toc) {
-      tocItem[2] = `${source.path}${tocItem[2]}`
-      index[tocItem[2]] = tocItem
+  const handler = async (path) => {
+    const { meta, toc, source } = await parseDoc.call(this, path)
+
+    const sourcePath = routePath(source.path) || '/'
+
+    if (![0, false].includes(meta.sidebar)) {
+      sidebars[sourcePath] = toc
     }
-    sources[source.path] = source
+
+    docs[sourcePath] = { meta, toc }
+    sources[sourcePath] = source
   }
 
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
+  if (Array.isArray(options.docs.sidebar)) {
+    options.docs.sidebar = options.docs.sidebar.reduce((obj, path) => {
+      return { ...obj, [path]: options.docs.sidebar }
+    }, {})
+  }
+
+  const docPrefix = trimSlash(options.docs.prefix)
+
+  for (const path in options.docs.sidebar) {
+    const sidebar = []
+    for (let sourcePath of options.docs.sidebar[path]) {
+      let title
+
+      if (Array.isArray(sourcePath)) {
+        [sourcePath, title] = sourcePath
+      }
+
+      if (sourcePath !== '/') {
+        sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
+      }
+
+      if (docs[sourcePath]) {
+        const { meta, toc: _toc } = docs[sourcePath]
+
+        if (!title && meta.title) {
+          title = meta.title
+        }
+
+        const toc = [..._toc]
+
+        const first = toc.shift()
+        sidebar.push([1, title || first[1], `${sourcePath}${first[2]}`])
+
+        sidebar.push(...toc.map((tocItem, i) => {
+          tocItem = [...tocItem]
+          tocItem[2] = `${sourcePath}${tocItem[2]}`
+          return tocItem
+        }))
+      }
+    }
+    sidebars[path] = sidebar
+  }
+
   return {
-    topLevel: {
-      index
+    options: {
+      $sidebars: sidebars
     },
     sources
   }

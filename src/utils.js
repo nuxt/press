@@ -40,6 +40,14 @@ export function join(...paths) {
   return _join(...paths.map(p => p.replace(/\//g, sep)))
 }
 
+export function trimEnd(str, chr = '') {
+  if (!chr) {
+    return str.trimEnd()
+  }
+
+  return str.replace(new RegExp(`${chr}+$`), '')
+}
+
 export function readFile(...paths) {
   return _readFile(join(...paths), 'utf-8')
 }
@@ -60,7 +68,50 @@ export function ensureDir(...paths) {
   return _ensureDir(join(...paths))
 }
 
-export async function updateJson(path, obj) {
+function removePrivateKeys(source, target = null) {
+  if (target === null) {
+    target = {}
+  }
+  for (const prop in source) {
+    if (prop === '__proto__' || prop === 'constructor') {
+      continue
+    }
+    const value = source[prop]
+    if ((!prop.startsWith('$')) && prop !== 'source') {
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        target[prop] = {}
+        removePrivateKeys(value, target[prop])
+        continue
+      }
+      target[prop] = value
+    }
+  }
+  return target
+}
+
+export async function loadConfig(rootId, config = {}) {
+  const jsConfigPath = join(this.options.srcDir, `nuxt.${rootId}.js`)
+  // JavaScript config has precedence over JSON config
+  if (exists(jsConfigPath)) {
+    config = defu(await _import(jsConfigPath), config)
+  } else if (exists(`${jsConfigPath}on`)) {
+    config = defu(await _import(`${jsConfigPath}on`), config)
+  }
+  this.options[rootId] = defu(config, this.options[rootId] || {})
+}
+
+export async function updateConfig(rootId, obj) {
+  // If .js config found, do nothing:
+  // we only update JSON files, not JavaScript
+  if (exists(join(this.options.srcDir, `nuxt.${rootId}.js`))) {
+    return
+  }
+
+  // Copy object and remove props that start with $
+  // (These can be used for internal template pre-processing)
+  obj = removePrivateKeys(obj)
+
+  const path = join(this.options.srcDir, `nuxt.${rootId}.json`)
   if (!exists(path)) {
     await writeJson(path, obj, { spaces: 2 })
     return
@@ -86,14 +137,17 @@ export function routePath(routePath) {
 export function walk(root, validate, sliceAtRoot = false) {
   const matches = []
   const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1
+
   if (validate instanceof RegExp) {
     const pattern = validate
     validate = path => pattern.test(path)
   }
+
   return new Promise((resolve) => {
     klaw(root)
       .on('data', (match) => {
         const path = match.path.slice(sliceAt)
+
         if (validate(path)) {
           matches.push(path)
         }

@@ -1,6 +1,6 @@
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
-import { _import, ensureDir, exists, join, readJsonSync, remove } from '../../utils'
+import { _import, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
 import data from './data'
 
 export default {
@@ -10,10 +10,10 @@ export default {
   enabled: () => true,
   templates: {
     'middleware': 'middleware.js',
+    'nuxt-template': 'components/nuxt-template.js',
+    'observer': 'components/observer.js',
     'plugin': 'plugin.js',
     'scroll/plugin': ['plugins/scroll.js', { ssr: false }],
-    'observer': 'components/observer.js',
-    'nuxt-template': 'components/nuxt-template.js',
     'source': 'pages/source.vue'
   },
   routes(templates) {
@@ -79,7 +79,8 @@ export default {
       const sourceCache = {}
       return {
         source(req, res, next) {
-          const source = req.url.slice(12)
+          const source = trimEnd(req.url.slice(12), '/')
+
           if (!sourceCache[source]) {
             sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
           }
