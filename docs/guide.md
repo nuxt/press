@@ -1,4 +1,3 @@
-
 # Guide
 
 **NuxtPress** is a microframework that leverages the [Nuxt module
