@@ -60,6 +60,7 @@ export default {
       this.options.watch.push(`~/*.md`)
       this.options.watch.push(`~/${options.docs.dir}/*.md`)
       this.options.watch.push(`~/${options.docs.dir}/**/*.md`)
+
     }
   },
   options: {
