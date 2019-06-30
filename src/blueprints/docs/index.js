@@ -57,8 +57,9 @@ export default {
       await updateConfig.call(this, rootId, { docs: this.$press.docs })
     },
     done({ options }) {
-      this.options.watch.push('~/**/*.md')
-      this.options.watch.push(`~/${options.docs.dir}/**/` + `*.md`)
+      this.options.watch.push(`~/*.md`)
+      this.options.watch.push(`~/${options.docs.dir}/*.md`)
+      this.options.watch.push(`~/${options.docs.dir}/**/*.md`)
     }
   },
   options: {

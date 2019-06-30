@@ -4,11 +4,15 @@ export default {
       type: String,
       required: true,
       default: () => ''
+    },
+    tag: {
+      type: String,
+      default: () => 'div'
     }
   },
   render(h) {
     return h({
-      template: `<div>${this.html}</div>`
+      template: `<${this.tag}>${this.html}</${this.tag}>`
     })
   },
   created() {

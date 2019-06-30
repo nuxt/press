@@ -2,7 +2,7 @@
   "docs": {
     "dir": "docs",
     "prefix": "/",
-    "title": "My Documentation",
+    "title": "NuxtPress documentation",
     "nav": [
       {
         "Home": "/"
