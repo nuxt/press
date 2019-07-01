@@ -17,11 +17,18 @@
     "sidebar": {
       "/": [
         "/",
-        "/guide"
+        "/guide",
+        "/customize"
       ],
       "/guide": [
         "/",
-        "/guide"
+        "/guide",
+        "/customize"
+      ],
+      "/customize": [
+        "/",
+        "/guide",
+        "/customize"
       ]
     }
   }

@@ -51,7 +51,8 @@ export default {
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/source/')) {
-          source.call(this, req, res, next)
+          const sourcePath = trimEnd(req.url.slice(12), '/')
+          source.call(this, sourcePath, req, res, next)
         } else {
           next()
         }
@@ -81,9 +82,7 @@ export default {
       const rootDir = join(this.options.buildDir, rootId, 'static')
       const sourceCache = {}
       return {
-        source(req, res, next) {
-          const source = trimEnd(req.url.slice(12), '/')
-
+        source(source, req, res, next) {
           if (!sourceCache[source]) {
             sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
           }

@@ -45,7 +45,7 @@ can be seen below. The `nav` key is initially empty and must be filled out.
 
 [docs-source]: https://github.com/nuxt/press/tree/master/demo/docs
 
-```js
+```json
 {
   "docs": {
     "dir": "docs",
@@ -82,17 +82,54 @@ The presence of any of these directories in the **`srcDir`** of a Nuxt project
 will enable their corresponding NuxtPress modes. You can customize these 
 directories via **`nuxt.press.json`**:
 
-```js
+```json
 {
   "docs": {
-    "dir": 'my-custom-docs-dir'
+    "dir": "my-custom-docs-dir"
   },
   "blog": {
-    "dir": 'my-custom-blog-dir'
+    "dir": "my-custom-blog-dir"
   },
   "slides": {
-    "dir": 'my-custom-slides-dir'
+    "dir": "my-custom-slides-dir"
   }
+}
+```
+
+> You can run multiple NuxtPress modes in the same Nuxt app.
+
+## Standalone mode
+
+When no route directories are found in `<srcDir>`, NuxtPress will start in
+standalone `docs` mode. It will try and load Markdown files from `<srcDir>`
+and make the **documentation suite app** available at `/`.
+
+You can modify the default app for standalone mode via `nuxt.config.js`:
+
+```js
+export default {
+  modules: [
+    ['@nuxt/press', 'slides']
+  ]
+}
+```
+
+> That's the only allowed NuxtPress configuration via `nuxt.config.js`. For
+> everything else, use either `nuxt.press.json` or `nuxt.press.js`.
+
+Via `nuxt.press.json`:
+
+```json
+{
+  "mode": "slides"
+}
+```
+
+Or via `nuxt.press.js`:
+
+```js
+export default {
+  mode: 'slides'
 }
 ```
 
@@ -108,7 +145,7 @@ be `/`. If however you add Markdown files to `<srcDir>/docs`, the root URL for
 the documentation suite will be `/docs`, as to avoid interfering  with existing
 application routes. You can customize this via `nuxt.press.json`:
 
-```js
+```json
 {
   "docs": {
     "prefix": "/custom-docs-prefix/"
@@ -198,128 +235,35 @@ NuxtPress will parse each slide from Markdown using `#` as the delimiter.
 If text follows `#`, it's appended as a `<h1>` tag. If not, it's simply used
 as the delimiter and no `<h1>` tag is added.
 
-The following example represents four slides:
+The following example represents four slides. It is a single file, but here
+it is shown divided in sections to illustrate the processing.
 
-```markup
+```md
+
 My Presentation
 (opener, slide 1)
 
+```
+```md
 # Slide 2 header
 
 Slide 2 text
 
+```
+```md
 #
 
 Slide 3 text
 (slide with no header)
 
+```
+```md
 # Slide 4 header
 
 Slide 4 text
+
 ```
 
 This is a simplification from [MDX][mdx], which uses `---` as delimiter.
 
 [mdx]: https://mdxjs.com/
-
-## Using components
-
-To use custom Vue components in your Markdown sources, just create a plugin to 
-import and register the component globally:
-
-```js
-import ColorPicker from '@radial-color-picker/vue-color-picker'
-
-Vue.component('color-picker', ColorPicker)
-```
-
-Since NuxtPress operates under the assumption all Markdown is provided by the
-author (and not via third-party user submission), sources are processed in full
-(tags included), with a couple of caveats:
-
-1. Can't use self-closing tags, i.e., **this won't work**:
-
-```markup
-<color-picker />
-```
-
-But **this will**:
-
-```markup
-<color-picker></color-picker>
-```
-
-2. When placing Markdown inside a component, it must be preceded and followed
-by an empty line, otherwise the whole block is treated as custom HTML.
-
-**This won't work**:
-
-```markup
-<div class="note">
-*Markdown* and <em>HTML</em>.
-</div>
-```
-
-But **this will**:
-
-```markup
-<div class="note">
-
-*Markdown* and <em>HTML</em>.
-
-</div>
-```
-
-As will **this**:
-
-```markup
-<span class="note">*Markdown* and <em>HTML</em>.</span>
-```
-
-This last example works because `<span>` is not a block-level tag.
-
-> Under the hood, NuxtPress uses [rehype-raw][rehype-raw] for this.
-
-[rehype-raw]: https://github.com/rehypejs/rehype-raw
-
-## Filesystem loader
-
-By default, **NuxtPress** loads content from the file system.
-
-For **`docs`** mode, it will load all Markdown files in the current directory
-and sub directories recursively and group them in a _serial list of **topics**_.
-
-Their final URL follows the format:
-
-```
-/topic/<slugified-h1-from-markdown-file>
-```
-
-For **`blogs`** mode, Markdown files are grouped as a *_chronological list of
-entries_*.
-
-Their final URL follows the format:
-
-```
-/<year>/<month>/<slugified-h1-from-markdown-file>
-```
-
-You can **disable filesystem loading** altogether by providing custom API
-handlers for retrieving indexes and Markdown source files.
-
-| API method                          | Role                                  |
-| ----------------------------------- | ------------------------------------- |
-| /api/docs/index                     | Index of documentation topics         |
-| /api/blog/index                     | Latest blog entries                   |
-| /api/blog/archive                   | Dated archive of blog entries         |
-| /api/slides/index                   | Index of slideshows                   |
-| /api/source/:source                 | Retrieve blog entry                   |
-| /api/archive                        | Retrieve blog archive                 |
-
-## Custom stylesheets
-
-The easiest to customize NuxtPress apps..
-
-## Ejectable templates
-
-NuxtPress app templates are ejectable...

@@ -6,5 +6,5 @@ export const templates = {
   layout: 'layout.vue',
   plugin: 'plugin.js',
   sidebar: 'components/sidebar.vue',
-  topic: 'components/source.vue'
+  topic: 'components/topic.vue'
 }

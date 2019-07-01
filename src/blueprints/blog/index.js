@@ -29,7 +29,7 @@ export default {
     'layout': 'layout.vue',
     'sidebar': 'components/sidebar.vue',
     'index': 'pages/index.vue',
-    'entry': 'components/source.vue',
+    'entry': 'components/entry.vue',
     'archive': 'pages/archive.vue'
   },
   ejectable: [
