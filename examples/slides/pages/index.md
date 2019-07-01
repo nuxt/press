@@ -1,3 +1,0 @@
-# Foobar
-
-Hey, this works!
