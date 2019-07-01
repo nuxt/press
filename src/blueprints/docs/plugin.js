@@ -3,12 +3,17 @@ if (process.client) {
     const scrollBehavior = app.$router.options.scrollBehavior
 
     app.$router.options.scrollBehavior = (to, from, savedPosition) => {
+      console.log('scrollBehavior', to, from, savedPosition, app.$press.disableScrollBehavior)
       if (savedPosition) {
         return Promise.resolve(savedPosition)
       }
 
       if (app.$press.disableScrollBehavior) {
         return Promise.resolve(false)
+      }
+
+      if (to.path === from.path && to.hash !== from.hash) {
+        app.$nextTick(() => app.$emit('triggerScroll'))
       }
 
       return scrollBehavior(to, from, savedPosition)

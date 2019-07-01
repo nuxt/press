@@ -38,9 +38,6 @@ export default {
     })
     this.setSidebar()
   },
-  mounted() {
-    window.x = this
-  },
   computed: {
     path() {
       return this.$route.path
@@ -56,17 +53,6 @@ export default {
     path() {
       this.setSidebar()
     },
-    hash(hash) {
-      if (!hash) {
-        window.scrollTo(0, 0)
-        return
-      }
-
-      const heading = document.querySelector(hash)
-      if (heading) {
-        heading.scrollIntoView({block: 'start', inline: 'nearest', behavior: 'smooth'})
-      }
-    }
   },
   methods: {
     setSidebar() {
