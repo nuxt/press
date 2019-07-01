@@ -3,7 +3,6 @@ if (process.client) {
     const scrollBehavior = app.$router.options.scrollBehavior
 
     app.$router.options.scrollBehavior = (to, from, savedPosition) => {
-      console.log('scrollBehavior', to, from, savedPosition, app.$press.disableScrollBehavior)
       if (savedPosition) {
         return Promise.resolve(savedPosition)
       }
