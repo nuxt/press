@@ -1,6 +1,6 @@
 {
   "name": "@nuxt/press",
-  "version": "0.0.1-alpha.50",
+  "version": "0.0.1-alpha.51",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
   "bin": {
     "nuxt-press": "./bin/cli.js"
@@ -39,6 +39,7 @@
     "gray-matter": "^4.0.2",
     "keymaster": "^1.6.2",
     "klaw": "^3.0.0",
+    "node-fetch": "^2.6.0",
     "prismjs": "^1.16.0",
     "slug": "^1.1.0",
     "swiper": "^4.5.0",
