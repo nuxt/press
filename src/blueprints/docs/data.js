@@ -1,4 +1,5 @@
 import { parse } from 'path'
+import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import { walk, join, exists, readFile, trimEnd, routePath } from '../../utils'
 import PromisePool from '../../pool'
@@ -24,7 +25,8 @@ async function parseDoc(sourcePath) {
   }
 
   const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw)
-  const title = this.$press.docs.source.title.call(this, fileName, raw)
+
+  const title = await this.$press.docs.source.title.call(this, fileName, raw, toc)
 
   const source = {
     type: 'topic',
