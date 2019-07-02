@@ -1,4 +1,4 @@
-# `Customize`
+# Customize
 
 This section covers all **NuxtPress** customization options.
 
