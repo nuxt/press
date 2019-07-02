@@ -80,17 +80,18 @@ export default async function ({ options }) {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
+  let $sidebar = options.docs.sidebar
   if (Array.isArray(options.docs.sidebar)) {
-    options.docs.sidebar = options.docs.sidebar.reduce((obj, path) => {
+    $sidebar = options.docs.sidebar.reduce((obj, path) => {
       return { ...obj, [path]: options.docs.sidebar }
     }, {})
   }
 
   const docPrefix = trimSlash(options.docs.prefix)
 
-  for (const path in options.docs.sidebar) {
+  for (const path in $sidebar) {
     const sidebar = []
-    for (let sourcePath of options.docs.sidebar[path]) {
+    for (let sourcePath of $sidebar[path]) {
       let title
 
       if (Array.isArray(sourcePath)) {
