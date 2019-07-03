@@ -18,11 +18,14 @@ async function parseDoc(sourcePath) {
   let raw = await readFile(this.options.srcDir, sourcePath)
   const { name: fileName } = parse(sourcePath)
 
-  let meta = defaultMetaSettings
+  let meta
   if (raw.trimLeft().startsWith('---')) {
     const { content, data } = graymatter(raw)
     raw = content
-    meta = defu(data, meta)
+
+    meta = defu(data, defaultMetaSettings)
+  } else {
+    meta = defu({}, defaultMetaSettings)
   }
 
   if (meta.sidebar === 'auto') {
@@ -85,9 +88,11 @@ export default async function ({ options }) {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  let $sidebar = options.docs.sidebar
+  let $sidebar
   if (Array.isArray(options.docs.sidebar)) {
-    options.docs.sidebar = { '/': options.docs.sidebar }
+    $sidebar = { '/': options.docs.sidebar }
+  } else {
+    $sidebar = options.docs.sidebar
   }
 
   const docPrefix = trimSlash(options.docs.prefix)
