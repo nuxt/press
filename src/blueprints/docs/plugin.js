@@ -11,6 +11,7 @@ if (process.client) {
         return Promise.resolve(false)
       }
 
+      // TODO: remove this once https://github.com/nuxt/nuxt.js/pull/6012 is released
       if (to.path === from.path && to.hash !== from.hash) {
         app.$nextTick(() => app.$emit('triggerScroll'))
       }
