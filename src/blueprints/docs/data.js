@@ -1,8 +1,9 @@
 import { parse } from 'path'
 import graymatter from 'gray-matter'
+import defu from 'defu'
 import { walk, join, exists, readFile, trimEnd, routePath } from '../../utils'
 import PromisePool from '../../pool'
-import { indexKeys } from './constants'
+import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
 
 // DOCS MODE
 // Markdown files can be placed in
@@ -10,17 +11,21 @@ import { indexKeys } from './constants'
 // Directory configurable via press.docs.dir
 
 const trimSlash = str => trimEnd(str, '/')
-const isIndexRE = new RegExp(`/(${indexKeys.join('|')})$`, 'i')
+const isIndexRE = new RegExp(`(^|/)(${indexKeys.join('|')})$`, 'i')
 
 async function parseDoc(sourcePath) {
   let raw = await readFile(this.options.srcDir, sourcePath)
   const { name: fileName } = parse(sourcePath)
 
-  let meta = {}
+  let meta = defaultMetaSettings
   if (raw.trimLeft().startsWith('---')) {
     const { content, data } = graymatter(raw)
     raw = content
-    meta = data
+    meta = defu(data, meta)
+  }
+
+  if (meta.sidebar === 'auto') {
+    meta.sidebarDepth = maxSidebarDepth
   }
 
   const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw)
@@ -35,7 +40,7 @@ async function parseDoc(sourcePath) {
   source.path = '/' + sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '')
 
   return {
-    toc,
+    toc: toc.filter(([level]) => level <= (meta.sidebarDepth + 1)),
     meta,
     source
   }
@@ -67,7 +72,7 @@ export default async function ({ options }) {
 
     const sourcePath = routePath(source.path) || '/'
 
-    if (![0, false].includes(meta.sidebar)) {
+    if (meta.sidebar === 'auto') {
       sidebars[sourcePath] = toc
     }
 
@@ -79,9 +84,7 @@ export default async function ({ options }) {
   await queue.done()
 
   if (Array.isArray(options.docs.sidebar)) {
-    options.docs.sidebar = options.docs.sidebar.reduce((obj, path) => {
-      return { ...obj, [path]: options.docs.sidebar }
-    }, {})
+    options.docs.sidebar = { '/': options.docs.sidebar }
   }
 
   const docPrefix = trimSlash(options.docs.prefix)
@@ -95,27 +98,55 @@ export default async function ({ options }) {
         [sourcePath, title] = sourcePath
       }
 
+      if (typeof sourcePath === 'object') {
+        title = sourcePath.title
+
+        sidebar.push([1, title])
+
+        if (sourcePath.children) {
+          for (sourcePath of sourcePath.children) {
+            sourcePath = sourcePath.replace(/.md$/i, '')
+            sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
+
+            if (docs[sourcePath]) {
+              const { meta, toc } = docs[sourcePath]
+
+              if (!title && meta.title) {
+                title = meta.title
+              }
+
+              sidebar.push(...toc.map(([level, name, url], i) => [
+                level + 1,
+                name,
+                url ? `${sourcePath}${url}` : url
+              ]))
+            }
+          }
+        }
+
+        continue
+      }
+
       if (sourcePath !== '/') {
         sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
       }
 
       if (docs[sourcePath]) {
-        const { meta, toc: _toc } = docs[sourcePath]
+        const { meta, toc: [first, ...toc] } = docs[sourcePath]
 
         if (!title && meta.title) {
           title = meta.title
         }
 
-        const toc = [..._toc]
+        if (first) {
+          sidebar.push([1, title || first[1], `${sourcePath}${first[2]}`])
+        }
 
-        const first = toc.shift()
-        sidebar.push([1, title || first[1], `${sourcePath}${first[2]}`])
-
-        sidebar.push(...toc.map((tocItem, i) => {
-          tocItem = [...tocItem]
-          tocItem[2] = `${sourcePath}${tocItem[2]}`
-          return tocItem
-        }))
+        sidebar.push(...toc.map(([level, name, url], i) => [
+          level,
+          name,
+          url ? `${sourcePath}${url}` : url
+        ]))
       }
     }
     sidebars[path] = sidebar

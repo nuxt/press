@@ -8,3 +8,9 @@ export const templates = {
   sidebar: 'components/sidebar.vue',
   topic: 'components/topic.vue'
 }
+
+export const maxSidebarDepth = 2
+
+export const defaultMetaSettings = {
+  sidebarDepth: 1
+}

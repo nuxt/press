@@ -32,7 +32,7 @@
   ],
   "dependencies": {
     "@nuxt/http": "^0.3.2",
-    "@nuxt/markdown": "^0.0.5",
+    "@nuxt/markdown": "^0.0.6",
     "animate.css": "^3.7.2",
     "convert-svg-to-png": "^0.5.0",
     "copy-webpack-plugin": "^5.0.3",
@@ -47,18 +47,18 @@
   "devDependencies": {
     "@nuxtjs/eslint-config": "^0.0.1",
     "babel-eslint": "^10.0.2",
-    "eslint": "^5.16.0",
+    "eslint": "^6.0.1",
     "eslint-config-standard": "^12.0.0",
-    "eslint-plugin-import": "^2.17.3",
-    "eslint-plugin-jest": "^22.6.4",
+    "eslint-plugin-import": "^2.18.0",
+    "eslint-plugin-jest": "^22.7.1",
     "eslint-plugin-node": "^9.1.0",
-    "eslint-plugin-promise": "^4.1.1",
+    "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.0",
-    "eslint-plugin-vue": "^5.2.2",
+    "eslint-plugin-vue": "^5.2.3",
     "nuxt": "^2.8.1",
-    "rollup": "^1.16.2",
+    "rollup": "^1.16.4",
     "rollup-plugin-auto-external": "^2.0.0",
-    "rollup-plugin-commonjs": "^10.0.0",
+    "rollup-plugin-commonjs": "^10.0.1",
     "rollup-plugin-copy": "^3.0.0"
   }
 }
