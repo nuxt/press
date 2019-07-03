@@ -7,11 +7,18 @@
         :class="{ [`h${level}`]: true }"
       >
         <nuxt-link
+          v-if="url"
           class="sidebar-link"
           :class="{ active: url === activePath }"
           :to="url">
           {{ name }}
         </nuxt-link>
+        <span
+          v-else
+          class="sidebar-title"
+        >
+          {{ name }}
+        </span>
       </li>
     </ul>
   </nav>
@@ -31,7 +38,7 @@ export default {
       _sidebarPaths: []
     }
   },
-  async beforeMount() {
+  beforeMount() {
     // extract all sidebar paths in reverse order of length
     this._sidebarPaths = Object.keys($sidebars).sort((a, b) => {
       return b.length - a.length
@@ -46,7 +53,7 @@ export default {
       return this.$route.hash
     },
     activePath() {
-      return `${this.$route.path}${this.hash}`
+      return `${this.path}${this.hash}`
     }
   },
   watch: {
@@ -71,6 +78,7 @@ export default {
 
 <style>
 .docs .sidebar {
+  position: block;
   width: 18vw;
   border-right: 1px solid #e5e5e5;
   margin: 0;
@@ -91,6 +99,11 @@ export default {
     & a.active {
       font-weight: bold;
     }
+  }
+
+  & .sidebar-title {
+    display: inline-block;
+    margin: 1rem 0 0.7rem 0;
   }
 
   & .h1 {

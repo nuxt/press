@@ -58,9 +58,7 @@ export default {
     },
     done({ options }) {
       this.options.watch.push(`~/*.md`)
-      this.options.watch.push(`~/${options.docs.dir}/*.md`)
       this.options.watch.push(`~/${options.docs.dir}/**/*.md`)
-
     }
   },
   options: {
@@ -93,7 +91,14 @@ export default {
         if (toc && toc[0]) {
           return toc[0][1]
         }
-        return body.substr(body.indexOf('#')).match(/^#\s+(.*)/)[1]
+
+        const [, title] = body.substr(body.indexOf('#')).match(/^#+\s+(.*)/)
+
+        if (title) {
+          return title
+        }
+
+        return 'tesTTest'
       }
     }
   }

@@ -1,6 +1,6 @@
 <template>
   <header class="top-menu">
-    <nuxt-link :to="config.prefix" class="home-link">
+    <nuxt-link :to="config.prefix || '/'" class="home-link">
       {{ config.title }}
     </nuxt-link>
 
@@ -32,13 +32,6 @@
 import _config from '~/nuxt.press'
 
 const config = _config.docs
-
-config.nav.forEach((link, i) => {
-  config.nav[i] = {
-    text: Object.keys(link)[0],
-    link: Object.values(link)[0]
-  }
-})
 
 export default {
   data: () => ({ config }),
