@@ -38,7 +38,7 @@ export default {
       _sidebarPaths: []
     }
   },
-  async beforeMount() {
+  beforeMount() {
     // extract all sidebar paths in reverse order of length
     this._sidebarPaths = Object.keys($sidebars).sort((a, b) => {
       return b.length - a.length

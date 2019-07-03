@@ -1,5 +1,4 @@
 import { parse } from 'path'
-import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import defu from 'defu'
 import { walk, join, exists, readFile, trimEnd, routePath } from '../../utils'
@@ -107,9 +106,7 @@ export default async function ({ options }) {
       }
 
       if (typeof sourcePath === 'object') {
-        title = sourcePath.title
-
-        sidebar.push([1, title])
+        sidebar.push([1, sourcePath.title])
 
         if (sourcePath.children) {
           for (sourcePath of sourcePath.children) {
@@ -117,10 +114,14 @@ export default async function ({ options }) {
             sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
 
             if (docs[sourcePath]) {
-              const { meta, toc } = docs[sourcePath]
+              const { meta, toc: [first, ...toc] } = docs[sourcePath]
 
               if (!title && meta.title) {
                 title = meta.title
+              }
+
+              if (first) {
+                sidebar.push([2, title || first[1], sourcePath])
               }
 
               sidebar.push(...toc.map(([level, name, url]) => [
@@ -147,7 +148,7 @@ export default async function ({ options }) {
         }
 
         if (first) {
-          sidebar.push([1, title || first[1], `${sourcePath}${first[2]}`])
+          sidebar.push([1, title || first[1], sourcePath])
         }
 
         sidebar.push(...toc.map(([level, name, url]) => [
