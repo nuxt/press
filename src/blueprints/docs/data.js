@@ -123,7 +123,7 @@ export default async function ({ options }) {
                 title = meta.title
               }
 
-              sidebar.push(...toc.map(([level, name, url], i) => [
+              sidebar.push(...toc.map(([level, name, url]) => [
                 level + 1,
                 name,
                 url ? `${sourcePath}${url}` : url
@@ -150,7 +150,7 @@ export default async function ({ options }) {
           sidebar.push([1, title || first[1], `${sourcePath}${first[2]}`])
         }
 
-        sidebar.push(...toc.map(([level, name, url], i) => [
+        sidebar.push(...toc.map(([level, name, url]) => [
           level,
           name,
           url ? `${sourcePath}${url}` : url
