@@ -11,6 +11,11 @@ if (!existsSync(join(initCwd, 'node_modules'))) {
   return
 }
 
+// Detect common presence of docs/nuxt.config.js
+if (existsSync(join(initCwd, 'docs', 'nuxt.config.js'))) {
+  return
+}
+
 const scripts = {
   'dev': 'nuxt dev',
   'build': 'nuxt build',

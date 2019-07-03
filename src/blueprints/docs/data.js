@@ -1,4 +1,5 @@
 import { parse } from 'path'
+import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import defu from 'defu'
 import { walk, join, exists, readFile, trimEnd, routePath } from '../../utils'
@@ -29,7 +30,8 @@ async function parseDoc(sourcePath) {
   }
 
   const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw)
-  const title = this.$press.docs.source.title.call(this, fileName, raw)
+
+  const title = await this.$press.docs.source.title.call(this, fileName, raw, toc)
 
   const source = {
     type: 'topic',
@@ -83,15 +85,16 @@ export default async function ({ options }) {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
+  let $sidebar = options.docs.sidebar
   if (Array.isArray(options.docs.sidebar)) {
     options.docs.sidebar = { '/': options.docs.sidebar }
   }
 
   const docPrefix = trimSlash(options.docs.prefix)
 
-  for (const path in options.docs.sidebar) {
+  for (const path in $sidebar) {
     const sidebar = []
-    for (let sourcePath of options.docs.sidebar[path]) {
+    for (let sourcePath of $sidebar[path]) {
       let title
 
       if (Array.isArray(sourcePath)) {

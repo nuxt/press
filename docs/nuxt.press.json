@@ -14,22 +14,10 @@
         "GitHub": "https://github.com/nuxt/press"
       }
     ],
-    "sidebar": {
-      "/": [
-        "/",
-        "/guide",
-        "/customize"
-      ],
-      "/guide": [
-        "/",
-        "/guide",
-        "/customize"
-      ],
-      "/customize": [
-        "/",
-        "/guide",
-        "/customize"
-      ]
-    }
+    "sidebar": [
+      "/",
+      "/guide",
+      "/customize"
+    ]
   }
 }
