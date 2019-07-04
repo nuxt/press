@@ -5,13 +5,16 @@
     "title": "NuxtPress documentation",
     "nav": [
       {
-        "Home": "/"
+        "text": "Home",
+        "link": "/"
       },
       {
-        "Internals": "/internals"
+        "text": "Internals",
+        "link": "/internals"
       },
       {
-        "GitHub": "https://github.com/nuxt/press"
+        "text": "GitHub",
+        "link": "https://github.com/nuxt/press"
       }
     ],
     "sidebar": [

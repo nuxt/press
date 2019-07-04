@@ -41,13 +41,20 @@ async function parseDoc(sourcePath) {
     body
   }
 
-  source.path = '/' + sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '')
+  source.path = fixIndex('/' + sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, ''))
 
   return {
     toc: toc.filter(([level]) => level <= (meta.sidebarDepth + 1)),
     meta,
     source
   }
+}
+
+function fixIndex(path) {
+  if (path === '/') {
+    return '/index'
+  }
+  return path
 }
 
 export default async function ({ options }) {
