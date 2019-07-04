@@ -76,7 +76,7 @@ export default {
     source: {
       async markdown(source) {
         if (!mdProcessor) {
-          mdProcessor = new Markdown(source, { sanitize: false }).createProcessor()
+          mdProcessor = new Markdown({ sanitize: false }).createProcessor()
         }
 
         const { contents } = await mdProcessor.toHTML(source)
