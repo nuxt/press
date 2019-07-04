@@ -14,6 +14,8 @@ import {
 
 import data from './data'
 
+let mdProcessor
+
 export default {
   // Include data loader
   data,
@@ -88,7 +90,7 @@ export default {
     },
     done({ options }) {
       this.options.watch.push(`~/${options.blog.dir}/*.md`)
-      this.options.watch.push(`~/${options.blog.dir}/**/*.md`)
+      this.options.watch.push(`~/${options.blog.dir}/**/*.md`) //*/
     }
   },
   options: {
@@ -126,12 +128,17 @@ export default {
 
     source: {
       async markdown(source) {
-        const md = new Markdown(source, {
-          skipToc: true,
-          sanitize: false
-        })
-        const html = await md.toHTML()
-        return html.contents
+        if (!mdProcessor) {
+          const config = {
+            skipToc: true,
+            sanitize: false
+          }
+
+          mdProcessor = new Markdown(config).createProcessor()
+        }
+
+        const { contents } = await mdProcessor.toHTML(source)
+        return contents
       },
 
       // head() parses the starting block of text in a Markdown source,
