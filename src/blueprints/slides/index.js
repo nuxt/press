@@ -2,6 +2,8 @@ import Markdown from '@nuxt/markdown'
 import { _import, resolve, exists, join, readJsonSync, isSingleMode } from '../../utils'
 import data from './data'
 
+let mdProcessor
+
 export default {
   // Include data loader
   data,
@@ -73,9 +75,12 @@ export default {
     },
     source: {
       async markdown(source) {
-        const md = new Markdown(source, { sanitize: false })
-        const html = await md.toHTML()
-        return html.contents
+        if (!mdProcessor) {
+          mdProcessor = new Markdown({ sanitize: false }).createProcessor()
+        }
+
+        const { contents } = await mdProcessor.toHTML(source)
+        return contents
       },
       // path() determines the final URL path of a Markdown source
       // In 'slides' mode, the default format is <prefix>/slides/<slug>

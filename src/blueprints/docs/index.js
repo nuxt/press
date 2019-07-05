@@ -1,4 +1,5 @@
 import Markdown from '@nuxt/markdown'
+import customContainer from 'remark-container'
 
 import {
   _import,
@@ -12,6 +13,8 @@ import {
 
 import { templates } from './constants'
 import data from './data'
+
+let mdProcessor
 
 export default {
   data,
@@ -84,8 +87,17 @@ export default {
     // },
     source: {
       markdown(source) {
-        const md = new Markdown(source, { sanitize: false })
-        return md.getTocAndMarkup()
+        if (!mdProcessor) {
+          const config = {
+            toc: true,
+            sanitize: false
+          }
+
+          mdProcessor = new Markdown(config).createProcessor()
+          mdProcessor.use(customContainer)
+        }
+
+        return mdProcessor.toMarkup(source)
       },
       title(fileName, body, toc) {
         if (toc && toc[0]) {
