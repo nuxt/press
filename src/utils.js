@@ -6,7 +6,8 @@ import {
   readdirSync,
   stat as _statAsync,
   readFile as _readFileAsync,
-  writeFile as _writeFileAsync
+  writeFile as _writeFileAsync,
+  appendFile as _appendFileAsync
 } from 'fs'
 
 import {
@@ -25,6 +26,7 @@ import slug from 'slug'
 const _stat = promisify(_statAsync)
 const _readFile = promisify(_readFileAsync)
 const _writeFile = promisify(_writeFileAsync)
+const _appendFile = promisify(_appendFileAsync)
 
 export function exists(...paths) {
   return existsSync(join(...paths))
@@ -58,6 +60,10 @@ export function readJsonSync(...path) {
 
 export function writeFile(path, contents) {
   return _writeFile(path, contents, 'utf-8')
+}
+
+export function appendFile(path, contents) {
+  return appendFile(path, contents, 'utf-8')
 }
 
 export function isDir(path) {
@@ -148,7 +154,7 @@ export function walk(root, validate, sliceAtRoot = false) {
       .on('data', (match) => {
         const path = match.path.slice(sliceAt)
 
-        if (validate(path)) {
+        if (validate(path) && !path.includes('node_modules')) {
           matches.push(path)
         }
       })

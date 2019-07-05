@@ -5,6 +5,7 @@ import {
   join,
   dirname,
   writeFile,
+  appendFile,
   readFile
 } from './utils'
 
@@ -15,6 +16,15 @@ import common from './blueprints/common'
 
 const cwd = process.cwd()
 const blueprints = { docs, blog, slides, common }
+
+async function ejectTheme(path) {
+  const blueprintsPath = join(dirname(require.resolve(`@nuxt/press`)), 'blueprints')
+  await appendFile(
+    join(cwd, 'nuxt.press.css'),
+    await readFile(join(blueprintsPath, path))
+  )
+  consola.info(`Ejected to ./nuxt.press.css`)
+}
 
 async function ejectTemplate(path) {
   const blueprintsPath = join(dirname(require.resolve(`@nuxt/press`)), 'blueprints')
@@ -34,6 +44,9 @@ class commands {
         if (!blueprints[blueprint].templates[template]) {
           consola.fatal('Unrecognized template -- please see docs at https://nuxt.press/')
           process.exit()
+        }
+        if (template.endsWith('/theme')) {
+          await ejectTheme(join(blueprint, blueprints[blueprint].templates[template]))
         }
         await ejectTemplate(join(blueprint, blueprints[blueprint].templates[template]))
       } else {
