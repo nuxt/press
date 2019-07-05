@@ -18,10 +18,13 @@ export default async function (options) {
   })
 
   // Register stylesheets
-  this.options.css.push(
-    'prismjs/themes/prism.css',
-    resolve('blueprints/common/default.css')
-  )
+  this.options.css.push('prismjs/themes/prism.css')
+
+  if (!exists(this.options.srcDir, 'nuxt.press.css')) {
+    this.options.css.push(resolve('blueprints/common/default.css'))
+  } else {
+    this.options.css.push('~/nuxt.press.css')
+  }
 
   // Common helper for writing JSON responses
   this.addServerMiddleware((_, res, next) => {

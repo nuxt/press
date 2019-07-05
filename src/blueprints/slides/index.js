@@ -51,7 +51,9 @@ export default {
   },
   build: {
     before() {
-      this.options.css.push(resolve('blueprints/slides/theme.css'))
+      if (!exists(this.options.srcDir, 'nuxt.press.css')) {
+        this.options.css.push(resolve('blueprints/slides/theme.css'))
+      }
     },
     done({ options }) {
       this.options.watch.push(`~/${options.slides.dir}/*.md`)

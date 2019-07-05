@@ -83,7 +83,9 @@ export default {
   },
   build: {
     before() {
-      this.options.css.push(resolve('blueprints/blog/theme.css'))
+      if (!exists(this.options.srcDir, 'nuxt.press.css')) {
+        this.options.css.push(resolve('blueprints/blog/theme.css'))
+      }
     },
     async compile({ rootId }) {
       await updateConfig.call(this, rootId, { blog: this.$press.blog })

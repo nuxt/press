@@ -72,12 +72,12 @@ override `docs.api.index` and not also override `common.api.source`.
 For overriding API handlers, use `nuxt.press.js`:
 
 ```js
-import yourMarkdownPreprocessor from 'your-own-markdown-preprocessor'
+import mdProcessor from 'your-own-markdown-preprocessor'
 
 const dummyEntry = {
   path: '/this-is/used-as-a-route',
   title: 'hello world',
-  body: yourMarkdownPreprocessor('# hello world\n\n`)
+  body: mdProcessor('# hello world\n\n`)
 }
 
 export default {
@@ -101,30 +101,53 @@ export default {
 ```
 
 The example uses very simple logic for clarity. Note that the signature for
-the `source()` handler has 4 parameters, the first being the source path. This
-is for your convenience, because NuxtPress expects a API request matching the 
-URL accessed in your Nuxt app:
+the `source()` handler has 4 parameters, the first being the **source path**. 
+This is for your convenience, because NuxtPress expects a API request matching 
+the URL accessed in your Nuxt app:
 
 URL accessed    | API request
 --------------- | --------------------
+/               | /api/source/index
 /foobar         | /api/source/foobar
+/foobar/xyz     | /api/source/foobar/xyz
 
-> If a HTTP request fails to be captured by Nuxt's route handlers, it will
-> land at a **final source handler** that tries to retrieve it **from the API**.
-> If you don't provide your own API handlers, NuxtPress uses built-in API
-> handlers that deliver the pregenerated files from the default filesystem loader.
+In other words, if a HTTP request fails to be captured by Nuxt's route handlers,
+it will land at a **final source handler** that tries to retrieve it **from the 
+API**. If you don't provide your own API handlers, NuxtPress uses built-in API
+handlers that deliver the pregenerated files from the default filesystem loader.
 
 ## Custom stylesheets
 
 The easiest way to customize the appearance of NuxtPress apps is to use:
 
 ```
-$ nuxt press eject css
+$ nuxt press eject <mode>/theme
 ```
 
-This will create a `<srcDir>/nuxt.press.css` file with the default stylesheets
-of the bundle apps currently enabled in your project. NuxtPress default 
-stylesheets are written using [css-preset-env stage-0 features][stage-0].
+There are four ejectable stylesheets:
+
+```
+$ nuxt press eject common/theme
+$ nuxt press eject docs/theme
+$ nuxt press eject blog/theme
+$ nuxt press eject slides/theme
+```
+
+Running any of these commands will append the specified stylesheet to the 
+`<srcDir>/nuxt.press.css` file. It will also be created automatically the first
+time if does not exist yet. Note that `docs`, `blog` and `slides` all depend
+on the `common` theme. So remember to always eject the common theme first:
+
+
+```
+$ nuxt press eject common/theme
+$ nuxt press eject blog/theme
+```
+
+> Beware: this command doesn't check if the stylesheet has been previously 
+> ejected, so running it multiple times will keep adding to `nuxt.press.css`.
+
+NuxtPress default stylesheets are written using [css-preset-env stage-0 features][stage-0].
 
 [stage-0]: https://preset-env.cssdb.org/
 
