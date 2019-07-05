@@ -118,7 +118,12 @@ handlers that deliver the pregenerated files from the default filesystem loader.
 
 ## Custom stylesheets
 
-The easiest way to customize the appearance of NuxtPress apps is to use:
+If you're only using NuxtPress for Markdown pages, you can just add CSS to
+the default layout. Learn more about Nuxt layouts [here][nuxt-layouts].
+
+[nuxt-layouts]: https://nuxtjs.org/guide/views#layouts
+
+For customizing the bundled apps, you can use `nuxt press eject`:
 
 ```
 $ nuxt press eject <mode>/theme
