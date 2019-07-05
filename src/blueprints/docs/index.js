@@ -25,7 +25,6 @@ export default {
       if (!modeCheck.pages) {
         options.dir = ''
       }
-      return true
     }
     return exists(this.options.srcDir, options.dir)
   },
