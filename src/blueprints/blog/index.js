@@ -101,7 +101,7 @@ export default {
     },
     done({ options }) {
       this.options.watch.push(`~/${options.blog.dir}/*.md`)
-      this.options.watch.push(`~/${options.blog.dir}/**/*.md`) //*/
+      this.options.watch.push(`~/${options.blog.dir}/**/*.md`) //* /
     }
   },
   options: {

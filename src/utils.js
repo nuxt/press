@@ -63,7 +63,7 @@ export function writeFile(path, contents) {
 }
 
 export function appendFile(path, contents) {
-  return appendFile(path, contents, 'utf-8')
+  return _appendFile(path, contents, 'utf-8')
 }
 
 export function isDir(path) {
