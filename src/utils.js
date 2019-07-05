@@ -169,14 +169,10 @@ export function walk(root, validate, sliceAtRoot = false) {
 }
 
 export function isSingleMode(otherModes) {
-  if (otherModes.every(m => !exists(join(this.options.srcDir, m)))) {
-    const pagesDir = join(this.options.srcDir, this.options.dir.pages)
-    if (!exists(pagesDir)) {
-      return true
-    } else if (!readdirSync(pagesDir).length) {
-      return true
-    }
-  }
+  const pagesDir = join(this.options.srcDir, this.options.dir.pages)
+  const pages = exists(pagesDir) && readdirSync(pagesDir).length
+  const single = (otherModes.every(m => !exists(join(this.options.srcDir, m))))
+  return { single, pages }
 }
 
 export function slugify(str) {

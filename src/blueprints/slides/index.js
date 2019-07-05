@@ -9,7 +9,8 @@ export default {
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(options) {
-    if (options.$standalone === 'slides' || isSingleMode.call(this, ['docs', 'blog'])) {
+    const modeCheck = isSingleMode.call(this, ['docs', 'blog', 'posts', 'entries'])
+    if (options.$standalone === 'slides' || modeCheck.single) {
       options.prefix = '/'
       options.dir = ''
       return true

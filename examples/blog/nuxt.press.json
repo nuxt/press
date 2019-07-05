@@ -1,5 +1,8 @@
 {
   "blog": {
+    "dir": "posts",
+    "prefix": "/",
+    "title": "A NuxtPress Blog",
     "links": [
       {
         "Home": "/blog"
@@ -19,9 +22,6 @@
         "twitter": "https://twitter.com/nuxt_js"
       }
     ],
-    "dir": "blog",
-    "prefix": "/blog/",
-    "title": "A NuxtPress Blog",
     "tagDomain": "nuxt.press"
   }
 }

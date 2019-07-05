@@ -21,12 +21,19 @@ export default {
   data,
   // Enable blog if srcDir/blog/ exists
   enabled(options) {
-    if (options.$standalone === 'blog' || isSingleMode.call(this, ['docs', 'slides'])) {
-      options.prefix = '/'
-      options.dir = ''
-      return
+    const modeCheck = isSingleMode.call(this, ['docs', 'slides'])
+    if (options.$standalone === 'blog' || modeCheck.single) {
+      if (!modeCheck.pages) {
+        options.dir = ''
+      }
+      if (exists(this.options.srcDir, 'posts')) {
+        options.dir = 'posts'
+      }
+      if (exists(this.options.srcDir, 'entries')) {
+        options.dir = 'entries'
+      }
     }
-    return exists(join(this.options.srcDir, options.dir))
+    return exists(this.options.srcDir, options.dir)
   },
   templates: {
     'assets': /\.svg$/,
