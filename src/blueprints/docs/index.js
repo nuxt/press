@@ -20,13 +20,16 @@ export default {
   data,
   templates,
   enabled(options) {
-    if (isSingleMode.call(this, ['blog', 'slides'])) {
+    if (options.$standalone === 'docs' || isSingleMode.call(this, ['blog', 'slides'])) {
       options.prefix = '/'
+      options.dir = ''
+      return true
     }
     // Enable docs blueprint if srcDir/*.md files exists
     // or if the srcDir/docs/ folder exists
     if (readdirSync(this.options.srcDir).find(p => /\.md$/.test(p))) {
-      options.dir = './'
+      options.prefix = '/'
+      options.dir = ''
       return true
     }
     return exists(this.options.srcDir, options.dir)

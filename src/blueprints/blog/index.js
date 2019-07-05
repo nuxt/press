@@ -21,8 +21,10 @@ export default {
   data,
   // Enable blog if srcDir/blog/ exists
   enabled(options) {
-    if (isSingleMode.call(this, ['docs', 'slides'])) {
+    if (options.$standalone === 'blog' || isSingleMode.call(this, ['docs', 'slides'])) {
       options.prefix = '/'
+      options.dir = ''
+      return
     }
     return exists(join(this.options.srcDir, options.dir))
   },

@@ -96,6 +96,12 @@ function removePrivateKeys(source, target = null) {
 }
 
 export async function loadConfig(rootId, config = {}) {
+  // Detect standalone mode
+  if (typeof config === 'string') {
+    this.options[rootId] = defu({ $standalone: config }, this.options[rootId] || {})
+    return
+  }
+
   const jsConfigPath = join(this.options.srcDir, `nuxt.${rootId}.js`)
   // JavaScript config has precedence over JSON config
   if (exists(jsConfigPath)) {
