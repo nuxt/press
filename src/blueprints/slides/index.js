@@ -88,6 +88,17 @@ export default {
         const { contents } = await mdProcessor.toHTML(source)
         return contents
       },
+
+      // head() parses the starting block of text in a Markdown source
+      // extracting YAML metadata via gray-matter if present
+      head(source) {
+        if (source.trimLeft().startsWith('---')) {
+          const { content: body, data } = graymatter(source)
+          return { ...data, body }
+        }
+        return {}
+      },
+
       // path() determines the final URL path of a Markdown source
       // In 'slides' mode, the default format is <prefix>/slides/<slug>
       path(fileName) {

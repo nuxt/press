@@ -1,5 +1,6 @@
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
+import graymatter from 'gray-matter'
 import { _import, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
 import data from './data'
 
@@ -94,6 +95,13 @@ export default {
       markdown(source) {
         const md = new Markdown(source, { sanitize: false })
         return md.toHTML().then(html => html.contents)
+      },
+      head(source) {
+        if (source.trimLeft().startsWith('---')) {
+          const { content: body, data } = graymatter(source)
+          return { ...data, body }
+        }
+        return {}
       },
       title(body) {
         return body.substr(body.indexOf('#')).match(/^#\s+(.*)/)[1]

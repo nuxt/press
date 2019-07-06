@@ -28,7 +28,7 @@ export default async function ({ $press, params, payload }, plugin = false) {
       $press.error = { statusCode: 404 }
       return
     }
-    $press.layout = typeToLayout[source.type]
+    $press.layout = source.layout || typeToLayout[source.type]
     $press.source = source
   }
 }
