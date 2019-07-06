@@ -98,8 +98,7 @@ function removePrivateKeys(source, target = null) {
 export async function loadConfig(rootId, config = {}) {
   // Detect standalone mode
   if (typeof config === 'string') {
-    this.options[rootId] = defu({ $standalone: config }, this.options[rootId] || {})
-    return
+    config = { $standalone: config }
   }
 
   const jsConfigPath = join(this.options.srcDir, `nuxt.${rootId}.js`)
@@ -110,6 +109,8 @@ export async function loadConfig(rootId, config = {}) {
     config = defu(await _import(`${jsConfigPath}on`), config)
   }
   this.options[rootId] = defu(config, this.options[rootId] || {})
+  this[`$${rootId}`] = this.options[rootId]
+  return this[`$${rootId}`]
 }
 
 export async function updateConfig(rootId, obj) {

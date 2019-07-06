@@ -27,39 +27,30 @@ export async function registerBlueprints(rootId, options, blueprints) {
 
   // Sets this.options[rootId] ensuring
   // external config files have precendence
-  await loadConfig.call(this, rootId, options)
+  options = await loadConfig.call(this, rootId, options)
 
   for (const id of blueprints) { // ['slides', 'common']) {
-    await _registerBlueprint.call(this, id, rootId)
+    await _registerBlueprint.call(this, id, rootId, options)
   }
 }
 
-export async function _registerBlueprint(id, rootId) {
+export async function _registerBlueprint(id, rootId, options) {
   // Load blueprint specification
   const blueprint = blueprints[id]
 
-  // Return if blueprint is not enabled
-  if (!blueprint.enabled.call(this, blueprint.options)) {
+  // Populate mode default options
+  const blueprintOptions = defu(options[id] || {}, blueprint.options)
+
+  // Determine if mode is enabled
+  if (!blueprint.enabled.call(this, blueprintOptions)) {
+    // Return if blueprint is not enabled
     return
+  } else {
+    // Set flag to indicate blueprint was enabled
+    options[`$${id}`] = true
+    // Populate options with defaults
+    options[id] = blueprintOptions
   }
-
-  if (!this[`$${rootId}`]) {
-    this[`$${rootId}`] = this.options[rootId]
-  }
-
-  if (blueprint.options) {
-    if (this.options[rootId][id]) {
-      Object.assign(this.options[rootId][id], defu(this.options[rootId][id], blueprint.options))
-    } else {
-      this.options[rootId][id] = blueprint.options
-    }
-  }
-
-  // Set flag to indicate blueprint was enabled
-  this.options[rootId][`$${id}`] = true
-
-  // For easy config acess in helper functions
-  const options = this.options[rootId]
 
   // Register serverMiddleware
   if (blueprint.serverMiddleware) {

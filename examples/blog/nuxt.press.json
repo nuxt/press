@@ -5,13 +5,13 @@
     "title": "A NuxtPress Blog",
     "links": [
       {
-        "Home": "/blog"
+        "Home": "/"
       },
       {
-        "Archive": "/blog/archive"
+        "Archive": "/archive"
       },
       {
-        "About": "/blog/about"
+        "About": "/about"
       }
     ],
     "icons": [
