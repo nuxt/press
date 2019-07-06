@@ -5,9 +5,7 @@ import {
   _import,
   resolve,
   exists,
-  readdirSync,
   updateConfig,
-  isSingleMode,
   routePath
 } from '../../utils'
 
@@ -20,11 +18,10 @@ export default {
   data,
   templates,
   enabled(options) {
-    const modeCheck = isSingleMode.call(this, ['blog', 'entries', 'posts', 'slides'])
-    if (options.$standalone === 'docs' || modeCheck.single) {
-      if (!modeCheck.pages) {
-        options.dir = ''
-      }
+    if (options.$standalone === 'docs') {
+      options.dir = ''
+      options.prefix = '/'
+      return true
     }
     return exists(this.options.srcDir, options.dir)
   },

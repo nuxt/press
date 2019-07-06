@@ -1,5 +1,5 @@
 import Markdown from '@nuxt/markdown'
-import { _import, resolve, exists, join, readJsonSync, isSingleMode } from '../../utils'
+import { _import, resolve, exists, join, readJsonSync } from '../../utils'
 import data from './data'
 
 let mdProcessor
@@ -9,10 +9,11 @@ export default {
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(options) {
-    const modeCheck = isSingleMode.call(this, ['docs', 'blog', 'posts', 'entries'])
-    if (options.$standalone === 'slides' || modeCheck.single) {
+    if (options.$standalone === 'slides') {
       options.prefix = '/'
-      options.dir = ''
+      if (!exists(join(this.options.srcDir, options.dir))) {
+        options.dir = ''
+      }
       return true
     }
     return exists(join(this.options.srcDir, options.dir))

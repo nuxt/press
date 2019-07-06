@@ -8,7 +8,6 @@ import {
   slugify,
   updateConfig,
   readJsonSync,
-  isSingleMode,
   routePath
 } from '../../utils'
 
@@ -21,17 +20,16 @@ export default {
   data,
   // Enable blog if srcDir/blog/ exists
   enabled(options) {
-    const modeCheck = isSingleMode.call(this, ['docs', 'slides'])
-    if (options.$standalone === 'blog' || modeCheck.single) {
-      if (!modeCheck.pages) {
-        options.dir = ''
-      }
+    if (options.$standalone === 'blog') {
+      options.dir = ''
+      options.prefix = '/'
       if (exists(this.options.srcDir, 'posts')) {
         options.dir = 'posts'
       }
       if (exists(this.options.srcDir, 'entries')) {
         options.dir = 'entries'
       }
+      return true
     }
     return exists(this.options.srcDir, options.dir)
   },
