@@ -42,7 +42,7 @@ export async function _registerBlueprint(id, rootId, options) {
   const blueprintOptions = defu(options[id] || {}, blueprint.options)
 
   // Determine if mode is enabled
-  if (!blueprint.enabled.call(this, blueprintOptions)) {
+  if (!blueprint.enabled.call(this, { ...options, [id]: blueprintOptions })) {
     // Return if blueprint is not enabled
     return
   } else {

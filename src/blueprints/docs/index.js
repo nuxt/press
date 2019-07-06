@@ -19,11 +19,11 @@ export default {
   templates,
   enabled(options) {
     if (options.$standalone === 'docs') {
-      options.dir = ''
-      options.prefix = '/'
+      options.docs.dir = ''
+      options.docs.prefix = '/'
       return true
     }
-    return exists(this.options.srcDir, options.dir)
+    return exists(this.options.srcDir, options.docs.dir)
   },
   routes(templates) {
     return [

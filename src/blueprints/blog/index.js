@@ -21,17 +21,17 @@ export default {
   // Enable blog if srcDir/blog/ exists
   enabled(options) {
     if (options.$standalone === 'blog') {
-      options.dir = ''
-      options.prefix = '/'
+      options.blog.dir = ''
+      options.blog.prefix = '/'
       if (exists(this.options.srcDir, 'posts')) {
-        options.dir = 'posts'
+        options.blog.dir = 'posts'
       }
       if (exists(this.options.srcDir, 'entries')) {
-        options.dir = 'entries'
+        options.blog.dir = 'entries'
       }
       return true
     }
-    return exists(this.options.srcDir, options.dir)
+    return exists(this.options.srcDir, options.blog.dir)
   },
   templates: {
     'assets': /\.svg$/,

@@ -10,13 +10,13 @@ export default {
   // Enable slides blueprint if srcDir/slides/*.md files exist
   enabled(options) {
     if (options.$standalone === 'slides') {
-      options.prefix = '/'
-      if (!exists(join(this.options.srcDir, options.dir))) {
-        options.dir = ''
+      options.slides.prefix = '/'
+      if (!exists(join(this.options.srcDir, options.slidesdir))) {
+        options.slides.dir = ''
       }
       return true
     }
-    return exists(join(this.options.srcDir, options.dir))
+    return exists(join(this.options.srcDir, options.slides.dir))
   },
   templates: {
     plugin: ['plugin.js', { ssr: false }],
