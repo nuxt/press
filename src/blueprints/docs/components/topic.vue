@@ -10,10 +10,10 @@ import { startObserver } from '../../common/components/observer'
 export default {
   layout: 'docs',
   props: ['data'],
-  created() {
-    // TODO remove this once @nuxt/markdown is updated
-    this.data.body = this.data.body.replace(/\{\{/g, '{\u200B{')
-  },
+  // created() {
+  //   // TODO remove this once @nuxt/markdown is updated
+  //   this.data.body = this.data.body.replace(/\{\{/g, '{\u200B{')
+  // },
   mounted() {
     const elements = `
       .topic h1,

@@ -4,6 +4,8 @@ import graymatter from 'gray-matter'
 import { _import, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
 import data from './data'
 
+let mdProcessor
+
 export default {
   // Include data loader
   data,
@@ -92,9 +94,16 @@ export default {
       }
     },
     source: {
-      markdown(source) {
-        const md = new Markdown(source, { sanitize: false })
-        return md.toHTML().then(html => html.contents)
+      async markdown(source) {
+        if (!mdProcessor) {
+          const config = {
+            skipToc: true,
+            sanitize: false
+          }
+          mdProcessor = new Markdown(config).createProcessor()
+        }
+        const { contents } = await mdProcessor.toHTML(source)
+        return contents
       },
       head(source) {
         if (source.trimLeft().startsWith('---')) {

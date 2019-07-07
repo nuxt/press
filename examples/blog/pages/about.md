@@ -3,6 +3,6 @@ title: Hello **world**!
 layout: blog
 ---
 
-# Foobar
+# About
 
 Hey, this works!

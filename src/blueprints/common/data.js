@@ -26,7 +26,7 @@ async function loadPage(pagePath) {
     delete data.title
   }
   body = await this.$press.common.source.markdown.call(this, body)
-  title = await this.$press.common.source.markdown.call(this, data.title)
+  title = await this.$press.common.source.markdown.call(this, title)
   const parsed = parse(pagePath)
   const path = `${parsed.dir.slice(sliceAt)}/${parsed.name}`
   return { body, title, path, ...data }
