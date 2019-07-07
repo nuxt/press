@@ -1,6 +1,6 @@
 {
   "docs": {
-    "dir": "docs",
+    "dir": "",
     "prefix": "/",
     "title": "NuxtPress documentation",
     "nav": [
