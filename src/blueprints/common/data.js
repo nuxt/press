@@ -16,7 +16,7 @@ async function loadPage(pagePath) {
   let body = await readFile(this.options.srcDir, pagePath)
   const titleMatch = body.match(/^#\s+(.*)/)
   let title = titleMatch ? titleMatch[1] : ''
-  let data = await this.$press.common.source.head.call(this, body)
+  const data = await this.$press.common.source.head.call(this, body)
   if (data.body) {
     body = data.body
     delete data.body

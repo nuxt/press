@@ -75,7 +75,6 @@ export default {
     ]
   },
   serverMiddleware({ options, rootId, id }) {
-    console.log('options', options)
     const { index, archive } = options.blog.api.call(this, { rootId, id })
     return [
       (req, res, next) => {

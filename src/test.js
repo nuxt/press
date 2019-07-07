@@ -1,5 +1,4 @@
 
-
 console.log(escapeVueInMarkdown(`
 \`\`\`
 {{ foobar }}

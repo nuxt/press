@@ -3,7 +3,6 @@ import {
   lstatSync,
   existsSync,
   readFileSync,
-  readdirSync,
   stat as _statAsync,
   readFile as _readFileAsync,
   writeFile as _writeFileAsync,
