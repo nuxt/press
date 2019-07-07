@@ -215,7 +215,23 @@ You can also use a shorthand syntax as follows:
 
 ### Table of contents
 
-NuxtPress ...
+The docs bundled app also includes a sidebar component that can automatically scroll topics into view when you click them, and highlights which topic is currently into view. To enable the table of contents:
+
+```
+{
+  "docs": {
+    "sidebar": [
+      "/",
+      "/guide",
+      "/customize"
+    ]
+  }
+}
+```
+
+See the full configuration for this documentation suite [here][docs-config].
+
+[docs-config]: https://github.com/nuxt/press/blob/master/docs/nuxt.press.json
 
 ## Publishing blogs
 
@@ -253,7 +269,7 @@ Here's `nuxt.press.json` from [`examples/blog`][examples-blog].
 
 [examples-blog]:  https://github.com/nuxt/press/tree/master/examples/blog
 
-```js
+```json
 {
   "blog": {
     "links": [
@@ -271,8 +287,7 @@ Here's `nuxt.press.json` from [`examples/blog`][examples-blog].
 
 Currently the **feed**, **twitter**, **github** and **linkedin** icons are available.
 
-You can also completely customize your blog template, and define your very own
-configuration properties and use them in your custom templates.
+You can also completely customize your blog template, and define your very own configuration properties and use them in your custom templates.
 
 See more about customization.
 
