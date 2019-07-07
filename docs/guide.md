@@ -156,7 +156,7 @@ export default {
 
 ## Publishing docs
 
-In docs mode, NuxtPress will automatically detects the presence of a **`README.md`** file or an **`index.md`** file in the configured search  directory and make that the *introductory page* of your docs suite.
+In docs mode, NuxtPress will automatically detects the presence of a **`README.md`** file or an **`index.md`** file in the configured lookup directory and make that the *introductory page* of your docs suite.
 
 As you saw before, the URL prefix is automaticaly determined by whether you're running docs mode in NuxtPress standalone or default mode (`/` vs `/docs`).  You can override this by manually setting `docs.prefix` in the configuration:
 
@@ -173,9 +173,14 @@ NuxtPress has full support for Markdown via [`@nuxt/markdown`][nm].
 
 [nm]: https://github.com/nuxt/markdown
 
+
+### Table of contents
+
+NuxtPress ...
+
 ## Publishing blogs
 
-To publish a blog, add your Markdown files to the `blog/` folder. You can structure them in however many subdirectories you want (for grouping posts by year of publication for, for instance). What determines the publishing date of each blog entry is actually their Markdown source header.
+You can structure Markdown files for the blog mode (under the configured lookup directory) in however many subdirectories you want (for grouping posts by year of publication for, for instance). What determines the publishing date of each blog entry is actually their Markdown source header.
 
 By default, NuxtPress uses a simple format where the first line is parsed out as the publication date. **Titles** and **slugs** are automatically generated from the first heading (`#`) of your Markdown sources:
 
