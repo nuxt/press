@@ -173,6 +173,45 @@ NuxtPress has full support for Markdown via [`@nuxt/markdown`][nm].
 
 [nm]: https://github.com/nuxt/markdown
 
+### Header links
+
+The links you see on the top right corner of this page are added via NuxtPress
+configuration. Use the `docs.nav` configuration key, as follows:
+
+```json
+{
+  "docs": {
+    "nav": [
+      {
+        "text": "Home",
+        "link": "/"
+      },
+      {
+        "text": "Internals",
+        "link": "/internals"
+      },
+      {
+        "text": "GitHub",
+        "link": "https://github.com/nuxt/press"
+      }
+    ]
+  }
+}
+```
+
+You can also use a shorthand syntax as follows:
+
+```json
+{
+  "docs": {
+    "nav": [
+      {"Home": "/"},
+      {"Internals": "/internals"},
+      {"GitHub": "https://github.com/nuxt/press"}
+    ]
+  }
+}
+```
 
 ### Table of contents
 
@@ -239,14 +278,9 @@ See more about customization.
 
 ## Publishing slides
 
-To publish a slideshow, add your Markdown file to the `slides/` folder.
-NuxtPress will parse each slide from Markdown using `#` as the delimiter.
+NuxtPress will parse each slide from Markdown using `#` as the delimiter. If text follows `#`, it's appended as a `<h1>` tag. If not, it's simply used as the delimiter and no `<h1>` tag is added.
 
-If text follows `#`, it's appended as a `<h1>` tag. If not, it's simply used
-as the delimiter and no `<h1>` tag is added.
-
-The following example represents four slides. It is a single file, but here
-it is shown divided in sections to illustrate the processing.
+The following example represents four slides. It is a single file, but here it is shown divided in sections to illustrate the processing.
 
 ```md
 

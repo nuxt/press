@@ -33,6 +33,18 @@ import _config from '~/nuxt.press'
 
 const config = _config.docs
 
+config.nav = config.nav.map((link) => {
+  const keys = Object.keys(link)
+  if (keys.length > 1) {
+    return link
+  } else {
+    return {
+      text: keys[0],
+      link: Object.values(link)[0]
+    }
+  }
+})
+
 export default {
   data: () => ({ config }),
   methods: {
