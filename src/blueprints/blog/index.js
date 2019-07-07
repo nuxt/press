@@ -23,11 +23,11 @@ export default {
     if (options.$standalone === 'blog') {
       options.blog.dir = ''
       options.blog.prefix = '/'
-      if (exists(this.options.srcDir, 'posts')) {
-        options.blog.dir = 'posts'
-      }
       if (exists(this.options.srcDir, 'entries')) {
         options.blog.dir = 'entries'
+      }
+      if (exists(this.options.srcDir, 'posts')) {
+        options.blog.dir = 'posts'
       }
       return true
     }
