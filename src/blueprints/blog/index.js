@@ -153,7 +153,7 @@ export default {
       // head() parses the starting block of text in a Markdown source,
       // considering the first and (optionally) second lines as
       // publishing date and summary respectively
-      head(source) {
+      head(fileName, source) {
         if (source.trimLeft().startsWith('---')) {
           const { content, data } = graymatter(source)
           if (data.date) {
@@ -162,9 +162,14 @@ export default {
           delete data.date
           return { ...data, content }
         }
-        const published = source.substr(0, source.indexOf('#')).trim()
+        let published
+        published = source.substr(0, source.indexOf('#')).trim()
+        published = Date.parse(published)
+        if (isNaN(published)) {
+          return new Error(`Missing or invalid publication date in ${fileName} -- see documentation at https://nuxt.press`)
+        }
         return {
-          published: new Date(Date.parse(published))
+          published: new Date(published)
         }
       },
 

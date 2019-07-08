@@ -1,5 +1,6 @@
 
 import { parse as parsePath } from 'path'
+import consola from 'consola'
 import { walk, join, readFile } from '../../utils'
 import PromisePool from '../../pool'
 
@@ -8,21 +9,22 @@ import PromisePool from '../../pool'
 // Configurable via press.blog.dir
 
 async function parseEntry(sourcePath) {
+  // TODO just completely rewrite this function, please
   const parse = this.$press.blog.source
   const fileName = parsePath(sourcePath).name
   const raw = await readFile(this.options.srcDir, sourcePath)
   const headData = parse.head.call(this, raw)
+  if (headData instanceof Error) {
+    consola.warn(headData)
+    return
+  }
   const title = headData.title || parse.title.call(this, raw)
   const slug = headData.slug
   const body = await parse.markdown.call(this, headData.content || raw.substr(raw.indexOf('#')))
   const published = headData.published
   delete headData.content
   const source = { ...headData, body, title, slug, published }
-  const validPath = this.$press.blog.source.path.call(this, fileName, source)
-  if (!validPath) {
-    return
-  }
-  source.path = `${this.$press.blog.prefix}${validPath}`
+  source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
   source.type = 'entry'
   source.id = this.$press.blog.source.id.call(this, source)
   return source
