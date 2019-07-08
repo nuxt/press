@@ -15,7 +15,7 @@ async function parseEntry(sourcePath) {
   const raw = await readFile(this.options.srcDir, sourcePath)
   const headData = parse.head.call(this, fileName, raw)
   if (headData instanceof Error) {
-    consola.warn(headData)
+    consola.warn(headData.message)
     return
   }
   const title = headData.title || parse.title.call(this, raw)
