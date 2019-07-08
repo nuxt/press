@@ -5,33 +5,26 @@ June 20, 2019
 > This content comes from the `docs` suite. It used here to exemplify
 > a blog entry from **June 20, 2019**.
 
-NuxtPress' default blog template makes it easy to automatically include
-sidebar text links, and also includes some predefined SVG icons for common
-links like *RSS feed*, *Twitter*, *GitHub* and *LinkedIn*.
+NuxtPress' default blog template makes it easy to automatically include sidebar text links.
 
-```js
-export default {
-  press: {
-    blog: {
-      meta: {
-        links: [
-          {Home: '/blog'},
-          {Archive: '/blog/archive'},
-          {About: '/blog/about'},
-        ],
-        icons: [
-          {github: 'http://github.com/nuxt/nuxt.js'},
-          {twitter: 'https://twitter.com/nuxt_js'}
-        ]
-      }
-    }
+Here's `nuxt.press.json` from [`examples/blog`][examples-blog].
+
+[examples-blog]:  https://github.com/nuxt/press/tree/master/examples/blog
+
+```json
+{
+  "blog": {
+    "links": [
+      {"Home": "/blog"},
+      {"Archive": "/blog/archive"},
+      {"About": "/blog/about"},
+    ]
   }
 }
 ```
 
-Currently the **feed**, **twitter**, **github** and **linkedin** icons are available.
-
-You can also completely customize your blog template, and define your very own 
-configuration properties and use them in your custom templates.
-
-See more about customization.
+This feature is mostly illustrative. You're likely to benefit more from ejecting
+the entire app bundle and adding your code for the `sidebar` component. Your
+component can still have access to these options you define under the `blog`
+configuration key in `nuxt.press.json` or `nuxt.press.js`, making it extremely
+to customize templates even with your own configuration options.
