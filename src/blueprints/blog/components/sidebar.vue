@@ -11,11 +11,6 @@
         </nuxt-link>
       </div>
     </div>
-    <a
-      v-for="(link, i) in icons"
-      :href="Object.values(link)[0]">
-      <img class="icon" :src="require(`../../assets/blog/icons/${Object.keys(link)[0]}.svg`)">
-    </a>
   </div>
 </template>
 
@@ -24,8 +19,7 @@ import config from '~/nuxt.press'
 
 export default {
   data: () => ({
-    links: config.blog.links,
-    icons: config.blog.icons
+    links: config.blog.links
   })
 }
 </script>

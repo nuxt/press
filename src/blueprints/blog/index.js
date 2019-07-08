@@ -34,7 +34,6 @@ export default {
     return exists(this.options.srcDir, options.blog.dir)
   },
   templates: {
-    'assets': /\.svg$/,
     'layout': 'layout.vue',
     'sidebar': 'components/sidebar.vue',
     'index': 'pages/index.vue',
