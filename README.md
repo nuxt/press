@@ -2,7 +2,7 @@
 
 This is a **work in progress**.
 
-Current alpha release: **0.0.1-alpha.56**
+Current alpha release: **0.0.1-alpha.63**
 
 Package currently used for development purposes only.
 
@@ -42,34 +42,6 @@ At its core, **NuxtPress** enables you to use Markdown files as [Nuxt pages][np]
 They preprocess Markdown files in different ways and are only added to your app's build if enabled.
 
 See the **Internals** section to learn more about how it works under the hood.
-
-## Publishing docs
-
-To enable the `docs` bundled app, place your Markdown files in `<srcDir>/` or `<srcDir>/docs`.
-
-In `docs` mode, tables of contents are automatically generated and can be
-displayed in a sidebar via configuration. You get all core features of 
-[VuePress][vp], but in a minimalistic Nuxt app.
-
-[vp]: https://vuepress.vuejs.org
-
-## Publishing blogs
-
-To enable the `blog` bundled app, place your Markdown files in `<srcDir>/blog`.
-
-In `blog` mode, Markdown entry metadata is loaded via [gray-matter][gm] and used to sort entries by date. Learn more.
-
-[gm]: https://github.com/jonschlinkert/gray-matter
-
-## Publishing slides
-
-To enable the `slides` bundled app, place your Markdown files in `<srcDir>/slides`.
-
-In `slides` mode, Markdown is especially processed to generate slideshows.
-
-Similar to [mdx-deck][]. Learn more.
-
-[mdx-deck]: https://github.com/jxnblk/mdx-deck
 
 ## Highly customizable
 

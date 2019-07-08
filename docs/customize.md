@@ -146,14 +146,14 @@ If overriding stylesheets isn't enough for your needs, you can eject NuxtPress b
 Eject with `npm run`:
 
 ```shell
-$ npm run press eject blog/sidebar
+$ npm run press eject blog
 ```
 
 Or `yarn`:
 
 
 ```shell
-$ yarn press eject blog/sidebar
+$ yarn press eject blog
 ```
 
 > See NuxtPress source code for bundled apps [here][source-code].
@@ -165,19 +165,10 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
 <table>
 <tr>
 <td>Mode</td>
-<td>Key</td>
 <td>Path</td>
 </tr>
 <tr>
 <td><code>docs</code></td>
-<td>
-<code>header</code><br>
-<code>index</code><br>
-<code>layout</code><br>
-<code>plugin</code><br>
-<code>sidebar</code><br>
-<code>topic</code>
-</td>
 <td>
 <code>press/docs/pages/components/header.vue</code><br>
 <code>press/docs/pages/index.vue</code><br>
@@ -190,13 +181,6 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
 <tr>
 <td><code>blog</code></td>
 <td>
-<code>index</code><br>
-<code>layout</code><br>
-<code>plugin</code><br>
-<code>sidebar</code><br>
-<code>entry</code>
-</td>
-<td>
 <code>press/blog/pages/index.vue</code><br>
 <code>press/blog/layout.vue</code><br>
 <code>press/blog/plugin.js</code><br>
@@ -207,12 +191,6 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
 <tr>
 <td><code>slides</code></td>
 <td>
-<code>plugin</code><br>
-<code>layout</code><br>
-<code>index</code><br>
-<code>slides</code>
-</td>
-<td>
 <code>press/slides/plugin.js</code><br>
 <code>press/slides/layout.vue</code><br>
 <code>press/slides/pages/index.vue</code><br>
@@ -220,6 +198,8 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
 </td>
 </tr>
 </table>
+
+> When ejecting bundled apps, all associated templates are ejected. Typically you won't have to edit `plugin.js` in your customizations, but it's also made available in case you need it.
 
 
 ## Using components

@@ -21,7 +21,7 @@ async function ejectTheme(path) {
   const blueprintsPath = join(dirname(require.resolve(`@nuxt/press`)), 'blueprints')
   await appendFile(
     join(cwd, 'nuxt.press.css'),
-    await readFile(join(blueprintsPath, path))
+    await readFile(join(blueprintsPath, path, 'theme.css'))
   )
   consola.info(`Ejected to ./nuxt.press.css`)
 }
@@ -38,25 +38,21 @@ async function ejectTemplate(path) {
 
 class commands {
   static async eject(args) {
-    const [ blueprint, template ] = args[0].split('/')
-    if (blueprint in blueprints) {
-      if (template) {
-        if (!blueprints[blueprint].templates[template]) {
-          consola.fatal('Unrecognized template -- please see docs at https://nuxt.press/')
-          process.exit()
-        }
-        if (template.endsWith('/theme')) {
-          await ejectTheme(join(blueprint, blueprints[blueprint].templates[template]))
-        }
-        await ejectTemplate(join(blueprint, blueprints[blueprint].templates[template]))
-      } else {
-        for (const bTemplate of Object.values(blueprints[blueprint].templates)) {
-          if (typeof bTemplate !== 'string') {
-            continue
-          }
-          await ejectTemplate(join(blueprint, bTemplate))
-        }
+    const [blueprint, key] = args[0].split('/')
+    if (key === 'theme') {
+      await ejectTheme(blueprint)
+      return
+    }
+    if (!(blueprint in blueprints)) {
+      consola.fatal('Unrecognized template bundle -- please see docs at https://nuxt.press/')
+      process.exit()
+    }
+    await ejectTheme(blueprint)
+    for (const bTemplate of Object.values(blueprints[blueprint].templates)) {
+      if (typeof bTemplate !== 'string') {
+        continue
       }
+      await ejectTemplate(join(blueprint, bTemplate))
     }
   }
 }
