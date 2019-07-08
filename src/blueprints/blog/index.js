@@ -170,8 +170,8 @@ export default {
 
       // path() determines the final URL path of a Markdown source
       // In `blog` mode, the default format is /YYYY/MM/DD/<slug>
-      path({ title, published }) {
-        const slug = slugify(title)
+      path(fileName, { title, published }) {
+        const slug = slugify(title || fileName)
         const date = published.toString().split(/\s+/).slice(1, 4).reverse()
         return `${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}`
       },
@@ -186,7 +186,8 @@ export default {
 
       // title() determines the title of a Markdown source
       title(body) {
-        return body.substr(body.indexOf('#')).match(/^#\s+(.*)/)[1]
+        const titleMatch = body.substr(body.indexOf('#')).match(/^#\s+(.*)/)
+        return titleMatch ? titleMatch[1] : ''
       }
     }
   }
