@@ -13,7 +13,7 @@ async function parseEntry(sourcePath) {
   const parse = this.$press.blog.source
   const fileName = parsePath(sourcePath).name
   const raw = await readFile(this.options.srcDir, sourcePath)
-  const headData = parse.head.call(this, raw)
+  const headData = parse.head.call(this, fileName, raw)
   if (headData instanceof Error) {
     consola.warn(headData)
     return
