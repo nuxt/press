@@ -117,7 +117,9 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
 
 If you're customizing **_everything_**, running `npx nuxt-press eject <mode>` will eject **all** templates associated with the specified mode.
 
-Every bundled app is written as a regular Nuxt app: they make use of _middleware_, _plugins_ and _layouts_. All bundled apps depend on the `common` app bundle, which populates `$press` and `$press.source`. The `common` app bundle also includes the main source route, which in turns loads the right components for the specified source path. You'll rarely need to edit the common app bundle templates, but they're also ejectable:
+Every bundled app is written as a regular Nuxt app: they make use of _middleware_, _plugins_ and _layouts_. All bundled apps depend on the `common` app bundle, which populates `$press` and `$press.source`.
+
+The `common` app bundle also includes the main source route, which in turns loads the right components for the specified source path. You'll rarely need to edit the common app bundle templates, but they're also ejectable:
 
 <table>
 <tr>
