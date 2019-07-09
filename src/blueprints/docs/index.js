@@ -35,6 +35,19 @@ export default {
     ]
   },
   async generateRoutes(data, prefix, staticRoot) {
+    // console.log('!')
+    // console.log(
+    //   [
+    //     {
+    //       route: prefix('index'),
+    //       payload: await _import(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
+    //     },
+    //     ...Object.keys(data.sources).map(route => ({
+    //       route: routePath(route),
+    //       payload: `${staticRoot}/sources${route}`
+    //     }))
+    //   ]
+    // )
     return [
       {
         route: prefix('index'),

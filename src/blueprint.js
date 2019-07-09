@@ -112,9 +112,11 @@ export async function _registerBlueprint(id, rootId, options) {
       const staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
       await saveStaticData.call(this, staticRoot, id, context.data)
 
-      if (blueprint.build && blueprint.build.done) {
+      if (blueprint.build) {
         this.nuxt.hook('build:done', async () => {
-          await blueprint.build.done.call(this, context)
+          if (blueprint.build.done) {
+            await blueprint.build.done.call(this, context)
+          }
 
           if (blueprint.generateRoutes) {
             if (!options.$generateRoutes) {
