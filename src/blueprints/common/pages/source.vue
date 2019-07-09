@@ -13,17 +13,17 @@
 const components = {}
 
 <% if (options.$docs) { %>
-import PressTopic from '../../docs/components/topic'
+import PressTopic from 'press/docs/components/topic'
 components['press-topic'] = PressTopic
 <% } %>
 
 <% if (options.$blog) { %>
-import PressEntry from '../../blog/components/entry'
+import PressEntry from 'press/blog/components/entry'
 components['press-entry'] = PressEntry
 <% } %>
 
 <% if (options.$slides) { %>
-import PressSlides from '../../slides/components/slides'
+import PressSlides from 'press/slides/components/slides'
 components['press-slides'] = PressSlides
 <% } %>
 
@@ -39,5 +39,19 @@ export default {
     }
     return { source: $press.source, sourcePath: params.source }
   }
+  // created() {
+  //   hotReloadHook(this, async function() {
+  //     const params = this.$route.params
+  //     let sourceParam = params.source
+  //     sourceParam = (params.source && params.source.replace(/\/+$/, '')) || 'index'
+  //     let source = await this.$press.get(`api/source/${sourceParam}`)
+  //     if (!source) {
+  //       source = await this.$press.get(`api/source/${sourceParam}/index`)
+  //     }
+  //     this.$press.source = source
+  //     Vue.nextTick(() => this.$forceUpdate())
+  //   })
+  // }
 }
+
 </script>

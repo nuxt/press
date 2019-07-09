@@ -109,6 +109,7 @@ export async function loadConfig(rootId, config = {}) {
   }
   this.options[rootId] = defu(config, this.options[rootId] || {})
   this[`$${rootId}`] = this.options[rootId]
+  this[`$${rootId}`].$buildDir = this.options.buildDir
   return this[`$${rootId}`]
 }
 

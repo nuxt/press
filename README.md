@@ -2,7 +2,7 @@
 
 This is a **work in progress**.
 
-Current alpha release: **0.0.1-alpha.63**
+Current alpha release: **0.0.1-alpha.67**
 
 Package currently used for development purposes only.
 

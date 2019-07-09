@@ -39,20 +39,31 @@ async function ejectTemplate(path) {
 class commands {
   static async eject(args) {
     const [blueprint, key] = args[0].split('/')
+    if (!(blueprint in blueprints)) {
+      consola.fatal('Unrecognized template bundle -- see docs at https://nuxt.press/')
+      process.exit()
+    }
     if (key === 'theme') {
       await ejectTheme(blueprint)
       return
     }
-    if (!(blueprint in blueprints)) {
-      consola.fatal('Unrecognized template bundle -- please see docs at https://nuxt.press/')
-      process.exit()
-    }
-    await ejectTheme(blueprint)
-    for (const bTemplate of Object.values(blueprints[blueprint].templates)) {
-      if (typeof bTemplate !== 'string') {
-        continue
+    if (key) {
+      if (!blueprints[blueprint].templates[key]) {
+        consola.fatal('Unrecognized template key -- see docs at https://nuxt.press/')
+        process.exit()
       }
-      await ejectTemplate(join(blueprint, bTemplate))
+      let template = blueprints[blueprint].templates[key]
+      if (Array.isArray(template)) {
+        template = template[0]
+      }
+      await ejectTemplate(join(blueprint, template))
+    } else {
+      for (let template of Object.values(blueprints[blueprint].templates)) {
+        if (Array.isArray(template)) {
+          template = template[0]
+        }
+        await ejectTemplate(join(blueprint, template))
+      }
     }
   }
 }
