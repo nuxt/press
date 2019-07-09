@@ -52,7 +52,7 @@ class commands {
         consola.fatal('Unrecognized template key -- see docs at https://nuxt.press/')
         process.exit()
       }
-      let template = blueprints[blueprint].templates[key])
+      let template = blueprints[blueprint].templates[key]
       if (Array.isArray(template)) {
         template = template[0]
       }
