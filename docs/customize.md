@@ -43,7 +43,7 @@ When detecting the presence of `nuxt.press.css`, NuxtPress will skip adding the 
 
 If overriding stylesheets isn't enough for your needs, you can eject NuxtPress bundled app templates for low-level modifications.
 
-The _concept_ of _ejecting_ is [taken from VuePress][vuepress-eject]. NuxtPress gives you the same functionality, with a little more control: if all you need is to customize a blog sidebar, you can eject that particular template (`blog/sidebar`) and have it shadow the built-in one. NuxtPress in this regards behaves similarly to Gatsby's [component shadowing][gatsby-components], in a more streamlined fashion.
+The _concept_ of _ejecting_ is [taken from VuePress][vuepress-eject]. NuxtPress gives you the same functionality, with a little more control: if all you need is to customize a blog sidebar, you can eject that particular template (`blog/sidebar`) and have it shadow the built-in one. NuxtPress in this regard behaves similarly to Gatsby's [component shadowing][gatsby-components], in a more streamlined fashion.
 
 [vuepress-eject]: https://vuepress.vuejs.org/default-theme-config/#ejecting
 [gatsby-components]: https://www.gatsbyjs.org/blog/2019-04-29-component-shadowing/
