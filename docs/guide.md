@@ -27,7 +27,9 @@ export default {
 }
 ```
 
-This will start NuxtPress in its **default mode**, where all bundled apps can be selectively enabled based on the presence of the `docs/`, `blog/` and `slides/` directories. In **default mode**, the URL prefix for each bundled app matches these directories, .e.g, blog will be able available at `/blog`.
+This will start NuxtPress in its **default mode**, which enables support for Markdown `pages/`, and automatic full static `nuxt generate` for them.
+
+Bundled apps can also be selectively enabled based on the presence of the `docs/`, `blog/` and `slides/` directories. In **default mode**, the URL prefix for each bundled app matches these directories, .e.g, blog will be able available at `/blog`.
 
 > In a freshly started project, `npm install` (or `yarn add`) will automatically create that `nuxt.config.js` file for you if you haven't already. 
 

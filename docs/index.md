@@ -12,7 +12,19 @@ title: Intro
 
 _Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
 
-Works in `universal` and `spa` modes, as well as with `nuxt generate`.
+⚡Works in `universal` and `spa` modes, as well as with `nuxt generate`.
+
+⚡`nuxt generate` is **automatic**: no need to provide generate routes yourself.
+
+⚡**No `__NUXT__` payload** is used for rendering Markdown (zero bloat).
+
+⚡Batteries included: **docs**, **blog** and **slides** bundled apps.
+
+⚡Ejectable styles and Vue templates (granular shadowing of built-in templates).
+
+⚡Parses **YAML metadata** and supports Vue **markup and interpolation**.
+
+⚡Fully **configurable** **data sources** and **Markdown preprocessing**.
 
 ## Markdown pages
 
@@ -69,23 +81,3 @@ You can also use the YAML metadata to specify the [Nuxt layout][nlayout]:
 layout: yourLayout
 ---
 ```
-
-## Bundled apps
-
-**NuxtPress** comes with three bundled apps: **docs**, **blog** and **slides**.
-
-They preprocess Markdown files in different ways and:
-
-- Are only added to your app's build if enabled.
-
-- Have clean stylesheets which **can be easily themed**.
-
-- Use a simple REST API which **can be overriden**.
-
-- Load Markdown files **with overridable functions**.
-
-- Can have templates  **ejected** via **nuxt press eject `<template>`**.
-
-- Can be added to any existing Nuxt app.
-
-See the [**Internals** section](/internals) to learn how it works under the hood.
