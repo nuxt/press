@@ -64,6 +64,9 @@ export default {
   },
   build: {
     async before() {
+      if (!this.options.watch.includes('~/pages/*.md')) {
+        this.options.watch.push('~/pages/*.md')
+      }
       this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
       const pagesDir = join(this.options.srcDir, this.options.dir.pages)
       if (!exists(pagesDir)) {
@@ -75,9 +78,6 @@ export default {
       if (this.$press.$placeholderPagesDir) {
         await remove(this.$press.$placeholderPagesDir)
       }
-    },
-    done() {
-      this.options.watch.push('~/pages/*.md')
     }
   },
   options: {

@@ -48,16 +48,18 @@ export default {
   },
   build: {
     before() {
+      if (!this.options.watch.includes('~/*.md')) {
+        this.options.watch.push(`~/*.md`)
+      }
+      if (!this.options.watch.includes('~/*/**.md')) {
+        this.options.watch.push('~/*/**.md')
+      }
       if (!exists(this.options.srcDir, 'nuxt.press.css')) {
         this.options.css.push(resolve('blueprints/docs/theme.css'))
       }
     },
     async compile({ rootId }) {
       await updateConfig.call(this, rootId, { docs: this.$press.docs })
-    },
-    done({ options }) {
-      this.options.watch.push(`~/*.md`)
-      this.options.watch.push(`~/${options.docs.dir}/**/*.md`)
     }
   },
   options: {

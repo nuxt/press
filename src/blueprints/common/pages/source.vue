@@ -39,5 +39,19 @@ export default {
     }
     return { source: $press.source, sourcePath: params.source }
   }
+  // created() {
+  //   hotReloadHook(this, async function() {
+  //     const params = this.$route.params
+  //     let sourceParam = params.source
+  //     sourceParam = (params.source && params.source.replace(/\/+$/, '')) || 'index'
+  //     let source = await this.$press.get(`api/source/${sourceParam}`)
+  //     if (!source) {
+  //       source = await this.$press.get(`api/source/${sourceParam}/index`)
+  //     }
+  //     this.$press.source = source
+  //     Vue.nextTick(() => this.$forceUpdate())
+  //   })
+  // }
 }
+
 </script>

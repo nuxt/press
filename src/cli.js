@@ -52,9 +52,16 @@ class commands {
         consola.fatal('Unrecognized template key -- see docs at https://nuxt.press/')
         process.exit()
       }
-      await ejectTemplate(join(blueprint, blueprints[blueprint].templates[key]))
+      let template = blueprints[blueprint].templates[key])
+      if (Array.isArray(template)) {
+        template = template[0]
+      }
+      await ejectTemplate(join(blueprint, template))
     } else {
-      for (const template of Object.values(blueprints[blueprint].templates)) {
+      for (let template of Object.values(blueprints[blueprint].templates)) {
+        if (Array.isArray(template)) {
+          template = template[0]
+        }
         await ejectTemplate(join(blueprint, template))
       }
     }

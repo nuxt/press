@@ -229,12 +229,14 @@ async function addTemplates({ options, rootId, id }, templates) {
     }
 
     // Pick up user-provide template replacements
-    const userProvidedTemplate = join(this.options.srcDir, rootId, id, template.src)
-    if (exists(userProvidedTemplate)) {
-      template.src = userProvidedTemplate
-      sliceAt = join(this.options.srcDir, rootId).length + 1
+    const userProvidedTemplateRoot = join(this.options.srcDir, rootId)
+    if (exists(userProvidedTemplateRoot, id, template.src)) {
+      template.src = join(userProvidedTemplateRoot, id, template.src)
+      sliceAt = userProvidedTemplateRoot.length + 1
     } else {
-      template.src = resolve('blueprints', id, template.src)
+      const builtinTemplateRoot = resolve('blueprints')
+      template.src = join(builtinTemplateRoot, id, template.src)
+      sliceAt = builtinTemplateRoot.length + 1
     }
 
     template.fileName = join(rootId, template.src.slice(sliceAt))
