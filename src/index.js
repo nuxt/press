@@ -6,7 +6,7 @@ export default async function (options) {
   // Use the full Vue build for client-side template compilation
   this.extendBuild((config) => {
     config.resolve.alias.vue$ = 'vue/dist/vue.esm.js'
-    config.resolve.alias['press'] = join(this.options.buildDir, 'press')
+    config.resolve.alias.press = join(this.options.buildDir, 'press')
   })
 
   // Enable all of https://preset-env.cssdb.org/features
