@@ -39,13 +39,13 @@ body, #__nuxt, #__layout {
   /* prismjs override */
   & pre,
   & pre[class*="language-"] {
-    background: #f5f2f0;
+    background: #f6f8fa;
     padding: 15px;
     & > code {
       font-size: 0.9em !important;
     }
   }
-  & table {
+  /* & table {
     width: 100%;
     border-collapse: collapse;
     border: 1px solid #999;
@@ -54,7 +54,7 @@ body, #__nuxt, #__layout {
   & table td {
     padding: 5px;
     border: 1px solid #999;
-  }
+  } */
   & a, & a:active, & a:visited {
     color: #555;
     text-decoration: none;
