@@ -13,17 +13,17 @@
 const components = {}
 
 <% if (options.$docs) { %>
-import PressTopic from '~~/.nuxt/press/docs/components/topic'
+import PressTopic from '~~/<%= options.$buildDir %>/press/docs/components/topic'
 components['press-topic'] = PressTopic
 <% } %>
 
 <% if (options.$blog) { %>
-import PressEntry from '~~/.nuxt/press/blog/components/entry'
+import PressEntry from '~~/<%= options.$buildDir %>/press/blog/components/entry'
 components['press-entry'] = PressEntry
 <% } %>
 
 <% if (options.$slides) { %>
-import PressSlides from '~~/.nuxt/press/slides/components/slides'
+import PressSlides from '~~/<%= options.$buildDir %>/press/slides/components/slides'
 components['press-slides'] = PressSlides
 <% } %>
 
