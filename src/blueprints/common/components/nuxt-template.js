@@ -1,21 +1,28 @@
 export default {
+  functional: true,
   props: {
     value: {
       type: String,
-      required: true,
-      default: () => ''
+      required: true
     },
     tag: {
       type: String,
-      default: () => 'div'
+      default: 'div'
     }
   },
-  render(h) {
+  render(h, { props, children }) {
+    let html
+    if (children && children.length) {
+      html = children.reduce((acc, c) => (acc += c.text), '')
+    } else {
+      html = props.value
+    }
+
     return h({
-      template: `<${this.tag}>${this.html}</${this.tag}>`
+      template: `<${props.tag}>${html}</${props.tag}>`
     })
-  },
-  created() {
+  }
+  /* created() {
     if (this.$slots.default) {
       this.html = ''
       for (const slot of this.$slots.default) {
@@ -27,5 +34,5 @@ export default {
     this.$watch('value', (html) => {
       this.html = html
     })
-  }
+  } */
 }
