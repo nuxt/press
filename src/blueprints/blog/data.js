@@ -8,7 +8,7 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-async function parseEntry(sourcePath) {
+async function parseEntry(sourcePath, processor) {
   // TODO just completely rewrite this function, please
   const parse = this.$press.blog.source
   const fileName = parsePath(sourcePath).name
@@ -20,7 +20,7 @@ async function parseEntry(sourcePath) {
   }
   const title = headData.title || parse.title.call(this, raw)
   const slug = headData.slug
-  const body = await parse.markdown.call(this, headData.content || raw.substr(raw.indexOf('#')))
+  const body = await parse.markdown.call(this, headData.content || raw.substr(raw.indexOf('#')), processor)
   const published = headData.published
   delete headData.content
   const source = { ...headData, body, title, slug, published }
@@ -60,8 +60,10 @@ export default async function () {
     return /\.md$/.test(path)
   })
 
+  const mdProcessor = await this.$press.blog.source.processor()
+
   const handler = async (path) => {
-    const entry = await parseEntry.call(this, path)
+    const entry = await parseEntry.call(this, path, mdProcessor)
     if (!entry) {
       return
     }

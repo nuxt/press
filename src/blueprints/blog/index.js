@@ -13,8 +13,6 @@ import {
 
 import data from './data'
 
-let mdProcessor
-
 export default {
   // Include data loader
   data,
@@ -65,11 +63,11 @@ export default {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(routePath(route)),
-        payload: await _import(`${staticRoot}${this.$press.blog.prefix}${route}.json`)
+        payload: await _import(join(staticRoot, 'blog', `${route}.json`))
       })),
       ...Object.keys(data.sources).map(async route => ({
         route: routePath(route),
-        payload: await _import(`${staticRoot}/sources${route}`)
+        payload: await _import(join(staticRoot, 'sources', route))
       }))
     ]
   },
@@ -134,17 +132,15 @@ export default {
     },
 
     source: {
-      async markdown(source) {
-        if (!mdProcessor) {
-          const config = {
-            skipToc: true,
-            sanitize: false
-          }
-
-          mdProcessor = new Markdown(config).createProcessor()
+      processor() {
+        const config = {
+          skipToc: true,
+          sanitize: false
         }
-
-        const { contents } = await mdProcessor.toHTML(source)
+        return new Markdown(config).createProcessor()
+      },
+      async markdown(source, processor) {
+        const { contents } = await processor.toHTML(source)
         return contents
       },
 

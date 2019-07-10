@@ -11,7 +11,7 @@ import PromisePool from '../../pool'
 // contents of the .md file become available as $page
 // in the custom Vue component for the page
 
-async function loadPage(pagePath) {
+async function loadPage(pagePath, mdProcessor) {
   const sliceAt = this.options.dir.pages.length
   let body = await readFile(this.options.srcDir, pagePath)
   const titleMatch = body.match(/^#\s+(.*)/)
@@ -25,8 +25,8 @@ async function loadPage(pagePath) {
     title = data.title
     delete data.title
   }
-  body = await this.$press.common.source.markdown.call(this, body)
-  title = await this.$press.common.source.markdown.call(this, title)
+  body = await this.$press.common.source.markdown.call(this, body, mdProcessor)
+  title = await this.$press.common.source.markdown.call(this, title, mdProcessor)
   const parsed = parse(pagePath)
   const path = `${parsed.dir.slice(sliceAt)}/${parsed.name}`
   return { body, title, path, ...data }
@@ -41,12 +41,13 @@ export default async function () {
     return {}
   }
   const pages = {}
+  const mdProcessor = await this.$press.common.source.processor()
   const queue = new PromisePool(
     await walk.call(this, pagesRoot, /\.md$/),
     async (path) => {
       // Somehow eslint doesn't detect func.call(), so:
       // eslint-disable-next-line no-use-before-define
-      const page = await loadPage.call(this, path)
+      const page = await loadPage.call(this, path, mdProcessor)
       pages[page.path] = page
     }
   )

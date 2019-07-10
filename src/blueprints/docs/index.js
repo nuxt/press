@@ -97,18 +97,14 @@ export default {
     //   }
     // },
     source: {
-      markdown(source) {
-        if (!mdProcessor) {
-          const config = {
-            toc: true,
-            sanitize: false
-          }
-
-          mdProcessor = new Markdown(config).createProcessor()
-          mdProcessor.use(customContainer)
-        }
-
-        return mdProcessor.toMarkup(source)
+      processor() {
+        const config = { toc: true, sanitize: false }
+        mdProcessor = new Markdown(config).createProcessor()
+        mdProcessor.use(customContainer)
+        return mdProcessor
+      },
+      markdown(source, processor) {
+        return processor.toMarkup(source)
       },
       title(fileName, body, toc) {
         if (toc && toc[0]) {

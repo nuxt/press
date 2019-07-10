@@ -7,7 +7,7 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the slides/ directory.
 // Configurable via press.slides.dir
 
-async function parseSlides(sourcePath) {
+async function parseSlides(sourcePath, mdProcessor) {
   const raw = await readFile(this.options.srcDir, sourcePath)
   let slides = []
   let c
@@ -39,7 +39,7 @@ async function parseSlides(sourcePath) {
   )
   slides = await Promise.all(
     slides.filter(Boolean).map((slide) => {
-      return this.$press.slides.source.markdown.call(this, slide)
+      return this.$press.slides.source.markdown.call(this, slide, mdProcessor)
     })
   )
   const source = { slides, type: 'slides' }
@@ -63,8 +63,10 @@ export default async function () {
     return /\.md$/.test(path)
   })
 
+  const mdProcessor = await this.$press.docs.source.processor()
+
   const handler = async (path) => {
-    const slides = await parseSlides.call(this, path)
+    const slides = await parseSlides.call(this, path, mdProcessor)
     sources[slides.path] = slides
   }
 

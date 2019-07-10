@@ -3,8 +3,6 @@ import graymatter from 'gray-matter'
 import { _import, resolve, exists, join, readJsonSync } from '../../utils'
 import data from './data'
 
-let mdProcessor
-
 export default {
   // Include data loader
   data,
@@ -81,17 +79,14 @@ export default {
       }
     },
     source: {
-      async markdown(source) {
-        if (!mdProcessor) {
-          mdProcessor = new Markdown({ sanitize: false }).createProcessor()
-        }
-
-        const { contents } = await mdProcessor.toHTML(source)
+      processor() {
+        const config = { skipToc: true, sanitize: false }
+        return new Markdown(config).createProcessor()
+      },
+      async markdown(source, processor) {
+        const { contents } = await processor.toHTML(source)
         return contents
       },
-
-      // head() parses the starting block of text in a Markdown source
-      // extracting YAML metadata via gray-matter if present
       head(source) {
         if (source.trimLeft().startsWith('---')) {
           const { content: body, data } = graymatter(source)
@@ -99,9 +94,6 @@ export default {
         }
         return {}
       },
-
-      // path() determines the final URL path of a Markdown source
-      // In 'slides' mode, the default format is <prefix>/slides/<slug>
       path(fileName) {
         return `${this.$press.slides.prefix}${fileName.toLowerCase()}`
       }

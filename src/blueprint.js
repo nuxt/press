@@ -10,7 +10,8 @@ import {
   loadConfig,
   updateConfig,
   resolve,
-  walk
+  walk,
+  _import
 } from './utils'
 
 import docs from './blueprints/docs'
@@ -86,7 +87,7 @@ export async function _registerBlueprint(id, rootId, options) {
     if (blueprint.routes) {
       const routes = await blueprint.routes.call(this, templates)
 
-      this.extendRoutes((nuxtRoutes, resolve) => {
+      this.extendRoutes((nuxtRoutes) => {
         for (const route of routes) {
           if (exists(route.component)) {
             // this is a fix for hmr, it already has full path set
@@ -122,7 +123,7 @@ export async function _registerBlueprint(id, rootId, options) {
             if (!options.$generateRoutes) {
               options.$generateRoutes = []
             }
-            const pathPrefix = path => `${blueprint.options.prefix}${path}`
+            const pathPrefix = path => `${options[id].prefix}${path}`
             options.$generateRoutes.push(async () => {
               const routes = await blueprint.generateRoutes.call(
                 this,
@@ -139,7 +140,11 @@ export async function _registerBlueprint(id, rootId, options) {
             })
           }
 
+          // TODO move this out of the build:done hook
+          // and onto a global (after all blueprints
+          // build:done hooks finished) handler
           if (options.$generateRoutes) {
+            const { extendStaticRoutes } = options
             this.options.generate.routes = async () => {
               const routes = {}
               const routeSets = await Promise.all(
@@ -149,6 +154,26 @@ export async function _registerBlueprint(id, rootId, options) {
                 for (const route of routeSet) {
                   routes[route.route] = route
                 }
+              }
+              if (extendStaticRoutes) {
+                await extendStaticRoutes.call(
+                  this,
+                  new Proxy(routes, {
+                    get(_, prop) {
+                      return routes[prop].payload
+                    },
+                    set(_, prop, value) {
+                      routes[prop] = {
+                        route: prop,
+                        payload: value
+                      }
+                      return routes[prop].payload
+                    }
+                  }),
+                  (...args) => {
+                    return _import(join(staticRootGenerate, ...args))
+                  }
+                )
               }
               return Object.values(routes)
             }

@@ -13,7 +13,7 @@ import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
 const trimSlash = str => trimEnd(str, '/')
 const isIndexRE = new RegExp(`(^|/)(${indexKeys.join('|')})$`, 'i')
 
-async function parseDoc(sourcePath) {
+async function parseDoc(sourcePath, mdProcessor) {
   let raw = await readFile(this.options.srcDir, sourcePath)
   const { name: fileName } = parse(sourcePath)
 
@@ -31,7 +31,7 @@ async function parseDoc(sourcePath) {
     meta.sidebarDepth = maxSidebarDepth
   }
 
-  const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw)
+  const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw, mdProcessor)
 
   const title = await this.$press.docs.source.title.call(this, fileName, raw, toc)
 
@@ -78,8 +78,10 @@ export default async function ({ options }) {
   const sources = {}
   const docs = {}
 
+  const mdProcessor = await this.$press.docs.source.processor()
+
   const handler = async (path) => {
-    const { meta, toc, source } = await parseDoc.call(this, path)
+    const { meta, toc, source } = await parseDoc.call(this, path, mdProcessor)
 
     const sourcePath = routePath(source.path) || '/'
 
