@@ -1,48 +1,44 @@
 <template>
-  <nav class="sidebar">
-    <ul>
-      <li
-        v-for="([level, name, url], t) in sidebar"
-        :key="`topic-${t}`"
-        :class="{ [`h${level}`]: true }"
-      >
-        <nuxt-link
-          v-if="url"
-          class="sidebar-link"
-          :class="{ active: url === activePath }"
-          :to="url">
-          {{ name }}
-        </nuxt-link>
-        <span
-          v-else
-          class="sidebar-title"
-        >
-          {{ name }}
-        </span>
-      </li>
-    </ul>
-  </nav>
+  <aside class="sidebar">
+    <sidebar-sections
+      :data="sidebar"
+      :active-path="activePath"
+    />
+  </aside>
 </template>
 
 <script>
-import config from '~/nuxt.press'
+import docsMixin from '../mixin'
+import { createSidebar, tocToTree, trimSlash } from '../utils'
+import SidebarSections from './sidebar-sections'
+import _config from '~/nuxt.press'
 
-// Parsing data payloads is faster with JSON.parse, see:
-// https://twitter.com/mathias/status/1143551692732030979
-const $sidebars = JSON.parse(`<%=JSON.stringify(options.docs.$sidebars, null, 2)%>`)
+const { docs: config } = _config
 
 export default {
+  components: {
+    SidebarSections
+  },
+  mixins: [docsMixin],
   data() {
     return {
       sidebar: null,
-      _sidebarPaths: []
     }
   },
-  beforeMount() {
+  created() {
+    if (Array.isArray(config.sidebar)) {
+      this.$sidebars = { '/': config.sidebar }
+    } else {
+      this.$sidebars = config.sidebar
+    }
+
+    this._sidebars = []
+
     // extract all sidebar paths in reverse order of length
-    this._sidebarPaths = Object.keys($sidebars).sort((a, b) => {
+    this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
       return b.length - a.length
     })
+
     this.setSidebar()
   },
   computed: {
@@ -53,21 +49,38 @@ export default {
       return this.$route.hash
     },
     activePath() {
-      return `${this.path}${this.hash}`
+      const path = trimSlash(this.path)
+      return `${path}${this.hash}`
     }
   },
   watch: {
     path() {
       this.setSidebar()
-    },
+    }
   },
   methods: {
     setSidebar() {
       const path = this.path
+      let sidebar
+
+      if (this._sidebars[path]) {
+        this.sidebar = this._sidebars[path]
+        return
+      }
+
+      const { meta, toc } = this.$page
+      if (meta && meta.sidebar === 'auto') {
+        this.sidebar = this._sidebars[path] = tocToTree(toc)
+        return
+      }
 
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
-          this.sidebar = $sidebars[sidebarPath]
+          if (!this._sidebars[sidebarPath]) {
+            this._sidebars[sidebarPath] = createSidebar(config, this.$sidebars[sidebarPath], this.$docs.pages)
+          }
+
+          this.sidebar = this._sidebars[sidebarPath]
           break
         }
       }
@@ -78,11 +91,12 @@ export default {
 
 <style>
 .docs .sidebar {
-  position: block;
+  position: fixed;
   width: 18vw;
   border-right: 1px solid #e5e5e5;
   margin: 0;
-  padding: 1.4rem 1.1rem 0 1.1rem;
+  padding: 1.4rem 0 0 0;
+  font-size: 1.1rem;
   text-align: left;
   overflow-y: auto;
 
@@ -94,7 +108,7 @@ export default {
   & li {
     list-style-type: none;
     margin: 0px;
-    margin-bottom: 5px;
+    margin-bottom: 3px;
     padding: 0px;
     & a.active {
       font-weight: bold;
@@ -106,24 +120,35 @@ export default {
     margin: 1rem 0 0.7rem 0;
   }
 
-  & .h1 {
-    font-size: 1.3rem;
-    margin-left: .7rem;
+  & .sidebar-heading {
+    margin: 0;
   }
 
-  & .h2 {
-    font-size: 1.2rem;
-    margin-left: 1.4rem;
+  & .sidebar-section {
+    margin: 0 0 1rem 0;
+
+    & .sidebar-section {
+      margin: 0;
+    }
   }
 
-  & .h3 {
-    font-size: 1.1rem;
-    margin-left: 2.1rem;
+  & li.sidebar-item,
+  & li.sidebar-section .sidebar-heading {
+    padding-left: 0.7rem;
   }
 
-  & .h4 {
-    font-size: 1rem;
-    margin-left: 2.8rem;
+  & li li.sidebar-item,
+  & li li.sidebar-section .sidebar-heading {
+    padding-left: 1.4rem;
+  }
+
+  & li li li.sidebar-item,
+  & li li li.sidebar-section .sidebar-heading {
+    padding-left: 2.1rem;
+  }
+
+  & li li li li.sidebar-item {
+    padding-left: 2.8rem;
   }
 }
 </style>

@@ -11,6 +11,6 @@ import top from './components/header'
 import sidebar from './components/sidebar'
 
 export default {
-  components: { top, sidebar }
+  components: { top, sidebar },
 }
 </script>

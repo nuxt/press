@@ -1,22 +1,14 @@
-if (process.client) {
-  window.onNuxtReady((app) => {
-    const scrollBehavior = app.$router.options.scrollBehavior
+import Vue from 'vue'
+import { trimSlash } from './utils'
 
-    app.$router.options.scrollBehavior = (to, from, savedPosition) => {
-      if (savedPosition) {
-        return Promise.resolve(savedPosition)
-      }
+export default function docsPlugin(ctx, inject) {
 
-      if (app.$press.disableScrollBehavior) {
-        return Promise.resolve(false)
-      }
+  const pages = JSON.parse(`<%=JSON.stringify(options.docs.$pages, null, 2).replace(/`/g, '\\`')%>`)
 
-      // TODO: remove this once https://github.com/nuxt/nuxt.js/pull/6012 is released
-      if (to.path === from.path && to.hash !== from.hash) {
-        app.$nextTick(() => app.$emit('triggerScroll'))
-      }
+  const docs = {
+    pages
+  }
 
-      return scrollBehavior(to, from, savedPosition)
-    }
-  })
+  ctx.$docs = docs
+  inject('docs', docs)
 }

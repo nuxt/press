@@ -25,7 +25,7 @@ body {
     z-index: 3;
   }
 
-  & > nav {
+  & .sidebar {
     position: fixed;
     width: 18rem;
     top: 3rem;

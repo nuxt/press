@@ -14,7 +14,7 @@ export default {
     'nuxt-template': 'components/nuxt-template.js',
     'observer': 'components/observer.js',
     'plugin': 'plugin.js',
-    'scroll/plugin': ['plugins/scroll.js', { ssr: false }],
+    'scroll/plugin': 'plugins/scroll.client.js',
     'source': 'pages/source.vue'
   },
   routes(templates) {

@@ -117,7 +117,7 @@ export default {
           return title
         }
 
-        return 'tesTTest'
+        return fileName
       }
     }
   }

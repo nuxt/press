@@ -4,13 +4,17 @@ export const templates = {
   header: 'components/header.vue',
   index: 'pages/index.vue',
   layout: 'layout.vue',
+  mixin: 'mixin.js',
   plugin: 'plugin.js',
   sidebar: 'components/sidebar.vue',
-  topic: 'components/topic.vue'
+  sidebarSection: 'components/sidebar-section.vue',
+  sidebarSections: 'components/sidebar-sections.vue',
+  topic: 'components/topic.vue',
+  utils: 'utils.js'
 }
 
-export const maxSidebarDepth = 2
+export const maxSidebarDepth = 3
 
 export const defaultMetaSettings = {
-  sidebarDepth: 1
+  sidebarDepth: 2
 }
