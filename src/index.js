@@ -22,7 +22,7 @@ export default async function (options) {
   this.options.css.push('prismjs/themes/prism.css')
 
   if (!exists(this.options.srcDir, 'nuxt.press.css')) {
-    this.options.css.push(resolve('blueprints/common/default.css'))
+    this.options.css.push(resolve('blueprints/common/theme.css'))
   } else {
     this.options.css.push('~/nuxt.press.css')
   }
