@@ -86,7 +86,7 @@ export default async function ({ options: { docs: docOptions } }) {
 
   const options = { $pages }
 
-  options.asJsonTemplate = new Proxy({}, {
+  options.$asJsonTemplate = new Proxy({}, {
     get(target, prop) {
       let val = options[prop] || options[`$${prop}`] || docOptions[prop]
 
