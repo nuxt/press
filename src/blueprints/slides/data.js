@@ -63,7 +63,7 @@ export default async function () {
     return /\.md$/.test(path)
   })
 
-  const mdProcessor = await this.$press.docs.source.processor()
+  const mdProcessor = await this.$press.slides.source.processor()
 
   const handler = async (path) => {
     const slides = await parseSlides.call(this, path, mdProcessor)

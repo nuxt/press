@@ -1,12 +1,28 @@
 <template>
   <main>
-    <nuxt-template tag="article" v-model="index.body" />
+    <home
+      v-if="$isHome"
+      :data="$docs.home"
+      v-model="index.body"
+    />
+    <nuxt-template
+      v-else
+      tag="article"
+      v-model="index.body"
+    />
   </main>
 </template>
 
 <script>
+import Home from 'press/docs/components/home'
+import docsMixin from 'press/docs/mixin'
+
 export default {
   layout: 'docs',
+  components: {
+    Home
+  },
+  mixins: [docsMixin],
   async asyncData ({ $press, payload, error }) {
     const index = payload || await $press.get('api/source<%= options.docs.prefix || '/' %>index')
     if (!index) {

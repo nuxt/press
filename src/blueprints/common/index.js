@@ -1,7 +1,7 @@
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
-import { _import, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
+import { importModule, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
 import data from './data'
 
 export default {
@@ -14,7 +14,7 @@ export default {
     'nuxt-template': 'components/nuxt-template.js',
     'observer': 'components/observer.js',
     'plugin': 'plugin.js',
-    'scroll/plugin': ['plugins/scroll.js', { ssr: false }],
+    'scroll/plugin': 'plugins/scroll.client.js',
     'source': 'pages/source.vue'
   },
   routes(templates) {
@@ -43,7 +43,7 @@ export default {
       }
       return {
         route: routePath,
-        payload: await _import(`${staticRoot}/sources${route}`)
+        payload: await importModule(`${staticRoot}/sources${route}`)
       }
     })
   },

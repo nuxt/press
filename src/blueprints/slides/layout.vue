@@ -3,3 +3,4 @@
     <nuxt class="content" />
   </div>
 </template>
+

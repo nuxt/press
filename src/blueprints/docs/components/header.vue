@@ -1,27 +1,20 @@
 <template>
   <header class="top-menu">
-    <nuxt-link :to="config.prefix || '/'" class="home-link">
-      {{ config.title }}
+    <nuxt-link :to="$docs.prefix" class="home-link">
+      {{ $docs.title }}
     </nuxt-link>
 
     <nav class="links">
       <ul>
         <li
-          v-for="({ text, link }, idx) in config.nav"
+          v-for="(item, idx) in $docs.nav"
           :key="`topmenu-${idx}`"
-          class="nav-item">
-          <a
-            v-if="isExternal(link)"
-            :href="link"
-            target="_blank">
-            {{ text }}
-          </a>
-          <nuxt-link
-            v-else
-            :class="activeClass"
-            :to="link">
-            {{ text }}
-          </nuxt-link>
+          class="nav-item"
+        >
+          <nav-link
+            :class="activeClass(item.link)"
+            :item="item"
+          />
         </li>
       </ul>
     </nav>
@@ -29,30 +22,17 @@
 </template>
 
 <script>
-import _config from '~/nuxt.press'
-
-const config = _config.docs
-
-config.nav = config.nav.map((link) => {
-  const keys = Object.keys(link)
-  if (keys.length > 1) {
-    return link
-  } else {
-    return {
-      text: keys[0],
-      link: Object.values(link)[0]
-    }
-  }
-})
+import docsMixin from '../mixin'
+import NavLink from './nav-link'
 
 export default {
-  data: () => ({ config }),
+  components: {
+    NavLink
+  },
+  mixins: [docsMixin],
   methods: {
     activeClass(link) {
       return this.$route.path.startsWith(link) ? 'active' : ''
-    },
-    isExternal(link) {
-      return link.startsWith('http') || link.startsWith('//')
     }
   }
 }

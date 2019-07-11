@@ -11,7 +11,7 @@ import {
   updateConfig,
   resolve,
   walk,
-  _import
+  importModule
 } from './utils'
 
 import docs from './blueprints/docs'
@@ -171,7 +171,7 @@ export async function _registerBlueprint(id, rootId, options) {
                     }
                   }),
                   (...args) => {
-                    return _import(join(staticRootGenerate, ...args))
+                    return importModule(join(staticRootGenerate, ...args))
                   }
                 )
               }

@@ -1,31 +1,18 @@
 export default {
+  functional: true,
   props: {
     value: {
       type: String,
-      required: true,
-      default: () => ''
+      required: true
     },
     tag: {
       type: String,
-      default: () => 'div'
+      default: 'div'
     }
   },
-  render(h) {
+  render(h, { props }) {
     return h({
-      template: `<${this.tag}>${this.html}</${this.tag}>`
-    })
-  },
-  created() {
-    if (this.$slots.default) {
-      this.html = ''
-      for (const slot of this.$slots.default) {
-        this.html += slot.text
-      }
-    } else {
-      this.html = this.value
-    }
-    this.$watch('value', (html) => {
-      this.html = html
+      template: `<${props.tag}>${props.value}</${props.tag}>`
     })
   }
 }

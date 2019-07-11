@@ -15,7 +15,7 @@ body {
   width: 100%;
   margin: 0;
 
-  & header {
+  & > header {
     position: fixed;
     top: 0;
     left: 0;
@@ -25,21 +25,27 @@ body {
     z-index: 3;
   }
 
-  & > nav {
+  & > .sidebar {
     position: fixed;
-    width: 18rem;
+    width: 20rem;
     top: 3rem;
     bottom: 0;
+    z-index: 2;
   }
 
-  & main.content {
-    padding: 3rem 1.4rem 1.4rem 19.4rem;
+  & > .content {
+    z-index: 1;
+    padding: 3rem 1.4rem 1.4rem 1.4rem;
     font-size: 1.1rem;
+
+    &.has-sidebar {
+      padding-left: 21.4rem;
+    }
 
     & article {
       line-height: 1.6rem;
       margin: 0 auto;
-      max-width: 660px;
+      max-width: 720px;
 
       & h2 {
         &:not(:first-of-type) {

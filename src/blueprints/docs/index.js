@@ -2,7 +2,7 @@ import Markdown from '@nuxt/markdown'
 import customContainer from 'remark-container'
 
 import {
-  _import,
+  importModule,
   resolve,
   exists,
   updateConfig,
@@ -40,7 +40,7 @@ export default {
     //   [
     //     {
     //       route: prefix('index'),
-    //       payload: await _import(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
+    //       payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
     //     },
     //     ...Object.keys(data.sources).map(route => ({
     //       route: routePath(route),
@@ -51,11 +51,11 @@ export default {
     return [
       {
         route: prefix('index'),
-        payload: await _import(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
+        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
       },
       ...Object.keys(data.sources).map(async route => ({
         route: routePath(route),
-        payload: await _import(`${staticRoot}/sources${route}`)
+        payload: await importModule(`${staticRoot}/sources${route}`)
       }))
     ]
   },
@@ -111,13 +111,13 @@ export default {
           return toc[0][1]
         }
 
-        const [, title] = body.substr(body.indexOf('#')).match(/^#+\s+(.*)/)
+        const titleMatch = body.substr(body.indexOf('#')).match(/^#+\s+(.*)/)
 
-        if (title) {
-          return title
+        if (titleMatch) {
+          return titleMatch[1]
         }
 
-        return 'tesTTest'
+        return fileName
       }
     }
   }

@@ -1,6 +1,8 @@
-import NuxtPress from '../src'
+import NuxtPress from '../../src'
 
 export default {
-  modules: [NuxtPress],
+  modules: [
+    [NuxtPress, 'slides']
+  ],
   css: ['~/assets/hello.css']
 }

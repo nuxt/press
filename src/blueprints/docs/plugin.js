@@ -1,22 +1,32 @@
-if (process.client) {
-  window.onNuxtReady((app) => {
-    const scrollBehavior = app.$router.options.scrollBehavior
+import Vue from 'vue'
+import OutboundLink from './components/outbound-link-icon'
+import config from '~/nuxt.press'
 
-    app.$router.options.scrollBehavior = (to, from, savedPosition) => {
-      if (savedPosition) {
-        return Promise.resolve(savedPosition)
-      }
+Vue.component('OutboundLink', OutboundLink)
 
-      if (app.$press.disableScrollBehavior) {
-        return Promise.resolve(false)
-      }
+export default function docsPlugin(ctx, inject) {
+  const pages = JSON.parse(`<%=options.docs.$asJsonTemplate.pages%>`)
+  const nav = JSON.parse(`<%=options.docs.$asJsonTemplate.nav%>`)
 
-      // TODO: remove this once https://github.com/nuxt/nuxt.js/pull/6012 is released
-      if (to.path === from.path && to.hash !== from.hash) {
-        app.$nextTick(() => app.$emit('triggerScroll'))
-      }
+  let home = null
+  const homePage = pages['/']
+  if (homePage && homePage.meta && homePage.meta.home) {
+    home = homePage.meta
+  }
 
-      return scrollBehavior(to, from, savedPosition)
-    }
-  })
+  const docs = {
+    ...config.docs,
+    nav,
+    home,
+    pages
+  }
+
+  if (ctx.$press) {
+    ctx.$press.docs = docs
+    return
+  }
+
+  const press = { docs }
+  ctx.$press = press
+  inject('press', press)
 }

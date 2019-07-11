@@ -1,7 +1,7 @@
-import { parse } from 'path'
+import path from 'path'
 import graymatter from 'gray-matter'
 import defu from 'defu'
-import { walk, join, exists, readFile, trimEnd, routePath } from '../../utils'
+import { walk, join, exists, readFile, routePath, escapeChars } from '../../utils'
 import PromisePool from '../../pool'
 import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
 
@@ -10,12 +10,11 @@ import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
 // Nuxt's srcDir or the docs/ directory.
 // Directory configurable via press.docs.dir
 
-const trimSlash = str => trimEnd(str, '/')
 const isIndexRE = new RegExp(`(^|/)(${indexKeys.join('|')})$`, 'i')
 
-async function parseDoc(sourcePath, mdProcessor) {
+async function parsePage(sourcePath, mdProcessor) {
   let raw = await readFile(this.options.srcDir, sourcePath)
-  const { name: fileName } = parse(sourcePath)
+  const { name: fileName } = path.parse(sourcePath)
 
   let meta
   if (raw.trimLeft().startsWith('---')) {
@@ -23,12 +22,12 @@ async function parseDoc(sourcePath, mdProcessor) {
     raw = content
 
     meta = defu(data, defaultMetaSettings)
+
+    if (meta.sidebar === 'auto') {
+      meta.sidebarDepth = maxSidebarDepth
+    }
   } else {
     meta = defu({}, defaultMetaSettings)
-  }
-
-  if (meta.sidebar === 'auto') {
-    meta.sidebarDepth = maxSidebarDepth
   }
 
   const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw, mdProcessor)
@@ -41,23 +40,17 @@ async function parseDoc(sourcePath, mdProcessor) {
     body
   }
 
-  source.path = fixIndex('/' + sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, ''))
+  sourcePath = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '')
+  source.path = `/${sourcePath || 'index'}`
 
   return {
-    toc: toc.filter(([level]) => level <= (meta.sidebarDepth + 1)),
+    toc,
     meta,
     source
   }
 }
 
-function fixIndex(path) {
-  if (path === '/') {
-    return '/index'
-  }
-  return path
-}
-
-export default async function ({ options }) {
+export default async function ({ options: { docs: docOptions } }) {
   let srcRoot = join(
     this.options.srcDir,
     this.$press.docs.dir
@@ -74,106 +67,54 @@ export default async function ({ options }) {
     return path.endsWith('.md')
   })
 
-  const sidebars = {}
   const sources = {}
-  const docs = {}
+  const $pages = {}
 
   const mdProcessor = await this.$press.docs.source.processor()
 
   const handler = async (path) => {
-    const { meta, toc, source } = await parseDoc.call(this, path, mdProcessor)
+    const { toc, meta, source } = await parsePage.call(this, path, mdProcessor)
 
     const sourcePath = routePath(source.path) || '/'
 
-    if (meta.sidebar === 'auto') {
-      sidebars[sourcePath] = toc
-    }
-
-    docs[sourcePath] = { meta, toc }
+    $pages[sourcePath] = { meta, toc }
     sources[sourcePath] = source
   }
 
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  let $sidebar
-  if (Array.isArray(options.docs.sidebar)) {
-    $sidebar = { '/': options.docs.sidebar }
-  } else {
-    $sidebar = options.docs.sidebar
-  }
+  const options = { $pages }
 
-  const docPrefix = trimSlash(options.docs.prefix)
+  options.$asJsonTemplate = new Proxy({}, {
+    get(target, prop) {
+      let val = options[prop] || options[`$${prop}`] || docOptions[prop]
 
-  for (const path in $sidebar) {
-    const sidebar = []
-    for (let sourcePath of $sidebar[path]) {
-      let title
-
-      if (Array.isArray(sourcePath)) {
-        [sourcePath, title] = sourcePath
-      }
-
-      if (typeof sourcePath === 'object') {
-        sidebar.push([1, sourcePath.title])
-
-        if (sourcePath.children) {
-          for (sourcePath of sourcePath.children) {
-            sourcePath = sourcePath.replace(/.md$/i, '')
-            sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
-
-            if (docs[sourcePath]) {
-              const { meta, toc: [first, ...toc] } = docs[sourcePath]
-
-              if (!title && meta.title) {
-                title = meta.title
-              }
-
-              if (first) {
-                sidebar.push([2, title || first[1], sourcePath])
-              }
-
-              sidebar.push(...toc.map(([level, name, url]) => [
-                level + 1,
-                name,
-                url ? `${sourcePath}${url}` : url
-              ]))
+      if (prop === 'nav') {
+        val = val.map((link) => {
+          const keys = Object.keys(link)
+          if (keys.length > 1) {
+            return link
+          } else {
+            return {
+              text: keys[0],
+              link: Object.values(link)[0]
             }
           }
-        }
-
-        continue
+        })
       }
 
-      if (sourcePath !== '/') {
-        sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
+      if (val) {
+        const jsonStr = JSON.stringify(val, null, 2)
+        return escapeChars(jsonStr, '`')
       }
 
-      if (docs[sourcePath]) {
-        const { meta, toc: [first, ...toc] } = docs[sourcePath]
-
-        if (!title && meta.title) {
-          title = meta.title
-        }
-
-        if (first) {
-          sidebar.push([1, title || first[1], sourcePath])
-        }
-
-        sidebar.push(...toc.map(([level, name, url]) => [
-          level,
-          name,
-          url ? `${sourcePath}${url}` : url
-        ]))
-      }
+      return val
     }
-    sidebars[path] = sidebar
-  }
+  })
 
   return {
-    options: {
-      $sidebars: sidebars
-    },
+    options,
     sources
   }
 }

@@ -28,31 +28,29 @@ function $json(url) {
 }
 
 export default async (ctx, inject) => {
-  let press
+  const press = ctx.$press || {}
   if (process.static && process.client) {
-    press = {
-      get(url) {
-        for (const apiPath of apiToStaticPaths) {
-          if (url.startsWith(apiPath)) {
-            if (typeof apiToStatic[apiPath] === 'function') {
-              return $json(apiToStatic[apiPath](url.slice(apiPath.length + 1)))
-            } else {
-              return $json(apiToStatic[apiPath])
-            }
+    press.get = function get(url) {
+      for (const apiPath of apiToStaticPaths) {
+        if (url.startsWith(apiPath)) {
+          if (typeof apiToStatic[apiPath] === 'function') {
+            return $json(apiToStatic[apiPath](url.slice(apiPath.length + 1)))
+          } else {
+            return $json(apiToStatic[apiPath])
           }
         }
       }
     }
   } else {
-    press = {
-      get(url) {
-        return ctx.$http.$get(url).catch(err => consola.warn(err))
-      }
+    press.get = function get(url) {
+      return ctx.$http.$get(url).catch(err => consola.warn(err))
     }
   }
 
-  ctx.$press = press
-  inject('press', press)
+  if (!ctx.$press) {
+    ctx.$press = press
+    inject('press', press)
+  }
 
   await pressMiddleware(ctx, true)
 }

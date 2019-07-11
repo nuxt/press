@@ -1,7 +1,7 @@
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import {
-  _import,
+  importModule,
   resolve,
   exists,
   join,
@@ -63,11 +63,11 @@ export default {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(routePath(route)),
-        payload: await _import(join(staticRoot, 'blog', `${route}.json`))
+        payload: await importModule(join(staticRoot, 'blog', `${route}.json`))
       })),
       ...Object.keys(data.sources).map(async route => ({
         route: routePath(route),
-        payload: await _import(join(staticRoot, 'sources', route))
+        payload: await importModule(join(staticRoot, 'sources', route))
       }))
     ]
   },

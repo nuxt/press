@@ -1,6 +1,6 @@
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
-import { _import, resolve, exists, join, readJsonSync } from '../../utils'
+import { importModule, resolve, exists, join, readJsonSync } from '../../utils'
 import data from './data'
 
 export default {
@@ -10,7 +10,7 @@ export default {
   enabled(options) {
     if (options.$standalone === 'slides') {
       options.slides.prefix = '/'
-      if (!exists(join(this.options.srcDir, options.slidesdir))) {
+      if (!exists(join(this.options.srcDir, options.slides.dir))) {
         options.slides.dir = ''
       }
       return true
@@ -36,7 +36,7 @@ export default {
   generateRoutes(data, prefix, staticRoot) {
     return Object.keys(data.sources).map(async route => ({
       route: prefix(route),
-      payload: await _import(`${staticRoot}/sources${route}`)
+      payload: await importModule(`${staticRoot}/sources${route}`)
     }))
   },
   // Register serverMiddleware
