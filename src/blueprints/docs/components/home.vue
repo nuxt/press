@@ -1,4 +1,5 @@
-<template>
+// Credit: this component is largely copied from @vuepress to maintain commonality
+ <template>
   <main class="home" aria-labelledby="main-title">
     <header class="hero">
       <img
