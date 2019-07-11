@@ -10,7 +10,7 @@ export default {
   enabled(options) {
     if (options.$standalone === 'slides') {
       options.slides.prefix = '/'
-      if (!exists(join(this.options.srcDir, options.slidesdir))) {
+      if (!exists(join(this.options.srcDir, options.slides.dir))) {
         options.slides.dir = ''
       }
       return true
