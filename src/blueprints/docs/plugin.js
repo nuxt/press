@@ -1,3 +1,8 @@
+import Vue from 'vue'
+import OutboundLink from './components/outbound-link-icon'
+
+Vue.component('OutboundLink', OutboundLink)
+
 export default function docsPlugin(ctx, inject) {
   const pages = JSON.parse(`<%=options.docs.$pagesJSON%>`)
 

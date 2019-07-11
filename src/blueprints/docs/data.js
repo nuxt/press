@@ -3,7 +3,7 @@ import graymatter from 'gray-matter'
 import defu from 'defu'
 import { walk, join, exists, readFile, routePath, escapeChars } from '../../utils'
 import PromisePool from '../../pool'
-import { indexKeys, defaultMetaSettings } from './constants'
+import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
 
 // DOCS MODE
 // Markdown files can be placed in
@@ -22,6 +22,10 @@ async function parsePage(sourcePath, mdProcessor) {
     raw = content
 
     meta = defu(data, defaultMetaSettings)
+
+    if (meta.sidebar === 'auto') {
+      meta.sidebarDepth = maxSidebarDepth
+    }
   } else {
     meta = defu({}, defaultMetaSettings)
   }

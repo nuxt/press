@@ -1,27 +1,20 @@
 <template>
   <header class="top-menu">
-    <nuxt-link :to="config.prefix || '/'" class="home-link">
+    <nuxt-link :to="config.prefix" class="home-link">
       {{ config.title }}
     </nuxt-link>
 
     <nav class="links">
       <ul>
         <li
-          v-for="({ text, link }, idx) in config.nav"
+          v-for="(item, idx) in config.nav"
           :key="`topmenu-${idx}`"
-          class="nav-item">
-          <a
-            v-if="isExternal(link)"
-            :href="link"
-            target="_blank">
-            {{ text }}
-          </a>
-          <nuxt-link
-            v-else
-            :class="activeClass"
-            :to="link">
-            {{ text }}
-          </nuxt-link>
+          class="nav-item"
+        >
+          <nav-link
+            :class="activeClass(item.link)"
+            :item="item"
+          />
         </li>
       </ul>
     </nav>
@@ -30,29 +23,18 @@
 
 <script>
 import config from '~/nuxt.press'
-
-config.docs.nav = config.docs.nav.map((link) => {
-  const keys = Object.keys(link)
-  if (keys.length > 1) {
-    return link
-  } else {
-    return {
-      text: keys[0],
-      link: Object.values(link)[0]
-    }
-  }
-})
+import NavLink from './nav-link'
 
 export default {
+  components: {
+    NavLink
+  },
   created() {
     this.config = config.docs
   },
   methods: {
     activeClass(link) {
       return this.$route.path.startsWith(link) ? 'active' : ''
-    },
-    isExternal(link) {
-      return link.startsWith('http') || link.startsWith('//')
     }
   }
 }

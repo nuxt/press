@@ -5,7 +5,13 @@
       class="section"
     >
       <p class="sidebar-heading">
-        <span>{{ name }}</span>
+        <nuxt-link
+          v-if="url"
+          :to="url"
+        >
+          {{ name }}
+        </nuxt-link>
+        <span v-else>{{ name }}</span>
       </p>
 
       <sidebar-sections
@@ -51,17 +57,24 @@ export default {
       return this.data[1]
     },
     url() {
-      return this.data[2] || '/'
+      return this.data[2]
+    },
+    path() {
+      const index = this.url.indexOf('#')
+      return index === -1 ? this.url : this.url.substr(0, index)
     },
     children() {
       return this.data[3]
     },
     showChildSection() {
-      if (this.depth < this.$page.meta.sidebarDepth) {
+      if (this.depth < this.$page.meta.sidebarDepth || this.isActive) {
         return !!this.children && this.children.length > 0
       }
 
       return false
+    },
+    isActive() {
+      return this.$route.path === this.path
     },
     sectionClass() {
       return this.showChildSection ? 'sidebar-section' : 'sidebar-item'

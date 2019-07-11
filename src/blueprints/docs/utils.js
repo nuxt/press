@@ -1,3 +1,4 @@
+export const externalRE = /^(https?:|mailto:|tel:|[a-z]{3,}:)/i
 
 export function trimEnd(str, chr = '') {
   if (!chr) {
@@ -8,6 +9,18 @@ export function trimEnd(str, chr = '') {
 }
 
 export const trimSlash = str => trimEnd(str, '/')
+
+export function isExternal(url) {
+  return externalRE.test(url) || url.startsWith('//')
+}
+
+export function isMailto(url) {
+  return url.startsWith('mailto:')
+}
+
+export function isTel(url) {
+  return url.startsWith('tel:')
+}
 
 export function tocToTree(toc) {
   const sections = [undefined, [], [], [], [], [], []]
@@ -58,7 +71,7 @@ export function createSidebarFromToc(path, title, page, startDepth = 0) {
     title = 'Home'
   }
 
-  if (first) {
+  if (first || !toc.length) {
     sidebar.push([1 + startDepth, meta.title || title || first[1], path])
   }
 

@@ -27,7 +27,7 @@ body {
 
   & > .sidebar {
     position: fixed;
-    width: 18rem;
+    width: 20rem;
     top: 3rem;
     bottom: 0;
     z-index: 2;
@@ -39,13 +39,13 @@ body {
     font-size: 1.1rem;
 
     &.has-sidebar {
-      padding-left: 19.4rem;
+      padding-left: 21.4rem;
     }
 
     & article {
       line-height: 1.6rem;
       margin: 0 auto;
-      max-width: 660px;
+      max-width: 720px;
 
       & h2 {
         &:not(:first-of-type) {

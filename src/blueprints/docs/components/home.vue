@@ -18,12 +18,10 @@
         v-if="data.actionText && data.actionLink"
         class="action"
       >
-        <nuxt-link
+        <nav-link
           class="action-button"
-          :to="actionLink.link"
-        >
-        {{ actionLink.text }}
-        </nuxt-link>
+          :item="actionLink"
+        />
       </p>
     </header>
 
@@ -57,8 +55,12 @@
 
 <script>
 import docsMixin from '../mixin'
+import NavLink from './nav-link'
 
 export default {
+  components: {
+    NavLink
+  },
   mixins: [docsMixin],
   props: {
     data: {
