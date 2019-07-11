@@ -1,6 +1,6 @@
 <template>
-  <main>
-    <nuxt-template tag="article" class="topic" v-model="data.body" />
+  <main class="topic">
+    <nuxt-template tag="article" v-model="data.body" />
   </main>
 </template>
 
