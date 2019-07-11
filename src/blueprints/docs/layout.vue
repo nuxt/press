@@ -2,11 +2,11 @@
   <div id="nuxt-press" class="docs">
     <top />
 
-    <sidebar v-if="!$isHome" />
+    <sidebar v-if="!$isHome || $docs.home.sidebar" />
 
     <nuxt
       class="content"
-      :class="{ 'has-sidebar': !$isHome }"
+      :class="{ 'has-sidebar': !$isHome || $docs.home.sidebar }"
     />
   </div>
 </template>
