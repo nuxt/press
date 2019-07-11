@@ -1,7 +1,7 @@
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
-import { _import, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
+import { importModule, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
 import data from './data'
 
 export default {
@@ -43,7 +43,7 @@ export default {
       }
       return {
         route: routePath,
-        payload: await _import(`${staticRoot}/sources${route}`)
+        payload: await importModule(`${staticRoot}/sources${route}`)
       }
     })
   },

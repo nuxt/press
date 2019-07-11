@@ -1,7 +1,7 @@
 import path from 'path'
 import graymatter from 'gray-matter'
 import defu from 'defu'
-import { walk, join, exists, readFile, routePath } from '../../utils'
+import { walk, join, exists, readFile, routePath, escapeChars } from '../../utils'
 import PromisePool from '../../pool'
 import { indexKeys, defaultMetaSettings } from './constants'
 
@@ -36,8 +36,8 @@ async function parsePage(sourcePath, mdProcessor) {
     body
   }
 
-  const _path = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '')
-  source.path = `/${_path || 'index'}`
+  sourcePath = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '')
+  source.path = `/${sourcePath || 'index'}`
 
   return {
     toc,
@@ -85,11 +85,17 @@ export default async function ({ options }) {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
+  const $options = {}
+  Object.defineProperty($options, '$pages', {
+    configurable: true,
+    enumerable: true,
+    get() {
+      return escapeChars(JSON.stringify(pages, null, 2), '`')
+    }
+  })
+
   return {
-    options: {
-      $pages: pages,
-      $sidebars: sidebars
-    },
+    options: $options,
     sources
   }
 }

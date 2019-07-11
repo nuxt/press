@@ -1,9 +1,5 @@
-import Vue from 'vue'
-import { trimSlash } from './utils'
-
 export default function docsPlugin(ctx, inject) {
-
-  const pages = JSON.parse(`<%=JSON.stringify(options.docs.$pages, null, 2).replace(/`/g, '\\`')%>`)
+  const pages = JSON.parse(`<%=options.docs.$pages%>`)
 
   const docs = {
     pages
