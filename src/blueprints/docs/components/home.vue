@@ -11,7 +11,7 @@
       <h1 v-if="data.heroText !== null" id="main-title">{{ data.heroText || $title || 'Hello' }}</h1>
 
       <p class="description">
-        {{ data.tagline || $description || 'Welcome to your VuePress site' }}
+        {{ data.tagline || $description || 'Welcome to your NuxtPress site' }}
       </p>
 
       <p

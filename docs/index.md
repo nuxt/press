@@ -1,30 +1,34 @@
 ---
-title: Intro
+home: true
+heroImage: /nuxt-press.png
+heroText: nuxt-press
+tagline: Publishing the Nuxt way
+actionText: Get Started →
+actionLink: /guide/
+footer: MIT License
 ---
 
-![nuxt-press][logo]
-
-[logo]: https://user-images.githubusercontent.com/904724/59497906-a2d9d680-8e94-11e9-8fac-a7172827f349.png
-
-# Publishing the Nuxt way
+<div style="margin: 0 auto; max-width: 700px;">
 
 **NuxtPress** is a multi-mode natural extension to Nuxt.js.
 
 _Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
 
-⚡Works in `universal` and `spa` modes, as well as with `nuxt generate`.
+⚡ Works in `universal` and `spa` modes, as well as with `nuxt generate`.
 
-⚡`nuxt generate` is **automatic**: no need to provide generate routes yourself.
+⚡ `nuxt generate` is **automatic**: no need to provide generate routes yourself.
 
-⚡**No `__NUXT__` payload** is used for rendering Markdown (zero bloat).
+⚡ **No `__NUXT__` payload** is used for rendering Markdown (zero bloat).
 
-⚡Batteries included: **docs**, **blog** and **slides** bundled apps.
+⚡ Batteries included: **docs**, **blog** and **slides** bundled apps.
 
-⚡Ejectable styles and Vue templates (granular shadowing of built-in templates).
+⚡ Ejectable styles and Vue templates (granular shadowing of built-in templates).
 
-⚡Parses **YAML metadata** and supports Vue **markup and interpolation**.
+⚡ Parses **YAML metadata** and supports Vue **markup and interpolation**.
 
-⚡Fully **configurable** **data sources** and **Markdown preprocessing**.
+⚡ Fully **configurable** **data sources** and **Markdown preprocessing**.
+
+</div>
 
 ## Markdown pages
 

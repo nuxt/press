@@ -5,21 +5,28 @@
     "title": "NuxtPress documentation",
     "nav": [
       {
-        "text": "Home",
-        "link": "/"
-      },
-      {
-        "text": "Internals",
-        "link": "/internals"
+        "text": "Guide",
+        "link": "/guide"
       },
       {
         "text": "GitHub",
         "link": "https://github.com/nuxt/press"
       }
     ],
+    "asJsonTemplate": {},
     "sidebar": [
       "/",
-      "/guide",
+      {
+        "title": "Guide",
+        "children": [
+          "/guide",
+          "/guide/mode-default",
+          "/guide/mode-standalone",
+          "/guide/publishing-docs",
+          "/guide/publishing-blog",
+          "/guide/publishing-slides"
+        ]
+      },
       "/customize"
     ]
   }
