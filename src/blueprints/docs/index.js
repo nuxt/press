@@ -111,10 +111,10 @@ export default {
           return toc[0][1]
         }
 
-        const [, title] = body.substr(body.indexOf('#')).match(/^#+\s+(.*)/)
+        const titleMatch = body.substr(body.indexOf('#')).match(/^#+\s+(.*)/)
 
-        if (title) {
-          return title
+        if (titleMatch) {
+          return titleMatch[1]
         }
 
         return fileName
