@@ -6,7 +6,6 @@ heroText: NuxtPress
 tagline: Publishing the Nuxt way
 actionText: Get Started →
 actionLink: /guide/
-sidebar: true
 footer: MIT License
 ---
 
