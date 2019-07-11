@@ -50,7 +50,7 @@ async function parsePage(sourcePath, mdProcessor) {
   }
 }
 
-export default async function () {
+export default async function ({ options: { docs: docOptions } }) {
   let srcRoot = join(
     this.options.srcDir,
     this.$press.docs.dir
@@ -68,7 +68,7 @@ export default async function () {
   })
 
   const sources = {}
-  const pages = {}
+  const $pages = {}
 
   const mdProcessor = await this.$press.docs.source.processor()
 
@@ -77,22 +77,41 @@ export default async function () {
 
     const sourcePath = routePath(source.path) || '/'
 
-    pages[sourcePath] = { meta, toc }
+    $pages[sourcePath] = { meta, toc }
     sources[sourcePath] = source
   }
 
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  const options = new Proxy({
-    $pages: pages,
-    $pagesJSON: undefined
-  }, {
+  const options = { $pages }
+
+  const isDev = this.options.dev
+
+  options.asJsonTemplate = new Proxy({}, {
     get(target, prop) {
-      if (prop === '$pagesJSON') {
-        return escapeChars(JSON.stringify(pages, null, 2), '`')
+      let val = options[prop] || options[`$${prop}`] || docOptions[prop]
+
+      if (prop === 'nav') {
+        val = val.map((link) => {
+          const keys = Object.keys(link)
+          if (keys.length > 1) {
+            return link
+          } else {
+            return {
+              text: keys[0],
+              link: Object.values(link)[0]
+            }
+          }
+        })
       }
-      return target[prop]
+
+      if (val) {
+        const jsonStr = JSON.stringify(val, null, isDev ? 2 : 0)
+        return escapeChars(jsonStr, '`')
+      }
+
+      return val
     }
   })
 

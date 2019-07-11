@@ -11,9 +11,6 @@
 import docsMixin from '../mixin'
 import { createSidebar, tocToTree, trimSlash } from '../utils'
 import SidebarSections from './sidebar-sections'
-import _config from '~/nuxt.press'
-
-const { docs: config } = _config
 
 export default {
   components: {
@@ -26,10 +23,11 @@ export default {
     }
   },
   created() {
-    if (Array.isArray(config.sidebar)) {
-      this.$sidebars = { '/': config.sidebar }
+    const sidebar = this.$docs.sidebar
+    if (Array.isArray(sidebar)) {
+      this.$sidebars = { '/': sidebar }
     } else {
-      this.$sidebars = config.sidebar
+      this.$sidebars = sidebar
     }
 
     this._sidebars = []
@@ -77,7 +75,7 @@ export default {
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
           if (!this._sidebars[sidebarPath]) {
-            this._sidebars[sidebarPath] = createSidebar(config, this.$sidebars[sidebarPath], this.$docs.pages)
+            this._sidebars[sidebarPath] = createSidebar(this.$docs, this.$sidebars[sidebarPath], this.$docs.pages)
           }
 
           this.sidebar = this._sidebars[sidebarPath]

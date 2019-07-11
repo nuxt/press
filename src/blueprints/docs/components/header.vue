@@ -1,13 +1,13 @@
 <template>
   <header class="top-menu">
-    <nuxt-link :to="config.prefix" class="home-link">
-      {{ config.title }}
+    <nuxt-link :to="$docs.prefix" class="home-link">
+      {{ $docs.title }}
     </nuxt-link>
 
     <nav class="links">
       <ul>
         <li
-          v-for="(item, idx) in config.nav"
+          v-for="(item, idx) in $docs.nav"
           :key="`topmenu-${idx}`"
           class="nav-item"
         >
@@ -22,16 +22,14 @@
 </template>
 
 <script>
-import config from '~/nuxt.press'
+import docsMixin from '../mixin'
 import NavLink from './nav-link'
 
 export default {
   components: {
     NavLink
   },
-  created() {
-    this.config = config.docs
-  },
+  mixins: [docsMixin],
   methods: {
     activeClass(link) {
       return this.$route.path.startsWith(link) ? 'active' : ''
