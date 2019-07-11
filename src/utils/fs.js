@@ -104,4 +104,3 @@ export function walk(root, validate, sliceAtRoot = false) {
       .on('end', () => resolve(matches))
   })
 }
-

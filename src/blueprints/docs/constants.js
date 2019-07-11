@@ -2,6 +2,7 @@ export const indexKeys = ['index', 'readme']
 
 export const templates = {
   header: 'components/header.vue',
+  home: 'components/home.vue',
   index: 'pages/index.vue',
   layout: 'layout.vue',
   mixin: 'mixin.js',

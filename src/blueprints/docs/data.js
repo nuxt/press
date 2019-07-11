@@ -46,7 +46,7 @@ async function parsePage(sourcePath, mdProcessor) {
   }
 }
 
-export default async function ({ options }) {
+export default async function () {
   let srcRoot = join(
     this.options.srcDir,
     this.$press.docs.dir
@@ -80,17 +80,20 @@ export default async function ({ options }) {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  const $options = {}
-  Object.defineProperty($options, '$pages', {
-    configurable: true,
-    enumerable: true,
-    get() {
-      return escapeChars(JSON.stringify(pages, null, 2), '`')
+  const options = new Proxy({
+    $pages: pages,
+    $pagesJSON: undefined
+  }, {
+    get(target, prop) {
+      if (prop === '$pagesJSON') {
+        return escapeChars(JSON.stringify(pages, null, 2), '`')
+      }
+      return target[prop]
     }
   })
 
   return {
-    options: $options,
+    options,
     sources
   }
 }
