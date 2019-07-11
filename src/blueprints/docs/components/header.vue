@@ -29,11 +29,9 @@
 </template>
 
 <script>
-import _config from '~/nuxt.press'
+import config from '~/nuxt.press'
 
-const config = _config.docs
-
-config.nav = config.nav.map((link) => {
+config.docs.nav = config.docs.nav.map((link) => {
   const keys = Object.keys(link)
   if (keys.length > 1) {
     return link
@@ -46,7 +44,9 @@ config.nav = config.nav.map((link) => {
 })
 
 export default {
-  data: () => ({ config }),
+  created() {
+    this.config = config.docs
+  },
   methods: {
     activeClass(link) {
       return this.$route.path.startsWith(link) ? 'active' : ''
