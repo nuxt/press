@@ -12,6 +12,8 @@ Package currently used for development purposes only.
 
 _Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
 
+⚡Automatic Markdown routes: `pages/foo/bar.md` → `/foo/bar`
+
 ⚡Works in `universal` and `spa` modes, as well as with `nuxt generate`.
 
 ⚡`nuxt generate` is **automatic**: no need to provide generate routes yourself.
