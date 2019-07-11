@@ -86,8 +86,6 @@ export default async function ({ options: { docs: docOptions } }) {
 
   const options = { $pages }
 
-  const isDev = this.options.dev
-
   options.asJsonTemplate = new Proxy({}, {
     get(target, prop) {
       let val = options[prop] || options[`$${prop}`] || docOptions[prop]
@@ -107,7 +105,7 @@ export default async function ({ options: { docs: docOptions } }) {
       }
 
       if (val) {
-        const jsonStr = JSON.stringify(val, null, isDev ? 2 : 0)
+        const jsonStr = JSON.stringify(val, null, 2)
         return escapeChars(jsonStr, '`')
       }
 
