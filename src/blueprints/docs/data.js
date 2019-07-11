@@ -63,7 +63,6 @@ export default async function ({ options }) {
     return path.endsWith('.md')
   })
 
-  const sidebars = {}
   const sources = {}
   const pages = {}
 
@@ -73,10 +72,6 @@ export default async function ({ options }) {
     const { toc, meta, source } = await parsePage.call(this, path, mdProcessor)
 
     const sourcePath = routePath(source.path) || '/'
-
-    if (meta.sidebar === 'auto') {
-      sidebars[sourcePath] = toc
-    }
 
     pages[sourcePath] = { meta, toc }
     sources[sourcePath] = source
