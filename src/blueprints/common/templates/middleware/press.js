@@ -21,9 +21,11 @@ export default async function ({ $press, params, payload }, plugin = false) {
       sourceParam = (params.source && params.source.replace(trimSlashRE, '')) || 'index'
       source = await $press.get(`api/source/${sourceParam}`)
     }
+
     if (!source) {
       source = await $press.get(`api/source/${sourceParam}/index`)
     }
+
     if (!source) {
       $press.error = { statusCode: 404 }
       return

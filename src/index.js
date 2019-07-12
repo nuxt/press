@@ -6,7 +6,7 @@ import resolve from './resolve'
 /**
  * @nuxt/press module for NuxtJS
  */
-export default async function (options) {
+export default async function NuxtPressModule(options) {
   const nuxt = this.nuxt
   options = nuxt.options.press || options
 
