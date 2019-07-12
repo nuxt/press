@@ -13,7 +13,7 @@ import PromisePool from '../../pool'
 
 async function loadPage(pagePath, mdProcessor) {
   const sliceAt = this.options.dir.pages.length
-  const { name, dir} = parse(pagePath)
+  const { name, dir } = parse(pagePath)
   const path = `${dir.slice(sliceAt)}/${name}`
 
   let body = await readFile(this.options.srcDir, pagePath)

@@ -5,7 +5,7 @@
 <link><%= blog.feed.link %></link>
 <description><%= blog.feed.description %></description>
 <% entries.forEach((entry) => { %><item>
-<link><%= entry.path %></link>
+<link><%= blog.feed.link %><%= entry.path %></link>
 <guid><%= entry.id %></guid>
 <pubDate><%= entry.published.toString() %></pubDate>
 <description><%= entry.title %></description>
