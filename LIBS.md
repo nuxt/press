@@ -2,7 +2,7 @@
 
 - https://github.com/nuxt/lmify
 - https://github.com/sapegin/mrm-core#json
-- https://github.com/Atinux/nuxt-tailwindcss
+- https://github.com/nuxt-community/nuxt-tailwindcss
 - https://github.com/troxler/vue-headful
 - https://github.com/stevenbenisek/rollup-plugin-auto-external
 - https://github.com/Akryum/vue-observe-visibility
