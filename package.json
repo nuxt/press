@@ -1,6 +1,6 @@
 {
   "name": "@nuxt/press",
-  "version": "0.0.1-alpha.77",
+  "version": "0.0.1-alpha.79",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
   "bin": {
     "nuxt-press": "./bin/cli.js"
@@ -13,6 +13,7 @@
   "files": [
     "bin",
     "dist",
+    "blueprints",
     "postinstall.js"
   ],
   "scripts": {

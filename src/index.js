@@ -1,6 +1,7 @@
 
 import { registerBlueprints } from './blueprint'
-import { join, resolve, exists } from './utils'
+import { join, exists } from './utils'
+import resolve from './resolve'
 
 export default async function (options) {
   // Use the full Vue build for client-side template compilation

@@ -1,5 +1,6 @@
 import defu from 'defu'
 import PromisePool from './pool'
+import resolve from './resolve'
 
 import {
   dirname,
@@ -9,7 +10,6 @@ import {
   writeJson,
   loadConfig,
   updateConfig,
-  resolve,
   walk,
   importModule
 } from './utils'

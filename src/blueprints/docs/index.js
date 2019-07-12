@@ -3,11 +3,12 @@ import customContainer from 'remark-container'
 
 import {
   importModule,
-  resolve,
   exists,
   updateConfig,
   routePath
 } from '../../utils'
+
+import resolve from '../../resolve'
 
 import { templates } from './constants'
 import data from './data'
@@ -80,22 +81,6 @@ export default {
     prefix: '/docs/',
     title: 'My Documentation',
     nav: [],
-
-    // If in Nuxt's SPA mode, setting custom API
-    // handlers also disables bundling of index.json
-    // and source/*.json files into the static/ folder
-    // api({ rootId }) {
-    //   const cache = {}
-    //   const rootDir = join(this.options.buildDir, rootId, 'static')
-    //   return {
-    //     index: (req, res, next) => {
-    //       if (this.options.dev || !cache.index) {
-    //         cache.index = readJsonSync(rootDir, 'sources', 'docs', 'index.json')
-    //       }
-    //       res.json(cache.index)
-    //     }
-    //   }
-    // },
     source: {
       processor() {
         const config = { toc: true, sanitize: false }

@@ -1,6 +1,7 @@
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
-import { importModule, resolve, exists, join, readJsonSync } from '../../utils'
+import { importModule, exists, join, readJsonSync } from '../../utils'
+import resolve from '../../resolve'
 import data from './data'
 
 export default {

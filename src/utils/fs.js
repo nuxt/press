@@ -12,7 +12,6 @@ import {
 
 import {
   dirname,
-  resolve as _resolve,
   join as _join,
   sep
 } from 'path'
@@ -40,10 +39,6 @@ export function exists(...paths) {
 }
 
 export const stat = _stat
-
-export function resolve(...paths) {
-  return _resolve(__dirname, '..', join(...paths))
-}
 
 export function join(...paths) {
   return _join(...paths.map(p => p.replace(/\//g, sep)))
