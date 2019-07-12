@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import { isExternal, isMailto, isTel } from '../utils'
+import { isExternal, isMailto, isTel } from 'press/docs/utils'
 
 export default {
   props: {

@@ -1,4 +1,4 @@
-import { trimSlash } from './utils'
+import { trimSlash } from 'press/docs/utils'
 
 export default {
   computed: {

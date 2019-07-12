@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { startObserver } from '../../common/components/observer'
+import { startObserver } from 'press/common/components/observer'
 
 export default {
   layout: 'docs',

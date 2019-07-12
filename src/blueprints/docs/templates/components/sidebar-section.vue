@@ -32,7 +32,7 @@
 </template>
 
 <script>
-import docsMixin from '../mixin'
+import docsMixin from 'press/docs/mixins/docs'
 
 export default {
   components: {

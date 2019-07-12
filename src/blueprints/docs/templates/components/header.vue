@@ -22,8 +22,8 @@
 </template>
 
 <script>
-import docsMixin from '../mixin'
-import NavLink from './nav-link'
+import docsMixin from 'press/docs/mixins/docs'
+import NavLink from 'press/docs/components/nav-link'
 
 export default {
   components: {

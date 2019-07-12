@@ -15,7 +15,7 @@
 
 <script>
 import Home from 'press/docs/components/home'
-import docsMixin from 'press/docs/mixin'
+import docsMixin from 'press/docs/mixins/docs'
 
 export default {
   layout: 'docs',

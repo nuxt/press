@@ -10,11 +10,12 @@ export default {
   // Main blueprint, enabled by default
   enabled: () => true,
   templates: {
-    'middleware': 'middleware.js',
-    'nuxt-template': 'components/nuxt-template.js',
+    // [type?:eject_key]: 'path in templates/'
+    'middleware': 'middleware/press.js',
+    'nuxt': 'components/nuxt-template.js',
     'observer': 'components/observer.js',
-    'plugin': 'plugin.js',
-    'scroll/plugin': 'plugins/scroll.client.js',
+    'plugin': 'plugins/press.js',
+    'plugin:scroll': 'plugins/scroll.client.js',
     'source': 'pages/source.vue'
   },
   routes(templates) {
@@ -84,7 +85,7 @@ export default {
       const sourceCache = {}
       return {
         source(source, req, res, next) {
-          if (!sourceCache[source]) {
+          if (this.options.dev || !sourceCache[source]) {
             sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
           }
           res.json(sourceCache[source])
@@ -100,7 +101,7 @@ export default {
         const { contents } = await processor.toHTML(source)
         return contents
       },
-      head(source) {
+      metadata(source) {
         if (source.trimLeft().startsWith('---')) {
           const { content: body, data } = graymatter(source)
           return { ...data, body }

@@ -16,6 +16,7 @@ export default {
   layout: 'blog',
   async asyncData ({ $press, payload }) {
     const archive = payload || await $press.get('api/blog/archive')
+
     return { archive }
   }
 }

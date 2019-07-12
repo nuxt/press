@@ -14,7 +14,6 @@
       >
         <div v-html="item" />
       </swiper-slide>
-
       <div class="swiper-pagination" slot="pagination"></div>
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
@@ -23,7 +22,7 @@
 </template>
 
 <script>
-import { startObserver } from '../../common/components/observer'
+import { startObserver } from 'press/common/components/observer'
 
 export default {
   props: ['data', 'path'],

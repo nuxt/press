@@ -13,17 +13,17 @@ async function parseEntry(sourcePath, processor) {
   const parse = this.$press.blog.source
   const fileName = parsePath(sourcePath).name
   const raw = await readFile(this.options.srcDir, sourcePath)
-  const headData = parse.head.call(this, fileName, raw)
-  if (headData instanceof Error) {
-    consola.warn(headData.message)
+  const metadata = parse.metadata.call(this, fileName, raw)
+  if (metadata instanceof Error) {
+    consola.warn(metadata.message)
     return
   }
-  const title = headData.title || parse.title.call(this, raw)
-  const slug = headData.slug
-  const body = await parse.markdown.call(this, headData.content || raw.substr(raw.indexOf('#')), processor)
-  const published = headData.published
-  delete headData.content
-  const source = { ...headData, body, title, slug, published }
+  const title = metadata.title || parse.title.call(this, raw)
+  const slug = metadata.slug
+  const body = await parse.markdown.call(this, metadata.content || raw.substr(raw.indexOf('#')), processor)
+  const published = metadata.published
+  delete metadata.content
+  const source = { ...metadata, body, title, slug, published }
   source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
   source.type = 'entry'
   source.id = this.$press.blog.source.id.call(this, source)
