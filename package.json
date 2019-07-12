@@ -17,6 +17,7 @@
     "postinstall.js"
   ],
   "scripts": {
+    "clean": "rimraf ./**/.nuxt src/**/dist test/**/dist",
     "dev": "nuxt dev",
     "build": "nuxt build",
     "dist": "rollup -c rollup.config.js",
@@ -68,6 +69,7 @@
     "node-env-file": "^0.1.8",
     "nuxt": "^2.8.1",
     "puppeteer-core": "^1.18.1",
+    "rimraf": "^2.6.3",
     "rollup": "^1.16.4",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-commonjs": "^10.0.1",
