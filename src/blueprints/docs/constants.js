@@ -6,12 +6,12 @@ export const templates = {
   index: 'pages/index.vue',
   layout: 'layouts/docs.vue',
   mixin: 'mixins/docs.js',
-  navLink: 'components/nav-link.vue',
-  outboundLinkIcon: 'components/outbound-link-icon.vue',
+  'nav-link': 'components/nav-link.vue',
+  'outbound-link-icon': 'components/outbound-link-icon.vue',
   plugin: 'plugins/press.docs.js',
   sidebar: 'components/sidebar.vue',
-  sidebarSection: 'components/sidebar-section.vue',
-  sidebarSections: 'components/sidebar-sections.vue',
+  'sidebar-section': 'components/sidebar-section.vue',
+  'sidebar-sections': 'components/sidebar-sections.vue',
   topic: 'components/topic.vue',
   utils: 'utils.js'
 }
