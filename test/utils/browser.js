@@ -84,11 +84,11 @@ export async function startBrowser(folder) {
     }
   }
 
-  const close = browser.close
-  browser.close = async () => {
-    await close()
+  if (serverInfo.server) {
+    const close = browser.close
 
-    if (serverInfo.server) {
+    browser.close = async () => {
+      await close()
       serverInfo.server.close()
     }
   }
