@@ -23,6 +23,7 @@ import common from './blueprints/common'
 const blueprints = { docs, blog, slides, common }
 
 export async function registerBlueprints(rootId, options, blueprints) {
+  // this: Nuxt ModuleContainer instance
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
@@ -47,14 +48,14 @@ export async function _registerBlueprint(id, rootId, options) {
   if (!blueprint.enabled.call(this, { ...options, [id]: blueprintOptions })) {
     // Return if blueprint is not enabled
     return
-  } else {
-    // Set flag to indicate blueprint was enabled
-    options[`$${id}`] = true
-    // Populate options with defaults
-    options[id] = blueprintOptions
   }
 
-  // Register serverMiddleware
+  // Set flag to indicate blueprint was enabled (ie: options.$common = true)
+  options[`$${id}`] = true
+  // Populate options with defaults
+  options[id] = blueprintOptions
+
+  // Register server middleware
   if (blueprint.serverMiddleware) {
     for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
       sm = sm.bind(this)
@@ -258,37 +259,36 @@ async function addTemplateAssets({ options, rootId, id }, pattern) {
 
 async function addTemplates({ options, rootId, id }, templates) {
   const finalTemplates = {}
-  let sliceAt = resolve('blueprints').length + 1
 
-  for (const templateKey in templates) {
-    if (templateKey === 'assets') {
-      await addTemplateAssets.call(this, { options, rootId, id }, templates[templateKey])
+  for (const key in templates) {
+    const type = key.split(':')[0]
+    let template = templates[key]
+    if (typeof template === 'string') {
+      template = { src: template }
+    }
+    template.fileName = join(rootId, id, template.src)
+    template.options = options
+
+    if (type === 'assets') {
+      await addTemplateAssets.call(this, { options, rootId, id }, template.src)
       continue
     }
 
-    const templateSpec = templates[templateKey]
-    const isTemplateArr = Array.isArray(templateSpec)
-    const template = {
-      src: isTemplateArr ? templateSpec[0] : templateSpec,
-      ...isTemplateArr && templateSpec[1]
-    }
-
-    // Pick up user-provide template replacements
-    const userProvidedTemplateRoot = join(this.options.srcDir, rootId)
-    if (exists(userProvidedTemplateRoot, id, template.src)) {
-      template.src = join(userProvidedTemplateRoot, id, template.src)
-      sliceAt = userProvidedTemplateRoot.length + 1
+    // Pick up user-provide template replacements (ie: ~/press/common/middleware.js)
+    const userTemplatePath = join(this.options.srcDir, template.fileName)
+    if (exists(userTemplatePath)) {
+      template.src = userTemplatePath
     } else {
-      const builtinTemplateRoot = resolve('blueprints')
-      template.src = join(builtinTemplateRoot, id, template.src)
-      sliceAt = builtinTemplateRoot.length + 1
+      template.src = join(resolve('blueprints'), id, 'templates', template.src)
     }
 
-    template.fileName = join(rootId, template.src.slice(sliceAt))
-    finalTemplates[templateKey] = template.fileName
+    // fileName should be like press/common/pages/source.vue, using Webpack alias
+    finalTemplates[key] = template.fileName
 
-    if (templateKey === 'plugin' || templateKey.endsWith('/plugin')) {
+    if (type === 'plugin') {
       const { dst } = this.addTemplate({ ...template, options })
+
+      // Push plugin at the end
       this.options.plugins.push({
         src: join(this.options.buildDir, dst),
         ssr: template.ssr,
@@ -297,13 +297,13 @@ async function addTemplates({ options, rootId, id }, templates) {
       continue
     }
 
-    if (templateKey === 'layout' || templateKey.endsWith('/layout')) {
-      this.addLayout({ ...template, options }, id)
+    if (type === 'layout') {
+      this.addLayout(template)
       continue
     }
 
     // Regular Vue templates (also usable as routes)
-    this.addTemplate({ ...template, options })
+    this.addTemplate(template)
   }
 
   return finalTemplates

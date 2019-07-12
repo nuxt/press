@@ -12,6 +12,7 @@
 export default {
   async asyncData ({ $press, payload }) {
     const slidesList = payload || await $press.get('api/slides/index')
+
     return { slidesList }
   }
 }

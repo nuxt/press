@@ -33,19 +33,12 @@ export default {
     return exists(this.options.srcDir, options.blog.dir)
   },
   templates: {
-    'layout': 'layout.vue',
-    'sidebar': 'components/sidebar.vue',
-    'index': 'pages/index.vue',
+    'archive': 'pages/archive.vue',
     'entry': 'components/entry.vue',
-    'archive': 'pages/archive.vue'
+    'index': 'pages/index.vue',
+    'layout': 'layouts/blog.vue',
+    'sidebar': 'components/sidebar.vue'
   },
-  ejectable: [
-    'layout',
-    'sidebar',
-    'index',
-    'entry',
-    'archive'
-  ],
   routes(templates) {
     return [
       {
@@ -154,10 +147,10 @@ export default {
         return contents
       },
 
-      // head() parses the starting block of text in a Markdown source,
+      // metadata() parses the starting block of text in a Markdown source,
       // considering the first and (optionally) second lines as
       // publishing date and summary respectively
-      head(fileName, source) {
+      metadata(fileName, source) {
         if (source.trimLeft().startsWith('---')) {
           const { content, data } = graymatter(source)
           if (data.date) {

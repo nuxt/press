@@ -1,13 +1,12 @@
 import consola from 'consola'
 import Vue from 'vue'
-import middleware from '../../middleware'
-import NuxtTemplate from './components/nuxt-template'
+import NuxtMiddleware from 'press/../middleware'
+import NuxtTemplate from 'press/common/components/nuxt-template'
+import pressMiddleware from 'press/common/middleware/press'
 
-import pressMiddleware from './middleware'
+NuxtMiddleware.press = pressMiddleware
 
-middleware.press = pressMiddleware
-
-Vue.component('nuxt-template', NuxtTemplate)
+Vue.component('NuxtTemplate', NuxtTemplate)
 
 const apiToStatic = {
   // Docs-only API endpoints
@@ -29,6 +28,7 @@ function $json(url) {
 
 export default async (ctx, inject) => {
   const press = ctx.$press || {}
+
   if (process.static && process.client) {
     press.get = function get(url) {
       for (const apiPath of apiToStaticPaths) {

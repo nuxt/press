@@ -19,9 +19,9 @@ export default {
     return exists(join(this.options.srcDir, options.slides.dir))
   },
   templates: {
-    plugin: ['plugin.js', { ssr: false }],
-    layout: 'layout.vue',
     index: 'pages/index.vue',
+    layout: 'layouts/slides.vue',
+    plugin: 'plugins/slides.client.js',
     slides: 'components/slides.vue'
   },
   // Register routes once templates have been added
@@ -88,7 +88,7 @@ export default {
         const { contents } = await processor.toHTML(source)
         return contents
       },
-      head(source) {
+      metadata(source) {
         if (source.trimLeft().startsWith('---')) {
           const { content: body, data } = graymatter(source)
           return { ...data, body }

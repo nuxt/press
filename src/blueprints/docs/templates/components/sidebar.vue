@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import docsMixin from '../mixin'
-import { createSidebar, tocToTree, trimSlash } from '../utils'
-import SidebarSections from './sidebar-sections'
+import docsMixin from 'press/docs/mixins/docs'
+import { createSidebar, tocToTree, trimSlash } from 'press/docs/utils'
+import SidebarSections from 'press/docs/components/sidebar-sections'
 
 export default {
   components: {

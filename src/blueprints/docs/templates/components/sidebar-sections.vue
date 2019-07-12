@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import SidebarSection from './sidebar-section'
+import SidebarSection from 'press/docs/components/sidebar-section'
 
 export default {
   name: 'SidebarSections',

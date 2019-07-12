@@ -61,58 +61,58 @@ $ npx nuxt-press eject blog/sidebar
 Below is a list of ejectable templates for each of NuxtPress bundled apps:
 
 <table>
-<tr>
-<td>Key</td>
-<td>Path</td>
-</tr>
-<tr>
-<td>
-<code>docs/plugin</code><br>
-<code>docs/header</code><br>
-<code>docs/index</code><br>
-<code>docs/layout</code><br>
-<code>docs/sidebar</code><br>
-<code>docs/topic</code>
-</td>
-<td>
-<code>press/docs/plugin.js</code><br>
-<code>press/docs/pages/components/header.vue</code><br>
-<code>press/docs/pages/index.vue</code><br>
-<code>press/docs/layout.vue</code><br>
-<code>press/docs/components/sidebar.vue</code><br>
-<code>press/docs/components/topic.vue
-</td>
-</tr>
-<tr>
-<td>
-<code>blog/plugin</code><br>
-<code>blog/index</code><br>
-<code>blog/layout</code><br>
-<code>blog/sidebar</code><br>
-<code>blog/entry</code>
-</td>
-<td>
-<code>press/blog/plugin.js</code><br>
-<code>press/blog/pages/index.vue</code><br>
-<code>press/blog/layout.vue</code><br>
-<code>press/blog/components/sidebar.vue</code><br>
-<code>press/blog/components/entry.vue
-</td>
-</tr>
-<tr>
-<td>
-<code>slides/plugin</code><br>
-<code>slides/layout</code><br>
-<code>slides/index</code><br>
-<code>slides/slides</code>
-</td>
-<td>
-<code>press/slides/plugin.js</code><br>
-<code>press/slides/layout.vue</code><br>
-<code>press/slides/pages/index.vue</code><br>
-<code>press/slides/components/slides.vue
-</td>
-</tr>
+  <tr>
+    <td>Key</td>
+    <td>Path</td>
+  </tr>
+  <tr>
+    <td>
+      <code>docs/layout</code><br>
+      <code>docs/index</code><br>
+      <code>docs/topic</code>
+      <code>docs/header</code><br>
+      <code>docs/sidebar</code><br>
+      <code>docs/plugin</code><br>
+    </td>
+    <td>
+      <code>press/docs/layouts/docs.vue</code><br>
+      <code>press/docs/pages/index.vue</code><br>
+      <code>press/docs/components/topic.vue
+      <code>press/docs/pages/components/header.vue</code><br>
+      <code>press/docs/components/sidebar.vue</code><br>
+      <code>press/docs/plugins/press.docs.js</code><br>
+      </td>
+  </tr>
+  <tr>
+    <td>
+      <code>blog/layout</code><br>
+      <code>blog/index</code><br>
+      <code>blog/archive</code><br>
+      <code>blog/entry</code>
+      <code>blog/sidebar</code><br>
+    </td>
+    <td>
+      <code>press/blog/layouts/blog.vue</code><br>
+      <code>press/blog/pages/index.vue</code><br>
+      <code>press/blog/pages/archive.vue</code><br>
+      <code>press/blog/components/entry.vue
+      <code>press/blog/components/sidebar.vue</code><br>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <code>slides/layout</code><br>
+      <code>slides/index</code><br>
+      <code>slides/slides</code>
+      <code>slides/plugin</code><br>
+    </td>
+    <td>
+      <code>press/slides/layouts/slides.vue</code><br>
+      <code>press/slides/pages/index.vue</code><br>
+      <code>press/slides/components/slides.vue
+      <code>press/slides/plugins/slides.client.js</code><br>
+    </td>
+  </tr>
 </table>
 
 If you're customizing **_everything_**, running `npx nuxt-press eject <mode>` will eject **all** templates associated with the specified mode.
@@ -122,28 +122,28 @@ Every bundled app is written as a regular Nuxt app: they make use of _middleware
 The `common` app bundle also includes the main source route, which in turns loads the right components for the specified source path. You'll rarely need to edit the common app bundle templates, but they're also ejectable:
 
 <table>
-<tr>
-<td>Key</td>
-<td>Path</td>
-</tr>
-<tr>
-<td>
-<code>common/middleware</code><br>
-<code>common/nuxt</code><br>
-<code>common/observer</code><br>
-<code>common/plugin</code><br>
-<code>common/scroll</code><br>
-<code>common/source</code>
-</td>
-<td>
-<code>press/common/middleware.js</code><br>
-<code>press/common/components/nuxt-template.js</code><br>
-<code>press/common/components/observer.js</code><br>
-<code>press/common/plugin.js</code><br>
-<code>press/common/plugins/scroll.js</code><br>
-<code>press/common/pages/source.vue</code><br>
-</td>
-</tr>
+  <tr>
+    <td>Key</td>
+    <td>Path</td>
+  </tr>
+  <tr>
+    <td>
+      <code>common/source</code>
+      <code>common/nuxt</code><br>
+      <code>common/middleware</code><br>
+      <code>common/observer</code><br>
+      <code>common/plugin</code><br>
+      <code>common/scroll</code><br>
+    </td>
+    <td>
+      <code>press/common/pages/source.vue</code><br>
+      <code>press/common/components/nuxt-template.js</code><br>
+      <code>press/common/middleware/press.js</code><br>
+      <code>press/common/components/observer.js</code><br>
+      <code>press/common/plugins/press.js</code><br>
+      <code>press/common/plugins/scroll.client.js</code><br>
+    </td>
+  </tr>
 </table>
 
 This makes NuxtPress nearly fully customizable. The rest of it is really just the module code that bootstraps all bundled apps if enabled into your Nuxt app.

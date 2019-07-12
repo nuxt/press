@@ -13,23 +13,26 @@ import PromisePool from '../../pool'
 
 async function loadPage(pagePath, mdProcessor) {
   const sliceAt = this.options.dir.pages.length
+  const { name, dir} = parse(pagePath)
+  const path = `${dir.slice(sliceAt)}/${name}`
+
   let body = await readFile(this.options.srcDir, pagePath)
+  const metadata = await this.$press.common.source.metadata.call(this, body)
   const titleMatch = body.match(/^#\s+(.*)/)
   let title = titleMatch ? titleMatch[1] : ''
-  const data = await this.$press.common.source.head.call(this, body)
-  if (data.body) {
-    body = data.body
-    delete data.body
+
+  // Overwrite body if given as metadata
+  if (metadata.body) {
+    body = metadata.body
   }
-  if (data.title) {
-    title = data.title
-    delete data.title
+  // Overwrite title if given as metadata
+  if (metadata.title) {
+    title = metadata.title
   }
   body = await this.$press.common.source.markdown.call(this, body, mdProcessor)
   title = await this.$press.common.source.markdown.call(this, title, mdProcessor)
-  const parsed = parse(pagePath)
-  const path = `${parsed.dir.slice(sliceAt)}/${parsed.name}`
-  return { body, title, path, ...data }
+
+  return { ...metadata, body, title, path }
 }
 
 export default async function () {
