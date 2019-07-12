@@ -7,6 +7,7 @@ import {
   join,
   ensureDir,
   exists,
+  writeFile,
   writeJson,
   loadConfig,
   updateConfig,
@@ -76,6 +77,10 @@ export async function _registerBlueprint(id, rootId, options) {
       Object.assign(options[id], context.data.options)
     }
 
+    if (context.data.static) {
+      await saveStaticFiles.call(this, context.data.static)
+    }
+
     const templates = await addTemplates.call(this, context, blueprint.templates)
 
     await updateConfig.call(this, rootId, { [id]: context.data.options })
@@ -106,12 +111,12 @@ export async function _registerBlueprint(id, rootId, options) {
     }
 
     const staticRoot = join(this.options.buildDir, rootId, 'static')
-    await saveStaticData.call(this, staticRoot, id, context.data)
+    await saveDataSources.call(this, staticRoot, id, context.data)
 
     this.nuxt.hook('build:compile', async () => {
       const staticRoot = join(this.options.buildDir, rootId, 'static')
       const staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
-      await saveStaticData.call(this, staticRoot, id, context.data)
+      await saveDataSources.call(this, staticRoot, id, context.data)
 
       if (blueprint.build) {
         this.nuxt.hook('build:done', async () => {
@@ -187,13 +192,26 @@ export async function _registerBlueprint(id, rootId, options) {
 
       this.nuxt.hook('generate:distCopied', async () => {
         await ensureDir(staticRootGenerate)
-        await saveStaticData(staticRootGenerate, id, context.data)
+        await saveDataSources(staticRootGenerate, id, context.data)
       })
     })
   })
 }
 
-async function saveStaticData(staticRoot, id, { topLevel, sources } = {}) {
+async function saveStaticFiles(files) {
+  const staticDir = join(this.options.srcDir, this.options.dir.static)
+  const pool = new PromisePool(Object.keys(files), async (file) => {
+    const filePath = join(staticDir, file)
+    const fileDir = dirname(filePath)
+    if (!exists(fileDir)) {
+      await ensureDir(fileDir)
+    }
+    await writeFile(filePath, files[file])
+  })
+  await pool.done()
+}
+
+async function saveDataSources(staticRoot, id, { topLevel, sources } = {}) {
   await ensureDir(staticRoot, id)
 
   if (topLevel) {

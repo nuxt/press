@@ -1,7 +1,9 @@
 
 import { parse as parsePath } from 'path'
 import consola from 'consola'
+import lodashTemplate from 'lodash/template'
 import { walk, join, readFile } from '../../utils'
+import resolve from '../../resolve'
 import PromisePool from '../../pool'
 
 // BLOG MODE
@@ -44,6 +46,13 @@ function addArchiveEntry(archive, entry) {
   archive[year][month].push(entry)
 }
 
+async function generateFeed(options, entries) {
+  const template = lodashTemplate(
+    await readFile(resolve('blueprints', 'blog', 'rss.xml'))
+  )
+  return template({ blog: options, entries })
+}
+
 export default async function () {
   const srcRoot = join(
     this.options.srcDir,
@@ -79,6 +88,11 @@ export default async function () {
     .slice(0, 10)
 
   return {
+    static: {
+      [this.$press.blog.feed.path(this.$press.blog)]: (
+        await generateFeed(this.$press.blog, index)
+      )
+    },
     topLevel: {
       index,
       archive

@@ -22,6 +22,11 @@
         "twitter": "https://twitter.com/nuxt_js"
       }
     ],
+    "feed": {
+      "link": "https://nuxt.press/",
+      "description": "A NuxtPress Blog Description",
+      "tagDomain": "nuxt.press"
+    },
     "tagDomain": "nuxt.press"
   }
 }
