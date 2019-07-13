@@ -81,7 +81,6 @@ jobs:
           root: ~/project
           paths:
             - src/**/test/fixtures/*/dist
-            - test/fixtures/*/dist
 
   test-e2e:
     parameters:
