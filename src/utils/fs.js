@@ -68,16 +68,6 @@ export function ensureDir(...paths) {
   return _ensureDir(join(...paths))
 }
 
-export function routePath(routePath) {
-  if (routePath.endsWith('/index')) {
-    return routePath.slice(0, routePath.indexOf('/index'))
-  }
-  if (routePath === 'index') {
-    return ''
-  }
-  return routePath
-}
-
 export function walk(root, validate, sliceAtRoot = false) {
   const matches = []
   const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1
