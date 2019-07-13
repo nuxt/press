@@ -10,7 +10,8 @@ describe('basic', () => {
 
     browser = await startBrowser(folder)
 
-    // browser.setLogLevel(['log', 'info', 'warn', 'error'])
+    // pass through browser errors, only works with chrome/puppeteer
+    browser.setLogLevel(['log', 'info', 'warn', 'error'])
   })
 
   afterAll(() => browser.close())

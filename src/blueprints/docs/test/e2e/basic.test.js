@@ -11,7 +11,8 @@ describe('basic', () => {
 
     browser = await startBrowser(folder)
 
-    // browser.setLogLevel(['log', 'info', 'warn', 'error'])
+    // pass through browser errors, only works with chrome/puppeteer
+    browser.setLogLevel(['log', 'info', 'warn', 'error'])
   })
 
   afterAll(() => browser.close())
@@ -30,7 +31,7 @@ describe('basic', () => {
     expect(await page.getText('.topic h1')).toBe('B1')
 
     const expectedLinks = [ 'B1', 'B2', 'B2.1', 'B2.1.1', 'B2.2', 'B3' ]
-    const sidebarLinks = await page.getTexts('.sidebar-link, .sidebar-heading a')
+    const sidebarLinks = await page.getTexts('.sidebar-link')
     expect(sidebarLinks.map(arrTrim)).toEqual(expectedLinks)
   }
 
@@ -38,7 +39,7 @@ describe('basic', () => {
     expect(await page.getText('.topic h1')).toBe('C1')
 
     const expectedLinks = [ 'C1 Meta', 'C1.1', 'C1.1.1', 'Second Header 1', 'Second Header 1.1' ]
-    const sidebarLinks = await page.getTexts('.sidebar-link, .sidebar-heading a')
+    const sidebarLinks = await page.getTexts('.sidebar-link')
     expect(sidebarLinks.map(arrTrim)).toEqual(expectedLinks)
   }
 
