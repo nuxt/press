@@ -1,7 +1,7 @@
 import path from 'path'
 import { getPort, startBrowser } from '@/utils'
 
-describe('basic', () => {
+describe.skip('basic', () => {
   let browser
   let page
 
