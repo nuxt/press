@@ -1,10 +1,8 @@
 ![nuxt-press](https://user-images.githubusercontent.com/904724/59497906-a2d9d680-8e94-11e9-8fac-a7172827f349.png)
 
-This is a **work in progress**.
+This is a **work in progress**. See alpha documentation [here][alpha-docs].
 
-Current alpha release: **0.0.1-alpha.68**
-
-Package currently used for development purposes only.
+[alpha-docs]: https://serene-lamarr-39961d.netlify.com
 
 # Publishing the Nuxt way
 
