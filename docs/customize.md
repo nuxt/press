@@ -78,7 +78,7 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
       <code>press/docs/layouts/docs.vue</code><br>
       <code>press/docs/pages/index.vue</code><br>
       <code>press/docs/components/topic.vue
-      <code>press/docs/pages/components/header.vue</code><br>
+      <code>press/docs/components/header.vue</code><br>
       <code>press/docs/components/sidebar.vue</code><br>
       <code>press/docs/plugins/press.docs.js</code><br>
       </td>

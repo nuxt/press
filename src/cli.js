@@ -26,14 +26,14 @@ async function ejectTheme(path) {
   consola.info(`Ejected to ./nuxt.press.css`)
 }
 
-async function ejectTemplate(path) {
+async function ejectTemplate(blueprint, templatePath) {
   const blueprintsPath = join(dirname(require.resolve(`@nuxt/press`)), 'blueprints')
-  await ensureDir(join(cwd, 'press', dirname(path)))
+  await ensureDir(join(cwd, 'press', blueprint, dirname(templatePath)))
   await writeFile(
-    join(cwd, 'press', path),
-    await readFile(join(blueprintsPath, path))
+    join(cwd, 'press', blueprint, templatePath),
+    await readFile(join(blueprintsPath, blueprint, 'templates', templatePath))
   )
-  consola.info(`Ejected press/${path}`)
+  consola.info(`Ejected ${join('press', blueprint, templatePath)}`)
 }
 
 class commands {
@@ -56,13 +56,13 @@ class commands {
       if (Array.isArray(template)) {
         template = template[0]
       }
-      await ejectTemplate(join(blueprint, template))
+      await ejectTemplate(blueprint, template)
     } else {
       for (let template of Object.values(blueprints[blueprint].templates)) {
         if (Array.isArray(template)) {
           template = template[0]
         }
-        await ejectTemplate(join(blueprint, template))
+        await ejectTemplate(blueprint, template)
       }
     }
   }

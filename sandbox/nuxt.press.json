@@ -4,7 +4,6 @@
     "prefix": "/blog/",
     "title": "A NuxtPress Blog",
     "links": [],
-    "icons": [],
-    "tagDomain": "nuxt.press"
+    "icons": []
   }
 }

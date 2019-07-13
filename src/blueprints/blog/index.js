@@ -37,7 +37,8 @@ export default {
     'entry': 'components/entry.vue',
     'index': 'pages/index.vue',
     'layout': 'layouts/blog.vue',
-    'sidebar': 'components/sidebar.vue'
+    'sidebar': 'components/sidebar.vue',
+    'head': 'head.js'
   },
   routes(templates) {
     return [
@@ -100,8 +101,17 @@ export default {
     title: 'A NuxtPress Blog',
     links: [],
     icons: [],
-    // Used in RFC4151-based RSS feed entry tags
-    tagDomain: 'nuxt.press',
+
+    feed: {
+      // Replace with final link to your feed
+      link: 'https://nuxt.press',
+      // The <description> RSS tag
+      description: 'A NuxtPress Blog Description',
+      // Used in RFC4151-based RSS feed entry tags
+      tagDomain: 'nuxt.press',
+      // Final RSS path
+      path: options => `${options.prefix}rss.xml`
+    },
 
     // If in Nuxt's SPA mode, setting custom API
     // handlers also disables bundling of index.json
@@ -172,7 +182,7 @@ export default {
       // id() determines the unique RSS ID of a Markdown source
       // Default RFC4151-based format is used. See https://tools.ietf.org/html/rfc4151
       id({ published, path }) {
-        const tagDomain = this.$press.blog.tagDomain
+        const tagDomain = this.$press.blog.feed.tagDomain
         const year = published.getFullYear()
         return `tag:${tagDomain},${year}:${path}`
       },
