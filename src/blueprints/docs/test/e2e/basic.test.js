@@ -1,6 +1,5 @@
 import path from 'path'
-import { arrTrim } from '@/utils'
-import { startBrowser } from '@/utils/browser'
+import { getPort, startBrowser } from '@/utils'
 
 describe('basic', () => {
   let browser
@@ -8,8 +7,9 @@ describe('basic', () => {
 
   beforeAll(async () => {
     const folder = path.resolve(__dirname, '..', 'fixtures/basic/dist/')
+    const port = await getPort()
 
-    browser = await startBrowser(folder)
+    browser = await startBrowser({ folder, port })
 
     // pass through browser errors, only works with chrome/puppeteer
     browser.setLogLevel(['log', 'info', 'warn', 'error'])
@@ -21,8 +21,8 @@ describe('basic', () => {
     expect(await page.getText('.topic h1')).toBe('Header')
 
     const expectedLinks = [ 'Home', 'Header', 'First Header 1', 'Second Header 1' ]
-    const sidebarLinks = await page.getTexts('.sidebar-link')
-    expect(sidebarLinks.map(arrTrim)).toEqual(expectedLinks)
+    const sidebarLinks = await page.getTexts('.sidebar-link', true)
+    expect(sidebarLinks).toEqual(expectedLinks)
 
     expect(await page.getText('.sidebar-heading span')).toBe('A test')
   }
@@ -31,16 +31,16 @@ describe('basic', () => {
     expect(await page.getText('.topic h1')).toBe('B1')
 
     const expectedLinks = [ 'B1', 'B2', 'B2.1', 'B2.1.1', 'B2.2', 'B3' ]
-    const sidebarLinks = await page.getTexts('.sidebar-link')
-    expect(sidebarLinks.map(arrTrim)).toEqual(expectedLinks)
+    const sidebarLinks = await page.getTexts('.sidebar-link', true)
+    expect(sidebarLinks).toEqual(expectedLinks)
   }
 
   async function testPageC() {
     expect(await page.getText('.topic h1')).toBe('C1')
 
     const expectedLinks = [ 'C1 Meta', 'C1.1', 'C1.1.1', 'Second Header 1', 'Second Header 1.1' ]
-    const sidebarLinks = await page.getTexts('.sidebar-link')
-    expect(sidebarLinks.map(arrTrim)).toEqual(expectedLinks)
+    const sidebarLinks = await page.getTexts('.sidebar-link', true)
+    expect(sidebarLinks).toEqual(expectedLinks)
   }
 
   test('open home', async () => {
@@ -55,8 +55,8 @@ describe('basic', () => {
     expect(await page.getText('h1')).toBe('Lorem Ipsum')
 
     const expectedLinks = [ 'A test', 'B test', 'C test', 'GitHub' ]
-    const navLinks = await page.getTexts('.top-menu .links .nav-item a.nav-link')
-    expect(navLinks.map(arrTrim)).toEqual(expectedLinks)
+    const navLinks = await page.getTexts('.top-menu .links .nav-item a.nav-link', true)
+    expect(navLinks).toEqual(expectedLinks)
   })
 
   test('nav /a', async () => {

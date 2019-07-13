@@ -1,5 +1,5 @@
 import path from 'path'
-import { startBrowser } from '@/utils/browser'
+import { getPort, startBrowser } from '@/utils'
 
 describe('basic', () => {
   let browser
@@ -7,8 +7,9 @@ describe('basic', () => {
 
   beforeAll(async () => {
     const folder = path.resolve(__dirname, '..', 'fixtures/prefix/dist/')
+    const port = await getPort()
 
-    browser = await startBrowser(folder)
+    browser = await startBrowser({ folder, port })
 
     // pass through browser errors, only works with chrome/puppeteer
     browser.setLogLevel(['log', 'info', 'warn', 'error'])
