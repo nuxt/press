@@ -80,7 +80,7 @@ jobs:
       - persist_to_workspace:
           root: ~/project
           paths:
-            - **/test/fixtures
+            - **/test/fixtures/*/dist
 
   test-e2e:
     parameters:
