@@ -30,12 +30,12 @@ export async function loadFixture(fixture, overrides) {
   config.dev = false
   config.test = true
 
-  const moduleName = NuxtPress.name
   config.modules = config.modules || []
+  const moduleName = NuxtPress.name
 
   let hasNuxtPress = false
   if (config.modules) {
-    hasNuxtPress = config.modules.find(m => {
+    hasNuxtPress = config.modules.some(m => {
       return (typeof m === 'function' && m.name === moduleName) || (Array.isArray(m) && m[0].name === moduleName)
     })
   }

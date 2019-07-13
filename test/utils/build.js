@@ -39,12 +39,12 @@ export function buildFixture (dir, callback, hooks = []) {
 
     const allowedPaths = [
       nuxt.options.buildDir,
+      nuxt.options.generate.dir,
       `${nuxt.options.srcDir}$`,
-      `${nuxt.options.srcDir}/dist`,
       `${nuxt.options.srcDir}/nuxt.press.json$`
     ]
 
-    const nuxtBuildDirRE = new RegExp(`^(${allowedPaths.join('|')})`)
+    const allowedPathsRE = new RegExp(`^(${allowedPaths.join('|')})`)
 
     // When building Nuxt we only expect files to changed
     // within the nuxt.options.buildDir
@@ -52,7 +52,7 @@ export function buildFixture (dir, callback, hooks = []) {
       const paths = await listPaths(nuxt.options[`${key}Dir`], pathsBefore[key])
 
       for (const item of paths) {
-        expect(item.path).toEqual(expect.stringMatching(nuxtBuildDirRE))
+        expect(item.path).toEqual(expect.stringMatching(allowedPathsRE))
       }
     }
   })
