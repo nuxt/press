@@ -48,7 +48,7 @@ function addArchiveEntry(archive, entry) {
 
 async function generateFeed(options, entries) {
   const template = lodashTemplate(
-    await readFile(resolve('blueprints', 'blog', 'rss.xml'))
+    await readFile(resolve('blueprints', 'blog', 'templates', 'rss.xml'))
   )
   return template({ blog: options, entries })
 }
@@ -87,9 +87,14 @@ export default async function () {
     .sort((a, b) => b.published - a.published)
     .slice(0, 10)
 
+  let feedPath = this.$press.blog.feed.path
+  if (typeof feedPath === 'function') {
+    feedPath = feedPath(this.$press.blog)
+  } 
+
   return {
     static: {
-      [this.$press.blog.feed.path(this.$press.blog)]: (
+      [feedPath]: (
         await generateFeed(this.$press.blog, index)
       )
     },
