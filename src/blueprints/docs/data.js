@@ -44,7 +44,13 @@ async function parsePage(sourcePath, mdProcessor) {
   source.path = `/${sourcePath || 'index'}`
 
   return {
-    toc,
+    toc: toc.map(h => {
+      if (h[2].substr(0, 1) === '#') {
+        h[2] = `/${sourcePath}${h[2]}`
+      }
+
+      return h
+    }),
     meta,
     source
   }
