@@ -27,24 +27,3 @@ _Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
 ⚡Parses **YAML metadata** and supports Vue **markup and interpolation**.
 
 ⚡Fully **configurable** **data sources** and **Markdown preprocessing**.
-
-## Markdown pages
-
-At its core, **NuxtPress** enables you to use Markdown files as [Nuxt pages][np]:
-
-[np]: https://nuxtjs.org/guide/views/#pages
-
-<table>
-<tr>
-<td><code>pages/index.md</code></td>
-<td><code>/</code></td>
-</tr>
-<tr>
-<td><code>pages/foo/index.md</code></td>
-<td><code>/foo</code></td>
-</tr>
-<tr>
-<td><code>pages/foo/bar.md</code></td>
-<td><code>/foo/bar</code></td>
-</tr>
-</table>

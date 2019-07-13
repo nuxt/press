@@ -90,7 +90,7 @@ export default async function () {
   let feedPath = this.$press.blog.feed.path
   if (typeof feedPath === 'function') {
     feedPath = feedPath(this.$press.blog)
-  } 
+  }
 
   return {
     static: {

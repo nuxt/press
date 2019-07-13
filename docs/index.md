@@ -17,18 +17,18 @@ _Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
 
 ⚡Automatic Markdown routes: `pages/foo/bar.md` → `/foo/bar`
 
-⚡ Works in `universal` and `spa` modes, as well as with `nuxt generate`.
+⚡Works in `universal` and `spa` modes, as well as with `nuxt generate`.
 
-⚡ `nuxt generate` is **automatic**: no need to provide generate routes yourself.
+⚡`nuxt generate` is **automatic**: no need to provide generate routes yourself.
 
-⚡ **No `__NUXT__` payload** is used for rendering Markdown (zero bloat).
+⚡**No `__NUXT__` payload** is used for rendering Markdown (zero bloat).
 
-⚡ Batteries included: **docs**, **blog** and **slides** bundled apps.
+⚡Batteries included: **docs**, **blog** and **slides** bundled apps.
 
-⚡ Ejectable styles and Vue templates (granular shadowing of built-in templates).
+⚡Ejectable styles and Vue templates (granular shadowing of built-in templates).
 
-⚡ Parses **YAML metadata** and supports Vue **markup and interpolation**.
+⚡Parses **YAML metadata** and supports Vue **markup and interpolation**.
 
-⚡ Fully **configurable** **data sources** and **Markdown preprocessing**.
+⚡Fully **configurable** **data sources** and **Markdown preprocessing**.
 
 </div>
