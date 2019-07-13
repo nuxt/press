@@ -7,4 +7,3 @@ export function routePath(routePath) {
   }
   return routePath
 }
-
