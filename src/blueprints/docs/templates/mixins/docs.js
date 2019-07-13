@@ -10,7 +10,10 @@ export default {
       return this.$docs.pages[path] || {}
     },
     $title() {
-      return this.$page.meta.title || this.$page.toc[0][1]
+      return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || ''
+    },
+    $description() {
+      return this.$page.meta.description || ''
     },
     $isHome() {
       return this.$route.path === '/' && !!this.$docs.home
