@@ -7,6 +7,8 @@
       <p class="sidebar-heading">
         <nuxt-link
           v-if="url"
+          class="sidebar-link"
+          :class="{ active: isActive  }"
           :to="url"
         >
           {{ name }}
@@ -15,16 +17,17 @@
       </p>
 
       <sidebar-sections
+        ref="sections"
         :active-path="activePath"
         :data="children"
         :depth="depth + 1"
-        :class="{ 'sidebar-group-items': !depth, 'sidebar-sub-headers': depth }"
+        v-show="!depth || activeChildTree"
       />
     </section>
     <nuxt-link
       v-else
       class="sidebar-link"
-      :class="{ active: url === activePath, 'sidebar-sub-header': depth }"
+      :class="{ active: isActive  }"
       :to="url">
       {{ name }}
     </nuxt-link>
@@ -67,14 +70,36 @@ export default {
       return this.data[3]
     },
     showChildSection() {
-      if (this.depth < this.$page.meta.sidebarDepth || this.isActive) {
+      //console.log(this.$route, this.$page)
+      if (this.depth < this.$page.meta.sidebarDepth) {
         return !!this.children && this.children.length > 0
       }
 
       return false
     },
     isActive() {
-      return this.$route.path === this.path
+      return this.url === this.activePath
+    },
+    activeChildTree() {
+      if (this.isActive) {
+        return true
+      }
+
+      if (!this.$refs.sections) {
+        return false
+      }
+
+      // or maybe better with an up-bubbling event?
+      const sections = this.$refs.sections.$refs.section
+      if (Array.isArray(sections)) {
+        for (const section of sections) {
+          if (section.isActive) {
+            return true
+          }
+        }
+      }
+
+      return false
     },
     sectionClass() {
       return this.showChildSection ? 'sidebar-section' : 'sidebar-item'
