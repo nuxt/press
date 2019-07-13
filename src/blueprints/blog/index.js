@@ -103,7 +103,7 @@ export default {
 
     feed: {
       // Replace with final link to your feed
-      link: 'https://nuxt.press ',
+      link: 'https://nuxt.press',
       // The <description> RSS tag
       description: 'A NuxtPress Blog Description',
       // Used in RFC4151-based RSS feed entry tags
