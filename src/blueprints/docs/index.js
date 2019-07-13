@@ -51,7 +51,7 @@ export default {
     // )
     return [
       {
-        route: prefix('index'),
+        route: prefix(''),
         payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
       },
       ...Object.keys(data.sources).map(async route => ({
