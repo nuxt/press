@@ -80,9 +80,9 @@ export async function _registerBlueprint(id, rootId, options) {
 
     if (context.data.static) {
       if (typeof options[id].extendStaticFiles === 'function') {
-        await options[id].extendStaticFiles.call(this, context.data.static)
+        await options[id].extendStaticFiles.call(this, context.data.static, context)
       }
-      await saveStaticFiles.call(this, context)
+      await saveStaticFiles.call(this, context.data.static)
     }
 
     const templates = await addTemplates.call(this, context, blueprint.templates)
