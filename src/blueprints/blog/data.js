@@ -87,14 +87,13 @@ export default async function () {
     .sort((a, b) => b.published - a.published)
     .slice(0, 10)
 
-  let feedPath = this.$press.blog.feed.path
-  if (typeof feedPath === 'function') {
-    feedPath = feedPath(this.$press.blog)
+  if (typeof this.$press.blog.feed.path === 'function') {
+    this.$press.blog.feed.path = this.$press.blog.feed.path(this.$press.blog)
   }
 
   return {
     static: {
-      [feedPath]: (
+      [this.$press.blog.feed.path]: (
         await generateFeed(this.$press.blog, index)
       )
     },

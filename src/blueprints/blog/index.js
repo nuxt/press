@@ -37,7 +37,8 @@ export default {
     'entry': 'components/entry.vue',
     'index': 'pages/index.vue',
     'layout': 'layouts/blog.vue',
-    'sidebar': 'components/sidebar.vue'
+    'sidebar': 'components/sidebar.vue',
+    'head': 'head.js'
   },
   routes(templates) {
     return [

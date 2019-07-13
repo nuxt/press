@@ -20,9 +20,11 @@ export default {
       const meta = [
         { property: 'og:type', content: 'article' },
         { property: 'og:url', content: `${config.blog.feed.link}${entry.path}` },
-        { property: 'og:title', content: entry.title },
-        { property: 'og:site_name', content: config.blog.title },
+        { property: 'og:title', content: entry.title }
       ]
+      if (entry.meta) {
+        meta.push(...meta)
+      }
       if (entry.description) {
         meta.push(
           { property: 'og:description', content: entry.description }
