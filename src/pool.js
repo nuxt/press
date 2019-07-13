@@ -6,11 +6,11 @@ const maxRetries = 0 // use 0 for debugging
 const pool = new Array(os.cpus().length).fill(null)
 
 export default class PromisePool {
-  constructor(jobs, handler) {
+  constructor (jobs, handler) {
     this.handler = handler
     this.jobs = jobs.map(payload => ({ payload }))
   }
-  async done(before) {
+  async done (before) {
     if (before) {
       await before()
     }

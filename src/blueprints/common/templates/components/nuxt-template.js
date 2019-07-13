@@ -10,7 +10,7 @@ export default {
       default: 'div'
     }
   },
-  render(h, { props }) {
+  render (h, { props }) {
     return h({
       template: `<${props.tag}>${props.value}</${props.tag}>`
     })

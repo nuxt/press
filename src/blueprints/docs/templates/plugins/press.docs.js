@@ -4,7 +4,7 @@ import config from '~/nuxt.press'
 
 Vue.component('OutboundLink', OutboundLink)
 
-export default function docsPlugin(ctx, inject) {
+export default function docsPlugin (ctx, inject) {
   const pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
   const nav = JSON.parse(`<%= options.docs.$asJsonTemplate.nav %>`)
 

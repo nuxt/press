@@ -1,15 +1,15 @@
 export class EntriesObserver {
-  static getEntryId(entry) {
+  static getEntryId (entry) {
     return `${entry.target.tagName}${entry.target.id}`
   }
 
-  constructor({ initialId, callback, throttle = 0 }) {
+  constructor ({ initialId, callback, throttle = 0 }) {
     this.initialId = initialId
     this.throttle = throttle
     this.callback = callback
   }
 
-  update(entries, initial) {
+  update (entries, initial) {
     if (this.entries === undefined && initial === undefined) {
       initial = true
       this.entries = []
@@ -30,7 +30,7 @@ export class EntriesObserver {
     this.callActive(initial)
   }
 
-  callActive(initial) {
+  callActive (initial) {
     let entry
 
     if (initial) {
@@ -52,7 +52,7 @@ export class EntriesObserver {
   }
 }
 
-export function startObserver({ vm, elements, initialId, throttle = 100 }, callback) {
+export function startObserver ({ vm, elements, initialId, throttle = 100 }, callback) {
   if (!elements) {
     return null
   }

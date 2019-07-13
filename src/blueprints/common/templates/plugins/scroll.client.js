@@ -1,4 +1,4 @@
-function scrollTop(el) {
+function scrollTop (el) {
   let top = 0
 
   do {

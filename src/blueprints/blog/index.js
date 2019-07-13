@@ -18,7 +18,7 @@ export default {
   // Include data loader
   data,
   // Enable blog if srcDir/blog/ exists
-  enabled(options) {
+  enabled (options) {
     if (options.$standalone === 'blog') {
       options.blog.dir = ''
       options.blog.prefix = '/'
@@ -40,7 +40,7 @@ export default {
     'sidebar': 'components/sidebar.vue',
     'head': 'head.js'
   },
-  routes(templates) {
+  routes (templates) {
     return [
       {
         name: 'blog_index',
@@ -54,7 +54,7 @@ export default {
       }
     ]
   },
-  generateRoutes(data, prefix, staticRoot) {
+  generateRoutes (data, prefix, staticRoot) {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(routePath(route)),
@@ -66,7 +66,7 @@ export default {
       }))
     ]
   },
-  serverMiddleware({ options, rootId, id }) {
+  serverMiddleware ({ options, rootId, id }) {
     const { index, archive } = options.blog.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
@@ -81,7 +81,7 @@ export default {
     ]
   },
   build: {
-    before() {
+    before () {
       if (!this.options.watch.includes('~/**/*.md')) {
         this.options.watch.push('~/**/*.md')
       }
@@ -89,7 +89,7 @@ export default {
         this.options.css.push(resolve('blueprints/blog/theme.css'))
       }
     },
-    async compile({ rootId }) {
+    async compile ({ rootId }) {
       await updateConfig.call(this, rootId, { blog: this.$press.blog })
     }
   },
@@ -116,7 +116,7 @@ export default {
     // If in Nuxt's SPA mode, setting custom API
     // handlers also disables bundling of index.json
     // and source/*.json files into the static/ folder
-    api({ rootId }) {
+    api ({ rootId }) {
       const cache = {}
       const rootDir = join(this.options.buildDir, rootId, 'static')
       return {
@@ -136,14 +136,14 @@ export default {
     },
 
     source: {
-      processor() {
+      processor () {
         const config = {
           skipToc: true,
           sanitize: false
         }
         return new Markdown(config).createProcessor()
       },
-      async markdown(source, processor) {
+      async markdown (source, processor) {
         const { contents } = await processor.toHTML(source)
         return contents
       },
@@ -151,7 +151,7 @@ export default {
       // metadata() parses the starting block of text in a Markdown source,
       // considering the first and (optionally) second lines as
       // publishing date and summary respectively
-      metadata(fileName, source) {
+      metadata (fileName, source) {
         if (source.trimLeft().startsWith('---')) {
           const { content, data } = graymatter(source)
           if (data.date) {
@@ -173,7 +173,7 @@ export default {
 
       // path() determines the final URL path of a Markdown source
       // In `blog` mode, the default format is /YYYY/MM/DD/<slug>
-      path(fileName, { title, published }) {
+      path (fileName, { title, published }) {
         const slug = slugify(title || fileName)
         const date = published.toString().split(/\s+/).slice(1, 4).reverse()
         return `${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}`
@@ -181,14 +181,14 @@ export default {
 
       // id() determines the unique RSS ID of a Markdown source
       // Default RFC4151-based format is used. See https://tools.ietf.org/html/rfc4151
-      id({ published, path }) {
+      id ({ published, path }) {
         const tagDomain = this.$press.blog.feed.tagDomain
         const year = published.getFullYear()
         return `tag:${tagDomain},${year}:${path}`
       },
 
       // title() determines the title of a Markdown source
-      title(body) {
+      title (body) {
         const titleMatch = body.substr(body.indexOf('#')).match(/^#\s+(.*)/)
         return titleMatch ? titleMatch[1] : ''
       }

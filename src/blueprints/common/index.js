@@ -18,7 +18,7 @@ export default {
     'plugin:scroll': 'plugins/scroll.client.js',
     'source': 'pages/source.vue'
   },
-  routes(templates) {
+  routes (templates) {
     return [
       {
         name: 'source',
@@ -30,7 +30,7 @@ export default {
       }
     ]
   },
-  generateRoutes(data, _, staticRoot) {
+  generateRoutes (data, _, staticRoot) {
     if (!data || !data.sources) {
       return []
     }
@@ -48,7 +48,7 @@ export default {
       }
     })
   },
-  serverMiddleware({ options, rootId, id }) {
+  serverMiddleware ({ options, rootId, id }) {
     const { source } = options.common.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
@@ -62,7 +62,7 @@ export default {
     ]
   },
   build: {
-    async before() {
+    async before () {
       if (!this.options.watch.includes('~/pages/*.md')) {
         this.options.watch.push('~/pages/*.md')
       }
@@ -73,18 +73,18 @@ export default {
         await ensureDir(pagesDir)
       }
     },
-    async compile() {
+    async compile () {
       if (this.$press.$placeholderPagesDir) {
         await remove(this.$press.$placeholderPagesDir)
       }
     }
   },
   options: {
-    api({ rootId }) {
+    api ({ rootId }) {
       const rootDir = join(this.options.buildDir, rootId, 'static')
       const sourceCache = {}
       return {
-        source(source, req, res, next) {
+        source (source, req, res, next) {
           if (this.options.dev || !sourceCache[source]) {
             sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
           }
@@ -93,22 +93,22 @@ export default {
       }
     },
     source: {
-      processor() {
+      processor () {
         const config = { skipToc: true, sanitize: false }
         return new Markdown(config).createProcessor()
       },
-      async markdown(source, processor) {
+      async markdown (source, processor) {
         const { contents } = await processor.toHTML(source)
         return contents
       },
-      metadata(source) {
+      metadata (source) {
         if (source.trimLeft().startsWith('---')) {
           const { content: body, data } = graymatter(source)
           return { ...data, body }
         }
         return {}
       },
-      title(body) {
+      title (body) {
         return body.substr(body.indexOf('#')).match(/^#\s+(.*)/)[1]
       }
     }

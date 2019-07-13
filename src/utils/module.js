@@ -1,4 +1,4 @@
-export function interopDefault(m) {
+export function interopDefault (m) {
   return m.default || m
 }
 
@@ -7,6 +7,6 @@ export function interopDefault(m) {
 //   return interopDefault(await import(`.${modulePath.slice(sliceAt)}`))
 // }
 
-export async function importModule(modulePath) {
+export async function importModule (modulePath) {
   return interopDefault(await import(modulePath))
 }

@@ -1,6 +1,6 @@
 import slug from 'slug'
 
-export function trimEnd(str, chr = '') {
+export function trimEnd (str, chr = '') {
   if (!chr) {
     return str.trimEnd()
   }
@@ -9,7 +9,7 @@ export function trimEnd(str, chr = '') {
 }
 
 const escapeREs = {}
-export function escapeChars(str, chars = '"') {
+export function escapeChars (str, chars = '"') {
   if (Array.isArray(chars)) {
     chars = chars.join()
   }
@@ -23,6 +23,6 @@ export function escapeChars(str, chars = '"') {
   return str.replace(escapeRE, '\\$1')
 }
 
-export function slugify(str) {
+export function slugify (str) {
   return slug(str, { lower: true })
 }

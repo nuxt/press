@@ -22,7 +22,7 @@ import common from './blueprints/common'
 
 const blueprints = { docs, blog, slides, common }
 
-export async function registerBlueprints(rootId, options, blueprints) {
+export async function registerBlueprints (rootId, options, blueprints) {
   // this: Nuxt ModuleContainer instance
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
@@ -37,7 +37,7 @@ export async function registerBlueprints(rootId, options, blueprints) {
   }
 }
 
-export async function _registerBlueprint(id, rootId, options) {
+export async function _registerBlueprint (id, rootId, options) {
   // Load blueprint specification
   const blueprint = blueprints[id]
 
@@ -168,10 +168,10 @@ export async function _registerBlueprint(id, rootId, options) {
                 await extendStaticRoutes.call(
                   this,
                   new Proxy(routes, {
-                    get(_, prop) {
+                    get (_, prop) {
                       return routes[prop].payload
                     },
-                    set(_, prop, value) {
+                    set (_, prop, value) {
                       routes[prop] = {
                         route: prop,
                         payload: value
@@ -202,7 +202,7 @@ export async function _registerBlueprint(id, rootId, options) {
   })
 }
 
-async function saveStaticFiles(files) {
+async function saveStaticFiles (files) {
   const staticDir = join(this.options.srcDir, this.options.dir.static)
   const pool = new PromisePool(Object.keys(files), async (file) => {
     const filePath = join(staticDir, file)
@@ -215,7 +215,7 @@ async function saveStaticFiles(files) {
   await pool.done()
 }
 
-async function saveDataSources(staticRoot, id, { topLevel, sources } = {}) {
+async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
   await ensureDir(staticRoot, id)
 
   if (topLevel) {
@@ -245,7 +245,7 @@ async function saveDataSources(staticRoot, id, { topLevel, sources } = {}) {
   }
 }
 
-async function addTemplateAssets({ options, rootId, id }, pattern) {
+async function addTemplateAssets ({ options, rootId, id }, pattern) {
   const srcDir = resolve('blueprints', id)
   const srcList = await walk.call(this, srcDir, pattern, true)
 
@@ -260,7 +260,7 @@ async function addTemplateAssets({ options, rootId, id }, pattern) {
   await pool.done()
 }
 
-async function addTemplates({ options, rootId, id }, templates) {
+async function addTemplates ({ options, rootId, id }, templates) {
   const finalTemplates = {}
 
   for (const key in templates) {

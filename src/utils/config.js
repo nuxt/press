@@ -2,7 +2,7 @@ import defu from 'defu'
 import { importModule } from './module'
 import { readFile, writeFile, exists, join, writeJson } from './fs'
 
-function removePrivateKeys(source, target = null) {
+function removePrivateKeys (source, target = null) {
   if (target === null) {
     target = {}
   }
@@ -23,7 +23,7 @@ function removePrivateKeys(source, target = null) {
   return target
 }
 
-export async function loadConfig(rootId, config = {}) {
+export async function loadConfig (rootId, config = {}) {
   // Detect standalone mode
   if (typeof config === 'string') {
     config = { $standalone: config }
@@ -42,7 +42,7 @@ export async function loadConfig(rootId, config = {}) {
   return this[`$${rootId}`]
 }
 
-export async function updateConfig(rootId, obj) {
+export async function updateConfig (rootId, obj) {
   // If .js config found, do nothing:
   // we only update JSON files, not JavaScript
   if (exists(join(this.options.srcDir, `nuxt.${rootId}.js`))) {

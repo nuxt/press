@@ -22,7 +22,7 @@ const apiToStatic = {
 
 const apiToStaticPaths = Object.keys(apiToStatic)
 
-function $json(url) {
+function $json (url) {
   return fetch(url).then(r => r.json())
 }
 
@@ -30,7 +30,7 @@ export default async (ctx, inject) => {
   const press = ctx.$press || {}
 
   if (process.static && process.client) {
-    press.get = function get(url) {
+    press.get = function get (url) {
       for (const apiPath of apiToStaticPaths) {
         if (url.startsWith(apiPath)) {
           if (typeof apiToStatic[apiPath] === 'function') {
@@ -42,7 +42,7 @@ export default async (ctx, inject) => {
       }
     }
   } else {
-    press.get = function get(url) {
+    press.get = function get (url) {
       return ctx.$http.$get(url).catch(err => consola.warn(err))
     }
   }

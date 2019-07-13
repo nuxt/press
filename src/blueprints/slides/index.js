@@ -8,7 +8,7 @@ export default {
   // Include data loader
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
-  enabled(options) {
+  enabled (options) {
     if (options.$standalone === 'slides') {
       options.slides.prefix = '/'
       if (!exists(join(this.options.srcDir, options.slides.dir))) {
@@ -25,7 +25,7 @@ export default {
     slides: 'components/slides.vue'
   },
   // Register routes once templates have been added
-  routes(templates) {
+  routes (templates) {
     return [
       {
         name: 'slides_index',
@@ -34,14 +34,14 @@ export default {
       }
     ]
   },
-  generateRoutes(data, prefix, staticRoot) {
+  generateRoutes (data, prefix, staticRoot) {
     return Object.keys(data.sources).map(async route => ({
       route: prefix(route),
       payload: await importModule(`${staticRoot}/sources${route}`)
     }))
   },
   // Register serverMiddleware
-  serverMiddleware({ options, rootId, id }) {
+  serverMiddleware ({ options, rootId, id }) {
     const { index } = options.slides.api.call(this, { rootId, id })
     return [
       (req, res, next) => {
@@ -54,7 +54,7 @@ export default {
     ]
   },
   build: {
-    before() {
+    before () {
       if (!this.options.watch.includes('~/*/**.md')) {
         this.options.watch.push('~/*/**.md')
       }
@@ -67,7 +67,7 @@ export default {
   options: {
     dir: 'slides',
     prefix: '/slides/',
-    api({ rootId }) {
+    api ({ rootId }) {
       const cache = {}
       const rootDir = join(this.options.buildDir, rootId, 'static')
       return {
@@ -80,22 +80,22 @@ export default {
       }
     },
     source: {
-      processor() {
+      processor () {
         const config = { skipToc: true, sanitize: false }
         return new Markdown(config).createProcessor()
       },
-      async markdown(source, processor) {
+      async markdown (source, processor) {
         const { contents } = await processor.toHTML(source)
         return contents
       },
-      metadata(source) {
+      metadata (source) {
         if (source.trimLeft().startsWith('---')) {
           const { content: body, data } = graymatter(source)
           return { ...data, body }
         }
         return {}
       },
-      path(fileName) {
+      path (fileName) {
         return `${this.$press.slides.prefix}${fileName.toLowerCase()}`
       }
     }

@@ -17,7 +17,7 @@ describe('basic', () => {
 
   afterAll(() => browser.close())
 
-  async function testPageA() {
+  async function testPageA () {
     expect(await page.getText('.topic h1')).toBe('Header')
 
     const expectedLinks = [ 'Home', 'Header', 'First Header 1', 'Second Header 1' ]
@@ -27,7 +27,7 @@ describe('basic', () => {
     expect(await page.getText('.sidebar-heading span')).toBe('A test')
   }
 
-  async function testPageB() {
+  async function testPageB () {
     expect(await page.getText('.topic h1')).toBe('B1')
 
     const expectedLinks = [ 'B1', 'B2', 'B2.1', 'B2.1.1', 'B2.2', 'B3' ]
@@ -35,7 +35,7 @@ describe('basic', () => {
     expect(sidebarLinks).toEqual(expectedLinks)
   }
 
-  async function testPageC() {
+  async function testPageC () {
     expect(await page.getText('.topic h1')).toBe('C1')
 
     const expectedLinks = [ 'C1 Meta', 'C1.1', 'C1.1.1', 'Second Header 1', 'Second Header 1.1' ]

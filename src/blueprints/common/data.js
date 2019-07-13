@@ -11,7 +11,7 @@ import PromisePool from '../../pool'
 // contents of the .md file become available as $page
 // in the custom Vue component for the page
 
-async function loadPage(pagePath, mdProcessor) {
+async function loadPage (pagePath, mdProcessor) {
   const sliceAt = this.options.dir.pages.length
   const { name, dir } = parse(pagePath)
   const path = `${dir.slice(sliceAt)}/${name}`

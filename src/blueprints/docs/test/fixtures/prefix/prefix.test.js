@@ -1,4 +1,4 @@
-import { buildFixture } from '@/utils/build'
+// import { buildFixture } from '@/utils/build'
 
 // buildFixture(__dirname)
 

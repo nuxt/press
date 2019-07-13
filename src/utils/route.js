@@ -1,4 +1,4 @@
-export function routePath(routePath) {
+export function routePath (routePath) {
   if (routePath.endsWith('/index')) {
     return routePath.slice(0, routePath.indexOf('/index'))
   }
