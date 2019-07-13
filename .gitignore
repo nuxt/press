@@ -1,5 +1,33 @@
-yarn.lock
-.DS_Store
+# Dependencies
 node_modules
-.nuxt
-dist
+
+# Lock files
+package-lock.json
+*/**/yarn.lock
+
+# Logs
+*.logs
+
+# Build/dist folders
+.nuxt*
+dist*
+
+# Coverage reports
+reports
+coverage
+*.lcov
+.nyc_output
+
+# Editors
+*.iml
+.idea
+.vscode
+
+# OSX
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Env vars
+.env*
+

@@ -1,84 +1,56 @@
-
-import {
-  lstatSync,
-  existsSync,
-  readFileSync,
-  stat as _statAsync,
-  readFile as _readFileAsync,
-  writeFile as _writeFileAsync,
-  appendFile as _appendFileAsync,
-  readdirSync
-} from 'fs'
-
-import {
-  dirname,
-  join as _join,
-  sep
-} from 'path'
-
+import path, { dirname } from 'path'
 import { promisify } from 'util'
-import { writeJson, ensureDir as _ensureDir, remove, move } from 'fs-extra'
+import fs, { readdirSync, readFileSync, writeJson, remove, move } from 'fs-extra'
 import klaw from 'klaw'
 
-const _stat = promisify(_statAsync)
-const _readFile = promisify(_readFileAsync)
-const _writeFile = promisify(_writeFileAsync)
-const _appendFile = promisify(_appendFileAsync)
-
 export {
-  dirname,
+  readdirSync,
+  readFileSync,
   writeJson,
   remove,
   move,
-  readdirSync,
-  readFileSync
+  dirname
 }
 
-export function exists(...paths) {
-  return existsSync(join(...paths))
+const readFileAsync = promisify(fs.readFile)
+const writeFileAsync = promisify(fs.writeFile)
+const appendFileAsync = promisify(fs.appendFile)
+
+export const stat = promisify(fs.stat)
+
+export function join (...paths) {
+  return path.join(...paths.map(p => p.replace(/\//g, path.sep)))
 }
 
-export const stat = _stat
-
-export function join(...paths) {
-  return _join(...paths.map(p => p.replace(/\//g, sep)))
+export function exists (...paths) {
+  return fs.existsSync(join(...paths))
 }
 
-export function readFile(...paths) {
-  return _readFile(join(...paths), 'utf-8')
+export function readFile (...paths) {
+  return readFileAsync(join(...paths), 'utf-8')
 }
 
-export function readJsonSync(...path) {
-  return JSON.parse(readFileSync(join(...path)).toString())
+export function writeFile (path, contents) {
+  return writeFileAsync(path, contents, 'utf-8')
 }
 
-export function writeFile(path, contents) {
-  return _writeFile(path, contents, 'utf-8')
+export function appendFile (path, contents) {
+  return appendFileAsync(path, contents, 'utf-8')
 }
 
-export function appendFile(path, contents) {
-  return _appendFile(path, contents, 'utf-8')
+export function readJsonSync (...paths) {
+  return JSON.parse(fs.readFileSync(join(...paths)).toString())
 }
 
-export function isDir(path) {
-  return lstatSync(path).isDirectory()
+export function isDir (path) {
+  return fs.lstatSync(path).isDirectory()
 }
 
-export function ensureDir(...paths) {
-  return _ensureDir(join(...paths))
+export function ensureDir (...paths) {
+  return fs.ensureDir(join(...paths))
 }
 
-export function routePath(routePath) {
-  if (routePath.endsWith('/index')) {
-    return routePath.slice(0, routePath.indexOf('/index'))
-  }
-  if (routePath === 'index') {
-    return ''
-  }
-  return routePath
-}
-
-export function walk(root, validate, sliceAtRoot = false) {
+export function walk (root, validate, sliceAtRoot = false) {
   const matches = []
   const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1
 

@@ -10,7 +10,7 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-async function parseEntry(sourcePath, processor) {
+async function parseEntry (sourcePath, processor) {
   // TODO just completely rewrite this function, please
   const parse = this.$press.blog.source
   const fileName = parsePath(sourcePath).name
@@ -32,7 +32,7 @@ async function parseEntry(sourcePath, processor) {
   return source
 }
 
-function addArchiveEntry(archive, entry) {
+function addArchiveEntry (archive, entry) {
   const year = entry.published.getFullYear()
   const month = (entry.published.getMonth() + 1)
     .toString()
@@ -46,7 +46,7 @@ function addArchiveEntry(archive, entry) {
   archive[year][month].push(entry)
 }
 
-async function generateFeed(options, entries) {
+async function generateFeed (options, entries) {
   const template = lodashTemplate(
     await readFile(resolve('blueprints', 'blog', 'templates', 'rss.xml'))
   )

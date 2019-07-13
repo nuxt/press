@@ -1,6 +1,7 @@
 <template>
   <ul class="sidebar-links">
     <sidebar-section
+      ref="section"
       v-for="(sectionData, i) in data"
       :key="`topic-${depth}-${i}`"
       :active-path="activePath"

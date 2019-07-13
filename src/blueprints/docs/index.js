@@ -18,7 +18,7 @@ let mdProcessor
 export default {
   data,
   templates,
-  enabled(options) {
+  enabled (options) {
     if (options.$standalone === 'docs') {
       options.docs.dir = ''
       options.docs.prefix = '/'
@@ -26,7 +26,7 @@ export default {
     }
     return exists(this.options.srcDir, options.docs.dir)
   },
-  routes(templates) {
+  routes (templates) {
     return [
       {
         name: 'docs_index',
@@ -35,7 +35,7 @@ export default {
       }
     ]
   },
-  async generateRoutes(data, prefix, staticRoot) {
+  async generateRoutes (data, prefix, staticRoot) {
     // console.log('!')
     // console.log(
     //   [
@@ -51,7 +51,7 @@ export default {
     // )
     return [
       {
-        route: prefix('index'),
+        route: prefix(''),
         payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
       },
       ...Object.keys(data.sources).map(async route => ({
@@ -61,7 +61,7 @@ export default {
     ]
   },
   build: {
-    before() {
+    before () {
       if (!this.options.watch.includes('~/*.md')) {
         this.options.watch.push(`~/*.md`)
       }
@@ -72,7 +72,7 @@ export default {
         this.options.css.push(resolve('blueprints/docs/theme.css'))
       }
     },
-    async compile({ rootId }) {
+    async compile ({ rootId }) {
       await updateConfig.call(this, rootId, { docs: this.$press.docs })
     }
   },
@@ -82,16 +82,16 @@ export default {
     title: 'My Documentation',
     nav: [],
     source: {
-      processor() {
+      processor () {
         const config = { toc: true, sanitize: false }
         mdProcessor = new Markdown(config).createProcessor()
         mdProcessor.use(customContainer)
         return mdProcessor
       },
-      markdown(source, processor) {
+      markdown (source, processor) {
         return processor.toMarkup(source)
       },
-      title(fileName, body, toc) {
+      title (fileName, body, toc) {
         if (toc && toc[0]) {
           return toc[0][1]
         }

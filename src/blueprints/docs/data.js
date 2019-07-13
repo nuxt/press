@@ -12,7 +12,7 @@ import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
 
 const isIndexRE = new RegExp(`(^|/)(${indexKeys.join('|')})$`, 'i')
 
-async function parsePage(sourcePath, mdProcessor) {
+async function parsePage (sourcePath, mdProcessor) {
   let raw = await readFile(this.options.srcDir, sourcePath)
   const { name: fileName } = path.parse(sourcePath)
 
@@ -44,7 +44,13 @@ async function parsePage(sourcePath, mdProcessor) {
   source.path = `/${sourcePath || 'index'}`
 
   return {
-    toc,
+    toc: toc.map((h) => {
+      if (h[2].substr(0, 1) === '#') {
+        h[2] = `/${sourcePath}${h[2]}`
+      }
+
+      return h
+    }),
     meta,
     source
   }
@@ -87,7 +93,7 @@ export default async function ({ options: { docs: docOptions } }) {
   const options = { $pages }
 
   options.$asJsonTemplate = new Proxy({}, {
-    get(target, prop) {
+    get (target, prop) {
       let val = options[prop] || options[`$${prop}`] || docOptions[prop]
 
       if (prop === 'nav') {

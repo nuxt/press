@@ -7,7 +7,7 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the slides/ directory.
 // Configurable via press.slides.dir
 
-async function parseSlides(sourcePath, mdProcessor) {
+async function parseSlides (sourcePath, mdProcessor) {
   const raw = await readFile(this.options.srcDir, sourcePath)
   let slides = []
   let c
