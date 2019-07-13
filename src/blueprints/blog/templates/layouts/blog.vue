@@ -6,8 +6,9 @@
 </template>
 
 <script>
-import config from '~/nuxt.press'
+import head from 'press/blog/head'
 import sidebar from 'press/blog/components/sidebar'
+import config from '~/nuxt.press'
 
 export default {
   components: { sidebar },
@@ -16,16 +17,21 @@ export default {
       return head
     } else {
       const entry = this.$press.source
+      const meta = [
+        { property: 'og:type', content: 'article' },
+        { property: 'og:url', content: `${config.blog.feed.link}${entry.path}` },
+        { property: 'og:title', content: entry.title },
+        { property: 'og:site_name', content: config.blog.title },
+      ]
+      if (entry.description) {
+        meta.push(
+          { property: 'og:description', content: entry.description }
+        )
+      }
       return {
         ...head,
         title: entry.title,
-        meta: head.meta.concat([
-          { property: 'og:title', content: entry.title },
-          { property: 'og:site_name', content: config.blog.title },
-          { property: 'og:type', content: 'article' },
-          { property: 'og:locale', content: 'en_us' },
-          { property: 'og:url', content: `${config.blog.feed.link}${entry.path}` }
-        ])
+        meta: head.meta.concat(meta)
       }
     }
   }
