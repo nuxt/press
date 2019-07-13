@@ -79,6 +79,9 @@ export async function _registerBlueprint(id, rootId, options) {
     }
 
     if (context.data.static) {
+      if (typeof options[id].extendStaticFiles === 'function') {
+        await options[id].extendStaticFiles.call(this, context.data.static)
+      }
       await saveStaticFiles.call(this, context.data.static)
     }
 
