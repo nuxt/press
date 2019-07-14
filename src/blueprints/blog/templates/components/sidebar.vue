@@ -3,12 +3,12 @@
     <div class="about">
       My NuxtPress Blog
       <div class="text-links">
-        <nuxt-link 
+        <press-link 
           v-for="(link, i) in links"
           :key="`link-${i}`"
           :to="Object.values(link)[0]">
           {{ Object.keys(link)[0] }}
-        </nuxt-link>
+        </press-link>
       </div>
     </div>
   </div>

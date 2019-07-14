@@ -1,5 +1,20 @@
+const isClient = process.client
+
+let requestIdleCallback = function (cb) {
+  const start = Date.now()
+  return setTimeout(() => {
+    cb({ // eslint-disable-line standard/no-callback-literal
+      didTimeout: false,
+      timeRemaining: () => Math.max(0, 50 - (Date.now() - start))
+    })
+  }, 1)
+}
+
+if (typeof window !== 'undefined' && window.requestIdleCallback) {
+  requestIdleCallback = window.requestIdleCallback
+}
+
 export default {
-  functional: true,
   props: {
     tag: {
       type: String,
@@ -15,23 +30,38 @@ export default {
       required: false
     }
   },
-  render (h, { parent, props, slots }) {
-    if (!props.data && props.source) {
-      props.data = props.source
+  render (h) {
+    if (!this.data && this.source) {
+      this.data = this.source
     }
-    if (props.data || parent.$isServer) {
-      if (props.source) {
+    if (isClient) {
+      requestIdleCallback(() => {
+        const pressLinks = [...this.$el.querySelectorAll('[data-press-link]')]
+        for (const pressLink of pressLinks) {
+          pressLink.addEventListener('click', this.pressLinkHandler)
+        }
+      })
+    }
+    if (this.data || this.$isServer) {
+      if (this.source) {
         return h({
-          template: `<${props.tag}>${props.source}</${props.tag}>`
+          template: `<${this.tag}>${this.source}</${this.tag}>`
         })
       } else {
-        return h(props.tag, slots().default)
+        return h(this.tag, this.$slots.default)
       }
     } else {
       const vnode = h('div', [])
       vnode.asyncFactory = {}
       vnode.isComment = true
       return vnode
+    }
+  },
+  methods: {
+    pressLinkHandler (e) {
+      e.preventDefault()
+      this.$router.push(e.target.attributes.href.value)
+      return false
     }
   }
 }

@@ -6,11 +6,11 @@
     <nuxt-static :data="$press.data.entries">
       <template v-for="entry in $press.data.entries">
         <p class="title">
-          <nuxt-link :to="entry.path">
+          <press-link :to="entry.path">
             {{ entry.title }}
             ·
             {{ entry.published.toString().slice(0, 10) }}
-          </nuxt-link>
+          </press-link>
         </p>
       </template>
     </nuxt-static>

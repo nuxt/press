@@ -3,12 +3,14 @@ import Vue from 'vue'
 import NuxtMiddleware from 'press/../middleware'
 import NuxtStatic from 'press/common/components/nuxt-static'
 import NuxtTemplate from 'press/common/components/nuxt-template'
+import PressLink from 'press/common/components/press-link'
 import pressMiddleware from 'press/common/middleware/press'
 
 NuxtMiddleware.press = pressMiddleware
 
 Vue.component('NuxtStatic', NuxtStatic)
 Vue.component('NuxtTemplate', NuxtTemplate)
+Vue.component('PressLink', PressLink)
 
 const apiToStatic = {
   // Docs-only API endpoints
