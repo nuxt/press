@@ -27,13 +27,18 @@ if (process.client) {
 
       // TODO: remove this once https://github.com/nuxt/nuxt.js/pull/6012 is released
       if (to.path === from.path && to.hash !== from.hash) {
-        const el = document.querySelector(to.hash)
-        if (el) {
-          const top = scrollTop(el)
-          return Promise.resolve({ x: 0, y: Math.max(0, top - headerHeight - 14) })
+        let y = 0
+
+        if (to.hash) {
+          const el = document.querySelector(to.hash)
+
+          if (el) {
+            const top = scrollTop(el)
+            y = Math.max(0, top - headerHeight - 14)
+          }
         }
 
-        app.$nextTick(() => app.$emit('triggerScroll'))
+        return Promise.resolve({ x: 0, y })
       }
 
       return scrollBehavior(to, from, savedPosition)
