@@ -1,7 +1,7 @@
+import path from 'path'
 import defu from 'defu'
 import PromisePool from './pool'
 import resolve from './resolve'
-
 import {
   dirname,
   join,
@@ -93,7 +93,7 @@ export async function _registerBlueprint (id, rootId, options) {
       await blueprint.build.before.call(this, context)
     }
 
-    if (blueprint.routes) {
+    /* if (blueprint.routes) {
       const routes = await blueprint.routes.call(this, templates)
 
       this.extendRoutes((nuxtRoutes) => {
@@ -112,15 +112,26 @@ export async function _registerBlueprint (id, rootId, options) {
         }
         nuxtRoutes.push(...routes)
       })
-    }
+    }/**/
 
     const staticRoot = join(this.options.buildDir, rootId, 'static')
-    await saveDataSources.call(this, staticRoot, id, context.data)
+    await saveDataSourceComponents.call(this, staticRoot, id, context.data)
+
+    if (context.data.routes) {
+      this.extendRoutes((nuxtRoutes) => {
+        for (const route of context.data.routes) {
+          const componentPath = route.component.replace(/(\/index)?.md$/, '')
+          route.component = path.join(staticRoot, 'sources', `${componentPath || 'index'}.vue`)
+          route.chunkName = route.chunkName.replace(/^\/+/, '')
+
+          nuxtRoutes.push(route)
+        }
+      })
+    }
 
     this.nuxt.hook('build:compile', async () => {
-      const staticRoot = join(this.options.buildDir, rootId, 'static')
       const staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
-      await saveDataSources.call(this, staticRoot, id, context.data)
+      await saveDataSourceComponents.call(this, staticRoot, id, context.data)
 
       if (blueprint.build) {
         this.nuxt.hook('build:done', async () => {
@@ -196,7 +207,7 @@ export async function _registerBlueprint (id, rootId, options) {
 
       this.nuxt.hook('generate:distCopied', async () => {
         await ensureDir(staticRootGenerate)
-        await saveDataSources(staticRootGenerate, id, context.data)
+        await saveDataSourceComponents(staticRootGenerate, id, context.data)
       })
     })
   })
@@ -215,7 +226,47 @@ async function saveStaticFiles (files) {
   await pool.done()
 }
 
-async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
+async function saveDataSourceComponents (staticRoot, id, { topLevel, sources } = {}) {
+  await ensureDir(staticRoot, id)
+
+  if (topLevel) {
+    for (const topLevelKey in topLevel) {
+      const topLevelPath = join(staticRoot, id, `${topLevelKey}.json`)
+
+      await ensureDir(dirname(topLevelPath))
+      await writeJson(topLevelPath, topLevel[topLevelKey])
+    }
+  }
+
+  if (sources) {
+    const pool = new PromisePool(
+      Object.values(sources),
+      async (source) => {
+        const sourcePath = join(staticRoot, 'sources', `${source.path}.vue`)
+        const sourceDir = dirname(sourcePath)
+
+        if (!exists(sourceDir)) {
+          await ensureDir(sourceDir)
+        }
+        const component = `
+<template>
+  <div>${source.body}</div>
+</template>
+
+<script>
+export default {
+  layout: 'docs'
+}
+</script>
+`
+        await writeFile(sourcePath, component)
+      }
+    )
+    await pool.done()
+  }
+}
+
+/* async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
   await ensureDir(staticRoot, id)
 
   if (topLevel) {
@@ -243,7 +294,7 @@ async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
     )
     await pool.done()
   }
-}
+} */
 
 async function addTemplateAssets ({ options, rootId, id }, pattern) {
   const srcDir = resolve('blueprints', id)

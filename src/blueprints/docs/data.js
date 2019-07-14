@@ -1,6 +1,7 @@
 import path from 'path'
 import graymatter from 'gray-matter'
 import defu from 'defu'
+import { createRoutes } from '@nuxt/utils'
 import { walk, join, exists, readFile, routePath, escapeChars } from '../../utils'
 import PromisePool from '../../pool'
 import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
@@ -73,6 +74,13 @@ export default async function ({ options: { docs: docOptions } }) {
     return path.endsWith('.md')
   })
 
+  const routesConfig = {
+    files: jobs.map(f => `/${f}`),
+    srcDir: this.options.srcDir,
+    supportedExtensions: ['md']
+  }
+  const routes = createRoutes(routesConfig)
+
   const sources = {}
   const $pages = {}
 
@@ -120,6 +128,7 @@ export default async function ({ options: { docs: docOptions } }) {
   })
 
   return {
+    routes,
     options,
     sources
   }
