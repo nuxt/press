@@ -1008,6 +1008,32 @@
     serve-static "^1.13.2"
     ws "^7.0.0"
 
+"@nuxt/markdown@0.0.10":
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.10.tgz#08c6baccd9da5103c65b64df0e6a1b0afef38f43"
+  integrity sha512-IE4lJT0xkarYj/ccaw/uDfT5H6X1Yg6ocD7lCKccAqkqqrTWc/ziaNaDtFERHsZRAjf9PNFKT1BeyAofi2GXyQ==
+  dependencies:
+    "@mapbox/rehype-prism" "^0.3.1"
+    detab "^2.0.1"
+    mdast-util-definitions "^1.2.3"
+    mdast-util-to-string "^1.0.5"
+    mdast-util-toc "^2.1.0"
+    rehype-minify-whitespace "^2.0.3"
+    rehype-raw "^4.0.1"
+    rehype-sanitize "^2.0.1"
+    rehype-sort-attribute-values "^1.0.1"
+    rehype-sort-attributes "^1.0.1"
+    rehype-stringify "^4.0.0"
+    remark-autolink-headings "git+https://github.com/thetutlage/remark-autolink-headings.git"
+    remark-macro "^1.0.7"
+    remark-parse "^5.0.0"
+    remark-rehype "^3.0.1"
+    remark-slug "^5.1.0"
+    remark-squeeze-paragraphs "^3.0.2"
+    unified "^7.0.0"
+    unist-builder "^1.0.3"
+    unist-util-visit "^1.4.0"
+
 "@nuxt/markdown@0.0.9-b":
   version "0.0.9-b"
   resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.9-b.tgz#bc2803fab2ed5dad7a596fd0ec2c0a18875dbcd3"
@@ -10929,10 +10955,10 @@ thunkify@^2.1.2:
   resolved "https://registry.yarnpkg.com/thunkify/-/thunkify-2.1.2.tgz#faa0e9d230c51acc95ca13a361ac05ca7e04553d"
   integrity sha1-+qDp0jDFGsyVyhOjYawFyn4EVT0=
 
-tib@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/tib/-/tib-0.6.1.tgz#341f4f3d247618f4ac672909d156c61501fd726d"
-  integrity sha512-uXLpnrEhAIlpoH9BpekC0xHYeBqvHLsBtEfBq6d8jpSR8BJNdCpICETBT0G9Pl+gR2JSBoOlSENmwh+wNBOKnA==
+tib@^0.6.3:
+  version "0.6.3"
+  resolved "https://registry.yarnpkg.com/tib/-/tib-0.6.3.tgz#ccbad64b75cf9043c981b16771f00772caabe2f0"
+  integrity sha512-SNy2Prof7xLAh9ZGXq7IAHzApGiY8VQx0N1QGOKyGoL3dr3o0S6+hV3ctjdN6wySzd9s4u4hses4YsdBl8z+aw==
   dependencies:
     "@babel/core" "^7.5.4"
     "@babel/parser" "^7.5.0"
