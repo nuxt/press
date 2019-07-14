@@ -1,5 +1,6 @@
 import consola from 'consola'
 import chalk from 'chalk'
+import exit from 'exit'
 
 chalk.enabled = false
 
