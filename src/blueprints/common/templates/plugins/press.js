@@ -1,11 +1,13 @@
 import consola from 'consola'
 import Vue from 'vue'
 import NuxtMiddleware from 'press/../middleware'
+import NuxtStatic from 'press/common/components/nuxt-static'
 import NuxtTemplate from 'press/common/components/nuxt-template'
 import pressMiddleware from 'press/common/middleware/press'
 
 NuxtMiddleware.press = pressMiddleware
 
+Vue.component('NuxtStatic', NuxtStatic)
 Vue.component('NuxtTemplate', NuxtTemplate)
 
 const apiToStatic = {

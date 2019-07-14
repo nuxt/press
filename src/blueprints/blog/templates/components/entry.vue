@@ -1,5 +1,5 @@
 <template>
-  <main v-html="data.body" />
+  <nuxt-static :source="data.body" />
 </template>
 
 <script>

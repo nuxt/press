@@ -11,6 +11,7 @@ export default async function ({ $press, params, payload }, plugin = false) {
     return
   }
 
+  $press.data = {}
   $press.layout = 'default'
 
   if (typeof params.source === 'string') {

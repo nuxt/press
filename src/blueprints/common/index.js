@@ -12,7 +12,8 @@ export default {
   templates: {
     // [type?:eject_key]: 'path in templates/'
     'middleware': 'middleware/press.js',
-    'nuxt': 'components/nuxt-template.js',
+    'nuxt-static': 'components/nuxt-static.js',
+    'nuxt-template': 'components/nuxt-template.js',
     'observer': 'components/observer.js',
     'plugin': 'plugins/press.js',
     'plugin:scroll': 'plugins/scroll.client.js',

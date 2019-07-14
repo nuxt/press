@@ -1,12 +1,12 @@
 <template>
   <component
-    v-if="['entry', 'topic', 'slides'].includes(source.type)"
-    :is="`press-${source.type}`"
-    :data="source"
-    :path="sourcePath" />
-  <nuxt-template
+    v-if="['entry', 'topic', 'slides'].includes($press.source.type)"
+    :is="`press-${$press.source.type}`"
+    :data="$press.source"
+    :path="$route.params.source" />
+  <nuxt-static
     v-else
-    v-model="source.body" />
+    :source="$press.source.body" />
 </template>
 
 <script>
@@ -30,27 +30,6 @@ components['press-slides'] = PressSlides
 export default {
   components,
   middleware: 'press',
-  layout({ $press }) {
-    return $press.layout
-  },
-  async asyncData ({ $press, params, error }) {
-    if ($press.error) {
-      error($press.error)
-    }
-    return { source: $press.source, sourcePath: params.source }
-  }
-  // created() {
-  //   hotReloadHook(this, async function() {
-  //     const params = this.$route.params
-  //     let sourceParam = params.source
-  //     sourceParam = (params.source && params.source.replace(/\/+$/, '')) || 'index'
-  //     let source = await this.$press.get(`api/source/${sourceParam}`)
-  //     if (!source) {
-  //       source = await this.$press.get(`api/source/${sourceParam}/index`)
-  //     }
-  //     this.$press.source = source
-  //     Vue.nextTick(() => this.$forceUpdate())
-  //   })
-  // }
+  layout: ({ $press }) => $press.layout
 }
 </script>

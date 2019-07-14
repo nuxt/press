@@ -1,23 +1,21 @@
 <template>
-  <main>
-    <template v-for="year in Object.keys(archive).reverse()">
+  <nuxt-static tag="main" :data="$press.data.archive">
+    <div v-for="year in Object.keys(this.$press.data.archive || {}).reverse()">
       <h1>{{ year }}</h1>
-      <template v-for="month in Object.keys(archive[year]).reverse()">
-        <template v-for="entry in archive[year][month]">
-          <p class="title"><a :href="`/${entry.permalink}`">{{ entry.title }}</a></p>
+      <template v-for="month in Object.keys($press.data.archive[year]).reverse()">
+        <template v-for="entry in $press.data.archive[year][month]">
+          <p class="title"><nuxt-link :to="`/${entry.path}`">{{ entry.title }}</nuxt-link></p>
         </template>
       </template>
-    </template>
-  </main>
+    </div>
+  </nuxt-static>
 </template>
 
 <script>
 export default {
   layout: 'blog',
-  async asyncData ({ $press, payload }) {
-    const archive = payload || await $press.get('api/blog/archive')
-
-    return { archive }
+  async fetch ({ $press, payload }) {
+    $press.data.archive = payload || await $press.get('api/blog/archive')
   }
 }
 </script>
