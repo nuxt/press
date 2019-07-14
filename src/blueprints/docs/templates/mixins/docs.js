@@ -7,7 +7,13 @@ export default {
     },
     $page () {
       const path = trimSlash(this.$route.path) || '/'
-      return this.$docs.pages[path] || {}
+
+      if (this.$docs.pages[path]) {
+        return this.$docs.pages[path]
+      }
+
+      // return empty object to not break stuff
+      return this.$docs.pages['/']
     },
     $title () {
       return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || ''
