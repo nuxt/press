@@ -13,24 +13,10 @@ module.exports = {
     '**/*.js'
   ],
 
-  coveragePathIgnorePatterns: [
-    // 'node_modules/(?!(@nuxt|nuxt))'
-  ],
-
   moduleNameMapper: {
     "@/(.*)$": "<rootDir>/test/$1",
     "~/(.*)$": "<rootDir>/src/$1",
   },
-
-  testPathIgnorePatterns: [
-    // 'node_modules/(?!(@nuxt|nuxt))',
-    // 'test/fixtures/.*/.*?/',
-    'examples/.*'
-  ],
-
-  transformIgnorePatterns: [
-    
-  ],
 
   transform: {
     '^.+\\.js$': 'babel-jest',
