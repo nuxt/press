@@ -1008,10 +1008,10 @@
     serve-static "^1.13.2"
     ws "^7.0.0"
 
-"@nuxt/markdown@^0.0.9":
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.9.tgz#ca5c1f9d2b354a6ceeeb8cc644275b7a7bdcbaad"
-  integrity sha512-iQoWnDjg32z6aB2i99ojwKppKs/MfVvuHgzO31wsW9lSiyYEhzMc3fayqaEHua4dpDt9f/Pb+flnum8bAYm26g==
+"@nuxt/markdown@0.0.9-b":
+  version "0.0.9-b"
+  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.9-b.tgz#bc2803fab2ed5dad7a596fd0ec2c0a18875dbcd3"
+  integrity sha512-T2KTdVtiNu7QzUjvwYxjpwDte4G+v8dAeVRfP9b2/pb4TKmGhv6ryMb7AkJgB7TJHZeyZG2od7urrBLaL6HO3Q==
   dependencies:
     "@mapbox/rehype-prism" "^0.3.1"
     detab "^2.0.1"
@@ -1042,6 +1042,24 @@
     chalk "^2.4.1"
     consola "^2.3.0"
     node-fetch "^2.3.0"
+
+"@nuxt/press@^0.0.1-alpha.88":
+  version "0.0.1-alpha.88"
+  resolved "https://registry.yarnpkg.com/@nuxt/press/-/press-0.0.1-alpha.88.tgz#bc421ec81ac7fb11ab18832f4031f50deff9ec48"
+  integrity sha512-4iIdrCxY+ZRvpVu96/nmEualH2QDyizVLNNaWaEpQRz/K7uaZqrTkb9Zv08vNdy5qKxcalpLwy54wojG+kggyw==
+  dependencies:
+    "@nuxt/http" "^0.3.2"
+    "@nuxt/markdown" "0.0.9-b"
+    animate.css "^3.7.2"
+    gray-matter "^4.0.2"
+    keymaster "^1.6.2"
+    klaw "^3.0.0"
+    node-fetch "^2.6.0"
+    prismjs "^1.16.0"
+    remark-container "^0.1.1"
+    slug "^1.1.0"
+    swiper "^4.5.0"
+    vue-awesome-swiper "^3.1.3"
 
 "@nuxt/server@2.8.1":
   version "2.8.1"

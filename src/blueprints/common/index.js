@@ -85,7 +85,7 @@ export default {
       const rootDir = join(this.options.buildDir, rootId, 'static')
       const sourceCache = {}
       return {
-        source (source, req, res, next) {
+        source (source, _, res) {
           if (this.options.dev || !sourceCache[source]) {
             sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
           }

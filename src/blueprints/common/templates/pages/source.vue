@@ -6,6 +6,7 @@
     :path="$route.params.source" />
   <nuxt-static
     v-else
+    tag="main"
     :source="$press.source.body" />
 </template>
 
