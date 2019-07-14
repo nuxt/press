@@ -31,9 +31,8 @@ export default {
     }
   },
   render (h) {
-    if (!this.data && this.source) {
-      this.data = this.source
-    }
+    const data = this.data || this.source
+
     if (isClient) {
       requestIdleCallback(() => {
         const pressLinks = [...this.$el.querySelectorAll('[data-press-link]')]
@@ -42,7 +41,7 @@ export default {
         }
       })
     }
-    if (this.data || this.$isServer) {
+    if (data || this.$isServer) {
       if (this.source) {
         return h({
           template: `<${this.tag}>${this.source}</${this.tag}>`
