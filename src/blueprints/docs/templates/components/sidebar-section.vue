@@ -21,13 +21,14 @@
         :active-path="activePath"
         :data="children"
         :depth="depth + 1"
+        :hidden="!showChildSection"
         v-show="showChildSection"
       />
     </section>
     <nuxt-link
       v-else
       class="sidebar-link"
-      :class="{ active: isActive  }"
+      :class="{ active: isActive }"
       :to="url">
       {{ name }}
     </nuxt-link>
