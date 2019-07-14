@@ -1,7 +1,7 @@
 <template>
   <li :class="sectionClass">
     <section
-      v-if="showChildSection"
+      v-if="createChildSection"
       class="section"
     >
       <p class="sidebar-heading">
@@ -21,7 +21,7 @@
         :active-path="activePath"
         :data="children"
         :depth="depth + 1"
-        v-show="!depth || activeChildTree"
+        v-show="showChildSection"
       />
     </section>
     <nuxt-link
@@ -69,13 +69,15 @@ export default {
     children() {
       return this.data[3]
     },
-    showChildSection() {
-      //console.log(this.$route, this.$page)
-      if (this.depth < this.$page.meta.sidebarDepth) {
+    createChildSection() {
+      if (this.depth <= this.$page.meta.sidebarDepth) {
         return !!this.children && this.children.length > 0
       }
 
       return false
+    },
+    showChildSection() {
+      return !this.depth || this.$page.meta.sidebar === 'auto' || this.activeChildTree
     },
     isActive() {
       return this.url === this.activePath
@@ -102,7 +104,7 @@ export default {
       return false
     },
     sectionClass() {
-      return this.showChildSection ? 'sidebar-section' : 'sidebar-item'
+      return this.createChildSection ? 'sidebar-section' : 'sidebar-item'
     }
   }
 }
