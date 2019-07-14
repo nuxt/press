@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar">
+  <aside class="sidebar" :class="sidebarClass">
     <sidebar-sections
       :data="sidebar"
       :active-path="activePath"
@@ -49,6 +49,9 @@ export default {
     activePath() {
       const path = trimSlash(this.path)
       return `${path}${this.hash}`
+    },
+    sidebarClass() {
+      return this.$page.meta.sidebar === 'auto' ? 'sidebar-auto' : undefined
     }
   },
   watch: {
@@ -122,12 +125,9 @@ export default {
     margin: 0;
   }
 
-  & .sidebar-section {
+  & .sidebar-depth-0 > li,
+  &.sidebar-auto .sidebar-depth-1 > li {
     margin: 0 0 1rem 0;
-
-    & .sidebar-section {
-      margin: 0;
-    }
   }
 
   & li.sidebar-item,

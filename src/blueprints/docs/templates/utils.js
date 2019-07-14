@@ -75,11 +75,7 @@ export function createSidebarFromToc (path, title, page, startDepth = 0) {
     sidebar.push([1 + startDepth, meta.title || title || first[1], path])
   }
 
-  sidebar.push(...toc.map(([level, name, url]) => [
-    level + startDepth,
-    name,
-    url ? `${path}${url}` : url
-  ]))
+  sidebar.push(...toc.map(([level, name, url]) => [level + startDepth, name, url]))
 
   return tocToTree(sidebar)
 }
