@@ -1,13 +1,16 @@
 <template>
-  <component
-    v-if="['entry', 'topic', 'slides'].includes($press.source.type)"
-    :is="`press-${$press.source.type}`"
-    :data="$press.source"
-    :path="$route.params.source" />
   <nuxt-static
-    v-else
-    tag="main"
-    :source="$press.source.body" />
+    :data="$press.source">
+    <component
+      v-if="['entry', 'topic', 'slides'].includes($press.source.type)"
+      :is="`press-${$press.source.type}`"
+      :data="$press.source"
+      :path="$route.params.source" />
+    <nuxt-static
+      v-else
+      tag="main"
+      :source="$press.source.body" />
+  </nuxt-static>
 </template>
 
 <script>
