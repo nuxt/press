@@ -13,6 +13,7 @@ export default {
     // [type?:eject_key]: 'path in templates/'
     'middleware': 'middleware/press.js',
     'nuxt-static': 'components/nuxt-static.js',
+    'press-link': 'components/press-link.js',
     'nuxt-template': 'components/nuxt-template.js',
     'observer': 'components/observer.js',
     'plugin': 'plugins/press.js',

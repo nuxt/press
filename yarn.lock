@@ -1060,6 +1060,32 @@
     unist-builder "^1.0.3"
     unist-util-visit "^1.4.0"
 
+"@nuxt/markdown@0.0.9-c":
+  version "0.0.9-c"
+  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.9-c.tgz#b4525620c06733772014302ded978b14a8a3fe67"
+  integrity sha512-nI1BtXW56u3gFYO3vyOVXEnjck0tXZZ5Q8jbxlgic/wS0Nfbifa/g9CI5+YV2gL2FKdxl9uh2huHW/aBS3rAoA==
+  dependencies:
+    "@mapbox/rehype-prism" "^0.3.1"
+    detab "^2.0.1"
+    mdast-util-definitions "^1.2.3"
+    mdast-util-to-string "^1.0.5"
+    mdast-util-toc "^2.1.0"
+    rehype-minify-whitespace "^2.0.3"
+    rehype-raw "^4.0.1"
+    rehype-sanitize "^2.0.1"
+    rehype-sort-attribute-values "^1.0.1"
+    rehype-sort-attributes "^1.0.1"
+    rehype-stringify "^4.0.0"
+    remark-autolink-headings "git+https://github.com/thetutlage/remark-autolink-headings.git"
+    remark-macro "^1.0.7"
+    remark-parse "^5.0.0"
+    remark-rehype "^3.0.1"
+    remark-slug "^5.1.0"
+    remark-squeeze-paragraphs "^3.0.2"
+    unified "^7.0.0"
+    unist-builder "^1.0.3"
+    unist-util-visit "^1.4.0"
+
 "@nuxt/opencollective@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@nuxt/opencollective/-/opencollective-0.2.2.tgz#17adc7d380457379cd14cbb64a435ea196cc4a6e"
