@@ -31,3 +31,6 @@ coverage
 # Env vars
 .env*
 
+# Test files
+src/blueprints/blog/test/fixtures/*/static/rss.xml
+

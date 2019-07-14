@@ -1,9 +1,10 @@
 <template>
   <div class="sidebar">
     <div class="about">
-      My NuxtPress Blog
+      <p>{{ title }}</p>
+
       <div class="text-links">
-        <press-link 
+        <press-link
           v-for="(link, i) in links"
           :key="`link-${i}`"
           :to="Object.values(link)[0]">
@@ -18,8 +19,9 @@
 import config from '~/nuxt.press'
 
 export default {
-  data: () => ({
-    links: config.blog.links
-  })
+  created() {
+    this.links = config.blog.links
+    this.title = config.blog.title
+  }
 }
 </script>

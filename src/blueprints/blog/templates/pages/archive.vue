@@ -4,7 +4,7 @@
       <h1>{{ year }}</h1>
       <template v-for="month in Object.keys($press.data.archive[year]).reverse()">
         <template v-for="entry in $press.data.archive[year][month]">
-          <p class="title"><press-link :to="`/${entry.path}`">{{ entry.title }}</press-link></p>
+          <p class="title"><press-link :to="entry.path">{{ entry.title }}</press-link></p>
         </template>
       </template>
     </div>

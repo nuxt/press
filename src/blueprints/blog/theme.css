@@ -27,9 +27,12 @@
     & .about {
       margin: 15px 0px;
       margin-bottom: 100px;
-      font-size: 28px;
-      display: table-caption;
-      text-align: right;
+      & p {
+        margin: 0;
+        font-size: 28px;
+        display: table-caption;
+        text-align: right;
+      }
       & .text-links {
         margin-top: 100px;
         & a {

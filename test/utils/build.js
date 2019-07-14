@@ -1,7 +1,7 @@
 import path from 'path'
 import { loadFixture, Nuxt, Builder, BundleBuilder, Generator, listPaths } from './index'
 
-export function buildFixture (dir, callback, hooks = []) {
+export function buildFixture ({ dir, callback, hooks = [], changedPaths = [] }) {
   const pathsBefore = {}
   let nuxt
 
@@ -41,7 +41,8 @@ export function buildFixture (dir, callback, hooks = []) {
       nuxt.options.buildDir,
       nuxt.options.generate.dir,
       `${nuxt.options.srcDir}$`,
-      `${nuxt.options.srcDir}/nuxt.press.json$`
+      `${nuxt.options.srcDir}/nuxt.press.json$`,
+      ...changedPaths.map(p => path.isAbsolute(p) ? p : path.join(nuxt.options.srcDir, p))
     ]
 
     const allowedPathsRE = new RegExp(`^(${allowedPaths.join('|')})`)

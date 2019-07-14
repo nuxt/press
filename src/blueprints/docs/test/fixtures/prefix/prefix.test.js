@@ -1,5 +1,5 @@
 // import { buildFixture } from '@/utils/build'
 
-// buildFixture(__dirname)
+// buildFixture({ dir: __dirname })
 
 test.todo('prefix')

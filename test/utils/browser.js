@@ -25,6 +25,12 @@ export async function startBrowser({ folder, port, extendPage = {} }) {
             return new Promise((resolve) => {
               window.$nuxt.$once('triggerScroll', resolve)
               window.$nuxt.$router.push(path)
+
+              // timeout after 10s
+              setTimeout(function() {
+                console.error('browser: nuxt navigation timed out')
+                window.$nuxt.$emit('triggerScroll')
+              }, 10000)
             })
           }, path)
         },
