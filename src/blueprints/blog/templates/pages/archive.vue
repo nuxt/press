@@ -1,5 +1,5 @@
 <template>
-  <nuxt-static tag="main">
+  <nuxt-static tag="main" :data="$press.data.archive">
     <div v-for="year in Object.keys(this.$press.data.archive || {}).reverse()">
       <h1>{{ year }}</h1>
       <template v-for="month in Object.keys($press.data.archive[year])">
