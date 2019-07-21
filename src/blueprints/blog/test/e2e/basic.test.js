@@ -18,7 +18,7 @@ describe('basic', () => {
   afterAll(() => browser.close())
 
   async function testPageHome () {
-    expect(await page.getText('.blog h1')).toBe('Publishing blogs')
+    expect(await page.getText('.blog h1')).toBe('Adding sidebar links')
 
     const expectedLinks = [ 'Home', 'Archive', 'About' ]
     const sidebarLinks = await page.getTexts('.sidebar .text-links a', true)
