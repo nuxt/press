@@ -21,8 +21,9 @@
 export default {
   layout: 'blog',
   async fetch ({ $press, payload }) {
-    $press.data.entries = (payload || await $press.get('api/blog/index')).slice(1)
-    $press.data.latest = $press.data.entries[0].body
+    const index = payload || await $press.get('api/blog/index')
+    $press.data.latest = index[0].body
+    $press.data.entries = index.slice(1)
   }
 }
 </script>

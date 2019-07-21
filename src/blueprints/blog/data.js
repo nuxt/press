@@ -54,7 +54,9 @@ async function generateFeed (options, entries) {
 }
 
 function sortEntries (entries) {
-  return entries.sort((a, b) => b.published - a.published)
+  return entries.sort((a, b) => {
+    return b.published - a.published
+  })
 }
 
 export default async function () {

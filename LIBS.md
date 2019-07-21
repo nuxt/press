@@ -1,5 +1,6 @@
 ## Useful libraries 
 
+- https://github.com/egoist/vmark
 - https://github.com/nuxt/lmify
 - https://github.com/sapegin/mrm-core#json
 - https://github.com/nuxt-community/nuxt-tailwindcss
