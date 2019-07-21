@@ -53,6 +53,10 @@ async function generateFeed (options, entries) {
   return template({ blog: options, entries })
 }
 
+function sortEntries (entries) {
+  return entries.sort((a, b) => b.published - a.published)
+}
+
 export default async function () {
   const srcRoot = join(
     this.options.srcDir,
@@ -83,9 +87,13 @@ export default async function () {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  const index = Object.values(sources)
-    .sort((a, b) => b.published - a.published)
-    .slice(0, 10)
+  const index = sortEntries(Object.values(sources)).slice(0, 10)
+
+  for (const year in archive) {
+    for (const month in archive[year]) {
+      sortEntries(archive[year][month])
+    }
+  }
 
   if (typeof this.$press.blog.feed.path === 'function') {
     this.$press.blog.feed.path = this.$press.blog.feed.path(this.$press.blog)
