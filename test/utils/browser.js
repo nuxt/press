@@ -23,14 +23,17 @@ export async function startBrowser({ folder, port, extendPage = {} }) {
         async navigate(path) {
           await page.runAsyncScript((path) => {
             return new Promise((resolve) => {
-              window.$nuxt.$once('triggerScroll', resolve)
-              window.$nuxt.$router.push(path)
-
               // timeout after 10s
-              setTimeout(function() {
+              const timeout = setTimeout(function() {
                 console.error('browser: nuxt navigation timed out')
                 window.$nuxt.$emit('triggerScroll')
               }, 10000)
+
+              window.$nuxt.$once('triggerScroll', () => {
+                clearTimeout(timeout)
+                resolve()
+              })
+              window.$nuxt.$router.push(path)
             })
           }, path)
         },
