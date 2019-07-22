@@ -95,7 +95,7 @@ export default async function () {
       if (i === 0) {
         return entry
       }
-      return (({ body, id, ...rest }) => rest)(entry)
+      return (({ body, ...rest }) => rest)(entry)
     })
 
   for (const year in archive) {
