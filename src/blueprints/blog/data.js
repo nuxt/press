@@ -90,10 +90,18 @@ export default async function () {
   await queue.done()
 
   const index = sortEntries(Object.values(sources)).slice(0, 10)
+    .map((entry, i) => {
+      // Remove body from all but the latest entry
+      if (i === 0) {
+        return entry
+      }
+      return (({ body, id, ...rest }) => rest)(entry)
+    })
 
   for (const year in archive) {
     for (const month in archive[year]) {
-      sortEntries(archive[year][month])
+      archive[year][month] = sortEntries(archive[year][month])
+        .map(({ body, id, ...entry }) => entry)
     }
   }
 
