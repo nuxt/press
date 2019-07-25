@@ -1,7 +1,6 @@
 
 import { registerBlueprints } from './blueprint'
 import { join, exists } from './utils'
-import resolve from './resolve'
 
 /**
  * @nuxt/press module for NuxtJS
