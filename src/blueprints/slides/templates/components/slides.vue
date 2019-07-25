@@ -26,14 +26,6 @@ import { startObserver } from 'press/common/components/observer'
 
 export default {
   props: ['data', 'path'],
-  head() {
-    console.log('this.data', this.data)
-    return {
-      htmlAttrs: {
-        class: 'slides'
-      }
-    }
-  },
   data: () => ({
     currentSlide: -1,
     // http://idangero.us/swiper/api/#initialize
