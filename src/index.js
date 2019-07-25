@@ -26,11 +26,10 @@ export default async function NuxtPressModule (options) {
   })
 
   // Register stylesheets
+  nuxt.options.css.push('normalize.css/normalize.css')
   nuxt.options.css.push('prismjs/themes/prism.css')
 
-  if (!exists(nuxt.options.srcDir, 'nuxt.press.css')) {
-    nuxt.options.css.push(resolve('blueprints/common/theme.css'))
-  } else {
+  if (exists(nuxt.options.srcDir, 'nuxt.press.css')) {
     nuxt.options.css.push('~/nuxt.press.css')
   }
 
