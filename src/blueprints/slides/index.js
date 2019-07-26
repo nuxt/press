@@ -58,7 +58,9 @@ export default {
       if (!this.options.watch.includes('~/*/**.md')) {
         this.options.watch.push('~/*/**.md')
       }
-      this.options.css.unshift(resolve('blueprints/slides/theme.css'))
+      if (!this.options.$press.naked) {
+        this.options.css.unshift(resolve('blueprints/slides/theme.css'))
+      }
     }
   },
   // Options are merged into the parent module default options

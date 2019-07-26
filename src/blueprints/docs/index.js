@@ -36,19 +36,6 @@ export default {
     ]
   },
   async generateRoutes (data, prefix, staticRoot) {
-    // console.log('!')
-    // console.log(
-    //   [
-    //     {
-    //       route: prefix('index'),
-    //       payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
-    //     },
-    //     ...Object.keys(data.sources).map(route => ({
-    //       route: routePath(route),
-    //       payload: `${staticRoot}/sources${route}`
-    //     }))
-    //   ]
-    // )
     return [
       {
         route: prefix(''),
@@ -68,8 +55,8 @@ export default {
       if (!this.options.watch.includes('~/*/**.md')) {
         this.options.watch.push('~/*/**.md')
       }
-      if (!exists(this.options.srcDir, 'nuxt.press.css')) {
-        this.options.css.push(resolve('blueprints/docs/theme.css'))
+      if (!this.options.$press.naked) {
+        this.options.css.unshift(resolve('blueprints/docs/theme.css'))
       }
     },
     async compile ({ rootId }) {
