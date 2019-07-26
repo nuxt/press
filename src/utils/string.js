@@ -1,5 +1,10 @@
 import slug from 'slug'
 
+export function stripP (str) {
+  str = str.replace(/^<p>/, '')
+  return str.replace(/<\/p>$/, '')
+}
+
 export function trimEnd (str, chr = '') {
   if (!chr) {
     return str.trimEnd()

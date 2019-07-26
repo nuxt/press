@@ -31,9 +31,16 @@ import PressSlides from 'press/slides/components/slides'
 components['press-slides'] = PressSlides
 <% } %>
 
+const component = Object.values(components)[0]
+
 export default {
   components,
   middleware: 'press',
-  layout: ({ $press }) => $press.layout
+  layout: ({ $press }) => $press.layout,
+  head() {
+    if (component.head) {
+      return component.head.call(this)
+    }
+  }
 }
 </script>

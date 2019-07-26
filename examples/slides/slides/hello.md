@@ -13,7 +13,7 @@ Here's a code snippet in a slide:
 
 ```js
 export default {
-  modules: [`@nuxt/press`]
+  modules: ['@nuxt/press']
 }
 ```
 
@@ -38,7 +38,7 @@ And include it in `nuxt.config.js`:
 
 ```js
 export default {
-  css: [`~/assets/my-slides.css`]
+  css: ['~/assets/my-slides.css']
 }
 ```
 
@@ -48,7 +48,7 @@ Then it would look like this:
 
 ```js
 export default {
-  modules: [`@nuxt/press`]
+  modules: ['@nuxt/press']
 }
 ```
 

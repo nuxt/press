@@ -3,7 +3,7 @@
     <swiper
       ref="slides"
       :options="swiperOptions"
-      :class="`slides-${path.split('/')[1]}`"
+      :class="`slides-${path.replace(/\//g, '-')}`"
       @slideChange="setCurrentSlide"
     >
       <swiper-slide
