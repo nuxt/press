@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import OutboundLink from 'press/docs/components/outbound-link-icon'
-import config from '~/nuxt.press'
+import config from 'press/config'
 
 Vue.component('OutboundLink', OutboundLink)
 

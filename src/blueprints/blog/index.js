@@ -85,11 +85,7 @@ export default {
       if (!this.options.watch.includes('~/**/*.md')) {
         this.options.watch.push('~/**/*.md')
       }
-      if (!this.$press.naked) {
-        const index = this.options.css.findIndex(css => typeof css === 'string' && css.match(/prism\.css$/))
-        console.log('come on man')
-        this.options.css.splice(index + 1, 0, resolve('blueprints/blog/theme.css'))
-      }
+      this.$addPressTheme('blueprints/blog/theme.css')
     },
     async compile ({ rootId }) {
       await updateConfig.call(this, rootId, { blog: this.$press.blog })

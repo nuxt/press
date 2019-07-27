@@ -55,9 +55,7 @@ export default {
       if (!this.options.watch.includes('~/*/**.md')) {
         this.options.watch.push('~/*/**.md')
       }
-      if (!this.$press.naked) {
-        this.options.css.unshift(resolve('blueprints/docs/theme.css'))
-      }
+      this.$addPressTheme('blueprints/docs/theme.css')
     },
     async compile ({ rootId }) {
       await updateConfig.call(this, rootId, { docs: this.$press.docs })

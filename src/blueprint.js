@@ -32,6 +32,20 @@ export async function registerBlueprints (rootId, options, blueprints) {
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
 
+
+  this.$addPressTheme = (path) => {
+    if (options.naked) {
+      return
+    }
+    let addIndex = this.options.css
+      .findIndex(css => typeof css === 'string' && css.match(/nuxt\.press\.css$/))
+    if (addIndex === -1) {
+      addIndex = this.options.css
+        .findIndex(css => typeof css === 'string' && css.match(/prism\.css$/))
+    }
+    this.options.css.splice(addIndex + 1, 0, resolve(path))
+  }
+
   for (const id of blueprints) { // ['slides', 'common']) {
     await _registerBlueprint.call(this, id, rootId, options)
   }

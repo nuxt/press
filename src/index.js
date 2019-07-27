@@ -49,6 +49,7 @@ export default async function NuxtPressModule (options) {
     next()
   })
 
+  
   // Load and register blueprints from './blueprints'
   await registerBlueprints.call(this, 'press', options, ['docs', 'blog', 'slides', 'common'])
 }

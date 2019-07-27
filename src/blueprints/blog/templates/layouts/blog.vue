@@ -1,5 +1,5 @@
 <template>
-  <div id="nuxt-press" class="blog">
+  <div id="nuxt-press" class="blog wysiwyg">
     <sidebar />
     <nuxt class="content" />
   </div>
@@ -8,7 +8,7 @@
 <script>
 import head from 'press/blog/head'
 import sidebar from 'press/blog/components/sidebar'
-import config from '~/nuxt.press'
+import config from 'press/config'
 
 export default {
   components: { sidebar },
