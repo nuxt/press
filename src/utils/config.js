@@ -29,7 +29,7 @@ export async function loadConfig (rootId, config = {}) {
     config = { $standalone: config }
   }
 
-  const jsConfigPath = join(this.options.srcDir, `nuxt.${rootId}.js`)
+  const jsConfigPath = join(this.options.rootDir, `nuxt.${rootId}.js`)
   // JavaScript config has precedence over JSON config
   if (exists(jsConfigPath)) {
     config = defu(await importModule(jsConfigPath), config)
@@ -45,7 +45,7 @@ export async function loadConfig (rootId, config = {}) {
 export async function updateConfig (rootId, obj) {
   // If .js config found, do nothing:
   // we only update JSON files, not JavaScript
-  if (exists(join(this.options.srcDir, `nuxt.${rootId}.js`))) {
+  if (exists(join(this.options.rootDir, `nuxt.${rootId}.js`))) {
     return
   }
 
@@ -53,7 +53,7 @@ export async function updateConfig (rootId, obj) {
   // (These can be used for internal template pre-processing)
   obj = removePrivateKeys(obj)
 
-  const path = join(this.options.srcDir, `nuxt.${rootId}.json`)
+  const path = join(this.options.rootDir, `nuxt.${rootId}.json`)
   if (!exists(path)) {
     await writeJson(path, obj, { spaces: 2 })
     return
