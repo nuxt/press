@@ -85,8 +85,8 @@ export default {
       if (!this.options.watch.includes('~/**/*.md')) {
         this.options.watch.push('~/**/*.md')
       }
-      if (!exists(this.options.srcDir, 'nuxt.press.css')) {
-        this.options.css.push(resolve('blueprints/blog/theme.css'))
+      if (!this.options.$press.naked) {
+        this.options.css.unshift(resolve('blueprints/blog/theme.css'))
       }
     },
     async compile ({ rootId }) {
