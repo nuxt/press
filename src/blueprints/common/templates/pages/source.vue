@@ -39,7 +39,18 @@ export default {
   layout: ({ $press }) => $press.layout,
   head() {
     if (component.head) {
-      return component.head.call(this)
+      return {
+        htmlAttrs: {
+          class: this.$press.layout
+        },
+        ...component.head.call(this)
+      }
+    } else {
+      return {
+        htmlAttrs: {
+          class: this.$press.layout
+        }
+      }
     }
   }
 }

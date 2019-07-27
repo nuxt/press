@@ -28,9 +28,11 @@ export default async function NuxtPressModule (options) {
   if (!options.naked) {
     // TODO Add addStylesheet() to Module Container API
     // To prevent adding duplicated entries automatically
-    nuxt.options.css.push('normalize.css/normalize.css')
-    nuxt.options.css.push('wysiwyg.css/wysiwyg.css')
-    nuxt.options.css.push('prismjs/themes/prism.css')
+    nuxt.options.css.push(
+      'normalize.css/normalize.css',
+      'wysiwyg.css/wysiwyg.css',
+      'prismjs/themes/prism.css'
+    )
   }
 
   if (exists(nuxt.options.srcDir, 'nuxt.press.css')) {

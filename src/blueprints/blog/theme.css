@@ -1,6 +1,15 @@
+:root {
+  box-sizing: border-box;  
+  font-family: sans-serif;
+}
+
+html.blog #__layout {
+  width: 740px !important;
+  margin: 0px auto;
+}
 
 #nuxt-press.blog {
-  width: 740px !important;
+  /* border: 1px solid #000; */
   display: flex;
   flex-grow: 1;
   justify-content: center;

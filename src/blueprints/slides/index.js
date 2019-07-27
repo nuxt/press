@@ -58,7 +58,7 @@ export default {
       if (!this.options.watch.includes('~/*/**.md')) {
         this.options.watch.push('~/*/**.md')
       }
-      if (!this.options.$press.naked) {
+      if (!this.$press.naked) {
         this.options.css.unshift(resolve('blueprints/slides/theme.css'))
       }
     }

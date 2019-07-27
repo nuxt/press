@@ -42,16 +42,21 @@ export async function loadConfig (rootId, config = {}) {
   return this[`$${rootId}`]
 }
 
-export async function updateConfig (rootId, obj) {
-  // If .js config found, do nothing:
-  // we only update JSON files, not JavaScript
-  if (exists(join(this.options.rootDir, `nuxt.${rootId}.js`))) {
-    return
-  }
+async function addConfigToBuild() {
 
+}
+
+export async function updateConfig (rootId, obj) {
   // Copy object and remove props that start with $
   // (These can be used for internal template pre-processing)
   obj = removePrivateKeys(obj)
+
+  // If .js config found, do nothing
+  // we only update JSON files, not JavaScript
+  if (exists(join(this.options.rootDir, `nuxt.${rootId}.js`))) {
+    const config = await importModule(join(this.options.rootDir, `nuxt.${rootId}.js`))
+    await writeFile(join(this.options.buildDir, 'press', 'config.json'), JSON.stringify(config, null, 2))
+  }
 
   const path = join(this.options.rootDir, `nuxt.${rootId}.json`)
   if (!exists(path)) {
@@ -63,5 +68,10 @@ export async function updateConfig (rootId, obj) {
   try {
     json = JSON.parse(jsonFile)
   } catch (_) {}
-  await writeFile(path, JSON.stringify(defu(json, obj), null, 2))
+  const updated = defu(json, obj)
+  await writeFile(path, JSON.stringify(updated, null, 2))
+  await writeFile(
+    join(this.options.buildDir, 'press', 'config.json'),
+    JSON.stringify(updated, null, 2)
+  )
 }

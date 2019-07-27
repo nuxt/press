@@ -1,6 +1,9 @@
-import config from '~/nuxt.press'
+import config from 'press/config'
 
 export default {
+  htmlAttrs: {
+    class: 'blog'
+  },
   meta: [
     { charset: 'utf-8' },
     { name: 'viewport', content: 'width=device-width, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1' },

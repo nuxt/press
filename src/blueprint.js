@@ -35,6 +35,9 @@ export async function registerBlueprints (rootId, options, blueprints) {
   for (const id of blueprints) { // ['slides', 'common']) {
     await _registerBlueprint.call(this, id, rootId, options)
   }
+
+  // Future-compatible flag
+  // this.$isGenerate = this._generate || this.target === 'static'
 }
 
 export async function _registerBlueprint (id, rootId, options) {

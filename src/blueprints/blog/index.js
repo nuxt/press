@@ -85,8 +85,10 @@ export default {
       if (!this.options.watch.includes('~/**/*.md')) {
         this.options.watch.push('~/**/*.md')
       }
-      if (!this.options.$press.naked) {
-        this.options.css.unshift(resolve('blueprints/blog/theme.css'))
+      if (!this.$press.naked) {
+        const index = this.options.css.findIndex(css => typeof css === 'string' && css.match(/prism\.css$/))
+        console.log('come on man')
+        this.options.css.splice(index + 1, 0, resolve('blueprints/blog/theme.css'))
       }
     },
     async compile ({ rootId }) {
