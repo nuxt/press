@@ -80,9 +80,6 @@ export default {
   },
   build: {
     before () {
-      if (!this.options.watch.includes('~/**/*.md')) {
-        this.options.watch.push('~/**/*.md')
-      }
       this.$addPressTheme('blueprints/blog/theme.css')
     },
     async compile ({ rootId }) {

@@ -1,6 +1,6 @@
-
 import { registerBlueprints } from './blueprint'
 import { join, exists } from './utils'
+import SSE from './sse'
 
 /**
  * @nuxt/press module for NuxtJS
@@ -38,6 +38,18 @@ export default async function NuxtPressModule (options) {
   if (exists(nuxt.options.srcDir, 'nuxt.press.css')) {
     nuxt.options.css.push('~/nuxt.press.css')
   }
+
+  const ssePool = new SSE()
+
+  this.$pressSourceEvent = (event, path) => {
+    ssePool.publish(event, { path })
+  }
+
+  // Hot reload for Markdown files
+  this.addServerMiddleware({
+    path: '/__press/hot',
+    handler: (_, res) => ssePool.subscribe(res)
+  })
 
   // Common helper for writing JSON responses
   this.addServerMiddleware((_, res, next) => {
