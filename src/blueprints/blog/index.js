@@ -10,8 +10,6 @@ import {
   routePath
 } from '../../utils'
 
-import resolve from '../../resolve'
-
 import data from './data'
 
 export default {

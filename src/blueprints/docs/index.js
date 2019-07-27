@@ -8,8 +8,6 @@ import {
   routePath
 } from '../../utils'
 
-import resolve from '../../resolve'
-
 import { templates } from './constants'
 import data from './data'
 

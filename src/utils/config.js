@@ -42,10 +42,6 @@ export async function loadConfig (rootId, config = {}) {
   return this[`$${rootId}`]
 }
 
-async function addConfigToBuild() {
-
-}
-
 export async function updateConfig (rootId, obj) {
   // Copy object and remove props that start with $
   // (These can be used for internal template pre-processing)

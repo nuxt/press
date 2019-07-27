@@ -32,7 +32,6 @@ export async function registerBlueprints (rootId, options, blueprints) {
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
 
-
   this.$addPressTheme = (path) => {
     if (options.naked) {
       return
