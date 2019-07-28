@@ -42,13 +42,13 @@ export default async function NuxtPressModule (options) {
   const ssePool = new SSE()
 
   this.$pressSourceEvent = (event, path) => {
-    ssePool.publish(event, { path })
+    ssePool.broadcast(event, { path })
   }
 
   // Hot reload for Markdown files
   this.addServerMiddleware({
     path: '/__press/hot',
-    handler: (_, res) => ssePool.subscribe(res)
+    handler: (req, res) => ssePool.subscribe(req, res)
   })
 
   // Common helper for writing JSON responses

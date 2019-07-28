@@ -52,6 +52,12 @@ export default {
         }
       }
     }
+  },
+  beforeMount() {
+    const hotUpdates = new EventSource('/__press/hot')
+    hotUpdates.onmessage = (...args) => {
+      console.log(args)
+    }
   }
 }
 </script>

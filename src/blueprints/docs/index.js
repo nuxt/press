@@ -47,12 +47,6 @@ export default {
   },
   build: {
     before () {
-      if (!this.options.watch.includes('~/*.md')) {
-        this.options.watch.push(`~/*.md`)
-      }
-      if (!this.options.watch.includes('~/*/**.md')) {
-        this.options.watch.push('~/*/**.md')
-      }
       this.$addPressTheme('blueprints/docs/theme.css')
     },
     async compile ({ rootId }) {

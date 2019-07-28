@@ -10,19 +10,21 @@ export default class SSE {
   }
 
   // Subscribe to a channel and set initial headers
-  public subscribe (res) {
+  subscribe (req, res) {
+    req.socket.setTimeout(0)
+    
     status(res, 200)
     header(res, 'Content-Type', 'text/event-stream')
     header(res, 'Cache-Control', 'no-cache')
     header(res, 'Connection', 'keep-alive')
 
     this.subscriptions.add(res)
-    this.res.on('close', () => this.subscriptions.delete(res))
-    this.publish('ready', {})
+    res.on('close', () => this.subscriptions.delete(res))
+    this.broadcast('ready', {})
   }
 
   // Publish event and data to all connected clients
-  public broadcast (event, data) {
+  broadcast (event, data) {
     this.counter++
     // Do console.log(this.subscriptions.size) to see, if there are any memory leaks
     for (const res of this.subscriptions) {

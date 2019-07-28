@@ -76,7 +76,7 @@ export default {
       }
     },
     done() {
-      chokidar.watch([ '*/*.md', '*/**/*.md' ], {
+      chokidar.watch(['*/*.md', '*/**/*.md'], {
         cwd: this.options.srcDir,
         ignoreInitial: true,
         ignored: 'node_modules/**/*'
