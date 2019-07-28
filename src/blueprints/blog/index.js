@@ -1,3 +1,4 @@
+import chokidar from 'chokidar'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import {
@@ -10,7 +11,7 @@ import {
   routePath
 } from '../../utils'
 
-import data from './data'
+import data, { parseEntry } from './data'
 
 export default {
   // Include data loader
@@ -84,6 +85,27 @@ export default {
     },
     async compile ({ rootId }) {
       await updateConfig.call(this, rootId, { blog: this.$press.blog })
+    },
+    async done () {
+      const mdProcessor = await this.$press.blog.source.processor()
+      const watchDir = this.$press.blog.dir
+        ? `${this.$press.blog.dir}/`
+        : this.$press.blog.dir
+      chokidar.watch([
+        `${watchDir}*.md`,
+        `${watchDir}**/*.md`
+      ], {
+        cwd: this.options.srcDir,
+        ignoreInitial: true,
+        ignored: 'node_modules/**/*'
+      })
+        .on('change', async (path) => {
+          this.$pressSourceEvent('change', await parseEntry.call(this, path, mdProcessor))
+        })
+        .on('add', async (path) => {
+          this.$pressSourceEvent('add', await parseEntry.call(this, path, mdProcessor))
+        })
+        .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
     }
   },
   options: {

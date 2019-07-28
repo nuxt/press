@@ -34,7 +34,10 @@ export async function registerBlueprints (rootId, options, blueprints) {
 
   const devStaticRoot = join(this.options.buildDir, rootId, 'static')
   this.saveDevDataSources = (...args) => {
-    saveDataSources.call(this, devStaticRoot, ...args)
+    return new Promise(async (resolve) => {
+      await saveDataSources.call(this, devStaticRoot, null, ...args)
+      resolve()
+    })
   }
 
   this.$addPressTheme = (path) => {

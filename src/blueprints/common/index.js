@@ -3,7 +3,7 @@ import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import { importModule, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
-import data from './data'
+import data, { loadPage } from './data'
 
 export default {
   // Include data loader
@@ -81,9 +81,9 @@ export default {
         ignoreInitial: true,
         ignored: 'node_modules/**/*'
       })
-        .on('change', path => this.$pressSourceEvent('change', path))
-        .on('add', path => this.$pressSourceEvent('add', path))
-        .on('unlink', path => this.$pressSourceEvent('unlink', path))
+        .on('change', async path => this.$pressSourceEvent('change', await loadPage(path)))
+        .on('add', async path => this.$pressSourceEvent('add', await loadPage(path)))
+        .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
     }
   },
   options: {

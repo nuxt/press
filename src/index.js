@@ -42,9 +42,9 @@ export default async function NuxtPressModule (options) {
   // Hot reload for Markdown files
   const ssePool = new SSE()
 
-  this.$pressSourceEvent = (event, source) => {
-    this.saveDevDataSources({ sources: { source }})
-    ssePool.broadcast(event, { path })
+  this.$pressSourceEvent = async (event, source) => {
+    await this.saveDevDataSources({ sources: { source } })
+    ssePool.broadcast(event, source)
   }
 
   this.addServerMiddleware({

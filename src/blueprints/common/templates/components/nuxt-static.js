@@ -31,6 +31,7 @@ export default {
     }
   },
   render (h) {
+    console.log('!update')
     const data = this.data || this.source
 
     if (isClient) {

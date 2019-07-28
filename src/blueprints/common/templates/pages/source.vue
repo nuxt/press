@@ -56,9 +56,12 @@ export default {
   beforeMount() {
     this.$hotUpdates = new EventSource('/__press/hot')
     this.$hotUpdates.addEventListener('message', (event) => {
-      const { path } = JSON.parse(event.data)
-      if (path === this.$press.source.src) {
-        this.$router.go()
+      const source = JSON.parse(event.data)
+      if (source.src === this.$press.source.src) {
+        this.$press.source = source
+        this.$nextTick().then(() => {
+          this.$forceUpdate()
+        })
       }
     })
   },
