@@ -53,18 +53,18 @@ export default {
       }
     }
   },
+<% if (options.dev) { %>
   beforeMount() {
     this.$hotUpdates = new EventSource('/__press/hot')
     this.$hotUpdates.addEventListener('message', (event) => {
       const source = JSON.parse(event.data)
       if (source.src === this.$press.source.src) {
         this.$press.source = source
-        this.$nextTick().then(() => {
-          this.$forceUpdate()
-        })
+        this.$nextTick().then(() => this.$forceUpdate())
       }
     })
   },
+  <% } %>
   destroyed() {
     this.$hotUpdates.close()
   }
