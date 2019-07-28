@@ -1,8 +1,9 @@
+import chokidar from 'chokidar'
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import { importModule, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
-import data from './data'
+import data, { loadPage } from './data'
 
 export default {
   // Include data loader
@@ -62,9 +63,6 @@ export default {
   },
   build: {
     async before () {
-      if (!this.options.watch.includes('~/pages/*.md')) {
-        this.options.watch.push('~/pages/*.md')
-      }
       this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
       const pagesDir = join(this.options.srcDir, this.options.dir.pages)
       if (!exists(pagesDir)) {
@@ -76,6 +74,16 @@ export default {
       if (this.$press.$placeholderPagesDir) {
         await remove(this.$press.$placeholderPagesDir)
       }
+    },
+    done () {
+      chokidar.watch(['pages/*.md'], {
+        cwd: this.options.srcDir,
+        ignoreInitial: true,
+        ignored: 'node_modules/**/*'
+      })
+        .on('change', async path => this.$pressSourceEvent('change', await loadPage(path)))
+        .on('add', async path => this.$pressSourceEvent('add', await loadPage(path)))
+        .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
     }
   },
   options: {

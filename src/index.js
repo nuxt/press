@@ -1,6 +1,6 @@
-
 import { registerBlueprints } from './blueprint'
 import { join, exists } from './utils'
+import SSE from './sse'
 
 /**
  * @nuxt/press module for NuxtJS
@@ -28,14 +28,29 @@ export default async function NuxtPressModule (options) {
   if (!options.naked) {
     // TODO Add addStylesheet() to Module Container API
     // To prevent adding duplicated entries automatically
-    nuxt.options.css.push('normalize.css/normalize.css')
-    nuxt.options.css.push('wysiwyg.css/wysiwyg.css')
-    nuxt.options.css.push('prismjs/themes/prism.css')
+    nuxt.options.css.push(
+      'normalize.css/normalize.css',
+      'wysiwyg.css/wysiwyg.css',
+      'prismjs/themes/prism.css'
+    )
   }
 
   if (exists(nuxt.options.srcDir, 'nuxt.press.css')) {
     nuxt.options.css.push('~/nuxt.press.css')
   }
+
+  // Hot reload for Markdown files
+  const ssePool = new SSE()
+
+  this.$pressSourceEvent = async (event, source) => {
+    await this.saveDevDataSources({ sources: { source } })
+    ssePool.broadcast(event, source)
+  }
+
+  this.addServerMiddleware({
+    path: '/__press/hot',
+    handler: (req, res) => ssePool.subscribe(req, res)
+  })
 
   // Common helper for writing JSON responses
   this.addServerMiddleware((_, res, next) => {

@@ -39,8 +39,34 @@ export default {
   layout: ({ $press }) => $press.layout,
   head() {
     if (component.head) {
-      return component.head.call(this)
+      return {
+        htmlAttrs: {
+          class: this.$press.layout
+        },
+        ...component.head.call(this)
+      }
+    } else {
+      return {
+        htmlAttrs: {
+          class: this.$press.layout
+        }
+      }
     }
+  },
+<% if (options.dev) { %>
+  beforeMount() {
+    this.$hotUpdates = new EventSource('/__press/hot')
+    this.$hotUpdates.addEventListener('message', (event) => {
+      const source = JSON.parse(event.data)
+      if (source.src === this.$press.source.src) {
+        this.$press.source = source
+        this.$nextTick().then(() => this.$forceUpdate())
+      }
+    })
+  },
+  <% } %>
+  destroyed() {
+    this.$hotUpdates.close()
   }
 }
 </script>

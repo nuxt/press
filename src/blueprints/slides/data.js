@@ -42,7 +42,7 @@ async function parseSlides (sourcePath, mdProcessor) {
       return this.$press.slides.source.markdown.call(this, slide, mdProcessor)
     })
   )
-  const source = { slides, type: 'slides' }
+  const source = { slides, type: 'slides', ...this.options.dev && { src: sourcePath } }
   source.path = this.$press.slides.source.path
     .call(this, parse(sourcePath).name.toLowerCase())
   return source

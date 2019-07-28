@@ -52,7 +52,8 @@ async function parsePage (sourcePath, mdProcessor) {
       return h
     }),
     meta,
-    source
+    source,
+    ...this.options.dev && { src: sourcePath }
   }
 }
 

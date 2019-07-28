@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import config from '~/nuxt.press'
+import config from 'press/config'
 
 export default {
   created() {

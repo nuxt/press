@@ -8,8 +8,6 @@ import {
   routePath
 } from '../../utils'
 
-import resolve from '../../resolve'
-
 import { templates } from './constants'
 import data from './data'
 
@@ -49,15 +47,7 @@ export default {
   },
   build: {
     before () {
-      if (!this.options.watch.includes('~/*.md')) {
-        this.options.watch.push(`~/*.md`)
-      }
-      if (!this.options.watch.includes('~/*/**.md')) {
-        this.options.watch.push('~/*/**.md')
-      }
-      if (!this.options.$press.naked) {
-        this.options.css.unshift(resolve('blueprints/docs/theme.css'))
-      }
+      this.$addPressTheme('blueprints/docs/theme.css')
     },
     async compile ({ rootId }) {
       await updateConfig.call(this, rootId, { docs: this.$press.docs })

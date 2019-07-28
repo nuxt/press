@@ -1,10 +1,7 @@
-
-body {
-  margin: 0;
-}
-
-* {
-  box-sizing: border-box;
+.docs body, .docs #__nuxt, .docs #__layout {
+  font-family: sans-serif;
+  width: 100%;
+  padding: 0px;
 }
 
 #nuxt-press.docs {

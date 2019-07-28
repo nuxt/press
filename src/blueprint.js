@@ -32,9 +32,33 @@ export async function registerBlueprints (rootId, options, blueprints) {
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
 
+  const devStaticRoot = join(this.options.buildDir, rootId, 'static')
+  this.saveDevDataSources = (...args) => {
+    return new Promise(async (resolve) => {
+      await saveDataSources.call(this, devStaticRoot, null, ...args)
+      resolve()
+    })
+  }
+
+  this.$addPressTheme = (path) => {
+    if (options.naked) {
+      return
+    }
+    let addIndex = this.options.css
+      .findIndex(css => typeof css === 'string' && css.match(/nuxt\.press\.css$/))
+    if (addIndex === -1) {
+      addIndex = this.options.css
+        .findIndex(css => typeof css === 'string' && css.match(/prism\.css$/))
+    }
+    this.options.css.splice(addIndex + 1, 0, resolve(path))
+  }
+
   for (const id of blueprints) { // ['slides', 'common']) {
     await _registerBlueprint.call(this, id, rootId, options)
   }
+
+  // Future-compatible flag
+  // this.$isGenerate = this._generate || this.target === 'static'
 }
 
 export async function _registerBlueprint (id, rootId, options) {
@@ -52,6 +76,10 @@ export async function _registerBlueprint (id, rootId, options) {
 
   // Set flag to indicate blueprint was enabled (ie: options.$common = true)
   options[`$${id}`] = true
+  if (this.options.dev) {
+    options.dev = true
+  }
+
   // Populate options with defaults
   options[id] = blueprintOptions
 
@@ -216,14 +244,16 @@ async function saveStaticFiles (files) {
 }
 
 async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
-  await ensureDir(staticRoot, id)
+  if (id) {
+    await ensureDir(staticRoot, id)
 
-  if (topLevel) {
-    for (const topLevelKey in topLevel) {
-      const topLevelPath = join(staticRoot, id, `${topLevelKey}.json`)
+    if (topLevel) {
+      for (const topLevelKey in topLevel) {
+        const topLevelPath = join(staticRoot, id, `${topLevelKey}.json`)
 
-      await ensureDir(dirname(topLevelPath))
-      await writeJson(topLevelPath, topLevel[topLevelKey])
+        await ensureDir(dirname(topLevelPath))
+        await writeJson(topLevelPath, topLevel[topLevelKey])
+      }
     }
   }
 

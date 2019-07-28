@@ -1,7 +1,6 @@
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import { importModule, exists, join, readJsonSync } from '../../utils'
-import resolve from '../../resolve'
 import data from './data'
 
 export default {
@@ -55,12 +54,7 @@ export default {
   },
   build: {
     before () {
-      if (!this.options.watch.includes('~/*/**.md')) {
-        this.options.watch.push('~/*/**.md')
-      }
-      if (!this.options.$press.naked) {
-        this.options.css.unshift(resolve('blueprints/slides/theme.css'))
-      }
+      this.$addPressTheme('blueprints/slides/theme.css')
     }
   },
   // Options are merged into the parent module default options
