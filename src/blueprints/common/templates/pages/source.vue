@@ -58,15 +58,22 @@ export default {
     this.$hotUpdates = new EventSource('/__press/hot')
     this.$hotUpdates.addEventListener('message', (event) => {
       const source = JSON.parse(event.data)
+      if (!source || !source.src) {
+        return
+      }
       if (source.src === this.$press.source.src) {
-        this.$press.source = source
-        this.$nextTick().then(() => this.$forceUpdate())
+        if (source.event === 'unlink') {
+          window.location.reload() // Fresh 404
+        } else {
+          this.$press.source = source
+          this.$nextTick().then(() => this.$forceUpdate())
+        }
       }
     })
   },
-  <% } %>
   destroyed() {
     this.$hotUpdates.close()
   }
+<% } %>
 }
 </script>

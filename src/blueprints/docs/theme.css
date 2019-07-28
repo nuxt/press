@@ -1,7 +1,11 @@
-.docs body, .docs #__nuxt, .docs #__layout {
+:root {
+  box-sizing: border-box;  
   font-family: sans-serif;
-  width: 100%;
-  padding: 0px;
+}
+
+html.blog #__layout {
+  width: 740px !important;
+  margin: 0px auto;
 }
 
 #nuxt-press.docs {

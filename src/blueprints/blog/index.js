@@ -90,6 +90,7 @@ export default {
       if (this.$isGenerate) {
         return
       }
+      let updatedEntry
       const mdProcessor = await this.$press.blog.source.processor()
       const watchDir = this.$press.blog.dir
         ? `${this.$press.blog.dir}/`
@@ -103,12 +104,14 @@ export default {
         ignored: 'node_modules/**/*'
       })
         .on('change', async (path) => {
-          this.$pressSourceEvent('change', await parseEntry.call(this, path, mdProcessor))
+          updatedEntry = await parseEntry.call(this, path, mdProcessor)
+          this.$pressSourceEvent('change', 'blog', updatedEntry)
         })
         .on('add', async (path) => {
-          this.$pressSourceEvent('add', await parseEntry.call(this, path, mdProcessor))
+          updatedEntry = await parseEntry.call(this, path, mdProcessor)
+          this.$pressSourceEvent('add', 'blog', updatedEntry)
         })
-        .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
+        .on('unlink', path => this.$pressSourceEvent('unlink', 'blog', { path }))
     }
   },
   options: {
