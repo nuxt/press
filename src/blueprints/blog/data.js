@@ -10,7 +10,7 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-async function parseEntry (sourcePath, processor) {
+export async function parseEntry (sourcePath, processor) {
   // TODO just completely rewrite this function, please
   const parse = this.$press.blog.source
   const fileName = parsePath(sourcePath).name
@@ -29,6 +29,9 @@ async function parseEntry (sourcePath, processor) {
   source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
   source.type = 'entry'
   source.id = this.$press.blog.source.id.call(this, source)
+  if (this.options.dev) {
+    source.src = sourcePath
+  }
   return source
 }
 

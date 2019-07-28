@@ -39,13 +39,14 @@ export default async function NuxtPressModule (options) {
     nuxt.options.css.push('~/nuxt.press.css')
   }
 
+  // Hot reload for Markdown files
   const ssePool = new SSE()
 
-  this.$pressSourceEvent = (event, path) => {
+  this.$pressSourceEvent = (event, source) => {
+    this.saveDevDataSources({ sources: { source }})
     ssePool.broadcast(event, { path })
   }
 
-  // Hot reload for Markdown files
   this.addServerMiddleware({
     path: '/__press/hot',
     handler: (req, res) => ssePool.subscribe(req, res)

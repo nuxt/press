@@ -75,15 +75,15 @@ export default {
         await remove(this.$press.$placeholderPagesDir)
       }
     },
-    done() {
-      chokidar.watch(['*/*.md', '*/**/*.md'], {
+    done () {
+      chokidar.watch(['pages/*.md'], {
         cwd: this.options.srcDir,
         ignoreInitial: true,
         ignored: 'node_modules/**/*'
       })
-      .on('change', path => this.$pressSourceEvent('change', path))
-      .on('add', path => this.$pressSourceEvent('add', path))
-      .on('unlink', path => this.$pressSourceEvent('unlink', path))
+        .on('change', path => this.$pressSourceEvent('change', path))
+        .on('add', path => this.$pressSourceEvent('add', path))
+        .on('unlink', path => this.$pressSourceEvent('unlink', path))
     }
   },
   options: {

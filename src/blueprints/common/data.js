@@ -32,7 +32,8 @@ async function loadPage (pagePath, mdProcessor) {
   body = await this.$press.common.source.markdown.call(this, body, mdProcessor)
   title = stripP(await this.$press.common.source.markdown.call(this, title, mdProcessor))
 
-  return { ...metadata, body, title, path }
+  const src = pagePath.slice(this.options.srcDir.length + 1)
+  return { ...metadata, body, title, path, ...this.options.dev && { src } }
 }
 
 export default async function () {

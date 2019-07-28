@@ -54,10 +54,16 @@ export default {
     }
   },
   beforeMount() {
-    const hotUpdates = new EventSource('/__press/hot')
-    hotUpdates.onmessage = (...args) => {
-      console.log(args)
-    }
+    this.$hotUpdates = new EventSource('/__press/hot')
+    this.$hotUpdates.addEventListener('message', (event) => {
+      const { path } = JSON.parse(event.data)
+      if (path === this.$press.source.src) {
+        this.$router.go()
+      }
+    })
+  },
+  destroyed() {
+    this.$hotUpdates.close()
   }
 }
 </script>

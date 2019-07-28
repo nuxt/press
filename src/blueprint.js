@@ -32,6 +32,11 @@ export async function registerBlueprints (rootId, options, blueprints) {
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
 
+  const devStaticRoot = join(this.options.buildDir, rootId, 'static')
+  this.saveDevDataSources = (...args) => {
+    saveDataSources.call(this, devStaticRoot, ...args)
+  }
+
   this.$addPressTheme = (path) => {
     if (options.naked) {
       return
@@ -68,6 +73,10 @@ export async function _registerBlueprint (id, rootId, options) {
 
   // Set flag to indicate blueprint was enabled (ie: options.$common = true)
   options[`$${id}`] = true
+  if (this.options.dev) {
+    options.dev = true
+  }
+
   // Populate options with defaults
   options[id] = blueprintOptions
 
@@ -232,14 +241,16 @@ async function saveStaticFiles (files) {
 }
 
 async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
-  await ensureDir(staticRoot, id)
+  if (id) {
+    await ensureDir(staticRoot, id)
 
-  if (topLevel) {
-    for (const topLevelKey in topLevel) {
-      const topLevelPath = join(staticRoot, id, `${topLevelKey}.json`)
+    if (topLevel) {
+      for (const topLevelKey in topLevel) {
+        const topLevelPath = join(staticRoot, id, `${topLevelKey}.json`)
 
-      await ensureDir(dirname(topLevelPath))
-      await writeJson(topLevelPath, topLevel[topLevelKey])
+        await ensureDir(dirname(topLevelPath))
+        await writeJson(topLevelPath, topLevel[topLevelKey])
+      }
     }
   }
 

@@ -12,7 +12,7 @@ export default class SSE {
   // Subscribe to a channel and set initial headers
   subscribe (req, res) {
     req.socket.setTimeout(0)
-    
+
     status(res, 200)
     header(res, 'Content-Type', 'text/event-stream')
     header(res, 'Cache-Control', 'no-cache')
@@ -35,7 +35,7 @@ export default class SSE {
   // Publish event and data to a given response object
   clientBroadcast (res, event, data) {
     res.write(`id: ${this.counter}\n`)
-    res.write(`event: ${event}\n`)
-    res.write(`data: ${JSON.stringify(data)}\n\n`)
+    res.write(`event: message\n`)
+    res.write(`data: ${JSON.stringify({ event, ...data })}\n\n`)
   }
 }
