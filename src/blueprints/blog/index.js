@@ -87,6 +87,9 @@ export default {
       await updateConfig.call(this, rootId, { blog: this.$press.blog })
     },
     async done () {
+      if (this.$isGenerate) {
+        return
+      }
       const mdProcessor = await this.$press.blog.source.processor()
       const watchDir = this.$press.blog.dir
         ? `${this.$press.blog.dir}/`
