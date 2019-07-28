@@ -1,6 +1,6 @@
 # Getting started
 
-**NuxtPress** is a foobar microframework that leverages the [Nuxt module system][1]. It will automatically register routes, templates and configuration options in your Nuxt application, depending on how you configure it. It also takes care of loading Markdown files, rendering them and making the pre-rendered static files available.
+**NuxtPress** is a microframework that leverages the [Nuxt module system][1]. It will automatically register routes, templates and configuration options in your Nuxt application, depending on how you configure it. It also takes care of loading Markdown files, rendering them and making the pre-rendered static files available.
 
 [1]: https://nuxtjs.org/guide/modules/
 

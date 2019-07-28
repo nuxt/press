@@ -1,57 +1,66 @@
-A NuxtPress
-<br>Presentation
+A NuxtPress<br>
+Presentation
 
-# Bullet points
+# It's a simple idea
 
-- smart slide delimiters (h1)
-- use vue components in markdown
-- vue-awesome-swiper under the hood
+Let's take a Markdown file and use<br>
+the `<h1>` headers as slide delimiters
 
-# Code snippets
+# 
 
-Here's a code snippet in a slide:
+```md
+Opener
 
-```js
-export default {
-  modules: ['@nuxt/press']
-}
+# Slide 2
+
+- Bullet point
+- Bullet pint
+
+# Slide 3
+
+...
 ```
+
+<style>
+.slides-hello .slide-3 pre { font-size: 14px; }
+</style>
+
+# Then
+
+We use Vue's [full build][vfb] to<br>
+enable runtime **template compilation**.
+
+[vfb]: https://vuejs.org/v2/guide/installation.html#Explanation-of-Different-Builds
+
+# So that
+
+We can have `<style>` tags and `<component>`<br>
+tags mixed with Markdown markup.
 
 # Theming
 
-Say you want to display the<br>
-previous snippet in a yellow background.
-
-#
-
-Create a `~/assets/my-slides.css`:
+Take this code snippet:
 
 ```css
-.slides-hello .slide-3 pre {
-  background: #f4e398 !important;
+.slides-hello .slide-6 pre {
+  background: #f4e398;
 }
 ```
 
-#
-
-And include it in `nuxt.config.js`:
-
-```js
-export default {
-  css: ['~/assets/my-slides.css']
+<style>
+.slides-hello .slide-6 pre {
+  background: #f4e398;
 }
+</style>
+
+# Noticed the background?
+
+```html
+<style>
+.slides-hello .slide-6 pre {
+  background: #f4e398;
+}
+</style>
 ```
 
-#
-
-Then it would look like this:
-
-```js
-export default {
-  modules: ['@nuxt/press']
-}
-```
-
-Get a copy of the default theme [here].
-
-[here]: https://foobar.com
+Yep, that's **inlined**.

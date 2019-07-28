@@ -21,7 +21,9 @@ export default {
     index: 'pages/index.vue',
     layout: 'layouts/slides.vue',
     plugin: 'plugins/slides.client.js',
-    slides: 'components/slides.vue'
+    slides: 'components/slides.vue',
+    arrowLeft: 'assets/arrow-left.svg',
+    arrowRight: 'assets/arrow-right.svg'
   },
   // Register routes once templates have been added
   routes (templates) {

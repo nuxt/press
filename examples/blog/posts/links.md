@@ -2,8 +2,7 @@ June 20, 2019
 
 # Adding sidebar links
 
-> This content comes from the `docs` suite. It used here to exemplify
-> a blog entry from **June 20, 2019**.
+> This content comes from the `docs` suite. It used here to exemplify a blog entry from **June 20, 2019**.
 
 NuxtPress' default blog template makes it easy to automatically include sidebar text links.
 

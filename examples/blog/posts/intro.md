@@ -4,8 +4,9 @@ date: April 20, 2019
 
 # Publishing blogs
 
-> This content comes from the `docs` suite. It used here to exemplify
-> a blog entry from **April 20, 2019**.
+> This content comes from the `docs` suite. It used here to exemplify a blog entry from **April 20, 2019**.
+
+Let's add a new paragraph. OMG it works.
 
 To publish a blog, add your Markdown files to the `blog/` folder. You can 
 structure them in however many subdirectories you want (for grouping posts by
