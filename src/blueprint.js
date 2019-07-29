@@ -58,7 +58,7 @@ export async function registerBlueprints (rootId, options, blueprints) {
   }
 
   // Future-compatible flag
-  // this.$isGenerate = this._generate || this.target === 'static'
+  this.$isGenerate = this._generate || this.target === 'static'
 }
 
 export async function _registerBlueprint (id, rootId, options) {

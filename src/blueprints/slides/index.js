@@ -1,7 +1,8 @@
+import chokidar from 'chokidar'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import { importModule, exists, join, readJsonSync } from '../../utils'
-import data from './data'
+import data, { parseSlides } from './data'
 
 export default {
   // Include data loader
@@ -57,6 +58,30 @@ export default {
   build: {
     before () {
       this.$addPressTheme('blueprints/slides/theme.css')
+    },
+    async done() {
+      if (this.$isGenerate) {
+        return
+      }
+      let updatedSlides
+      const mdProcessor = await this.$press.slides.source.processor()
+      const watchDir = this.$press.slides.dir
+        ? `${this.$press.slides.dir}/`
+        : this.$press.slides.dir
+      chokidar.watch([`${watchDir}*.md`, `${watchDir}**/*.md`], {
+        cwd: this.options.srcDir,
+        ignoreInitial: true,
+        ignored: 'node_modules/**/*'
+      })
+        .on('change', async (path) => {
+          updatedSlides = await parseSlides.call(this, path, mdProcessor)
+          this.$pressSourceEvent('change', 'slides', updatedSlides)
+        })
+        .on('add', async (path) => {
+          updatedSlides = await parseSlides.call(this, path, mdProcessor)
+          this.$pressSourceEvent('add', 'slides', updatedSlides)
+        })
+        .on('unlink', path => this.$pressSourceEvent('unlink', 'slides', { path }))
     }
   },
   // Options are merged into the parent module default options

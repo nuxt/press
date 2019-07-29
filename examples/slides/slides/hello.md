@@ -22,7 +22,7 @@ Opener
 ```
 
 <style>
-.slides-hello .slide-3 pre { font-size: 14px; }
+.slides-hello .slide-2 pre { font-size: 16px; }
 </style>
 
 # Then
@@ -49,7 +49,7 @@ Take this code snippet:
 
 <style>
 .slides-hello .slide-6 pre {
-  background: #f4e398;
+  background: #0f0;
 }
 </style>
 
