@@ -16,6 +16,14 @@ html.blog #__layout {
   width: 100%;
   margin: 0;
 
+  & a, & a:active, & a:visited {
+    color: #555;
+    text-decoration: none;
+  }
+  & a:hover {
+    color: #999;
+  }
+
   & > header {
     position: fixed;
     top: 0;
@@ -48,6 +56,10 @@ html.blog #__layout {
       margin: 0 auto;
       max-width: 720px;
 
+      & h1, & h2, & h3, & h4, & h5, & h6 {
+        margin-top: 40px;
+      }
+  
       & h2 {
         &:not(:first-of-type) {
           margin-top: 70px;
@@ -74,6 +86,17 @@ html.blog #__layout {
         &:hover {
           color: #93dd00 !important;
         }
+      }
+
+      & blockquote {
+        font-style: italic;
+        font-size: 0.9em;
+        margin-left: 0px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        padding-left: 10px;
+        margin-right: 0px;
+        border-left: 3px solid #555555;
       }
 
       & table {

@@ -3,7 +3,7 @@
     <top />
     <sidebar v-if="!$isHome || $docs.home.sidebar" />
     <nuxt
-      class="content"
+      class="content wysiwyg"
       :class="{ 'has-sidebar': !$isHome || $docs.home.sidebar }"
     />
   </div>

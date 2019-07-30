@@ -154,6 +154,7 @@ export async function _registerBlueprint (id, rootId, options) {
         this.nuxt.hook('build:done', async () => {
           if (blueprint.build.done) {
             await blueprint.build.done.call(this, context)
+            console.log('this.options.css', this.options.css)
           }
 
           if (blueprint.generateRoutes) {
