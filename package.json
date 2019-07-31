@@ -25,6 +25,7 @@
     "start": "nuxt start",
     "lint": "eslint --ignore-path .gitignore --fix --ext .js src",
     "postinstall": "node postinstall.js",
+    "jest": "jest",
     "test": "yarn test:fixtures && yarn test:e2e",
     "test:e2e": "jest test/e2e",
     "test:fixtures": "jest test/fixtures"
