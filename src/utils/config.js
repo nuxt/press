@@ -1,6 +1,6 @@
 import defu from 'defu'
 import { importModule } from './module'
-import { readFile, writeFile, exists, join, writeJson } from './fs'
+import { readFile, writeFile, exists, join, writeJson, ensureDir } from './fs'
 
 function removePrivateKeys (source, target = null) {
   if (target === null) {
@@ -51,6 +51,7 @@ export async function updateConfig (rootId, obj) {
   // we only update JSON files, not JavaScript
   if (exists(join(this.options.rootDir, `nuxt.${rootId}.js`))) {
     const config = await importModule(join(this.options.rootDir, `nuxt.${rootId}.js`))
+    await ensureDir(join(this.options.buildDir, 'press'))
     await writeFile(join(this.options.buildDir, 'press', 'config.json'), JSON.stringify(config, null, 2))
     return
   }
@@ -67,6 +68,7 @@ export async function updateConfig (rootId, obj) {
   } catch (_) {}
   const updated = defu(json, obj)
   await writeFile(path, JSON.stringify(updated, null, 2))
+  await ensureDir(join(this.options.buildDir, 'press'))
   await writeFile(
     join(this.options.buildDir, 'press', 'config.json'),
     JSON.stringify(updated, null, 2)
