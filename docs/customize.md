@@ -17,27 +17,27 @@ $ npx nuxt-press eject <mode>/theme
 There are four ejectable stylesheets:
 
 ```
-$ npx nuxt-press eject common/theme
 $ npx nuxt-press eject docs/theme
 $ npx nuxt-press eject blog/theme
 $ npx nuxt-press eject slides/theme
 ```
 
-Running any of these commands will append the specified stylesheet to the `<srcDir>/nuxt.press.css` file. It will also be created automatically the first time if does not exist yet. Note that `docs`, `blog` and `slides` all depend on the `common` theme. So remember to always eject the common theme first:
-
-
-```
-$ npx nuxt-press eject common/theme
-$ npx nuxt-press eject blog/theme
-```
+Running any of these commands will append the specified stylesheet to the `<srcDir>/nuxt.press.css` file. It will also be created automatically the first time if does not exist yet. 
 
 > Beware: this command doesn't check if the stylesheet has been previously ejected, so running it multiple times will keep adding to `nuxt.press.css`.
 
-NuxtPress default stylesheets are written using [css-preset-env stage-0 features][stage-0].
+NuxtPress includes [normalize.css](https://necolas.github.io/normalize.css/) and [wysiwyg.css](https://jgthms.com/wysiwyg.css/), with minimal customizations. All theme stylesheets are written using [css-preset-env stage-0 features][stage-0]. 
 
 [stage-0]: https://preset-env.cssdb.org/
 
-When detecting the presence of `nuxt.press.css`, NuxtPress will skip adding the built-in stylesheets internally and will use this file instead.
+When detecting the presence of `nuxt.press.css`, NuxtPress will simply add it to the stack. To avoid duplication, consider using [nuxt-purgecss](https://github.com/Developmint/nuxt-purgecss). Or, you can disable all built-in NuxtPress styles altogether by setting `naked` to true in `nuxt.press.json`:
+
+
+```js
+{
+  "naked": true
+}
+```
 
 ## Ejectable templates
 
@@ -90,6 +90,7 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
       <code>blog/archive</code><br>
       <code>blog/entry</code>
       <code>blog/sidebar</code><br>
+      <code>blog/feed</code><br>
     </td>
     <td>
       <code>press/blog/layouts/blog.vue</code><br>
@@ -97,6 +98,7 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
       <code>press/blog/pages/archive.vue</code><br>
       <code>press/blog/components/entry.vue
       <code>press/blog/components/sidebar.vue</code><br>
+      <code>press/blog/rss.xml</code><br>
     </td>
   </tr>
   <tr>
