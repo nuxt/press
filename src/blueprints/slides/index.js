@@ -59,7 +59,7 @@ export default {
     before () {
       this.$addPressTheme('blueprints/slides/theme.css')
     },
-    async done() {
+    async done () {
       if (this.$isGenerate) {
         return
       }
