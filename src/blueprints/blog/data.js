@@ -51,7 +51,7 @@ function addArchiveEntry (archive, entry) {
 
 async function generateFeed (options, entries) {
   const template = lodashTemplate(
-    await readFile(resolve('blueprints', 'blog', 'templates', 'rss.xml'))
+    await readFile(resolve('blueprints', 'blog', 'templates', 'static', 'rss.xml'))
   )
   return template({ blog: options, entries })
 }

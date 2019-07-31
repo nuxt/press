@@ -38,7 +38,7 @@ export default {
     'layout': 'layouts/blog.vue',
     'sidebar': 'components/sidebar.vue',
     'head': 'head.js',
-    'feed': 'rss.xml'
+    'feed': 'static/rss.xml'
   },
   routes (templates) {
     return [

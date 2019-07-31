@@ -154,7 +154,6 @@ export async function _registerBlueprint (id, rootId, options) {
         this.nuxt.hook('build:done', async () => {
           if (blueprint.build.done) {
             await blueprint.build.done.call(this, context)
-            console.log('this.options.css', this.options.css)
           }
 
           if (blueprint.generateRoutes) {
@@ -298,6 +297,9 @@ async function addTemplates ({ options, rootId, id }, templates) {
     const type = key.split(':')[0]
     let template = templates[key]
     if (typeof template === 'string') {
+      if (template.startsWith('static/')) {
+        continue
+      }
       template = { src: template }
     }
     template.fileName = join(rootId, id, template.src)
