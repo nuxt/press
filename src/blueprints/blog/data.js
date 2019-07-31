@@ -2,7 +2,7 @@
 import { parse as parsePath } from 'path'
 import consola from 'consola'
 import lodashTemplate from 'lodash/template'
-import { walk, join, readFile } from '../../utils'
+import { exists, walk, join, readFile } from '../../utils'
 import resolve from '../../resolve'
 import PromisePool from '../../pool'
 
@@ -50,9 +50,11 @@ function addArchiveEntry (archive, entry) {
 }
 
 async function generateFeed (options, entries) {
-  const template = lodashTemplate(
-    await readFile(resolve('blueprints', 'blog', 'templates', 'static', 'rss.xml'))
-  )
+  let srcPath = join(this.options.srcDir, 'press', 'blog', 'static', 'rss.xml')
+  if (!exists(srcPath)) {
+    srcPath = resolve('blueprints', 'blog', 'templates', 'static', 'rss.xml')
+  }
+  const template = lodashTemplate(await readFile(srcPath))
   return template({ blog: options, entries })
 }
 
