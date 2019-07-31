@@ -52,6 +52,7 @@ export async function updateConfig (rootId, obj) {
   if (exists(join(this.options.rootDir, `nuxt.${rootId}.js`))) {
     const config = await importModule(join(this.options.rootDir, `nuxt.${rootId}.js`))
     await writeFile(join(this.options.buildDir, 'press', 'config.json'), JSON.stringify(config, null, 2))
+    return
   }
 
   const path = join(this.options.rootDir, `nuxt.${rootId}.json`)
