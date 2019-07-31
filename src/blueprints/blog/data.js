@@ -117,7 +117,7 @@ export default async function () {
   return {
     static: {
       [this.$press.blog.feed.path]: (
-        await generateFeed(this.$press.blog, index)
+        await generateFeed.call(this, this.$press.blog, index)
       )
     },
     topLevel: {
