@@ -33,3 +33,27 @@ Slide 4 text
 This is a simplification from [MDX][mdx], which uses `---` as delimiter.
 
 [mdx]: https://mdxjs.com/
+
+## Convenience classes
+
+NuxtPress adds classes to slides to make styling easier. 
+
+```css
+.slides-<fileName> .slide-<slideNumber> {
+  ...
+}
+```
+
+Use the above CSS selector pattern to style the entire presentation or any specific slide. You can also inline `<style>` tags with such selectors in the slides Markdown source. Take a `slides/hello.md` file, for example:
+
+```
+# Presentation
+
+<style>
+.slides-hello .slide-1 h1 {
+  font-size: 2rem;
+}
+</style>
+```
+
+This would modify the styles for the first slide.
