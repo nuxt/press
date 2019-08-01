@@ -44,7 +44,9 @@ export default {
   },
   // Register serverMiddleware
   serverMiddleware ({ options, rootId, id }) {
-    const { index } = options.slides.api.call(this, { rootId, id })
+    const { index } = typeof options.slides.api === 'function'
+      ? options.slides.api.call(this, { rootId, id })
+      : options.slides.api
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/slides/index')) {

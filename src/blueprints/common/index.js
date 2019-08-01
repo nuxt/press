@@ -49,7 +49,9 @@ export default {
     })
   },
   serverMiddleware ({ options, rootId, id }) {
-    const { source } = options.common.api.call(this, { rootId, id })
+    const { source } = typeof options.common.api === 'function'
+      ? options.common.api.call(this, { rootId, id })
+      : options.common.api
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/source/')) {

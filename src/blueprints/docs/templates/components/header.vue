@@ -9,12 +9,10 @@
         <li
           v-for="(item, idx) in $docs.nav"
           :key="`topmenu-${idx}`"
-          class="nav-item"
-        >
+          class="nav-item">
           <nav-link
             :class="activeClass(item.link)"
-            :item="item"
-          />
+            :item="item" />
         </li>
       </ul>
     </nav>

@@ -67,7 +67,9 @@ export default {
     ]
   },
   serverMiddleware ({ options, rootId, id }) {
-    const { index, archive } = options.blog.api.call(this, { rootId, id })
+    const { index, archive } = typeof options.blog.api === 'function'
+      ? options.blog.api.call(this, { rootId, id })
+      : options.blog.api
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/blog/index')) {
