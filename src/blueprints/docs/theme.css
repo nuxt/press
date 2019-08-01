@@ -99,6 +99,22 @@ html.blog #__layout {
         border-left: 3px solid #555555;
       }
 
+      & code {
+        font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+        font-size: 1em;
+        color: #669900;
+        font-weight: bold;
+      }
+      /* prismjs override */
+      & pre,
+      & pre[class*="language-"] {
+        background: #f6f8fa;
+        padding: 15px;
+        & > code {
+          font-size: 0.9em !important;
+        }
+      }
+
       & table {
         width: 100%;
         border-collapse: collapse;

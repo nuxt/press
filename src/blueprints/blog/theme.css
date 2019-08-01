@@ -9,23 +9,27 @@ html.blog #__layout {
 }
 
 #nuxt-press.blog {
-  /* border: 1px solid #000; */
   display: flex;
   flex-grow: 1;
   justify-content: center;
+
   & .h1 {
     font-size: 17px;
     margin-left: 10px;
   }
+
   & .h2 {
     font-size: 16px;
     margin-left: 20px;
   }
+
   & .h3 {
     font-size: 15px;
     margin-left: 30px;
   }
+
   & .sidebar {
+    background: linear-gradient(-90deg, rgba(244,244,244,1.0) 50%, rgba(255,255,255,1.0) 95%, rgba(255,255,255,1.0) 100%);
     border-right: 1px solid #000;
     flex-basis: 25%;
     margin: 0px;
@@ -33,6 +37,7 @@ html.blog #__layout {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+
     & .about {
       margin: 15px 0px;
       margin-bottom: 100px;
@@ -51,6 +56,7 @@ html.blog #__layout {
         }
       }
     }
+    
     & a {
       display: block;
       margin: 0px;
@@ -65,12 +71,35 @@ html.blog #__layout {
     }
   }
   & .content {
-    background: linear-gradient(90deg, rgba(244,244,244,1.0) 50%, rgba(255,255,255,1.0) 95%, rgba(255,255,255,1.0) 100%);
     flex-basis: 75%;
     padding: 20px;
+
+    & blockquote {
+      font-style: italic;
+      font-size: 0.9em;
+      margin-left: 0px;
+      padding-top: 0px;
+      padding-bottom: 0px;
+      padding-left: 10px;
+      margin-right: 0px;
+      border-left: 3px solid #555555;
+    }
+
+    & code {
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+      font-size: 1em;
+      color: #669900;
+      font-weight: bold;
+    }
+
+    /* prismjs override */
     & pre,
     & pre[class*="language-"] {
-      background: #fff !important;
+      background: #f6f8fa;
+      padding: 15px;
+      & > code {
+        font-size: 0.9em !important;
+      }
     }
   }
 }
