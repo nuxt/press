@@ -37,39 +37,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.top-menu {
-  display: flex;
-  justify-content: space-between;
-  padding: .7rem 1rem;
-
-  & .home-link {
-    font-size: 1.5rem;
-    font-weight: bold;
-    vertical-align: middle;
-    line-height: 1.6rem;
-    padding-left: 1rem;
-  }
-
-  & nav.links {
-    position: relative;
-    right: 1rem;
-
-    & ul {
-      display: flex;
-      margin: 0;
-      list-style-type: none;
-
-      & li {
-        margin: 0;
-      }
-
-      & .nav-item {
-        line-height: 1.5rem;
-        padding: 0 .5rem 0 .5rem;
-      }
-    }
-  }
-}
-</style>

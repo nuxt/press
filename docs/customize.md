@@ -39,6 +39,8 @@ When detecting the presence of `nuxt.press.css`, NuxtPress will simply add it to
 }
 ```
 
+For convenience, all styles are kept in one theme file, so that you get everything when you eject. This is why `<style>` isn't used in the bundled app components.
+
 ## Ejectable templates
 
 If overriding stylesheets isn't enough for your needs, you can eject NuxtPress bundled app templates for low-level modifications.

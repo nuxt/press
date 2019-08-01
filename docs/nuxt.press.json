@@ -5,15 +5,12 @@
     "title": "NuxtPress documentation",
     "nav": [
       {
-        "text": "Guide",
-        "link": "/guide"
+        "Guide": "/guide"
       },
       {
-        "text": "GitHub",
-        "link": "https://github.com/nuxt/press"
+        "GitHub": "https://github.com/nuxt/press"
       }
     ],
-    "asJsonTemplate": {},
     "sidebar": [
       "/",
       {
