@@ -36,7 +36,9 @@ html.blog #__layout {
 
   & > .sidebar {
     position: fixed;
-    width: 20rem;
+    width: auto;
+    max-width: 20rem;
+    padding-right: 2rem;
     top: 3rem;
     bottom: 0;
     z-index: 2;
@@ -83,6 +85,9 @@ html.blog #__layout {
       & a {
         font-weight: bold;
         color: #669900 !important;
+        & code {
+          background: none;
+        }
         &:hover {
           color: #93dd00 !important;
         }
@@ -104,6 +109,7 @@ html.blog #__layout {
         font-size: 1em;
         color: #669900;
         font-weight: bold;
+        padding: 0.2em;
       }
       /* prismjs override */
       & pre,
@@ -111,6 +117,7 @@ html.blog #__layout {
         background: #f6f8fa;
         padding: 15px;
         & > code {
+          padding: 0px;
           font-size: 0.9em !important;
         }
       }
