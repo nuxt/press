@@ -12,21 +12,7 @@ html.blog #__layout {
   display: flex;
   flex-grow: 1;
   justify-content: center;
-
-  & .h1 {
-    font-size: 17px;
-    margin-left: 10px;
-  }
-
-  & .h2 {
-    font-size: 16px;
-    margin-left: 20px;
-  }
-
-  & .h3 {
-    font-size: 15px;
-    margin-left: 30px;
-  }
+  min-height: 100vh;
 
   & .sidebar {
     background: linear-gradient(-90deg, rgba(244,244,244,1.0) 50%, rgba(255,255,255,1.0) 95%, rgba(255,255,255,1.0) 100%);
@@ -51,28 +37,60 @@ html.blog #__layout {
         margin-top: 100px;
         & a {
           font-size: 15px;
-          text-decoration: underline !important;
           display: block;
+          text-align: right;
+          &:hover {
+            border-bottom: none;
+            text-decoration: underline;
+          }
         }
       }
     }
-    
+  }
+
+  & .content {
+    flex-basis: 75%;
+    padding: 20px;
+
+    & code {
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+      font-size: 1em;
+      color: #669900;
+      font-weight: bold;
+    }
+
     & a {
-      display: block;
       margin: 0px;
       margin-bottom: 5px;
+      color: #000 !important;
       padding: 0px;
-      text-align: right;
+      & code {
+        background: none;
+      }
+      &:hover {
+        border-bottom: none;
+      }
       & img {
         display: inline-block;
         width: 30px;
         height: auto;
       }
     }
-  }
-  & .content {
-    flex-basis: 75%;
-    padding: 20px;
+
+    & .h1 {
+      font-size: 17px;
+      margin-left: 10px;
+    }
+
+    & .h2 {
+      font-size: 16px;
+      margin-left: 20px;
+    }
+
+    & .h3 {
+      font-size: 15px;
+      margin-left: 30px;
+    }
 
     & blockquote {
       font-style: italic;
@@ -83,13 +101,6 @@ html.blog #__layout {
       padding-left: 10px;
       margin-right: 0px;
       border-left: 3px solid #555555;
-    }
-
-    & code {
-      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-      font-size: 1em;
-      color: #669900;
-      font-weight: bold;
     }
 
     /* prismjs override */
