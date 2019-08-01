@@ -59,9 +59,10 @@ async function generateFeed (options, entries) {
 }
 
 function sortEntries (entries) {
-  return entries.sort((a, b) => {
-    return b.published - a.published
-  })
+  return entries
+    .map(e => ({ ...e, $published: new Date(e.published) }))
+    .sort((a, b) => (b.$published - a.$published))
+    .map(({ $published, ...e }) => e)
 }
 
 export default async function () {
