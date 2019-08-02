@@ -1,5 +1,6 @@
 <template>
   <aside class="sidebar" :class="sidebarClass">
+    <div class="mobile-toggle" @click="toggleMobile">×</div>
     <sidebar-sections
       :data="sidebar"
       :active-path="activePath"
@@ -86,6 +87,9 @@ export default {
         }
       }
     }
+  },
+  toggleMobile() {
+    document.querySelector('.sidebar').classList.toggle('mobile-visible')
   }
 }
 </script>

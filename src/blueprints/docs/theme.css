@@ -83,6 +83,10 @@ html.blog #__layout {
     font-size: 1.1rem;
     text-align: left;
     overflow-y: auto;
+
+    & .mobile-toggle {
+      display: none
+    }
   
     & ul {
       margin: 0;
@@ -345,10 +349,12 @@ html.blog #__layout {
       justify-content: space-between;
       padding: .7rem 0.5rem;
     
-
       & .mobile-toggle {
         display: block;
         margin-left: 1rem;
+        align-self: center;
+        user-select: none;
+        cursor: pointer;
       }
 
       & .home-link {
@@ -369,15 +375,29 @@ html.blog #__layout {
       position: fixed;
       width: 15rem;
       padding-right: 2rem;
-      top: 3rem;
+      top: 0;
       bottom: 0;
-      z-index: 2;
+      z-index: 1000;
+      background: #fff;
       border-right: 1px solid #e5e5e5;
       padding: 1.4rem 0 0 0;
       font-size: 1.1rem;
       text-align: left;
       overflow-y: auto;
+
+      &.mobile-visible {
+        display: block;
+      }
     
+      & .mobile-toggle {
+        display: block;
+        position: absolute;
+        user-select: none;
+        cursor: pointer;
+        top: 1rem;
+        right: 1rem;
+      }
+  
       & ul {
         margin: 0;
         padding: 0;
