@@ -1,6 +1,6 @@
 <template>
   <div id="nuxt-press" class="docs">
-    <top />
+    <top v-show="$route.path !== '/'" />
     <sidebar v-if="!$isHome || $docs.home.sidebar" />
     <nuxt
       class="content wysiwyg"

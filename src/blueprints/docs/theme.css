@@ -393,7 +393,14 @@ html.blog #__layout {
   
     & > .content {
       font-size: 0.9rem;
-  
+
+      & .home {
+        max-width: 500px;
+        & .description {
+          max-width: 500px;
+        }
+      }
+
       &.has-sidebar {
         padding-left: 1.4rem;
       }

@@ -1,10 +1,11 @@
 <template>
   <aside ref="sidebar" class="sidebar" :class="sidebarClass">
-    <div class="mobile-toggle" @click="toggleMobile">×</div>
+    <div
+      class="mobile-toggle"
+      @click="toggleMobile">×</div>
     <sidebar-sections
       :data="sidebar"
-      :active-path="activePath"
-    />
+      :active-path="activePath" />
   </aside>
 </template>
 

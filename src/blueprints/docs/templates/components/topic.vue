@@ -5,15 +5,22 @@
 </template>
 
 <script>
+import config from 'press/config'
 import { startObserver } from 'press/common/components/observer'
 
 export default {
   layout: 'docs',
   props: ['data'],
-  // created() {
-  //   // TODO remove this once @nuxt/markdown is updated
-  //   this.data.body = this.data.body.replace(/\{\{/g, '{\u200B{')
-  // },
+  head: () => ({
+    htmlAttrs: {
+      class: 'docs'
+    },
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { property: 'og:site_name', content: config.docs.title }
+    ]
+  }),
   mounted() {
     const elements = `
       .topic h1,

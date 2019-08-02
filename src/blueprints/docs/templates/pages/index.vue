@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import config from 'press/config'
 import Home from 'press/docs/components/home'
 import docsMixin from 'press/docs/mixins/docs'
 
@@ -22,6 +23,16 @@ export default {
   components: {
     Home
   },
+  head: () => ({
+    htmlAttrs: {
+      class: 'docs'
+    },
+    meta: [
+      { charset: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { property: 'og:site_name', content: config.docs.title }
+    ]
+  }),
   mixins: [docsMixin],
   async asyncData ({ $press, payload, error }) {
     const index = payload || await $press.get('api/source<%= options.docs.prefix || '/' %>index')

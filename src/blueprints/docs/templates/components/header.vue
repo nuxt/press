@@ -1,6 +1,9 @@
 <template>
   <header class="top-menu">
-    <div class="mobile-toggle" @click="toggleMobile">☰</div>
+    <div
+      class="mobile-toggle"
+      @click="toggleMobile">☰</div>
+    
     <nuxt-link :to="$docs.prefix" class="home-link">
       {{ $docs.title }}
     </nuxt-link>
