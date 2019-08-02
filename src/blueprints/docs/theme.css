@@ -389,6 +389,7 @@ html.blog #__layout {
         top: 1rem;
         right: 1rem;
       }
+    }
   
     & > .content {
       font-size: 0.9rem;
