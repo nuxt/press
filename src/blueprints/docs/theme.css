@@ -37,6 +37,10 @@ html.blog #__layout {
     display: flex;
     justify-content: space-between;
     padding: .7rem 0.5rem;
+
+    & .mobile-toggle {
+      display: none;
+    }
   
     & .home-link {
       font-size: 1.5rem;
@@ -168,28 +172,21 @@ html.blog #__layout {
           max-width: 35rem;
           font-size: 1.6rem;
           line-height: 1.3;
-          color: lighten($textColor, 40%);
         }
 
         & .action-button {
           display: inline-block;
           font-size: 1.2rem;
-          color: #fff;
-          background-color: $accentColor;
           padding: 0.8rem 1.6rem;
           border-radius: 4px;
           transition: background-color .1s ease;
-          box-sizing: border-box;
-          border-bottom: 1px solid darken($accentColor, 10%);
-
           &:hover {
-            background-color: lighten($accentColor, 10%);
+            border-bottom: none;
           }
         }
       }
 
       & .features {
-        border-top: 1px solid $borderColor;
         padding: 1.2rem 0;
         margin-top: 2.5rem;
         display: flex;
@@ -209,19 +206,12 @@ html.blog #__layout {
           font-weight: 500;
           border-bottom: none;
           padding-bottom: 0;
-          color: lighten($textColor, 10%);
-        }
-
-        & p {
-          color: lighten($textColor, 25%);
         }
       }
 
       & .footer {
         padding: 2.5rem;
-        border-top: 1px solid $borderColor;
         text-align: center;
-        color: lighten($textColor, 25%);
       }
     }
 
@@ -229,6 +219,16 @@ html.blog #__layout {
       line-height: 1.6rem;
       margin: 0 auto;
       max-width: 720px;
+
+      & h1 {
+        font-size: 2rem;
+      }
+      & h2 {
+        font-size: 1.8rem;
+      }
+      & h3 {
+        font-size: 1.6rem;
+      }
 
       & h1, & h2, & h3, & h4, & h5, & h6 {
         margin-top: 40px;
@@ -241,7 +241,6 @@ html.blog #__layout {
       }
 
       & h3 {
-        user-select: none;
         & span {
           color: #2f495e !important;
           text-shadow: 1px 1px #fff;
@@ -346,32 +345,22 @@ html.blog #__layout {
       justify-content: space-between;
       padding: .7rem 0.5rem;
     
+
+      & .mobile-toggle {
+        display: block;
+        margin-left: 1rem;
+      }
+
       & .home-link {
         font-size: 1.5rem;
         font-weight: bold;
         vertical-align: middle;
         line-height: 1.6rem;
-        padding-left: 0;
+        margin-right: 2rem;
       }
     
       & nav.links {
-        position: relative;
-        right: 1rem;
-    
-        & ul {
-          display: flex;
-          margin: 0;
-          list-style-type: none;
-    
-          & li {
-            margin: 0;
-          }
-    
-          & .nav-item {
-            line-height: 1.5rem;
-            padding: 0 .5rem 0 .5rem;
-          }
-        }
+        display: none;
       }
     }
   
@@ -441,7 +430,7 @@ html.blog #__layout {
     & > .content {
       z-index: 1;
       padding: 3rem 1.4rem 1.4rem 1.4rem;
-      font-size: 1.1rem;
+      font-size: 0.9rem;
   
       &.has-sidebar {
         padding-left: 1.4rem;
@@ -477,28 +466,19 @@ html.blog #__layout {
             max-width: 35rem;
             font-size: 1.6rem;
             line-height: 1.3;
-            color: lighten($textColor, 40%);
           }
   
           & .action-button {
             display: inline-block;
             font-size: 1.2rem;
-            color: #fff;
-            background-color: $accentColor;
             padding: 0.8rem 1.6rem;
             border-radius: 4px;
             transition: background-color .1s ease;
             box-sizing: border-box;
-            border-bottom: 1px solid darken($accentColor, 10%);
-  
-            &:hover {
-              background-color: lighten($accentColor, 10%);
-            }
           }
         }
   
         & .features {
-          border-top: 1px solid $borderColor;
           padding: 1.2rem 0;
           margin-top: 2.5rem;
           display: flex;
@@ -518,19 +498,12 @@ html.blog #__layout {
             font-weight: 500;
             border-bottom: none;
             padding-bottom: 0;
-            color: lighten($textColor, 10%);
-          }
-  
-          & p {
-            color: lighten($textColor, 25%);
           }
         }
   
         & .footer {
           padding: 2.5rem;
-          border-top: 1px solid $borderColor;
           text-align: center;
-          color: lighten($textColor, 25%);
         }
       }
   
@@ -539,6 +512,16 @@ html.blog #__layout {
         margin: 0 auto;
         max-width: 720px;
   
+        & h1 {
+          font-size: 1.2rem;
+        }
+        & h2 {
+          font-size: 1rem;
+        }
+        & h3 {
+          font-size: 1.6rem;
+        }
+
         & h1, & h2, & h3, & h4, & h5, & h6 {
           margin-top: 40px;
         }
@@ -587,7 +570,7 @@ html.blog #__layout {
   
         & code {
           font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-          font-size: 1em;
+          font-size: 0.8em;
           color: #669900;
           font-weight: bold;
           padding: 0.2em;
@@ -599,7 +582,7 @@ html.blog #__layout {
           padding: 15px;
           & > code {
             padding: 0px;
-            font-size: 0.9em !important;
+            font-size: 0.7em !important;
           }
         }
   
