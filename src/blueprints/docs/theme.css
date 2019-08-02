@@ -374,6 +374,8 @@ html.blog #__layout {
       display: none;
       position: fixed;
       top: 0;
+      height: 100vh;
+      overflow-y: scroll;
       z-index: 1000;
       background: #fff;
 
