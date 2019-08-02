@@ -114,7 +114,6 @@ sidebarDepth: 2
 ```
 
 ### Sidebar Groups
-}
 
 You can divide sidebar links into multiple groups by using objects:
 
