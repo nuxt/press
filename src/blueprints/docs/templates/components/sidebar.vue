@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar" :class="sidebarClass">
+  <aside ref="sidebar" class="sidebar" :class="sidebarClass">
     <div class="mobile-toggle" @click="toggleMobile">×</div>
     <sidebar-sections
       :data="sidebar"
@@ -56,8 +56,12 @@ export default {
     }
   },
   watch: {
-    path() {
+    async path() {
       this.setSidebar()
+      await this.$nextTick()
+      if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
+        this.toggleMobile()
+      }
     }
   },
   methods: {
