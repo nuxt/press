@@ -86,10 +86,10 @@ export default {
           break
         }
       }
+    },
+    toggleMobile() {
+      document.querySelector('.sidebar').classList.toggle('mobile-visible')
     }
-  },
-  toggleMobile() {
-    document.querySelector('.sidebar').classList.toggle('mobile-visible')
   }
 }
 </script>
