@@ -1,4 +1,4 @@
-# English docs
+# {{ $t('title') }}
 
 English docs
 

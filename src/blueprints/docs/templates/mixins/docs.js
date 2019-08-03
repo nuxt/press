@@ -6,7 +6,11 @@ export default {
       return this.$press.docs
     },
     $page () {
-      const path = trimSlash(this.$route.path) || '/'
+      let path = trimSlash(this.$route.path) || '/'
+
+      if (this.$nuxt._i18n) {
+        path += this.$nuxt._i18n.locale
+      }
 
       if (this.$docs.pages[path]) {
         return this.$docs.pages[path]

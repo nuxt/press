@@ -1,4 +1,4 @@
-# Brazilian Portuguese docs
+# {{ $t('title') }}
 
 Brazilian Portuguese docs
 

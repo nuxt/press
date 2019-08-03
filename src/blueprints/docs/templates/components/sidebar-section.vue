@@ -11,9 +11,9 @@
           :class="{ active: isActive  }"
           :to="url"
         >
-          {{ name }}
+          <nuxt-template v-model="name" />
         </nuxt-link>
-        <span v-else>{{ name }}</span>
+        <span v-else><nuxt-template v-model="name" /></span>
       </p>
 
       <sidebar-sections

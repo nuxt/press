@@ -8,8 +8,13 @@ export default function docsPlugin (ctx, inject) {
   const pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
   const nav = JSON.parse(`<%= options.docs.$asJsonTemplate.nav %>`)
 
+  let locale
+  if (ctx.app.i18n) {
+    locale = ctx.app.i18n.locale
+  }
+
   let home = null
-  const homePage = pages['/']
+  const homePage = pages[`/${locale && `${locale}`}`]
   if (homePage && homePage.meta && homePage.meta.home) {
     home = homePage.meta
   }

@@ -12,10 +12,12 @@ export default {
       fallbackLocale: 'en',
       messages: {
         'en': {
+          title: 'I18n example',
           welcome: 'Welcome'
         },
         'pt-BR': {
-          welcome: 'Benvindo'
+          title: 'Exemplo I18n',
+          welcome: 'Bem vindo'
         }
       }
     }

@@ -35,10 +35,17 @@ export default {
   }),
   mixins: [docsMixin],
   async asyncData ({ $press, payload, error }) {
-    const index = payload || await $press.get('api/source<%= options.docs.prefix || '/' %>index')
+    let sourceGet = 'api/source'
+    if ($press.locale) {
+      sourceGet += `/${$press.locale}`
+    } else {
+      sourceGet += `index`
+    }
+    const index = payload || await $press.get(sourceGet)
     if (!index) {
       return error({ statusCode: 404 })
     }
+    console.log('index', index)
     return { index }
   }
 }

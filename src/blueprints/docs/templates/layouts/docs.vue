@@ -1,6 +1,6 @@
 <template>
   <div id="nuxt-press" class="docs">
-    <top v-show="$route.path !== '/'" />
+    <top v-if="!$isHome || $docs.home.sidebar" />
     <sidebar v-if="!$isHome || $docs.home.sidebar" />
     <nuxt
       class="content wysiwyg"
@@ -25,9 +25,9 @@ export default {
     }
 
     return {
-      title: this.$title,
-      titleTemplate: `%s - ${this.$press.docs.title}`,
       meta,
+      title: this.$title,
+      titleTemplate: `%s - ${this.$press.docs.title}`
     }
   }
 }
