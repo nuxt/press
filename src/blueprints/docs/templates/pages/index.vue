@@ -39,8 +39,9 @@ export default {
     if ($press.locale) {
       sourceGet += `/${$press.locale}`
     } else {
-      sourceGet += `index`
+      sourceGet += `/index`
     }
+    console.log('sourceGet', sourceGet)
     const index = payload || await $press.get(sourceGet)
     if (!index) {
       return error({ statusCode: 404 })

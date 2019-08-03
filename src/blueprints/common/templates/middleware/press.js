@@ -6,7 +6,7 @@ const typeToLayout = {
 
 const trimSlashRE = /\/+$/
 
-export default async function ({ app, $press, params, payload }, plugin = false) {
+export default async function ({ app, route, $press, params, payload }, plugin = false) {
   if (process.server && !plugin) {
     return
   }
@@ -15,18 +15,25 @@ export default async function ({ app, $press, params, payload }, plugin = false)
   $press.layout = 'default'
 
   if (app.i18n) {
-    $press.locale = app.i18n.locale
+    const locale = app.i18n.locales
+      .find(l => route.path.match(new RegExp(`^\\/${l}[^/]*`)))
+    if (locale) {
+      app.i18n.locale = locale
+      $press.locale = locale
+    } else {
+      $press.locale = app.i18n.locale
+    }
   }
+
+  console.log('$press.locale', $press.locale)
 
   if (typeof params.source === 'string') {
     let source = payload
-    let sourceParam = $press.locale ? `${$press.locale}/` : ''
 
-    console.log('sourceParam', sourceParam)
+    let sourceParam = $press.locale ? `${$press.locale}/` : ''
 
     if (!source) {
       sourceParam = (params.source && params.source.replace(trimSlashRE, '')) || 'index'
-      console.log('sourceParam', sourceParam)
       source = await $press.get(`api/source/${sourceParam}`)
     }
 

@@ -8,8 +8,8 @@ export default {
     $page () {
       let path = trimSlash(this.$route.path) || '/'
 
-      if (this.$nuxt._i18n) {
-        path += this.$nuxt._i18n.locale
+      if (path === '/' && this.$press.locale) {
+        path += this.$press.locale
       }
 
       if (this.$docs.pages[path]) {
