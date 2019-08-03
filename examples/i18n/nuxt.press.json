@@ -3,6 +3,9 @@
     "dir": "",
     "prefix": "/",
     "title": "My Documentation",
-    "nav": []
+    "nav": [],
+    "sidebar": [
+      "/"
+    ]
   }
 }

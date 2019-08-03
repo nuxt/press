@@ -1,3 +1,0 @@
-# English docs
-
-English docs
