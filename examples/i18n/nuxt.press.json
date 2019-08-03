@@ -6,6 +6,16 @@
     "nav": [],
     "sidebar": [
       "/"
-    ]
+    ],
+    "locales": {
+      "en": {
+        "title": "I18n example",
+        "welcome": "Welcome"
+      },
+      "pt-BR": {
+        "title": "Exemplo I18n",
+        "welcome": "Bem vindo"
+      }
+    }
   }
 }

@@ -1,5 +1,3 @@
-# {{ $t('title') }}
+# Brazilian Portuguese docs
 
 Brazilian Portuguese docs
-
-## {{ $t('welcome') }}
