@@ -26,5 +26,9 @@
       },
       "/customize"
     ]
+  },
+  "locales": {
+    "en": {},
+    "pt-BR": {}
   }
 }

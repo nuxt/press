@@ -5,7 +5,7 @@ heroImage: /nuxt-press.png
 heroText: NuxtPress
 tagline: Publishing the Nuxt way
 actionText: Get Started →
-actionLink: /guide/
+actionLink: /pt-BR/guide/
 footer: MIT License
 ---
 

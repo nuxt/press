@@ -71,17 +71,6 @@ export default {
         this.$press.$placeholderPagesDir = pagesDir
         await ensureDir(pagesDir)
       }
-      if (options.locales) {
-        const locales = Object.keys(options.locales)
-        this.options.i18n = {
-          locales,
-          defaultLocale: locales[0],
-          vueI18n: {
-            fallbackLocale: locales[0],
-            messages: options.locales
-          }
-        }
-      }
     },
     async done () {
       chokidar.watch(['pages/*.md'], {

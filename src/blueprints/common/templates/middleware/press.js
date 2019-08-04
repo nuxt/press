@@ -15,12 +15,14 @@ export default async function ({ app, route, $press, params, payload }, plugin =
   $press.layout = 'default'
 
   if (app.i18n) {
+    console.log('!')
     const locale = app.i18n.locales
       .find(l => route.path.match(new RegExp(`^\\/${l}[^/]*`)))
     if (locale) {
       app.i18n.locale = locale
       $press.locale = locale
     } else {
+      console.log('app.i18n.locale', app.i18n.locale)
       $press.locale = app.i18n.locale
     }
   }
