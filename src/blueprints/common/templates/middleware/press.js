@@ -16,7 +16,7 @@ export default async function ({ app, route, $press, params, payload }, plugin =
 
   if (app.i18n) {
     const locale = app.i18n.locales
-      .find(l => route.path.match(new RegExp(`^\\/${l}[^/]*`)))
+      .find(l => route.path.startsWith(`/${l}`))
     if (locale) {
       app.i18n.locale = locale
       $press.locale = locale
@@ -24,8 +24,6 @@ export default async function ({ app, route, $press, params, payload }, plugin =
       $press.locale = app.i18n.locale
     }
   }
-
-  console.log('$press.locale', $press.locale)
 
   if (typeof params.source === 'string') {
     let source = payload

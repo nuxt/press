@@ -32,10 +32,8 @@ export async function registerBlueprints (rootId, options, blueprints) {
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
 
-  // console.log('options', options)
   if (options.locales) {
     const locales = Object.keys(options.locales)
-    console.log('locales', locales)
     this.options.i18n = {
       locales,
       defaultLocale: locales[0],

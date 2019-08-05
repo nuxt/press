@@ -65,7 +65,11 @@ export async function updateConfig (rootId, obj) {
   let json = {}
   try {
     json = JSON.parse(jsonFile)
-  } catch (_) {}
+  } catch (err) {
+    consola.error('An error occurred updating NuxtPress config:')
+    consola.fatal(err)
+    process.exit()
+  }
   const updated = defu(json, obj)
   await writeFile(path, JSON.stringify(updated, null, 2))
   await ensureDir(join(this.options.buildDir, 'press'))
