@@ -98,14 +98,24 @@ export default {
 
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
+          console.log('path', path)
+          console.log('sidebarPath', sidebarPath)
           if (!this._sidebars[sidebarPath]) {
-            this._sidebars[sidebarPath] = createSidebar(this.$docs, this.$sidebars[sidebarPath], this.$docs.pages)
+            console.log('!', this.$sidebars[sidebarPath])
+            this._sidebars[sidebarPath] = createSidebar(
+              this.$docs.prefix,
+              this.$sidebars[sidebarPath],
+              this.$docs.pages,
+              this.$press.locale
+            )
+            console.log('!!', this._sidebars[sidebarPath])
           }
 
           this.sidebar = this._sidebars[sidebarPath]
           break
         }
       }
+      // console.log('this.sidebar', this.sidebar)
     },
     toggleMobile() {
       document.querySelector('.sidebar').classList.toggle('mobile-visible')

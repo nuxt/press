@@ -12,9 +12,6 @@ export default {
     },
     $page () {
       let path = this.path
-
-      console.log('path', path)
-
       if (this.$docs.pages[path]) {
         return this.$docs.pages[path]
       }
