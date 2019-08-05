@@ -72,8 +72,8 @@ export default {
   },
   watch: {
     async path() {
-      this.setSidebar()
       await this.$nextTick()
+      this.setSidebar()
       if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
         this.toggleMobile()
       }

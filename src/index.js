@@ -1,5 +1,6 @@
 import { registerBlueprints } from './blueprint'
 import { join, exists } from './utils'
+import resolve from './resolve'
 import SSE from './sse'
 
 /**
@@ -31,7 +32,7 @@ export default async function NuxtPressModule (options) {
     nuxt.options.css.push(
       'normalize.css/normalize.css',
       'wysiwyg.css/wysiwyg.css',
-      'prismjs/themes/prism.css'
+      resolve('blueprints/common/prism.css')
     )
   }
 
