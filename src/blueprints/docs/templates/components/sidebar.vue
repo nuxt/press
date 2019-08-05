@@ -30,13 +30,18 @@ export default {
       if (this.$press.locale) {
         for (let i = 0; i < sidebar.length; i++) {
           if (typeof sidebar[i] === 'string') {
-            sidebar[i] = sidebar[i].replace(/^\//, `/${this.$press.locale}`)
+            if (sidebar[i] === '/') {
+              sidebar[i] = `/${this.$press.locale}`
+              continue
+            }
+            sidebar[i] = sidebar[i].replace(/^\//, `/${this.$press.locale}/`)
           } else {
             if (sidebar[i].children) {
               sidebar[i].children = sidebar[i].children.map(p => `/${this.$press.locale}${p}`)
             }
           }
         }
+        console.log('sidebar', sidebar)
         this.$sidebars = { [`/${this.$press.locale}`]: sidebar }
       } else {
         this.$sidebars = { '/': sidebar }
