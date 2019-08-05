@@ -25,31 +25,9 @@ export default {
     }
   },
   created() {
-    const sidebar = this.$docs.sidebar
-    if (Array.isArray(sidebar)) {
-      if (this.$press.locale) {
-        for (let i = 0; i < sidebar.length; i++) {
-          if (typeof sidebar[i] === 'string') {
-            if (sidebar[i] === '/') {
-              sidebar[i] = `/${this.$press.locale}`
-              continue
-            }
-            sidebar[i] = sidebar[i].replace(/^\//, `/${this.$press.locale}/`)
-          } else {
-            if (sidebar[i].children) {
-              sidebar[i].children = sidebar[i].children.map(p => `/${this.$press.locale}${p}`)
-            }
-          }
-        }
-        this.$sidebars = { [`/${this.$press.locale}`]: sidebar }
-      } else {
-        this.$sidebars = { '/': sidebar }
-      }
-    } else {
-      this.$sidebars = sidebar
-    }
+    this.$sidebars = this.$docs.$sidebars
 
-    this._sidebars = []
+    this._sidebars = {}
 
     // extract all sidebar paths in reverse order of length
     this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
@@ -71,12 +49,13 @@ export default {
     }
   },
   watch: {
-    async path() {
-      await this.$nextTick()
+    path() {
       this.setSidebar()
-      if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
-        this.toggleMobile()
-      }
+      this.$nextTick().then(() => {
+        if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
+          this.toggleMobile()
+        }
+      })
     }
   },
   methods: {
@@ -107,6 +86,7 @@ export default {
           }
 
           this.sidebar = this._sidebars[sidebarPath]
+          console.log('this.sidebar/2', this.sidebar)
           break
         }
       }

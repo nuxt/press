@@ -35,7 +35,6 @@ export default {
     ]
   }),
   mounted() {
-    console.log('data', this.data)
     const elements = `
       .topic h1,
       .topic h2,
