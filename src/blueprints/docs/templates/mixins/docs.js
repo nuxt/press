@@ -5,19 +5,22 @@ export default {
     $docs () {
       return this.$press.docs
     },
+    path() {
+      return this.$route.path === '/' && this.$press.locale
+        ? `/${this.$press.locale}`
+        : trimSlash(this.$route.path) || '/'
+    },
     $page () {
-      let path = trimSlash(this.$route.path) || '/'
+      let path = this.path
 
-      if (path === '/' && this.$press.locale) {
-        path += this.$press.locale
-      }
+      console.log('path', path)
 
       if (this.$docs.pages[path]) {
         return this.$docs.pages[path]
       }
 
       // return empty object to not break stuff
-      return this.$docs.pages['/']
+      return this.$docs.pages[`/${this.$press.locale}`]
     },
     $title () {
       return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || ''
@@ -26,6 +29,10 @@ export default {
       return this.$page.meta.description || ''
     },
     $isHome () {
+      if (this.$press.locale) {
+        // console.log('>', this.$route.path, [`/${this.$press.locale}`, '/'].includes(this.$route.path) && this.$docs)
+        return [`/${this.$press.locale}`, '/'].includes(this.$route.path) && !!this.$docs.home
+      }
       return this.$route.path === '/' && !!this.$docs.home
     }
   }

@@ -5,16 +5,24 @@ import config from 'press/config'
 Vue.component('OutboundLink', OutboundLink)
 
 export default function docsPlugin (ctx, inject) {
-  const pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
+  let pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
   const nav = JSON.parse(`<%= options.docs.$asJsonTemplate.nav %>`)
 
-  let locale
-  if (ctx.app.i18n) {
-    locale = ctx.app.i18n.locale
+  let homePage = '/'
+  if (ctx.$press.locale) {
+    homePage = `/${ctx.$press.locale}`
+    pages = Object.keys(pages).reduce((hash, page) => {
+      if (page.startsWith(homePage)) {
+        hash[page] = pages[page]
+        return hash
+      } else {
+        return hash
+      }
+    }, {})
   }
 
   let home = null
-  const homePage = pages[`/${locale && `${locale}`}`]
+  homePage = pages[homePage]
   if (homePage && homePage.meta && homePage.meta.home) {
     home = homePage.meta
   }

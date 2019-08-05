@@ -2,15 +2,13 @@
   <li :class="sectionClass">
     <section
       v-if="createChildSection"
-      class="section"
-    >
+      class="section">
       <p class="sidebar-heading">
         <nuxt-link
           v-if="url"
           class="sidebar-link"
           :class="{ active: isActive  }"
-          :to="url"
-        >
+          :to="url">
           <nuxt-template v-model="name" />
         </nuxt-link>
         <span v-else><nuxt-template v-model="name" /></span>
@@ -22,8 +20,7 @@
         :data="children"
         :depth="depth + 1"
         :hidden="!showChildSection"
-        v-show="showChildSection"
-      />
+        v-show="showChildSection" />
     </section>
     <nuxt-link
       v-else

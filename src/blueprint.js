@@ -339,13 +339,23 @@ async function addTemplates ({ options, rootId, id }, templates) {
     if (type === 'plugin') {
       const { dst } = this.addTemplate({ ...template, options })
 
-      // Push plugin at the end
-      this.options.plugins.push({
-        src: join(this.options.buildDir, dst),
-        ssr: template.ssr,
-        mode: template.mode
-      })
-      continue
+      if (id !== 'common') {
+        this.options.plugins.push({
+          src: join(this.options.buildDir, dst),
+          ssr: template.ssr,
+          mode: template.mode
+        })
+        continue
+      } else {
+        const httpPluginIndex = this.options.plugins
+          .findIndex(p => p.src.match(/\/http\.js$/))
+        this.options.plugins.splice(httpPluginIndex + 1, 0, {
+          src: join(this.options.buildDir, dst),
+          ssr: template.ssr,
+          mode: template.mode
+        })
+        continue
+      }
     }
 
     if (type === 'layout') {

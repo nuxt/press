@@ -32,6 +32,8 @@ export default {
       this.$sidebars = sidebar
     }
 
+    console.log('this.$sidebars', JSON.stringify(this.$sidebars, null, 2))
+
     this._sidebars = []
 
     // extract all sidebar paths in reverse order of length
@@ -42,9 +44,6 @@ export default {
     this.setSidebar()
   },
   computed: {
-    path() {
-      return this.$route.path
-    },
     hash() {
       return this.$route.hash
     },
