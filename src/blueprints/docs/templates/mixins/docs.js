@@ -30,7 +30,6 @@ export default {
     },
     $isHome () {
       if (this.$press.locale) {
-        // console.log('>', this.$route.path, [`/${this.$press.locale}`, '/'].includes(this.$route.path) && this.$docs)
         return [`/${this.$press.locale}`, '/'].includes(this.$route.path) && !!this.$docs.home
       }
       return this.$route.path === '/' && !!this.$docs.home

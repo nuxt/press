@@ -27,12 +27,23 @@ export default {
   created() {
     const sidebar = this.$docs.sidebar
     if (Array.isArray(sidebar)) {
-      this.$sidebars = { '/': sidebar }
+      if (this.$press.locale) {
+        for (let i = 0; i < sidebar.length; i++) {
+          if (typeof sidebar[i] === 'string') {
+            sidebar[i] = sidebar[i].replace(/^\//, `/${this.$press.locale}`)
+          } else {
+            if (sidebar[i].children) {
+              sidebar[i].children = sidebar[i].children.map(p => `/${this.$press.locale}${p}`)
+            }
+          }
+        }
+        this.$sidebars = { [`/${this.$press.locale}`]: sidebar }
+      } else {
+        this.$sidebars = { '/': sidebar }
+      }
     } else {
       this.$sidebars = sidebar
     }
-
-    console.log('this.$sidebars', JSON.stringify(this.$sidebars, null, 2))
 
     this._sidebars = []
 

@@ -15,8 +15,6 @@
 
 <script>
 import config from 'press/config'
-import Home from 'press/docs/components/home'
-import docsMixin from 'press/docs/mixins/docs'
 
 export default {
   layout: 'docs',
@@ -41,13 +39,14 @@ export default {
     } else {
       sourceGet += `/index`
     }
-    console.log('sourceGet', sourceGet)
     const index = payload || await $press.get(sourceGet)
     if (!index) {
       return error({ statusCode: 404 })
     }
-    console.log('index', index)
     return { index }
+  },
+  mounted() {
+    console.log('this.$isHome', this.$isHome)
   }
 }
 </script>

@@ -22,7 +22,9 @@ export default function docsPlugin (ctx, inject) {
   }
 
   let home = null
+  console.log('homePage', homePage)
   homePage = pages[homePage]
+  console.log('homePage', homePage)
   if (homePage && homePage.meta && homePage.meta.home) {
     home = homePage.meta
   }

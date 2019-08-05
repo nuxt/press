@@ -27,15 +27,13 @@ export default async function ({ app, route, $press, params, payload }, plugin =
     }
   }
 
-  console.log('$press.locale', $press.locale)
-
   if (typeof params.source === 'string') {
     let source = payload
 
-    let sourceParam = $press.locale ? `${$press.locale}/` : ''
+    let sourceParam = $press.locale ? `/${$press.locale}` : '/'
 
     if (!source) {
-      sourceParam = (params.source && params.source.replace(trimSlashRE, '')) || 'index'
+      sourceParam = (sourceParam && sourceParam.replace(trimSlashRE, '')) || 'index'
       source = await $press.get(`api/source/${sourceParam}`)
     }
 
@@ -47,6 +45,7 @@ export default async function ({ app, route, $press, params, payload }, plugin =
       $press.error = { statusCode: 404 }
       return
     }
+
     $press.layout = source.layout || typeToLayout[source.type]
     $press.source = source
   }
