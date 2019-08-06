@@ -1,5 +1,5 @@
 
-**NuxtPress** is a microframework that leverages the [Nuxt module system][1]. It will automatically register routes, templates and configuration options in your Nuxt application, depending on how you configure it. It also takes care of loading Markdown files, rendering them and making the pre-rendered static files available.
+**NuxtPress** é um microframework que faz uso do [sistema de módulos do Nuxt][1]. Ele automaticamente registrará rotas, templates e opções na sua aplicação Nuxt, dependendo de como você o configurar. Ele também se encarrega de carregar arquivos Markdown, renderizá-los e torná-los disponíveis estaticamente.
 
 [1]: https://nuxtjs.org/guide/modules/
 
@@ -16,7 +16,7 @@ Note that you must also install [Nuxt][nuxt] if you haven't already.
 
 [nuxt]: https://nuxtjs.org
 
-# Configuration
+# Configuração
 
 First, **NuxtPress** needs to be enabled via `nuxt.config.js`:
 

@@ -18,6 +18,10 @@ html.blog #__layout {
   width: 100%;
   margin: 0;
 
+  & select:focus {
+    outline: none;
+  }
+
   & a, & a:active, & a:visited {
     color: #555;
     text-decoration: none;
