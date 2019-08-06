@@ -27,7 +27,7 @@ export default {
   created() {
     this.$sidebars = this.$docs.$sidebars
 
-    this._sidebars = {}
+    this._sidebars = []
 
     // extract all sidebar paths in reverse order of length
     this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
