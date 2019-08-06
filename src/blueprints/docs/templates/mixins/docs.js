@@ -30,6 +30,9 @@ export default {
         return [`/${this.$press.locale}`, '/'].includes(this.$route.path) && !!this.$docs.home
       }
       return this.$route.path === '/' && !!this.$docs.home
+    },
+    locale () {
+      return this.$press.locale
     }
   }
 }

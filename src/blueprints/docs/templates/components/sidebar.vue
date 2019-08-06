@@ -14,41 +14,46 @@ import docsMixin from 'press/docs/mixins/docs'
 import { createSidebar, tocToTree, trimSlash } from 'press/docs/utils'
 import SidebarSections from 'press/docs/components/sidebar-sections'
 
-function resetSidebar() {
-  let sidebar = JSON.parse(JSON.stringify(this.$docs.sidebar))
+function prepareSidebar() {
+  let sidebar = this.$docs.sidebar
 
-  if (Array.isArray(sidebar)) {
-    if (this.$press.locale) {
-      for (let i = 0; i < sidebar.length; i++) {
-        if (typeof sidebar[i] === 'string') {
-          if (sidebar[i] === '/') {
-            sidebar[i] = `/${this.$press.locale}`
-            continue
+  const sidebarIsArray = Array.isArray(this.$docs.sidebar)
+  if (sidebarIsArray) {
+    this.$sidebars = this.$sidebars || {}
+    const routePrefix = `/${this.$press.locale}`
+
+    if (!this.$sidebars[routePrefix]) {
+      if (!this.$press.locale) {
+        this.$sidebars[routePrefix] = sidebar
+      } else {
+        const localeSidebar = sidebar.map((item) => {
+          if (typeof item === 'object') {
+            return {
+              ...item,
+              children: item.children.map(p => `${routePrefix}${p}`)
+            }
           }
-          sidebar[i] = sidebar[i].replace(/^\//, `/${this.$press.locale}/`)
-        } else if (sidebar[i].children) {
-          sidebar[i].children = sidebar[i].children.map(p => `/${this.$press.locale}${p}`)
-        }
+
+          if (item === '/') {
+            item = ''
+          }
+
+          return `${routePrefix}${item}`
+        })
+
+        this.$sidebars[routePrefix] = localeSidebar
       }
-      this.$sidebars = { [`/${this.$press.locale}`]: sidebar }
-    } else {
-      this.$sidebars = { '/': sidebar }
     }
   } else {
     this.$sidebars = sidebar
-  }
-
-  if (!this._sidebars) {
-    this._sidebars = []
   }
 
   // extract all sidebar paths in reverse order of length
   this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
     return b.length - a.length
   })
-
-  this.setSidebar()
 }
+
 export default {
   components: {
     SidebarSections
@@ -60,7 +65,10 @@ export default {
     }
   },
   created() {
-    resetSidebar.call(this)
+    this._sidebars = []
+
+    prepareSidebar.call(this)
+    this.setSidebar()
   },
   computed: {
     hash() {
@@ -75,10 +83,14 @@ export default {
     }
   },
   watch: {
+    locale() {
+      prepareSidebar.call(this)
+    },
     path() {
-      resetSidebar.call(this)
-      this.$nextTick().then(() => {
-        if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
+      this.setSidebar()
+
+      this.$nextTick(() => {
+        if (this.$refs.sidebar.classList.contains('mobile-visible')) {
           this.toggleMobile()
         }
       })
@@ -117,7 +129,7 @@ export default {
       }
     },
     toggleMobile() {
-      document.querySelector('.sidebar').classList.toggle('mobile-visible')
+      this.$refs.sidebar.classList.toggle('mobile-visible')
     }
   }
 }
