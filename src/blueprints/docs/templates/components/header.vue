@@ -3,15 +3,16 @@
     <div
       class="mobile-toggle"
       @click="toggleMobile">☰</div>
-    
+
     <nuxt-link :to="$docs.prefix" class="home-link">
       {{ $docs.title }}
     </nuxt-link>
 
     <nav class="links">
-      <select v-model="lang" @change="(e) => {
-        $router.push($route.path.replace(`/${$press.locale}`, `/${e.target.value}`))
-      }">
+      <select
+        v-if="$press.locales"
+        v-model="lang"
+        @change="this.changeLocale">
         <option
           v-for="locale in $press.locales"
           :key='`locale-${locale.code}`'
@@ -51,6 +52,10 @@ export default {
     },
     toggleMobile() {
       document.querySelector('.sidebar').classList.toggle('mobile-visible')
+    },
+    changeLocale() {
+      const newRoute = this.$route.path.replace(`/${this.$press.locale}`, `/${this.lang}`)
+      this.$router.push(newRoute)
     }
   }
 }
