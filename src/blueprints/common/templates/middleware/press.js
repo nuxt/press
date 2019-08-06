@@ -23,6 +23,7 @@ export default async function ({ app, route, $press, params, payload }, plugin =
     } else {
       $press.locale = app.i18n.locale
     }
+    $press.locales = app.i18n.locales
   }
 
   if (typeof params.source === 'string') {

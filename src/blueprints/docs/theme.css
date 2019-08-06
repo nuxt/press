@@ -51,7 +51,10 @@ html.blog #__layout {
     }
   
     & nav.links {
+      display: flex;
       position: relative;
+      flex-direction: row;
+      align-items: flex-end;
       right: 1rem;
   
       & ul {

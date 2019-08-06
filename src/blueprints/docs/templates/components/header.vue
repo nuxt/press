@@ -9,6 +9,10 @@
     </nuxt-link>
 
     <nav class="links">
+      <select>
+        <option value="en">English</option>
+        <option value="pt-BR">Portuguese (BR)</option>
+      </select>
       <ul>
         <li
           v-for="(item, idx) in $docs.nav"
