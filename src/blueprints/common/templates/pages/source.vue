@@ -66,7 +66,7 @@ export default {
           window.location.reload() // Fresh 404
         } else {
           this.$press.source = source
-          this.$nextTick().then(() => this.$forceUpdate())
+          this.$nextTick(() => this.$forceUpdate())
         }
       }
     })
