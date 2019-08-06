@@ -13,13 +13,8 @@ function docsMiddleware (ctx, plugin = false) {
     return
   }
 
-  let homePage = '/'
-  if (ctx.$press.locale) {
-    homePage = `/${ctx.$press.locale}`
-  }
-
   let home = null
-  homePage = pages[homePage]
+  const homePage = pages[`/${ctx.$press.locale}`]
 
   if (homePage && homePage.meta && homePage.meta.home) {
     home = homePage.meta
