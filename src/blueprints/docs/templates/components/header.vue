@@ -9,9 +9,11 @@
     </nuxt-link>
 
     <nav class="links">
-      <select>
-        <option value="en">English</option>
-        <option value="pt-BR">Portuguese (BR)</option>
+      <select @change="(e) => $router.push(`/${e.target.value}`)">
+        <option
+          v-for="locale in $press.locales"
+          :key='`locale-${locale.code}`'
+          :value="locale.code">{{ locale.name }}</option>
       </select>
       <ul>
         <li

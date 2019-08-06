@@ -32,14 +32,14 @@ export async function registerBlueprints (rootId, options, blueprints) {
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
 
-  if (options.locales) {
-    const locales = Object.keys(options.locales)
+  if (options.i18n) {
+    const locales = options.i18n.locales
     this.options.i18n = {
       locales,
-      defaultLocale: locales[0],
+      defaultLocale: locales[0].code,
       vueI18n: {
-        fallbackLocale: locales[0],
-        messages: options.locales
+        fallbackLocale: locales[0].code,
+        messages: options.i18n.messages || {}
       }
     }
     this.requireModule('nuxt-i18n')
