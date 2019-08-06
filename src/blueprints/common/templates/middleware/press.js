@@ -6,7 +6,9 @@ const typeToLayout = {
 
 const trimSlashRE = /\/+$/
 
-export default async function ({ app, route, $press, params, payload }, plugin = false) {
+export default async function pressMiddleware(ctx, plugin = false) {
+  const { app, route, $press, params, payload } = ctx
+
   if (process.server && !plugin) {
     return
   }
@@ -15,10 +17,8 @@ export default async function ({ app, route, $press, params, payload }, plugin =
   $press.layout = 'default'
 
   if (app.i18n) {
-    console.log('app.i18n.locales', app.i18n.locales)
     const locale = app.i18n.locales
       .find(l => route.path.startsWith(`/${l.code}`))
-    console.log('locale', locale)
     if (locale) {
       app.i18n.locale = locale.code
       $press.locale = locale.code
@@ -27,8 +27,6 @@ export default async function ({ app, route, $press, params, payload }, plugin =
     }
     $press.locales = app.i18n.locales
   }
-
-  console.log('$press.locale', $press.locale)
 
   if (typeof params.source === 'string') {
     let source = payload
@@ -54,4 +52,13 @@ export default async function ({ app, route, $press, params, payload }, plugin =
     $press.layout = source.layout || typeToLayout[source.type]
     $press.source = source
   }
+
+  for (const m of pressMiddleware.extraMiddleware) {
+    m(ctx)
+  }
+}
+
+pressMiddleware.extraMiddleware = []
+pressMiddleware.add = (middleware) => {
+  pressMiddleware.extraMiddleware.push(middleware)
 }

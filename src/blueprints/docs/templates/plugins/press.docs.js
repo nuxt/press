@@ -1,12 +1,17 @@
 import Vue from 'vue'
+import NuxtMiddleware from 'press/../middleware'
 import OutboundLink from 'press/docs/components/outbound-link-icon'
 import config from 'press/config'
 
 Vue.component('OutboundLink', OutboundLink)
 
-export default function docsPlugin (ctx, inject) {
-  let pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
-  const nav = JSON.parse(`<%= options.docs.$asJsonTemplate.nav %>`)
+let pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
+const nav = JSON.parse(`<%= options.docs.$asJsonTemplate.nav %>`)
+
+function docsMiddleware (ctx, plugin = false) {
+  if (process.server && !plugin) {
+    return
+  }
 
   let homePage = '/'
   if (ctx.$press.locale) {
@@ -27,12 +32,11 @@ export default function docsPlugin (ctx, inject) {
     pages
   }
 
-  if (ctx.$press) {
-    ctx.$press.docs = docs
-    return
-  }
+  ctx.$press.docs = docs
+}
 
-  const press = { docs }
-  ctx.$press = press
-  inject('press', press)
+NuxtMiddleware.press.add(docsMiddleware)
+
+export default function docsPlugin(ctx) {
+  docsMiddleware(ctx, true)
 }
