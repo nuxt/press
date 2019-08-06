@@ -32,6 +32,19 @@ export async function registerBlueprints (rootId, options, blueprints) {
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
 
+  if (options.i18n) {
+    const locales = options.i18n.locales
+    this.options.i18n = {
+      locales,
+      defaultLocale: locales[0].code,
+      vueI18n: {
+        fallbackLocale: locales[0].code,
+        messages: options.i18n.messages || {}
+      }
+    }
+    this.requireModule('nuxt-i18n')
+  }
+
   const devStaticRoot = join(this.options.buildDir, rootId, 'static')
   this.saveDevDataSources = (...args) => {
     return new Promise(async (resolve) => {
@@ -324,13 +337,23 @@ async function addTemplates ({ options, rootId, id }, templates) {
     if (type === 'plugin') {
       const { dst } = this.addTemplate({ ...template, options })
 
-      // Push plugin at the end
-      this.options.plugins.push({
-        src: join(this.options.buildDir, dst),
-        ssr: template.ssr,
-        mode: template.mode
-      })
-      continue
+      if (id !== 'common') {
+        this.options.plugins.push({
+          src: join(this.options.buildDir, dst),
+          ssr: template.ssr,
+          mode: template.mode
+        })
+        continue
+      } else {
+        const httpPluginIndex = this.options.plugins
+          .findIndex(p => p.src.match(/\/http\.js$/))
+        this.options.plugins.splice(httpPluginIndex + 1, 0, {
+          src: join(this.options.buildDir, dst),
+          ssr: template.ssr,
+          mode: template.mode
+        })
+        continue
+      }
     }
 
     if (type === 'layout') {

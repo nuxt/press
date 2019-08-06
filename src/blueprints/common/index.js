@@ -64,7 +64,7 @@ export default {
     ]
   },
   build: {
-    async before () {
+    async before ({ options }) {
       this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
       const pagesDir = join(this.options.srcDir, this.options.dir.pages)
       if (!exists(pagesDir)) {
@@ -72,12 +72,7 @@ export default {
         await ensureDir(pagesDir)
       }
     },
-    async compile () {
-      if (this.$press.$placeholderPagesDir) {
-        await remove(this.$press.$placeholderPagesDir)
-      }
-    },
-    done () {
+    async done () {
       chokidar.watch(['pages/*.md'], {
         cwd: this.options.srcDir,
         ignoreInitial: true,
@@ -86,6 +81,10 @@ export default {
         .on('change', async path => this.$pressSourceEvent('change', await loadPage(path)))
         .on('add', async path => this.$pressSourceEvent('add', await loadPage(path)))
         .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
+
+      if (this.$press.$placeholderPagesDir) {
+        await remove(this.$press.$placeholderPagesDir)
+      }
     }
   },
   options: {

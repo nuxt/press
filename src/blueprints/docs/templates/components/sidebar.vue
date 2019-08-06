@@ -14,6 +14,41 @@ import docsMixin from 'press/docs/mixins/docs'
 import { createSidebar, tocToTree, trimSlash } from 'press/docs/utils'
 import SidebarSections from 'press/docs/components/sidebar-sections'
 
+function resetSidebar() {
+  let sidebar = JSON.parse(JSON.stringify(this.$docs.sidebar))
+
+  if (Array.isArray(sidebar)) {
+    if (this.$press.locale) {
+      for (let i = 0; i < sidebar.length; i++) {
+        if (typeof sidebar[i] === 'string') {
+          if (sidebar[i] === '/') {
+            sidebar[i] = `/${this.$press.locale}`
+            continue
+          }
+          sidebar[i] = sidebar[i].replace(/^\//, `/${this.$press.locale}/`)
+        } else if (sidebar[i].children) {
+          sidebar[i].children = sidebar[i].children.map(p => `/${this.$press.locale}${p}`)
+        }
+      }
+      this.$sidebars = { [`/${this.$press.locale}`]: sidebar }
+    } else {
+      this.$sidebars = { '/': sidebar }
+    }
+  } else {
+    this.$sidebars = sidebar
+  }
+
+  if (!this._sidebars) {
+    this._sidebars = []
+  }
+
+  // extract all sidebar paths in reverse order of length
+  this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
+    return b.length - a.length
+  })
+
+  this.setSidebar()
+}
 export default {
   components: {
     SidebarSections
@@ -25,26 +60,9 @@ export default {
     }
   },
   created() {
-    const sidebar = this.$docs.sidebar
-    if (Array.isArray(sidebar)) {
-      this.$sidebars = { '/': sidebar }
-    } else {
-      this.$sidebars = sidebar
-    }
-
-    this._sidebars = []
-
-    // extract all sidebar paths in reverse order of length
-    this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
-      return b.length - a.length
-    })
-
-    this.setSidebar()
+    resetSidebar.call(this)
   },
   computed: {
-    path() {
-      return this.$route.path
-    },
     hash() {
       return this.$route.hash
     },
@@ -57,12 +75,13 @@ export default {
     }
   },
   watch: {
-    async path() {
-      this.setSidebar()
-      await this.$nextTick()
-      if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
-        this.toggleMobile()
-      }
+    path() {
+      resetSidebar.call(this)
+      this.$nextTick().then(() => {
+        if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
+          this.toggleMobile()
+        }
+      })
     }
   },
   methods: {
@@ -84,7 +103,12 @@ export default {
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
           if (!this._sidebars[sidebarPath]) {
-            this._sidebars[sidebarPath] = createSidebar(this.$docs, this.$sidebars[sidebarPath], this.$docs.pages)
+            this._sidebars[sidebarPath] = createSidebar(
+              this.$docs.prefix,
+              this.$sidebars[sidebarPath],
+              this.$docs.pages,
+              this.$press.locale
+            )
           }
 
           this.sidebar = this._sidebars[sidebarPath]

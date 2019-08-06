@@ -25,20 +25,15 @@ export default {
     }
     return exists(this.options.srcDir, options.docs.dir)
   },
-  routes (templates) {
-    return [
-      {
-        name: 'docs_index',
-        path: this.$press.docs.prefix,
-        component: templates.index
-      }
-    ]
-  },
   async generateRoutes (data, prefix, staticRoot) {
+    let index = 'índex'
+    if (this.$press.i18n) {
+      index = this.$press.i18n.locales[0].code
+    }
     return [
       {
         route: prefix(''),
-        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
+        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/${index}.json`)
       },
       ...Object.keys(data.sources).map(async route => ({
         route: routePath(route),

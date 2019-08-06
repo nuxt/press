@@ -26,5 +26,17 @@
       },
       "/customize"
     ]
+  },
+  "i18n": {
+    "locales": [
+      {
+        "code": "en",
+        "name": "English"
+      },
+      {
+        "code": "pt-BR",
+        "name": "Português (BR)"
+      }
+    ]
   }
 }

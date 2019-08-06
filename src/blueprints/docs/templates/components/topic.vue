@@ -1,16 +1,29 @@
 <template>
-  <main class="topic">
-    <nuxt-template tag="article" v-model="data.body" />
+  <main>
+    <home
+      v-if="$isHome"
+      :data="$docs.home"
+      v-model="data.body"
+    />
+    <nuxt-template
+      v-else
+      tag="article"
+      v-model="data.body"
+    />
   </main>
 </template>
 
 <script>
 import config from 'press/config'
+import Home from 'press/docs/components/home'
 import { startObserver } from 'press/common/components/observer'
+import docsMixin from 'press/docs/mixins/docs'
 
 export default {
+  components: { Home },
   layout: 'docs',
   props: ['data'],
+  mixins: [docsMixin],
   head: () => ({
     htmlAttrs: {
       class: 'docs'

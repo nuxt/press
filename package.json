@@ -79,6 +79,7 @@
     "jest": "^24.8.0",
     "node-env-file": "^0.1.8",
     "nuxt": "^2.8.1",
+    "nuxt-i18n": "^6.0.0",
     "puppeteer-core": "^1.19.0",
     "rimraf": "^2.6.3",
     "rollup": "^1.17.0",

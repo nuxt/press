@@ -80,7 +80,7 @@ export function createSidebarFromToc (path, title, page, startDepth = 0) {
   return tocToTree(sidebar)
 }
 
-export function createSidebar ({ prefix }, sidebarConfig, pages) {
+export function createSidebar (prefix, sidebarConfig, pages) {
   const docPrefix = trimSlash(prefix)
 
   const sidebar = []

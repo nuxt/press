@@ -5,15 +5,15 @@ heroImage: /nuxt-press.png
 heroText: NuxtPress
 tagline: Publishing the Nuxt way
 actionText: Get Started →
-actionLink: /guide/
+actionLink: /pt-BR/guide/
 footer: MIT License
 ---
 
 <div style="margin: 0 auto; max-width: 700px;">
 
-**NuxtPress** is a multi-mode natural extension to Nuxt.js.
+**NuxtPress** é um módulo para Nuxt.js.
 
-_Adds magical **Markdown publishing abilities** to your Nuxt app_ ✨✨✨
+Dá _**recursos mágicos de processamento Markdown**_ ao seus apps Nuxt ✨✨✨
 
 ⚡Automatic Markdown routes: `pages/foo/bar.md` → `/foo/bar`
 
