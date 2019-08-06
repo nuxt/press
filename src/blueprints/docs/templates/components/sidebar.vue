@@ -78,7 +78,6 @@ export default {
     path() {
       resetSidebar.call(this)
       this.$nextTick().then(() => {
-        console.log('this.$options', this.$options)
         if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
           this.toggleMobile()
         }

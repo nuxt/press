@@ -25,11 +25,21 @@ export default {
     }
     return exists(this.options.srcDir, options.docs.dir)
   },
-  generateRoutes (data, _, staticRoot) {
-    return Object.keys(data.sources).map(async route => ({
-      route: routePath(route),
-      payload: await importModule(`${staticRoot}/sources${route}`)
-    }))
+  async generateRoutes (data, prefix, staticRoot) {
+    let index = 'índex'
+    if (this.$press.i18n) {
+      index = this.$press.i18n.locales[0].code
+    }
+    return [
+      {
+        route: prefix(''),
+        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/${index}.json`)
+      },
+      ...Object.keys(data.sources).map(async route => ({
+        route: routePath(route),
+        payload: await importModule(`${staticRoot}/sources${route}`)
+      }))
+    ]
   },
   build: {
     before () {
