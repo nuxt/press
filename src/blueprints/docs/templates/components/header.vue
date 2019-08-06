@@ -9,7 +9,9 @@
     </nuxt-link>
 
     <nav class="links">
-      <select @change="(e) => $router.push(`/${e.target.value}`)">
+      <select v-model="lang" @change="(e) => {
+        $router.push($route.path.replace(`/${$press.locale}`, `/${e.target.value}`))
+      }">
         <option
           v-for="locale in $press.locales"
           :key='`locale-${locale.code}`'
@@ -36,6 +38,11 @@ import NavLink from 'press/docs/components/nav-link'
 export default {
   components: {
     NavLink
+  },
+  data () {
+    return {
+      lang: this.$press.locale
+    }
   },
   mixins: [docsMixin],
   methods: {
