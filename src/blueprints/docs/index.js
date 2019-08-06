@@ -25,26 +25,11 @@ export default {
     }
     return exists(this.options.srcDir, options.docs.dir)
   },
-  // routes (templates) {
-  //   return [
-  //     {
-  //       name: 'docs_index',
-  //       path: this.$press.docs.prefix,
-  //       component: templates.index
-  //     }
-  //   ]
-  // },
-  async generateRoutes (data, prefix, staticRoot) {
-    return [
-      // {
-      //   route: prefix(''),
-      //   payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/index.json`)
-      // },
-      ...Object.keys(data.sources).map(async route => ({
-        route: routePath(route),
-        payload: await importModule(`${staticRoot}/sources${route}`)
-      }))
-    ]
+  generateRoutes (data, _, staticRoot) {
+    return Object.keys(data.sources).map(async route => ({
+      route: routePath(route),
+      payload: await importModule(`${staticRoot}/sources${route}`)
+    }))
   },
   build: {
     before () {

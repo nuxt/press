@@ -5,13 +5,13 @@ export default {
     $docs () {
       return this.$press.docs
     },
-    path() {
+    path () {
       return this.$route.path === '/' && this.$press.locale
         ? `/${this.$press.locale}`
         : trimSlash(this.$route.path) || '/'
     },
     $page () {
-      let path = this.path
+      const path = this.path
       if (this.$docs.pages[path]) {
         return this.$docs.pages[path]
       }

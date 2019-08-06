@@ -86,7 +86,6 @@ export default {
           }
 
           this.sidebar = this._sidebars[sidebarPath]
-          console.log('this.sidebar/2', this.sidebar)
           break
         }
       }

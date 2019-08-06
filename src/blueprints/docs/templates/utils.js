@@ -81,7 +81,7 @@ export function createSidebarFromToc (path, title, page, startDepth = 0) {
 }
 
 export function createSidebar (prefix, sidebarConfig, pages) {
-  let docPrefix = trimSlash(prefix)
+  const docPrefix = trimSlash(prefix)
 
   const sidebar = []
   for (let sourcePath of sidebarConfig) {

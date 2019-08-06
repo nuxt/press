@@ -1,3 +1,4 @@
+import consola from 'consola'
 import defu from 'defu'
 import { importModule } from './module'
 import { readFile, writeFile, exists, join, writeJson, ensureDir } from './fs'
