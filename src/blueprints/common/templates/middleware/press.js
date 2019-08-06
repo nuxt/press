@@ -6,7 +6,7 @@ const typeToLayout = {
 
 const trimSlashRE = /\/+$/
 
-export default async function pressMiddleware(ctx, plugin = false) {
+export default async function pressMiddleware (ctx, plugin = false) {
   const { app, route, $press, params, payload } = ctx
 
   if (process.server && !plugin) {

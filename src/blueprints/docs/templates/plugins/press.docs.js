@@ -5,7 +5,7 @@ import config from 'press/config'
 
 Vue.component('OutboundLink', OutboundLink)
 
-let pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
+const pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
 const nav = JSON.parse(`<%= options.docs.$asJsonTemplate.nav %>`)
 
 function docsMiddleware (ctx, plugin = false) {
@@ -37,6 +37,6 @@ function docsMiddleware (ctx, plugin = false) {
 
 NuxtMiddleware.press.add(docsMiddleware)
 
-export default function docsPlugin(ctx) {
+export default function docsPlugin (ctx) {
   docsMiddleware(ctx, true)
 }

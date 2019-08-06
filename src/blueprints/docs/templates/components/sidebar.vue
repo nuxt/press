@@ -25,7 +25,7 @@ export default {
     }
   },
   created() {
-    let sidebar = this.$docs.sidebar
+    let sidebar = JSON.parse(JSON.stringify(this.$docs.sidebar))
 
     if (Array.isArray(sidebar)) {
       if (this.$press.locale) {
@@ -48,7 +48,9 @@ export default {
       this.$sidebars = sidebar
     }
 
-    this._sidebars = []
+    if (!this._sidebars) {
+      this._sidebars = []
+    }
 
     // extract all sidebar paths in reverse order of length
     this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
@@ -72,7 +74,6 @@ export default {
   watch: {
     path() {
       this.$options.created.call(this)
-      this.setSidebar()
       this.$nextTick().then(() => {
         if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
           this.toggleMobile()
@@ -84,6 +85,8 @@ export default {
     setSidebar() {
       const path = this.path
       let sidebar
+
+      console.log('>>path', path)
 
       if (this._sidebars[path]) {
         this.sidebar = this._sidebars[path]
