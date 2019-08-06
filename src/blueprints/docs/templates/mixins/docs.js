@@ -16,6 +16,7 @@ export default {
         return this.$docs.pages[path]
       }
 
+      console.log(this.$docs.pages)
       // return empty object to not break stuff
       return this.$docs.pages[`/${this.$press.locale}`]
     },

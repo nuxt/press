@@ -15,16 +15,20 @@ export default async function ({ app, route, $press, params, payload }, plugin =
   $press.layout = 'default'
 
   if (app.i18n) {
+    console.log('app.i18n.locales', app.i18n.locales)
     const locale = app.i18n.locales
       .find(l => route.path.startsWith(`/${l.code}`))
+    console.log('locale', locale)
     if (locale) {
-      app.i18n.locale = locale
+      app.i18n.locale = locale.code
       $press.locale = locale.code
     } else {
-      $press.locale = app.i18n.locale.code
+      $press.locale = app.i18n.locale
     }
     $press.locales = app.i18n.locales
   }
+
+  console.log('$press.locale', $press.locale)
 
   if (typeof params.source === 'string') {
     let source = payload

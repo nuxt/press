@@ -11,14 +11,6 @@ export default function docsPlugin (ctx, inject) {
   let homePage = '/'
   if (ctx.$press.locale) {
     homePage = `/${ctx.$press.locale}`
-    pages = Object.keys(pages).reduce((hash, page) => {
-      if (page.startsWith(homePage)) {
-        hash[page] = pages[page]
-        return hash
-      } else {
-        return hash
-      }
-    }, {})
   }
 
   let home = null
@@ -33,27 +25,6 @@ export default function docsPlugin (ctx, inject) {
     nav,
     home,
     pages
-  }
-
-  if (Array.isArray(docs.sidebar)) {
-    if (ctx.$press.locale) {
-      for (let i = 0; i < docs.sidebar.length; i++) {
-        if (typeof docs.sidebar[i] === 'string') {
-          if (docs.sidebar[i] === '/') {
-            docs.sidebar[i] = `/${ctx.$press.locale}`
-            continue
-          }
-          docs.sidebar[i] = docs.sidebar[i].replace(/^\//, `/${ctx.$press.locale}/`)
-        } else if (docs.sidebar[i].children) {
-          docs.sidebar[i].children = docs.sidebar[i].children.map(p => `/${ctx.$press.locale}${p}`)
-        }
-      }
-      docs.$sidebars = { [`/${ctx.$press.locale}`]: docs.sidebar }
-    } else {
-      docs.$sidebars = { '/': docs.sidebar }
-    }
-  } else {
-    docs.$sidebars = docs.sidebar
   }
 
   if (ctx.$press) {

@@ -25,7 +25,28 @@ export default {
     }
   },
   created() {
-    this.$sidebars = this.$docs.$sidebars
+    let sidebar = this.$docs.sidebar
+
+    if (Array.isArray(sidebar)) {
+      if (this.$press.locale) {
+        for (let i = 0; i < sidebar.length; i++) {
+          if (typeof sidebar[i] === 'string') {
+            if (sidebar[i] === '/') {
+              sidebar[i] = `/${this.$press.locale}`
+              continue
+            }
+            sidebar[i] = sidebar[i].replace(/^\//, `/${this.$press.locale}/`)
+          } else if (sidebar[i].children) {
+            sidebar[i].children = sidebar[i].children.map(p => `/${this.$press.locale}${p}`)
+          }
+        }
+        this.$sidebars = { [`/${this.$press.locale}`]: sidebar }
+      } else {
+        this.$sidebars = { '/': sidebar }
+      }
+    } else {
+      this.$sidebars = sidebar
+    }
 
     this._sidebars = []
 
@@ -50,6 +71,7 @@ export default {
   },
   watch: {
     path() {
+      this.$options.created.call(this)
       this.setSidebar()
       this.$nextTick().then(() => {
         if ([...this.$refs.sidebar.classList].includes('mobile-visible')) {
