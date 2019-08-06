@@ -1,6 +1,6 @@
 <template>
   <div id="nuxt-press" class="docs">
-    <top v-if="!$isHome || $docs.home.sidebar" />
+    <top v-if="!$isHome || $docs.home.header" />
     <sidebar v-if="!$isHome || $docs.home.sidebar" />
     <nuxt
       class="content wysiwyg"
