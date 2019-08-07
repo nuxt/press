@@ -18,7 +18,7 @@ describe('basic', () => {
   afterAll(() => browser.close())
 
   async function testPageA () {
-    expect(await page.getText('.topic h1')).toBe('Header')
+    expect(await page.getText('.docs h1')).toBe('Header')
 
     const expectedLinks = [ 'Home', 'Header', 'First Header 1', 'First Header 2', 'Second Header 1', 'Second Header 1.1' ]
     const sidebarLinks = await page.getTexts('.sidebar-link', true)
@@ -30,7 +30,7 @@ describe('basic', () => {
   }
 
   async function testPageB () {
-    expect(await page.getText('.topic h1')).toBe('B1')
+    expect(await page.getText('.docs h1')).toBe('B1')
 
     const expectedLinks = [ 'B1', 'B2', 'B2.1', 'B2.1.1', 'B2.2', 'B3' ]
     const sidebarLinks = await page.getTexts('.sidebar-link', true)
@@ -40,7 +40,7 @@ describe('basic', () => {
   }
 
   async function testPageC () {
-    expect(await page.getText('.topic h1')).toBe('C1')
+    expect(await page.getText('.docs h1')).toBe('C1')
 
     const expectedLinks = [ 'C1 Meta', 'C1.1', 'C1.1.1', 'C1.1.1.1', 'Second Header 1', 'Second Header 1.1' ]
     const sidebarLinks = await page.getTexts('.sidebar-link', true)
@@ -72,7 +72,7 @@ describe('basic', () => {
   test('nav /a/first (depth visibility)', async () => {
     expect(await page.getText('.sidebar-depth-1 .sidebar-links:not([hidden]) .sidebar-link')).toBeNull()
 
-    await page.navigate('/a/first')
+    await page.navigate('/a/first/')
 
     expect(await page.getText('.sidebar-depth-1 .sidebar-links:not([hidden]) .sidebar-link', true)).toEqual('First Header 2')
   })
@@ -80,13 +80,13 @@ describe('basic', () => {
   test('nav /a/second (depth visibility)', async () => {
     expect(await page.getText('.sidebar-depth-1 .sidebar-section:nth-child(3) .sidebar-links:not([hidden]) .sidebar-link')).toBeNull()
 
-    await page.navigate('/a/second')
+    await page.navigate('/a/second/')
 
     expect(await page.getText('.sidebar-depth-1 .sidebar-section:nth-child(3) .sidebar-links:not([hidden]) .sidebar-link', true)).toEqual('Second Header 1.1')
   })
 
   test('open /a', async () => {
-    const url = browser.getUrl('/a')
+    const url = browser.getUrl('/a/')
 
     page = await browser.page(url)
 
@@ -94,13 +94,13 @@ describe('basic', () => {
   })
 
   test('nav /b', async () => {
-    await page.navigate('/b')
+    await page.navigate('/b/')
 
     await testPageB()
   })
 
   test('open /b', async () => {
-    const url = browser.getUrl('/b')
+    const url = browser.getUrl('/b/')
 
     page = await browser.page(url)
 
@@ -108,13 +108,13 @@ describe('basic', () => {
   })
 
   test('nav /c', async () => {
-    await page.navigate('/c')
+    await page.navigate('/c/')
 
     await testPageC()
   })
 
   test('open /c', async () => {
-    const url = browser.getUrl('/c')
+    const url = browser.getUrl('/c/')
     page = await browser.page(url)
 
     await testPageC()

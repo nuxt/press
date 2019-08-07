@@ -2,6 +2,7 @@ import Vue from 'vue'
 import NuxtMiddleware from 'press/../middleware'
 import OutboundLink from 'press/docs/components/outbound-link-icon'
 import config from 'press/config'
+import { trimSlash, normalizePaths } from 'press/docs/utils'
 
 Vue.component('OutboundLink', OutboundLink)
 
@@ -14,14 +15,22 @@ function docsMiddleware (ctx, plugin = false) {
   }
 
   let home = null
-  const homePage = pages[`/${ctx.$press.locale}`]
+  const homePath = ctx.$press.locale ? `/${ctx.$press.locale}/` : '/'
+  const homePage = pages[homePath]
 
   if (homePage && homePage.meta && homePage.meta.home) {
     home = homePage.meta
   }
 
+  if (ctx.$press.docs) {
+    ctx.$press.docs.home = home
+    return
+  }
+
   const docs = {
     ...config.docs,
+    prefix: trimSlash(config.docs.prefix),
+    sidebar: normalizePaths(config.docs.sidebar),
     nav,
     home,
     pages

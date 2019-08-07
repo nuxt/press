@@ -15,8 +15,12 @@ export class EntriesObserver {
       this.entries = []
     }
 
-    for (const entry of entries) {
-      entry.$id = this.constructor.getEntryId(entry)
+    for (const _entry of entries) {
+      const entry = {
+        $id: this.constructor.getEntryId(_entry),
+        intersectionRatio: _entry.intersectionRatio,
+        target: _entry.target
+      }
 
       if (initial) {
         this.entries.push(entry)
@@ -52,7 +56,7 @@ export class EntriesObserver {
   }
 }
 
-export function startObserver ({ vm, elements, initialId, throttle = 100 }, callback) {
+export function startObserver ({ vm, elements, initialId, throttle = 100, options = {} }, callback) {
   if (!elements) {
     return null
   }
@@ -63,7 +67,7 @@ export function startObserver ({ vm, elements, initialId, throttle = 100 }, call
     callback
   })
 
-  const observer = new IntersectionObserver(entries => ahObserver.update(entries))
+  const observer = new IntersectionObserver(entries => ahObserver.update(entries), options)
 
   if (typeof elements === 'string') {
     elements = [...document.querySelectorAll(elements)]

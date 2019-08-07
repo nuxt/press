@@ -8,7 +8,7 @@
           v-if="url"
           class="sidebar-link"
           :class="{ active: isActive  }"
-          :to="url">
+          :to="fullUrl">
           {{ name }}
         </nuxt-link>
         <span v-else>{{ name }}</span>
@@ -26,7 +26,7 @@
       v-else
       class="sidebar-link"
       :class="{ active: isActive }"
-      :to="url">
+      :to="fullUrl">
       {{ name }}
     </nuxt-link>
   </li>
@@ -60,15 +60,19 @@ export default {
     url() {
       return this.data[2]
     },
-    path() {
+    fullUrl() {
+      return `${this.$docs.prefix}${this.url}`
+    },
+    /*path() {
       const index = this.url.indexOf('#')
       return index === -1 ? this.url : this.url.substr(0, index)
-    },
+    },*/
     children() {
       return this.data[3]
     },
     createChildSection() {
-      if (this.depth <= this.$page.meta.sidebarDepth) {
+      const extraDepth = this.$page.meta.sidebar === 'auto' ? 0 : 1
+      if (this.depth < this.$page.meta.sidebarDepth + extraDepth) {
         return !!this.children && this.children.length > 0
       }
 

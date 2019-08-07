@@ -11,7 +11,7 @@
 
 <script>
 import docsMixin from 'press/docs/mixins/docs'
-import { createSidebar, tocToTree, trimSlash } from 'press/docs/utils'
+import { createSidebar, tocToTree } from 'press/docs/utils'
 import SidebarSections from 'press/docs/components/sidebar-sections'
 
 function prepareSidebar() {
@@ -20,7 +20,7 @@ function prepareSidebar() {
   const sidebarIsArray = Array.isArray(this.$docs.sidebar)
   if (sidebarIsArray) {
     this.$sidebars = this.$sidebars || {}
-    const routePrefix = `/${this.$press.locale}`
+    const routePrefix = this.$press.locale ? `/${this.$press.locale}` : ''
 
     if (!this.$sidebars[routePrefix]) {
       if (!this.$press.locale) {
@@ -75,8 +75,7 @@ export default {
       return this.$route.hash
     },
     activePath() {
-      const path = trimSlash(this.path)
-      return `${path}${this.hash}`
+      return `${this.path}${this.hash}`
     },
     sidebarClass() {
       return this.$page.meta.sidebar === 'auto' ? 'sidebar-auto' : undefined
@@ -116,7 +115,6 @@ export default {
         if (path.startsWith(sidebarPath)) {
           if (!this._sidebars[sidebarPath]) {
             this._sidebars[sidebarPath] = createSidebar(
-              this.$docs.prefix,
               this.$sidebars[sidebarPath],
               this.$docs.pages,
               this.$press.locale

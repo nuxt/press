@@ -1,8 +1,9 @@
 ---
 home: true
+header: true
 heroImage: /hero.png
 actionText: Get Started
-actionLink: /guide/
+actionLink: /a/
 features:
 - title: Feat 1
   details: Details 1

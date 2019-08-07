@@ -22,13 +22,57 @@ export default {
     'source': 'pages/source.vue'
   },
   routes (templates) {
-    return [
-      {
-        name: 'source',
-        path: '/:source(.*)',
-        component: templates.source
+    const $press = this.nuxt.options.press
+
+    const prefixes = []
+    for (const blueprint of ['blog', 'docs', 'slides']) {
+      if ($press[blueprint]) {
+        const prefix = $press[blueprint].prefix || '/'
+        if (!prefixes.includes(prefix)) {
+          prefixes.push(prefix)
+        }
       }
-    ]
+    }
+
+    const routes = []
+    for (let prefix of prefixes) {
+      prefix = trimEnd(prefix, '/')
+
+      let prefixName = ''
+      if (prefix) {
+        prefixName = `-${prefix.replace('/', '')}`
+
+        if (prefix[0] !== '/') {
+          prefix = `/${prefix}`
+        }
+      }
+
+      const hasLocales = !!$press.i18n
+      if (hasLocales) {
+        routes.push({
+          name: `source-locale${prefixName}`,
+          path: `${prefix}/:locale/:source(.*)`,
+          component: templates.source
+        })
+
+        routes.push({
+          name: `source${prefixName}`,
+          path: `${prefix}/`,
+          meta: { sourceParam: true },
+          component: templates.source
+        })
+
+        continue
+      }
+
+      routes.push({
+        name: `source${prefixName}`,
+        path: `${prefix}/:source(.*)`,
+        component: templates.source
+      })
+    }
+
+    return routes
   },
   generateRoutes (data, _, staticRoot) {
     if (!data || !data.sources) {
@@ -92,9 +136,22 @@ export default {
       const rootDir = join(this.options.buildDir, rootId, 'static')
       const sourceCache = {}
       return {
-        source (source, _, res) {
+        source (source, _, res, next) {
           if (this.options.dev || !sourceCache[source]) {
-            sourceCache[source] = readJsonSync(rootDir, 'sources', `${source}.json`)
+            let sourceFile = join(rootDir, 'sources', `${source}.json`)
+
+            if (!exists(sourceFile)) {
+              sourceFile = join(rootDir, 'sources', `${source}/index.json`)
+
+              if (!exists(sourceFile)) {
+                const err = new Error('NuxtPress: source not found')
+                err.statusCode = 404
+                next(err)
+                return
+              }
+            }
+
+            sourceCache[source] = readJsonSync(sourceFile)
           }
           res.json(sourceCache[source])
         }
