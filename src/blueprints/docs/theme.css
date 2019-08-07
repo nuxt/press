@@ -3,12 +3,21 @@
   font-family: 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Cantarell, Ubuntu, Helvetica, Arial, sans-serif;
 }
 
-html.blog #__layout {
-  width: 740px !important;
+html.docs {
+  background: #628fb2;
+}
+
+html.docs body {
+  height: auto;
+  width: 896px;
+  margin: 0 auto;
+}
+
+html.docs #__layout {
   margin: 0px auto;
 }
 
-@custom-media --mobile only screen and (max-device-width: 812px), (max-width: 812px);
+@custom-media --mobile only screen and (max-device-width: 896px), (max-width: 896px);
 
 #nuxt-press.docs {
   display: flex;
@@ -33,10 +42,10 @@ html.blog #__layout {
   & > header {
     position: fixed;
     top: 0;
-    left: 0;
-    width: 100vw;
+    left: auto;
+    width: calc(896px - 1rem);
     background-color: #fff;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 2px solid #e5e5e5;
     z-index: 3;
     display: flex;
     justify-content: space-between;
@@ -51,7 +60,7 @@ html.blog #__layout {
       font-weight: bold;
       vertical-align: middle;
       line-height: 1.6rem;
-      padding-left: 0;
+      padding-left: 0.2rem;
     }
   
     & nav.links {
@@ -85,6 +94,7 @@ html.blog #__layout {
     top: 3rem;
     bottom: 0;
     z-index: 2;
+    background: #fff;
     border-right: 1px solid #e5e5e5;
     padding: 1.4rem 0 0 0;
     font-size: 1.1rem;
@@ -106,7 +116,14 @@ html.blog #__layout {
       margin-bottom: 3px;
       padding: 0px;
       & a.active {
+        display: inline-block;
+        margin-top: 0.2rem;
+        border-top: 1px solid #628fb2;
+        padding-top: 0.2rem;
         font-weight: bold;
+        padding-bottom: 0.2rem;
+        border-bottom: 1px solid #628fb2;
+        margin-bottom: 0.2rem;
       }
     }
   
@@ -148,6 +165,8 @@ html.blog #__layout {
     z-index: 1;
     padding: 3rem 1.4rem 1.4rem 1.4rem;
     font-size: 1.1rem;
+    background: #fff;
+
 
     &.has-sidebar {
       padding-left: 15.4rem;
