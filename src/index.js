@@ -40,23 +40,25 @@ export default async function NuxtPressModule (options) {
     nuxt.options.css.push('~/nuxt.press.css')
   }
 
-  // Hot reload for Markdown files
-  const ssePool = new SSE()
+  if (nuxt.options.dev) {
+    // Hot reload for Markdown files
+    const ssePool = new SSE()
 
-  this.$pressSourceEvent = async (event, app, payload) => {
-    if (event === 'reload') {
-      await this.saveDevDataSources(app, payload.data)
-      ssePool.broadcast('change', payload.source)
-    } else {
-      await this.saveDevDataSources(app, { sources: { source: payload } })
-      ssePool.broadcast(event, payload)
+    this.$pressSourceEvent = async (event, app, payload) => {
+      if (event === 'reload') {
+        await this.saveDevDataSources(app, payload.data)
+        ssePool.broadcast('change', payload.source)
+      } else {
+        await this.saveDevDataSources(app, { sources: { source: payload } })
+        ssePool.broadcast(event, payload)
+      }
     }
-  }
 
-  this.addServerMiddleware({
-    path: '/__press/hot',
-    handler: (req, res) => ssePool.subscribe(req, res)
-  })
+    this.addServerMiddleware({
+      path: '/__press/hot',
+      handler: (req, res) => ssePool.subscribe(req, res)
+    })
+  }
 
   // Common helper for writing JSON responses
   this.addServerMiddleware((_, res, next) => {

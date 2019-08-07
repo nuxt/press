@@ -4,8 +4,6 @@ const typeToLayout = {
   'slides': 'slides'
 }
 
-const trimSlashRE = /\/+$/
-
 const extraMiddlewares = []
 
 export default async function pressMiddleware (ctx, plugin = false) {
@@ -21,8 +19,9 @@ export default async function pressMiddleware (ctx, plugin = false) {
   if (app.i18n) {
     $press.locales = app.i18n.locales
 
-    if (!$press.locale || !route.path.startsWith(`/${$press.locale}`)) {
-      const locale = app.i18n.locales.find(l => route.path.startsWith(`/${l.code}`))
+    // only change locale if it wasnt set or the current route doesnt use the set locale
+    if (!$press.locale || $press.locale !== params.locale) {
+      const locale = app.i18n.locales.find(locale => locale.code === params.locale)
 
       if (locale) {
         app.i18n.locale = locale.code
@@ -33,24 +32,34 @@ export default async function pressMiddleware (ctx, plugin = false) {
     }
   }
 
-  if (typeof params.source === 'string') {
+  let hasSource = typeof params.source === 'string'
+  if (!hasSource) {
+    const [matched] = route.matched
+
+    hasSource = matched && matched.meta.sourceParam
+  }
+
+  if (hasSource) {
     let source = payload
 
-    let sourceParam = params.source === '' && $press.locale
-      ? `${$press.locale}`
-      : params.source
+    let sourceParam
+    if (!params.source && $press.locale) {
+      sourceParam = $press.locale
+    } else {
+      sourceParam = `${$press.locale}${$press.locale ? '/' : ''}${params.source}`
+    }
 
     if (!source) {
-      sourceParam = (sourceParam && sourceParam.replace(trimSlashRE, '')) || 'index'
+      sourceParam = sourceParam || 'index'
       source = await $press.get(`api/source/${sourceParam}`)
     }
 
     if (!source) {
-      source = await $press.get(`api/source/${sourceParam}/index`)
+      console.error('WHY AM I HERE ?', sourceParam)
+      source = await $press.get(`api/source/${sourceParam}index`)
     }
 
     if (!source) {
-      $press.error = { statusCode: 404 }
       return
     }
 

@@ -35,20 +35,23 @@ export async function parsePage (sourcePath, mdProcessor) {
 
   const title = await this.$press.docs.source.title.call(this, fileName, raw, toc)
 
-  sourcePath = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '')
+  sourcePath = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '') || 'index'
+
+  const urlPath = sourcePath === 'index' ? '/' : `/${sourcePath.replace(/\/index$/, '')}/`
 
   const source = {
     type: 'topic',
     title,
     body,
-    path: `/${sourcePath || 'index'}`,
+    sourcePath,
+    path: urlPath,
     ...this.options.dev && { src }
   }
 
   return {
     toc: toc.map((h) => {
       if (h[2].substr(0, 1) === '#') {
-        h[2] = `/${sourcePath}${h[2]}`
+        h[2] = `${urlPath}${h[2]}`
       }
 
       return h
@@ -85,7 +88,10 @@ export default async function ({ options: { docs: docOptions } }) {
 
     const sourcePath = routePath(source.path) || '/'
 
-    $pages[sourcePath] = { meta, toc }
+    $pages[sourcePath] = {
+      meta,
+      toc
+    }
     sources[sourcePath] = source
   }
 

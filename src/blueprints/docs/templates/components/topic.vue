@@ -36,12 +36,12 @@ export default {
   }),
   mounted() {
     const elements = `
-      .topic h1,
-      .topic h2,
-      .topic h3,
-      .topic h4,
-      .topic h5,
-      .topic h6
+      article h1,
+      article h2,
+      article h3,
+      article h4,
+      article h5,
+      article h6
     `
 
     const initialId = this.$route.hash.substr(1)
@@ -49,8 +49,8 @@ export default {
     const observedCallback = (target) => {
       const targetId = target.id ? `#${target.id}` : ``
       let targetHeading = `${this.$route.path}${targetId}`
-
       let heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
+
       if (!heading && target.tagName === 'H1') {
         targetHeading = this.$route.path
         heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
@@ -77,7 +77,8 @@ export default {
     this._observer = startObserver({
       vm: this,
       elements,
-      initialId
+      initialId,
+      options: {  }
     }, observedCallback)
   }
 }

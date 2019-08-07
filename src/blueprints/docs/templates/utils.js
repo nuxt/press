@@ -22,6 +22,37 @@ export function isTel (url) {
   return url.startsWith('tel:')
 }
 
+export const normalizePath = str => str.endsWith('/') || str.includes('/#') ? str : `${str}/`
+
+export function normalizePaths (paths) {
+  if (Array.isArray(paths)) {
+    for (const key in paths) {
+      paths[key] = normalizePaths(paths[key])
+    }
+    return paths
+  }
+
+  if (typeof paths === 'object') {
+    if (paths.children) {
+      paths.children = normalizePaths(paths.children)
+      return paths
+    }
+
+    for (const key in paths) {
+      const normalizedKey = normalizePath(key)
+      paths[normalizedKey] = normalizePaths(paths[key])
+
+      if (key !== normalizedKey) {
+        delete paths[key]
+      }
+    }
+
+    return paths
+  }
+
+  return normalizePath(paths)
+}
+
 export function tocToTree (toc) {
   const sections = [undefined, [], [], [], [], [], []]
   let prevLevel = 0
@@ -75,14 +106,12 @@ export function createSidebarFromToc (path, title, page, startDepth = 0) {
     sidebar.push([1 + startDepth, meta.title || title || first[1], path])
   }
 
-  sidebar.push(...toc.map(([level, name, url]) => [level + startDepth, name, url]))
+  sidebar.push(...toc.map(([level, name, url]) => [level + startDepth, name, normalizePath(url)]))
 
   return tocToTree(sidebar)
 }
 
-export function createSidebar (prefix, sidebarConfig, pages) {
-  const docPrefix = trimSlash(prefix)
-
+export function createSidebar (sidebarConfig, pages) {
   const sidebar = []
   for (let sourcePath of sidebarConfig) {
     let title
@@ -96,8 +125,7 @@ export function createSidebar (prefix, sidebarConfig, pages) {
 
       if (sourcePath.children) {
         for (sourcePath of sourcePath.children) {
-          sourcePath = sourcePath.replace(/.md$/i, '')
-          sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
+          sourcePath = normalizePath(sourcePath.replace(/.md$/i, ''))
 
           children.push(...createSidebarFromToc(sourcePath, undefined, pages[sourcePath], 1))
         }
@@ -105,10 +133,6 @@ export function createSidebar (prefix, sidebarConfig, pages) {
 
       sidebar.push([1, title, '', children])
       continue
-    }
-
-    if (sourcePath !== '/') {
-      sourcePath = trimSlash(`${docPrefix}${sourcePath}`)
     }
 
     sidebar.push(...createSidebarFromToc(sourcePath, title, pages[sourcePath]))

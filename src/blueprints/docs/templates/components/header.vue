@@ -4,15 +4,14 @@
       class="mobile-toggle"
       @click="toggleMobile">☰</div>
 
-    <nuxt-link :to="$docs.prefix" class="home-link">
+    <nuxt-link :to="`${$docs.prefix}/`" class="home-link">
       {{ $docs.title }}
     </nuxt-link>
 
     <nav class="links">
       <select
         v-if="$press.locales"
-        v-model="lang"
-        @change="this.changeLocale">
+        v-model="lang">
         <option
           v-for="locale in $press.locales"
           :key='`locale-${locale.code}`'
@@ -46,16 +45,18 @@ export default {
     }
   },
   mixins: [docsMixin],
+  watch: {
+    lang(newLocale, oldLocale) {
+      const newRoute = this.$route.path.replace(`/${oldLocale}`, `/${newLocale}`)
+      this.$router.push(newRoute)
+    }
+  },
   methods: {
     activeClass(link) {
       return this.$route.path.startsWith(link) ? 'active' : ''
     },
     toggleMobile() {
       document.querySelector('.sidebar').classList.toggle('mobile-visible')
-    },
-    changeLocale() {
-      const newRoute = this.$route.path.replace(`/${this.$press.locale}`, `/${this.lang}`)
-      this.$router.push(newRoute)
     }
   }
 }

@@ -15,6 +15,9 @@ export const templates = {
   utils: 'utils.js'
 }
 
+export const defaultDir = 'docs'
+export const defaultPrefix = '/docs/'
+
 export const maxSidebarDepth = 2
 
 export const defaultMetaSettings = {
