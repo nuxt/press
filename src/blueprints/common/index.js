@@ -140,10 +140,10 @@ export default {
       return {
         source (source, _, res, next) {
           if (this.options.dev || !sourceCache[source]) {
-            let sourceFile = join(rootDir, 'sources', `${source}.json`)
+            let sourceFile = join(rootDir, 'sources', `${source}/index.json`)
 
             if (!exists(sourceFile)) {
-              sourceFile = join(rootDir, 'sources', `${source}/index.json`)
+              sourceFile = join(rootDir, 'sources', `${source}.json`)
 
               if (!exists(sourceFile)) {
                 const err = new Error('NuxtPress: source not found')
