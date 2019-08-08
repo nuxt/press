@@ -30,6 +30,9 @@ export default {
       required: false
     }
   },
+  mounted () {
+    this.$nextTick(() => this.$root.$emit('nuxt-static:rendered'))
+  },
   render (h) {
     const data = this.data || this.source
 

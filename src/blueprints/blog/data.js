@@ -27,7 +27,6 @@ export async function parseEntry (sourcePath, processor) {
   delete metadata.content
   const source = { ...metadata, body, title, slug, published }
   source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
-  source.sourcePath = `${this.$press.blog.source.path.call(this, fileName, source)}`
   source.type = 'entry'
   source.id = this.$press.blog.source.id.call(this, source)
   if (this.options.dev) {

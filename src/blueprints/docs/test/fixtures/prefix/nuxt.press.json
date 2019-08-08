@@ -1,5 +1,4 @@
 {
-  "mode": "docs",
   "docs": {
     "dir": "",
     "prefix": "/custom/",
@@ -38,5 +37,6 @@
         "/a/second"
       ]
     }
-  }
+  },
+  "mode": "docs"
 }

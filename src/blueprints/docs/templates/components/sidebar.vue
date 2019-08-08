@@ -14,7 +14,7 @@ import docsMixin from 'press/docs/mixins/docs'
 import { createSidebar, tocToTree } from 'press/docs/utils'
 import SidebarSections from 'press/docs/components/sidebar-sections'
 
-function prepareSidebar() {
+function initSidebar() {
   let sidebar = this.$docs.sidebar
 
   const sidebarIsArray = Array.isArray(this.$docs.sidebar)
@@ -67,8 +67,8 @@ export default {
   created() {
     this._sidebars = []
 
-    prepareSidebar.call(this)
-    this.setSidebar()
+    initSidebar.call(this)
+    this.prepareSidebar(true)
   },
   computed: {
     hash() {
@@ -83,10 +83,10 @@ export default {
   },
   watch: {
     locale() {
-      prepareSidebar.call(this)
+      initSidebar.call(this)
     },
     path() {
-      this.setSidebar()
+      this.prepareSidebar()
 
       this.$nextTick(() => {
         if (this.$refs.sidebar.classList.contains('mobile-visible')) {
@@ -96,18 +96,19 @@ export default {
     }
   },
   methods: {
-    setSidebar() {
+    prepareSidebar(initial) {
       const path = this.path
       let sidebar
 
       if (this._sidebars[path]) {
-        this.sidebar = this._sidebars[path]
+        this.setSidebar(this._sidebars[path], initial)
         return
       }
 
       const { meta, toc } = this.$page
       if (meta && meta.sidebar === 'auto') {
-        this.sidebar = this._sidebars[path] = tocToTree(toc)
+        this._sidebars[path] = tocToTree(toc)
+        this.setSidebar(this._sidebars[path], initial)
         return
       }
 
@@ -121,10 +122,25 @@ export default {
             )
           }
 
-          this.sidebar = this._sidebars[sidebarPath]
+          this.setSidebar(this._sidebars[sidebarPath], initial)
           break
         }
       }
+    },
+    setSidebar(sidebar, initial) {
+      if (initial) {
+        this.sidebar = sidebar
+        return
+      }
+
+      const changeSidebar = () => {
+        this.$nextTick(() => {
+          this.sidebar = sidebar
+        })
+      }
+
+      // this.$nuxt.$once('triggerScroll', changeSidebar)
+      this.$root.$once('nuxt-static:rendered', changeSidebar)
     },
     toggleMobile() {
       this.$refs.sidebar.classList.toggle('mobile-visible')
