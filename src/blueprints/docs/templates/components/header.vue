@@ -47,7 +47,7 @@ export default {
   mixins: [docsMixin],
   watch: {
     lang(newLocale, oldLocale) {
-      const newRoute = this.$route.path.replace(`/${oldLocale}`, `/${newLocale}`)
+      const newRoute = this.$route.path.replace(`/${oldLocale}/`, `/${newLocale}/`)
       this.$router.push(newRoute)
     }
   },
