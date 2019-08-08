@@ -22,7 +22,7 @@ export default {
     'source': 'pages/source.vue'
   },
   routes (templates) {
-    const $press = this.nuxt.options.press
+    const $press = this.$press
 
     const prefixes = []
     for (const blueprint of ['blog', 'docs', 'slides']) {
