@@ -33,8 +33,8 @@ describe('basic', () => {
     expect(await page.getElementCount('.blog .title a')).toBe(2)
 
     const expectedLinks = [
-      '/2019/jun/20/adding-sidebar-links',
-      '/2019/apr/20/publishing-blogs'
+      '/2019/jun/20/adding-sidebar-links/',
+      '/2019/apr/20/publishing-blogs/'
     ]
     expect(await page.getAttributes('.blog .title a', 'href')).toEqual(expectedLinks)
   }

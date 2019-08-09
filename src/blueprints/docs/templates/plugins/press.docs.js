@@ -2,7 +2,7 @@ import Vue from 'vue'
 import NuxtMiddleware from 'press/../middleware'
 import OutboundLink from 'press/docs/components/outbound-link-icon'
 import config from 'press/config'
-import { trimSlash, normalizePaths } from 'press/docs/utils'
+import { normalizePaths, trimSlash } from 'press/common/utils'
 
 Vue.component('OutboundLink', OutboundLink)
 

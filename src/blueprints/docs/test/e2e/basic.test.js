@@ -47,13 +47,7 @@ describe('basic', () => {
     expect(sidebarLinks).toEqual(expectedLinks)
   }
 
-  test('open home', async () => {
-    const url = browser.getUrl('/')
-
-    page = await browser.page(url)
-  })
-
-  test('test home', async () => {
+  async function testHome () {
     expect(await page.getAttribute('.hero img', 'src')).toBe('/hero.png')
     expect(await page.getElementCount('.feature')).toBe(3)
     expect(await page.getText('h1')).toBe('Lorem Ipsum')
@@ -61,6 +55,14 @@ describe('basic', () => {
     const expectedLinks = [ 'A test', 'B test', 'C test', 'GitHub' ]
     const navLinks = await page.getTexts('.top-menu .links .nav-item a.nav-link', true)
     expect(navLinks).toEqual(expectedLinks)
+  }
+
+  test('open home', async () => {
+    const url = browser.getUrl('/')
+
+    page = await browser.page(url)
+
+    await testHome()
   })
 
   test('nav /a', async () => {
@@ -118,5 +120,11 @@ describe('basic', () => {
     page = await browser.page(url)
 
     await testPageC()
+  })
+
+  test('nav /', async () => {
+    await page.navigate('/')
+
+    await testHome()
   })
 })

@@ -1,9 +1,9 @@
 <template>
   <nuxt-link
-    class="nav-link"
     v-if="!isExternal(link)"
-    :to="localisedLink"
+    :to="link"
     :exact="exact"
+    class="nav-link"
   >{{ item.text }}</nuxt-link>
   <a
     v-else
@@ -27,9 +27,6 @@ export default {
     }
   },
   computed: {
-    localisedLink() {
-      return `${this.$press.docs.prefix}${this.$press.locale ? '/' : ''}${this.$press.locale}${this.link}`
-    },
     link() {
       return this.item.link
     },

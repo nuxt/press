@@ -274,7 +274,12 @@ async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
     const pool = new PromisePool(
       Object.values(sources),
       async (source) => {
-        const sourcePath = join(staticRoot, 'sources', `${source.sourcePath || source.path}.json`)
+        let sourceFile = '.json'
+        if (source.path.endsWith('/')) {
+          sourceFile = `index${sourceFile}`
+        }
+
+        const sourcePath = join(staticRoot, 'sources', `${source.path}`, sourceFile)
         const sourceDir = dirname(sourcePath)
 
         if (!exists(sourceDir)) {

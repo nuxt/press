@@ -14,7 +14,7 @@ import PromisePool from '../../pool'
 export async function loadPage (pagePath, mdProcessor) {
   const sliceAt = this.options.dir.pages.length
   const { name, dir } = parse(pagePath)
-  const path = `${dir.slice(sliceAt)}/${name}`
+  const path = `${dir.slice(sliceAt)}/${name}/`
 
   let body = await readFile(this.options.srcDir, pagePath)
   const metadata = await this.$press.common.source.metadata.call(this, body)
@@ -33,7 +33,14 @@ export async function loadPage (pagePath, mdProcessor) {
   title = stripP(await this.$press.common.source.markdown.call(this, title, mdProcessor))
 
   const src = pagePath.slice(this.options.srcDir.length + 1)
-  return { ...metadata, body, title, path, ...this.options.dev && { src } }
+
+  return {
+    ...metadata,
+    body,
+    title,
+    path,
+    src: this.options.dev ? src : undefined
+  }
 }
 
 export default async function () {

@@ -14,14 +14,14 @@ Vue.component('PressLink', PressLink)
 
 const apiToStatic = {
   // Docs-only API endpoints
-  'api/docs/index': '/_press/docs/index.json',
+  // 'api/docs/index': '/_press/docs/index.json',
   // Blog-only API endpoints
   'api/blog/index': '/_press/blog/index.json',
   'api/blog/archive': '/_press/blog/archive.json',
   // Slides-only API endpoints
   'api/slides/index': '/_press/slides/index.json',
   // Common API endpoints
-  'api/source': path => `/_press/sources/${path}.json`
+  'api/source': path => `/_press/sources/${path}/index.json`
 }
 
 function $json (url) {

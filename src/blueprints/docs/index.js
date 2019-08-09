@@ -35,18 +35,18 @@ export default {
     return exists(this.options.srcDir, options.docs.dir)
   },
   async generateRoutes (data, prefix, staticRoot) {
-    let localePrefix = '/index'
+    let home = '/'
     if (this.$press.i18n) {
-      localePrefix = `/${this.$press.i18n.locales[0].code}`
+      home = `/${this.$press.i18n.locales[0].code}`
     }
     return [
       {
         route: prefix(''),
-        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}${localePrefix}.json`)
+        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}${home}`)
       },
-      ...Object.values(data.sources).map(async ({ sourcePath, path }) => ({
+      ...Object.values(data.sources).map(async ({ path }) => ({
         route: routePath(path),
-        payload: await importModule(`${staticRoot}/sources/${sourcePath}`)
+        payload: await importModule(`${staticRoot}/sources/${path}`)
       }))
     ]
   },

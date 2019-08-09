@@ -1,7 +1,7 @@
 import path from 'path'
 import graymatter from 'gray-matter'
 import defu from 'defu'
-import { walk, join, exists, readFile, routePath, escapeChars } from '../../utils'
+import { walk, join, exists, readFile, routePath, escapeChars, trimSlash } from '../../utils'
 import PromisePool from '../../pool'
 import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
 
@@ -43,8 +43,7 @@ export async function parsePage (sourcePath, mdProcessor) {
     type: 'topic',
     title,
     body,
-    sourcePath,
-    path: urlPath,
+    path: `${trimSlash(this.$press.docs.prefix)}${urlPath}`,
     ...this.options.dev && { src }
   }
 
@@ -82,11 +81,12 @@ export default async function ({ options: { docs: docOptions } }) {
   const $pages = {}
 
   const mdProcessor = await this.$press.docs.source.processor()
+  const prefix = trimSlash(this.$press.docs.prefix)
 
   const handler = async (path) => {
     const { toc, meta, source } = await parsePage.call(this, path, mdProcessor)
 
-    const sourcePath = routePath(source.path) || '/'
+    const sourcePath = routePath(source.path, prefix) || '/'
 
     $pages[sourcePath] = {
       meta,
