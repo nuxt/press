@@ -16,19 +16,6 @@ import sidebar from 'press/docs/components/sidebar'
 
 export default {
   components: { top, sidebar },
-  mixins: [docsMixin],
-  head() {
-    const meta = []
-
-    if (this.$description) {
-      meta.push({ name: "description", content: this.$description })
-    }
-
-    return {
-      meta,
-      title: this.$title,
-      titleTemplate: `%s - ${this.$press.docs.title}`
-    }
-  }
+  mixins: [docsMixin]
 }
 </script>

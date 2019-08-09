@@ -24,16 +24,26 @@ export default {
   layout: 'docs',
   props: ['data'],
   mixins: [docsMixin],
-  head: () => ({
-    htmlAttrs: {
-      class: 'docs'
-    },
-    meta: [
+  head() {
+    const meta = [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { property: 'og:site_name', content: config.docs.title }
+      { property: 'og:site_name', content: this.$press.docs.title }
     ]
-  }),
+
+    if (this.$description) {
+      meta.push({ name: "description", content: this.$description })
+    }
+
+    return {
+      htmlAttrs: {
+        class: 'docs'
+      },
+      meta,
+      title: this.$title,
+      titleTemplate: `%s - ${this.$press.docs.title}`
+    }
+  },
   mounted() {
     const elements = `
       article h1,
