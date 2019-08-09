@@ -9,7 +9,7 @@ import {
   routePath
 } from '../../utils'
 
-import { templates } from './constants'
+import { templates, defaultDir, defaultPrefix } from './constants'
 import data from './data'
 
 let mdProcessor
@@ -19,25 +19,34 @@ export default {
   templates,
   enabled (options) {
     if (options.$standalone === 'docs') {
-      options.docs.dir = ''
-      options.docs.prefix = '/'
+      options.docs.dir = options.docs.dir || ''
+      options.docs.prefix = options.docs.prefix || '/'
       return true
     }
+
+    if (options.docs.dir === undefined) {
+      options.docs.dir = defaultDir
+    }
+
+    if (!options.docs.prefix) {
+      options.docs.prefix = defaultPrefix
+    }
+
     return exists(this.options.srcDir, options.docs.dir)
   },
   async generateRoutes (data, prefix, staticRoot) {
-    let index = 'índex'
+    let home = '/'
     if (this.$press.i18n) {
-      index = this.$press.i18n.locales[0].code
+      home = `/${this.$press.i18n.locales[0].code}`
     }
     return [
       {
         route: prefix(''),
-        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}/${index}.json`)
+        payload: await importModule(`${staticRoot}/sources${this.$press.docs.prefix}${home}`)
       },
-      ...Object.keys(data.sources).map(async route => ({
-        route: routePath(route),
-        payload: await importModule(`${staticRoot}/sources${route}`)
+      ...Object.values(data.sources).map(async ({ path }) => ({
+        route: routePath(path),
+        payload: await importModule(`${staticRoot}/sources/${path}`)
       }))
     ]
   },
@@ -80,8 +89,8 @@ export default {
     }
   },
   options: {
-    dir: 'docs',
-    prefix: '/docs/',
+    dir: undefined,
+    prefix: undefined,
     title: 'My Documentation',
     nav: [],
     source: {

@@ -1,14 +1,22 @@
-import { trimSlash } from 'press/docs/utils'
-
 export default {
   computed: {
-    $docs () {
-      return this.$press.docs
+    locale () {
+      return this.$press.locale
     },
     path () {
-      return this.$route.path === '/' && this.$press.locale
-        ? `/${this.$press.locale}`
-        : trimSlash(this.$route.path) || '/'
+      let path = this.$route.path
+      if (this.$docs.prefix) {
+        path = path.substr(this.$docs.prefix.length)
+      }
+
+      if (path === '/' && this.locale) {
+        return `/${this.locale}/`
+      }
+
+      return path || '/'
+    },
+    $docs () {
+      return this.$press.docs
     },
     $page () {
       const path = this.path
@@ -16,8 +24,8 @@ export default {
         return this.$docs.pages[path]
       }
 
-      // return empty object to not break stuff
-      return this.$docs.pages[`/${this.$press.locale}`]
+      const fallbackPath = this.locale ? `/${this.locale}/` : '/'
+      return this.$docs.pages[fallbackPath]
     },
     $title () {
       return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || ''
@@ -26,13 +34,17 @@ export default {
       return this.$page.meta.description || ''
     },
     $isHome () {
-      if (this.$press.locale) {
-        return [`/${this.$press.locale}`, '/'].includes(this.$route.path) && !!this.$docs.home
+      if (!this.$docs.home) {
+        return false
       }
-      return this.$route.path === '/' && !!this.$docs.home
-    },
-    locale () {
-      return this.$press.locale
+
+      const path = this.path
+
+      if (this.locale) {
+        return [`/${this.locale}/`, '/'].includes(path)
+      }
+
+      return path === '/'
     }
   }
 }

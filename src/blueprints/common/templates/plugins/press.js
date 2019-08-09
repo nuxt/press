@@ -14,17 +14,15 @@ Vue.component('PressLink', PressLink)
 
 const apiToStatic = {
   // Docs-only API endpoints
-  'api/docs/index': '/_press/docs/index.json',
+  // 'api/docs/index': '/_press/docs/index.json',
   // Blog-only API endpoints
   'api/blog/index': '/_press/blog/index.json',
   'api/blog/archive': '/_press/blog/archive.json',
   // Slides-only API endpoints
   'api/slides/index': '/_press/slides/index.json',
   // Common API endpoints
-  'api/source': path => `/_press/sources/${path}.json`
+  'api/source': path => `/_press/sources/${path}/index.json`
 }
-
-const apiToStaticPaths = Object.keys(apiToStatic)
 
 function $json (url) {
   return fetch(url).then(r => r.json())
@@ -38,13 +36,20 @@ export default async (ctx, inject) => {
 
   if (process.static && process.client) {
     press.get = function get (url) {
-      for (const apiPath of apiToStaticPaths) {
+      for (const apiPath in apiToStatic) {
+        const staticPath = apiToStatic[apiPath]
+
         if (url.startsWith(apiPath)) {
-          if (typeof apiToStatic[apiPath] === 'function') {
-            return $json(apiToStatic[apiPath](url.slice(apiPath.length + 1)))
-          } else {
-            return $json(apiToStatic[apiPath])
+          if (typeof staticPath === 'function') {
+            const startSlice = apiPath.length + 1
+            const endSlice = url.endsWith('/') ? 1 : 0
+            url = url.slice(startSlice, url.length - endSlice)
+
+            const apiUrl = staticPath(url)
+            return $json(apiUrl)
           }
+
+          return $json(staticPath)
         }
       }
     }

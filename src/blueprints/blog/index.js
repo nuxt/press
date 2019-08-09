@@ -8,7 +8,8 @@ import {
   slugify,
   updateConfig,
   readJsonSync,
-  routePath
+  routePath,
+  trimSlash
 } from '../../utils'
 
 import data, { parseEntry } from './data'
@@ -58,7 +59,7 @@ export default {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(routePath(route)),
-        payload: await importModule(join(staticRoot, 'blog', `${route}.json`))
+        payload: await importModule(join(staticRoot, 'blog', `${trimSlash(route)}.json`))
       })),
       ...Object.keys(data.sources).map(async route => ({
         route: routePath(route),
@@ -200,7 +201,7 @@ export default {
       path (fileName, { title, published }) {
         const slug = slugify(title || fileName)
         const date = published.toString().split(/\s+/).slice(1, 4).reverse()
-        return `${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}`
+        return `${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}/`
       },
 
       // id() determines the unique RSS ID of a Markdown source

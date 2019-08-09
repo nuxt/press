@@ -39,19 +39,18 @@ export default {
   layout: ({ $press }) => $press.layout,
   head() {
     if (component.head) {
-      return {
-        htmlAttrs: {
-          class: this.$press.layout
-        },
-        ...component.head.call(this)
-      }
-    } else {
-      return {
-        htmlAttrs: {
-          class: this.$press.layout
-        }
+      return {}
+    }
+
+    return {
+      htmlAttrs: {
+        class: this.$press.layout
       }
     }
+  },
+  validate({ $press }) {
+    // middleware's run before validate
+    return !!$press.source
   },
 <% if (options.dev) { %>
   beforeMount() {

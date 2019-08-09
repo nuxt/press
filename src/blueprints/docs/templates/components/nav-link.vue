@@ -1,9 +1,9 @@
 <template>
   <nuxt-link
-    class="nav-link"
-    :to="link"
     v-if="!isExternal(link)"
+    :to="link"
     :exact="exact"
+    class="nav-link"
   >{{ item.text }}</nuxt-link>
   <a
     v-else

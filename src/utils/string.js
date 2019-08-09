@@ -13,6 +13,8 @@ export function trimEnd (str, chr = '') {
   return str.replace(new RegExp(`${chr}+$`), '')
 }
 
+export const trimSlash = str => trimEnd(str, '/')
+
 const escapeREs = {}
 export function escapeChars (str, chars = '"') {
   if (Array.isArray(chars)) {

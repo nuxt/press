@@ -62,10 +62,14 @@ export async function updateConfig (rootId, obj) {
     await writeJson(path, obj, { spaces: 2 })
     return
   }
-  const jsonFile = await readFile(path)
   let json = {}
   try {
-    json = JSON.parse(jsonFile)
+    const jsonFile = await readFile(path)
+    if (!jsonFile) {
+      consola.warn(`Config file ${path} was empty`)
+    } else {
+      json = JSON.parse(jsonFile)
+    }
   } catch (err) {
     consola.error('An error occurred updating NuxtPress config:')
     consola.fatal(err)

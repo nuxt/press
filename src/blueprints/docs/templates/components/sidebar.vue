@@ -11,16 +11,16 @@
 
 <script>
 import docsMixin from 'press/docs/mixins/docs'
-import { createSidebar, tocToTree, trimSlash } from 'press/docs/utils'
+import { createSidebar, tocToTree } from 'press/docs/utils'
 import SidebarSections from 'press/docs/components/sidebar-sections'
 
-function prepareSidebar() {
+function initSidebar() {
   let sidebar = this.$docs.sidebar
 
   const sidebarIsArray = Array.isArray(this.$docs.sidebar)
   if (sidebarIsArray) {
     this.$sidebars = this.$sidebars || {}
-    const routePrefix = `/${this.$press.locale}`
+    const routePrefix = this.$press.locale ? `/${this.$press.locale}` : ''
 
     if (!this.$sidebars[routePrefix]) {
       if (!this.$press.locale) {
@@ -67,16 +67,15 @@ export default {
   created() {
     this._sidebars = []
 
-    prepareSidebar.call(this)
-    this.setSidebar()
+    initSidebar.call(this)
+    this.prepareSidebar(true)
   },
   computed: {
     hash() {
       return this.$route.hash
     },
     activePath() {
-      const path = trimSlash(this.path)
-      return `${path}${this.hash}`
+      return `${this.path}${this.hash}`
     },
     sidebarClass() {
       return this.$page.meta.sidebar === 'auto' ? 'sidebar-auto' : undefined
@@ -84,10 +83,10 @@ export default {
   },
   watch: {
     locale() {
-      prepareSidebar.call(this)
+      initSidebar.call(this)
     },
     path() {
-      this.setSidebar()
+      this.prepareSidebar()
 
       this.$nextTick(() => {
         if (this.$refs.sidebar.classList.contains('mobile-visible')) {
@@ -97,18 +96,19 @@ export default {
     }
   },
   methods: {
-    setSidebar() {
+    prepareSidebar(initial) {
       const path = this.path
       let sidebar
 
       if (this._sidebars[path]) {
-        this.sidebar = this._sidebars[path]
+        this.setSidebar(this._sidebars[path], initial)
         return
       }
 
       const { meta, toc } = this.$page
       if (meta && meta.sidebar === 'auto') {
-        this.sidebar = this._sidebars[path] = tocToTree(toc)
+        this._sidebars[path] = tocToTree(toc)
+        this.setSidebar(this._sidebars[path], initial)
         return
       }
 
@@ -116,17 +116,31 @@ export default {
         if (path.startsWith(sidebarPath)) {
           if (!this._sidebars[sidebarPath]) {
             this._sidebars[sidebarPath] = createSidebar(
-              this.$docs.prefix,
               this.$sidebars[sidebarPath],
               this.$docs.pages,
               this.$press.locale
             )
           }
 
-          this.sidebar = this._sidebars[sidebarPath]
+          this.setSidebar(this._sidebars[sidebarPath], initial)
           break
         }
       }
+    },
+    setSidebar(sidebar, initial) {
+      if (initial) {
+        this.sidebar = sidebar
+        return
+      }
+
+      const changeSidebar = () => {
+        this.$nextTick(() => {
+          this.sidebar = sidebar
+        })
+      }
+
+      // this.$nuxt.$once('triggerScroll', changeSidebar)
+      this.$root.$once('nuxt-static:rendered', changeSidebar)
     },
     toggleMobile() {
       this.$refs.sidebar.classList.toggle('mobile-visible')
