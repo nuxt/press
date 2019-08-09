@@ -347,6 +347,13 @@ html.docs #__layout {
 }
 
 @media (--mobile) {
+
+  html.docs body {
+    height: auto;
+    width: auto;
+    margin:auto;
+  }
+
   #nuxt-press.docs {
     display: flex;
     height: 100vh;
@@ -384,7 +391,7 @@ html.docs #__layout {
       }
 
       & .home-link {
-        font-size: 1.5rem;
+        font-size: 1.1rem;
         font-weight: bold;
         vertical-align: middle;
         line-height: 1.6rem;
