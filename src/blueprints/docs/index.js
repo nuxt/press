@@ -6,7 +6,8 @@ import {
   importModule,
   exists,
   updateConfig,
-  routePath
+  routePath,
+  markdownToText
 } from '../../utils'
 
 import { templates, defaultDir, defaultPrefix } from './constants'
@@ -50,6 +51,32 @@ export default {
       }))
     ]
   },
+  async ready () {
+    if (this.$press.docs.search) {
+      await this.requireModule({
+        src: '@nuxtjs/lunr-module',
+        options: {
+          globalComponent: false,
+          languages: (this.$press.i18n && this.$press.i18n.locales.map(l => l.code.split('-').shift())) || []
+        }
+      })
+
+      let documentIndex = 1
+      this.nuxt.hook('press:docs:page', ({ toc, source }) => {
+        this.nuxt.callHook('lunr:document', {
+          locale: (source.locale || '').split('-').shift(),
+          document: {
+            id: documentIndex,
+            title: source.title,
+            body: markdownToText(source.body)
+          },
+          meta: source.path
+        })
+
+        documentIndex++
+      })
+    }
+  },
   build: {
     before () {
       this.$addPressTheme('blueprints/docs/theme.css')
@@ -92,6 +119,7 @@ export default {
     dir: undefined,
     prefix: undefined,
     title: 'My Documentation',
+    search: true,
     nav: [],
     source: {
       processor () {

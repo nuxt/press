@@ -39,6 +39,7 @@
     "@nuxt/http": "^0.3.3",
     "@nuxt/markdown": "0.0.10",
     "@nuxt/press": "^0.0.1-alpha.88",
+    "@nuxtjs/lunr-module": "^0.1.0",
     "animate.css": "^3.7.2",
     "braces": "^3.0.2",
     "gray-matter": "^4.0.2",

@@ -39,8 +39,15 @@ export async function parsePage (sourcePath, mdProcessor) {
 
   const urlPath = sourcePath === 'index' ? '/' : `/${sourcePath.replace(/\/index$/, '')}/`
 
+  let locale = ''
+  const locales = this.$press.i18n && this.$press.i18n.locales
+  if (locales) {
+    ({ code: locale } = locales.find(l => l.code === sourcePath || sourcePath.startsWith(`${l.code}/`)) || {})
+  }
+
   const source = {
     type: 'topic',
+    locale,
     title,
     body,
     path: `${trimSlash(this.$press.docs.prefix)}${urlPath}`,
@@ -87,6 +94,13 @@ export default async function ({ options: { docs: docOptions } }) {
     const { toc, meta, source } = await parsePage.call(this, path, mdProcessor)
 
     const sourcePath = routePath(source.path, prefix) || '/'
+
+    this.nuxt.callHook('press:docs:page', {
+      toc,
+      meta,
+      sourcePath,
+      source
+    })
 
     $pages[sourcePath] = {
       meta,

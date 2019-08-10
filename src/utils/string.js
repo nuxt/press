@@ -33,3 +33,13 @@ export function escapeChars (str, chars = '"') {
 export function slugify (str) {
   return slug(str, { lower: true })
 }
+
+export function markdownToText (markdown) {
+  // fully strip code blocks
+  markdown = markdown.replace(/<code[^>]*>[\s\S]*?<\/code>/gmi, '')
+
+  // strip other html tags
+  markdown = markdown.replace(/<\/?[^>]+(>|$)/g, '')
+
+  return markdown
+}
