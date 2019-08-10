@@ -52,7 +52,7 @@ jobs:
       - attach-project
       - run:
           name: Security Audit
-          command: yarn audit --groups dependencies
+          command: yarn audit --groups dependencies || true
 
   test-unit:
     executor: node
