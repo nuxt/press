@@ -315,7 +315,6 @@ html.docs #__layout {
       /* prismjs override */
       & pre,
       & pre[class*="language-"] {
-        background: #1d262e;
         padding: 15px;
         & > code {
           padding: 0px;
