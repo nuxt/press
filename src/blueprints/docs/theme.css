@@ -70,6 +70,14 @@ html.docs #__layout {
       align-items: flex-end;
       right: 1rem;
 
+      & .search {
+        margin: 0 1rem 0 0;
+
+        & input {
+          width: 10rem;
+        }
+      }
+
       & ul.links {
         display: flex;
         margin: 0;

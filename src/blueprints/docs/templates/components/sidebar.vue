@@ -75,7 +75,11 @@ export default {
       return this.$route.hash
     },
     activePath() {
-      return `${this.path}${this.hash}`
+      let path = this.path
+      if (!path.endsWith('/')) {
+        path =`${path}/`
+      }
+      return `${path}${this.hash}`
     },
     sidebarClass() {
       return this.$page.meta.sidebar === 'auto' ? 'sidebar-auto' : undefined

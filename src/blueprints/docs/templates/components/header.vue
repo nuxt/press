@@ -9,10 +9,10 @@
     </nuxt-link>
 
     <nav class="nav-right">
-      <lunr-search :lang="searchLanguage">
+      <lunr-search :locale="locale" class="search">
         <template v-slot:default="{ result, index, maxScore, meta }">
-          <nuxt-link v-if="meta" :to="meta" role="menuitem">
-            {{ getPageTitle(meta) }}
+          <nuxt-link v-if="meta" :to="meta.to" role="menuitem">
+            {{ meta.title }}
             <span class="text-right">{{ Math.round(100 * result.score / maxScore) }}%</span>
           </nuxt-link>
         </template>
@@ -54,11 +54,6 @@ export default {
   data () {
     return {
       lang: this.$press.locale
-    }
-  },
-  computed: {
-    searchLanguage() {
-      return this.lang.split(/[-_]/).shift()
     }
   },
   watch: {
