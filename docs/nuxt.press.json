@@ -13,18 +13,7 @@
       }
     ],
     "sidebar": [
-      "/",
-      {
-        "title": "Guide",
-        "children": [
-          "/guide",
-          "/guide/mode-default",
-          "/guide/mode-standalone",
-          "/guide/publishing-docs",
-          "/guide/publishing-blog",
-          "/guide/publishing-slides"
-        ]
-      },
+      "/guide",
       "/customize"
     ]
   },
