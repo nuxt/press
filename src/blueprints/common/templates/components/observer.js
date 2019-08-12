@@ -15,12 +15,8 @@ export class EntriesObserver {
       this.entries = []
     }
 
-    for (const _entry of entries) {
-      const entry = {
-        $id: this.constructor.getEntryId(_entry),
-        intersectionRatio: _entry.intersectionRatio,
-        target: _entry.target
-      }
+    for (const entry of entries) {
+      entry.$id = this.constructor.getEntryId(entry)
 
       if (initial) {
         this.entries.push(entry)
