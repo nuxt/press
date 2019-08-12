@@ -8,7 +8,16 @@
       {{ $docs.title }}
     </nuxt-link>
 
-    <nav class="links">
+    <nav class="nav-right">
+      <lunr-search :locale="locale" class="search">
+        <template v-slot:default="{ result, index, maxScore, meta }">
+          <nuxt-link v-if="meta" :to="meta.to" role="menuitem">
+            {{ meta.title }}
+            <span class="text-right">{{ Math.round(100 * result.score / maxScore) }}%</span>
+          </nuxt-link>
+        </template>
+      </lunr-search>
+
       <select
         v-if="$press.locales"
         v-model="lang">
@@ -17,7 +26,8 @@
           :key='`locale-${locale.code}`'
           :value="locale.code">{{ locale.name }}</option>
       </select>
-      <ul>
+
+      <ul class="links">
         <li
           v-for="(item, idx) in $docs.nav"
           :key="`topmenu-${idx}`"
@@ -37,14 +47,15 @@ import NavLink from 'press/docs/components/nav-link'
 
 export default {
   components: {
-    NavLink
+    NavLink,
+    LunrSearch: () => import('lunr-module/search')
   },
+  mixins: [docsMixin],
   data () {
     return {
       lang: this.$press.locale
     }
   },
-  mixins: [docsMixin],
   watch: {
     lang(newLocale, oldLocale) {
       const newRoute = this.$route.path.replace(`/${oldLocale}/`, `/${newLocale}/`)
@@ -57,6 +68,14 @@ export default {
     },
     toggleMobile() {
       document.querySelector('.sidebar').classList.toggle('mobile-visible')
+    },
+    getPageTitle(path) {
+      const page = this.$docs.pages[path]
+      if (!page || !page.toc || !page.toc.length) {
+        return 'unknown page'
+      }
+
+      return page.toc[0][1]
     }
   }
 }

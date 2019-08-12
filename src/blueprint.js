@@ -110,6 +110,10 @@ export async function _registerBlueprint (id, rootId, options) {
     }
   }
 
+  if (blueprint.ready) {
+    await blueprint.ready.call(this)
+  }
+
   this.nuxt.hook('build:before', async () => {
     const context = { options, rootId, id }
 
@@ -158,7 +162,13 @@ export async function _registerBlueprint (id, rootId, options) {
     const staticRoot = join(this.options.buildDir, rootId, 'static')
     await saveDataSources.call(this, staticRoot, id, context.data)
 
+    let compileHookRan = false
     this.nuxt.hook('build:compile', async () => {
+      if (compileHookRan) {
+        return
+      }
+      compileHookRan = true
+
       const staticRoot = join(this.options.buildDir, rootId, 'static')
       const staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
       await saveDataSources.call(this, staticRoot, id, context.data)
@@ -287,6 +297,13 @@ async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
         }
 
         await writeJson(sourcePath, source)
+
+        this.nuxt.callHook('press:source', {
+          id,
+          staticRoot,
+          sourcePath,
+          source
+        })
       }
     )
     await pool.done()

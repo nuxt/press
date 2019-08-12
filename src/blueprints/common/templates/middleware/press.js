@@ -45,9 +45,16 @@ export default async function pressMiddleware (ctx, plugin = false) {
     if (!source) {
       let sourcePath = route.path
 
-      const isRoot = !params.source || sourcePath === '/'
-      if (isRoot && $press.locale) {
-        sourcePath = `${sourcePath}${$press.locale}`
+      if ($press.locale) {
+        let shouldAddLocale = sourcePath === '/'
+
+        if (!shouldAddLocale && params.source) {
+          shouldAddLocale = !sourcePath.match(new RegExp(`/${$press.locale}/?`))
+        }
+
+        if (shouldAddLocale) {
+          sourcePath = `${sourcePath}${$press.locale}`
+        }
       }
 
       source = await $press.get(`api/source${sourcePath}`)

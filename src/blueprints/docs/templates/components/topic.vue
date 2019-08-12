@@ -1,7 +1,7 @@
 <template>
   <main>
     <home
-      v-if="$isHome"
+      v-if="isHome"
       :data="$docs.home"
       v-model="data.body"
     />
@@ -44,7 +44,20 @@ export default {
       titleTemplate: `%s - ${this.$press.docs.title}`
     }
   },
+  created() {
+    // make isHome non-reactive
+    // otherwise on route change (triggered by the header observer)
+    // $isHome triggers a re-render of nuxt-template
+    // although visibly nothing happens it just shouldnt happen
+    // and it alos breaks the observer
+    this.isHome = this.$isHome
+  },
   mounted() {
+    // no need to add observer for Home component
+    if (this.isHome) {
+      return
+    }
+
     const elements = `
       article h1,
       article h2,

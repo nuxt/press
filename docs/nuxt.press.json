@@ -3,6 +3,7 @@
     "dir": "",
     "prefix": "/",
     "title": "NuxtPress documentation",
+    "search": true,
     "nav": [
       {
         "Guide": "/guide"
