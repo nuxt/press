@@ -22,7 +22,7 @@ See documentation at **[https://nuxt.press](https://nuxt.press)**.
 ⚡Parses **YAML metadata** and supports **Vue template markup**.<br>
 ⚡Fully **configurable** **data sources** and **Markdown preprocessing**.<br>
 
-# Credits
+## Credits
 
 Created and maintained by [@galvez][galvez] and [@pimlie][pimlie] with the 
 help of the **Nuxt Team**.
