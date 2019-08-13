@@ -6,7 +6,7 @@
 [![npm](https://img.shields.io/npm/dt/@nuxt/press.svg)](https://www.npmjs.com/package/@nuxt/press)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/@nuxt/press/latest.svg)](https://www.npmjs.com/package/@nuxt/press)
 
-See [documentation at](https://nuxt.press)
+See documentation at **[https://nuxt.press](https://nuxt.press)**.
 
 # Publishing the Nuxt way
 
