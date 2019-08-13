@@ -38,12 +38,12 @@ help of the **Nuxt Team**.
 <tr>
 <td>
 <a href="https://www.qomplx.com/?ref=vuetify-github">
-<img height="70px" src="https://user-images.githubusercontent.com/12291/50407303-987b3180-07bb-11e9-80b8-9609f99023dc.png">
+<img height="100px" src="https://user-images.githubusercontent.com/12291/50407303-987b3180-07bb-11e9-80b8-9609f99023dc.png">
 </a>
 </td>
 </tr>
 </table>
 
-*Interested in **adding your logo to this list**? [Reach out][contact] for sponsoring details.
+Interested in **adding your logo to this list**? [Reach out][contact] for sponsoring details.
 
 [contact]: maito:jonasgalvez@gmail.com
