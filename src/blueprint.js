@@ -247,7 +247,7 @@ export async function _registerBlueprint (id, rootId, options) {
 
       this.nuxt.hook('generate:distCopied', async () => {
         await ensureDir(staticRootGenerate)
-        await saveDataSources(staticRootGenerate, id, context.data)
+        await saveDataSources.call(this, staticRootGenerate, id, context.data)
       })
     })
   })
