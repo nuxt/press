@@ -31,7 +31,7 @@ export async function startBrowser({ folder, port, extendPage = {} }) {
 
               window.$nuxt.$once('triggerScroll', () => {
                 clearTimeout(timeout)
-                resolve()
+                setTimeout(resolve, 250)
               })
               window.$nuxt.$router.push(path)
             })

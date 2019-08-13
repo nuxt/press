@@ -3,13 +3,14 @@
     <home
       v-if="isHome"
       :data="$docs.home"
-      v-model="data.body"
+      :value="data.body"
+      :meta="meta"
       @mounted="templateReady"
     />
     <nuxt-template
       v-else
       tag="article"
-      v-model="data.body"
+      :value="data.body"
       @mounted="templateReady"
     />
   </main>
@@ -49,10 +50,16 @@ export default {
   },
   computed: {
     $title () {
-      return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || ''
+      return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || 'Hello'
     },
     $description () {
-      return this.$page.meta.description || ''
+      return this.$page.meta.description || 'Welcome to your NuxtPress site'
+    },
+    meta() {
+      return {
+        title: this.$title,
+        description: this.$description
+      }
     }
   },
   created() {

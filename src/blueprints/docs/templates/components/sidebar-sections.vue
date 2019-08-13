@@ -1,5 +1,10 @@
 <template functional>
-  <ul class="sidebar-links" :class="`sidebar-depth-${props.depth}`">
+  <ul
+    v-show="props.visible"
+    :hidden="!props.visible"
+    class="sidebar-links"
+    :class="`sidebar-depth-${props.depth}`"
+  >
     <component :is="injections.components.SidebarSection"
       ref="section"
       v-for="(sectionData, i) in props.data"
@@ -14,6 +19,7 @@
 <script>
 export default {
   name: 'SidebarSections',
+  inject: ['components'],
   props: {
     activePath: {
       type: String
@@ -26,7 +32,10 @@ export default {
       type: Number,
       default: 0
     },
-  },
-  inject: ['components']
+    visible: {
+      type: Boolean,
+      default: true
+    }
+  }
 }
 </script>

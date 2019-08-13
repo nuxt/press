@@ -14,13 +14,12 @@
         <span v-else>{{ name }}</span>
       </p>
 
-      <sidebar-sections
+      <component :is="components.SidebarSections"
         ref="sections"
         :active-path="activePath"
         :data="children"
         :depth="depth + 1"
-        :hidden="!showChildSection"
-        v-show="showChildSection" />
+        :visible="showChildSection" />
     </section>
     <nuxt-link
       v-else
@@ -36,10 +35,8 @@
 import docsMixin from 'press/docs/mixins/docs'
 
 export default {
-  components: {
-    SidebarSections: () => import('./sidebar-sections')
-  },
   mixins: [docsMixin],
+  inject: ['components'],
   props: {
     activePath: {
       type: String
@@ -63,10 +60,6 @@ export default {
     fullUrl() {
       return `${this.$docs.prefix}${this.url}`
     },
-    /*path() {
-      const index = this.url.indexOf('#')
-      return index === -1 ? this.url : this.url.substr(0, index)
-    },*/
     children() {
       return this.data[3]
     },

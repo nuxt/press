@@ -61,6 +61,7 @@ export default {
   },
   provide: {
     components: {
+      SidebarSections,
       SidebarSection
     }
   },
