@@ -10,7 +10,7 @@ See documentation at **[https://nuxt.press](https://nuxt.press)**.
 
 # Publishing the Nuxt way
 
-**NuxtPress** is a microframework that leverages the [Nuxt module system][1].
+**NuxtPress** is a **microframework** that leverages the [Nuxt module system][1].
 
 [1]: https://nuxtjs.org/guide/modules/
 
