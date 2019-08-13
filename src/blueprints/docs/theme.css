@@ -313,22 +313,26 @@ html.docs #__layout {
 
       & code {
         font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-        font-size: 1em;
+        font-size: 0.8em;
         color: #669900;
         font-weight: bold;
+        background-color: #faf8f5;
         padding: 0.2em;
       }
       /* prismjs override */
       & pre,
       & pre[class*="language-"] {
         padding: 15px;
+        background-color: #faf8f5;
+        font-size: 0.9em;
         & > code {
           padding: 0px;
-          font-size: 0.9em !important;
+          background: transparent;
         }
       }
 
       & table {
+        table-layout: fixed;
         width: 100%;
         border-collapse: collapse;
         & th {
@@ -338,6 +342,10 @@ html.docs #__layout {
         & th {
           border: 1px solid #dfe2e5;
           padding: 6px 13px;
+          overflow-x: scroll;
+          & code {
+            font-size: 0.7em;
+          }
         }
         & tr {
           background-color: #fff;
@@ -346,6 +354,12 @@ html.docs #__layout {
         & tr:nth-child(2n) {
           background-color: #f6f8fa;
         }
+      }
+
+      & ol, & ul {
+        list-style-position: outside;
+        margin-left: 1rem;
+        padding-left: 0px;
       }
     }
   }

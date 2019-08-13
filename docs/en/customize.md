@@ -62,16 +62,16 @@ $ npx nuxt-press eject blog/sidebar
 
 Below is a list of ejectable templates for each of NuxtPress bundled apps:
 
-<table>
+<table class="templates-table">
   <tr>
-    <td>Key</td>
+    <td style="width: 35%;">Key</td>
     <td>Path</td>
   </tr>
   <tr>
     <td>
       <code>docs/layout</code><br>
       <code>docs/index</code><br>
-      <code>docs/topic</code>
+      <code>docs/topic</code><br>
       <code>docs/header</code><br>
       <code>docs/sidebar</code><br>
       <code>docs/plugin</code><br>
@@ -79,7 +79,7 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
     <td>
       <code>press/docs/layouts/docs.vue</code><br>
       <code>press/docs/pages/index.vue</code><br>
-      <code>press/docs/components/topic.vue
+      <code>press/docs/components/topic.vue</code><br>
       <code>press/docs/components/header.vue</code><br>
       <code>press/docs/components/sidebar.vue</code><br>
       <code>press/docs/plugins/press.docs.js</code><br>
@@ -90,7 +90,7 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
       <code>blog/layout</code><br>
       <code>blog/index</code><br>
       <code>blog/archive</code><br>
-      <code>blog/entry</code>
+      <code>blog/entry</code><br>
       <code>blog/sidebar</code><br>
       <code>blog/feed</code><br>
     </td>
@@ -98,7 +98,7 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
       <code>press/blog/layouts/blog.vue</code><br>
       <code>press/blog/pages/index.vue</code><br>
       <code>press/blog/pages/archive.vue</code><br>
-      <code>press/blog/components/entry.vue
+      <code>press/blog/components/entry.vue</code><br>
       <code>press/blog/components/sidebar.vue</code><br>
       <code>press/blog/rss.xml</code><br>
     </td>
@@ -107,13 +107,13 @@ Below is a list of ejectable templates for each of NuxtPress bundled apps:
     <td>
       <code>slides/layout</code><br>
       <code>slides/index</code><br>
-      <code>slides/slides</code>
-      <code>slides/plugin</code><br>
+      <code>slides/slides</code><br>
+      <code>slides/plugin</code>
     </td>
     <td>
       <code>press/slides/layouts/slides.vue</code><br>
       <code>press/slides/pages/index.vue</code><br>
-      <code>press/slides/components/slides.vue
+      <code>press/slides/components/slides.vue</code><br>
       <code>press/slides/plugins/slides.client.js</code><br>
     </td>
   </tr>
