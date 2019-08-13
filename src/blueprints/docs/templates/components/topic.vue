@@ -4,11 +4,13 @@
       v-if="isHome"
       :data="$docs.home"
       v-model="data.body"
+      @mounted="templateReady"
     />
     <nuxt-template
       v-else
       tag="article"
       v-model="data.body"
+      @mounted="templateReady"
     />
   </main>
 </template>
@@ -22,8 +24,9 @@ import docsMixin from 'press/docs/mixins/docs'
 export default {
   components: { Home },
   layout: 'docs',
-  props: ['data'],
+  props: ['data', 'path'],
   mixins: [docsMixin],
+  transition: () => this.isHome ? '' : 'page',
   head() {
     const meta = [
       { charset: 'utf-8' },
@@ -42,6 +45,14 @@ export default {
       meta,
       title: this.$title,
       titleTemplate: `%s - ${this.$press.docs.title}`
+    }
+  },
+  computed: {
+    $title () {
+      return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || ''
+    },
+    $description () {
+      return this.$page.meta.description || ''
     }
   },
   created() {
@@ -69,6 +80,9 @@ export default {
     this.startObserver()
   },
   methods: {
+    templateReady() {
+      this.$nuxt.$emit('topicReady')
+    },
     restartObserver() {
       this.stopObserver()
       this.startObserver()

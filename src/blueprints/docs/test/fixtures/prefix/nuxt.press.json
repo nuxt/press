@@ -3,6 +3,7 @@
     "dir": "",
     "prefix": "/custom/",
     "title": "Test docs",
+    "search": true,
     "nav": [
       {
         "text": "A test",

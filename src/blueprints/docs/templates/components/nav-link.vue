@@ -1,26 +1,8 @@
-<template>
-  <nuxt-link
-    v-if="!isExternal(link)"
-    :to="link"
-    :exact="exact"
-    class="nav-link"
-  >{{ item.text }}</nuxt-link>
-  <a
-    v-else
-    :href="link"
-    class="nav-link external"
-    :target="isMailto(link) || isTel(link) ? null : '_blank'"
-    :rel="isMailto(link) || isTel(link) ? null : 'noopener noreferrer'"
-  >
-    {{ item.text }}
-    <OutboundLink/>
-  </a>
-</template>
-
 <script>
 import { isExternal, isMailto, isTel } from 'press/docs/utils'
 
 export default {
+  functional: true,
   props: {
     item: {
       required: true
@@ -34,10 +16,31 @@ export default {
       return this.link === '/'
     }
   },
-  methods: {
-    isExternal,
-    isMailto,
-    isTel
+  render(h, { props }) {
+    const { link, text } = props.item
+
+    if (isExternal(link)) {
+      const isMailOrTell = isMailto(link) || isTel(link)
+      return h('a', {
+        staticClass: 'nav-link external',
+        attrs: {
+          href: link,
+          rel: isMailOrTell ? null : 'noopener noreferrer',
+          target: isMailOrTell ? null : '_blank'
+        }
+      }, [
+        text,
+        h('OutboundLink')
+      ])
+    }
+
+    return h('NuxtLink', {
+      staticClass: 'nav-link',
+      props: {
+        to: link,
+        exact: link === '/'
+      }
+    }, [ text ])
   }
 }
 </script>

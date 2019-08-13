@@ -12,6 +12,7 @@
 <script>
 import docsMixin from 'press/docs/mixins/docs'
 import { createSidebar, tocToTree } from 'press/docs/utils'
+import SidebarSection from 'press/docs/components/sidebar-section'
 import SidebarSections from 'press/docs/components/sidebar-sections'
 
 function initSidebar() {
@@ -58,24 +59,32 @@ export default {
   components: {
     SidebarSections
   },
+  provide: {
+    components: {
+      SidebarSection
+    }
+  },
   mixins: [docsMixin],
+  props: {
+    initial: Boolean
+  },
   data() {
     return {
-      sidebar: null,
+      sidebar: [],
     }
   },
   created() {
     this._sidebars = []
 
     initSidebar.call(this)
-    this.prepareSidebar(true)
+    this.prepareSidebar(!!this.initial)
   },
   computed: {
     hash() {
       return this.$route.hash
     },
     activePath() {
-      let path = this.path
+      let path = this.normalizedPath
       if (!path.endsWith('/')) {
         path =`${path}/`
       }
@@ -89,7 +98,7 @@ export default {
     locale() {
       initSidebar.call(this)
     },
-    path() {
+    normalizedPath() {
       this.prepareSidebar()
 
       this.$nextTick(() => {
@@ -101,7 +110,7 @@ export default {
   },
   methods: {
     prepareSidebar(initial) {
-      const path = this.path
+      const path = this.normalizedPath
       let sidebar
 
       if (this._sidebars[path]) {
@@ -143,8 +152,7 @@ export default {
         })
       }
 
-      // this.$nuxt.$once('triggerScroll', changeSidebar)
-      this.$root.$once('nuxt-static:rendered', changeSidebar)
+      this.$nuxt.$once('topicReady', changeSidebar)
     },
     toggleMobile() {
       this.$refs.sidebar.classList.toggle('mobile-visible')

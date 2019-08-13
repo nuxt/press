@@ -5,24 +5,38 @@
 
 html.docs {
   background: #628fb2;
-}
 
-html.docs body {
-  height: auto;
-  width: 896px;
-  margin: 0 auto;
-}
 
-html.docs #__layout {
-  margin: 0px auto;
+  & body {
+    height: auto;
+    width: 896px;
+    margin: 0 auto;
+  }
+
+  & #__layout {
+    margin: 0px auto;
+  }
+
+  & .page-enter-active,
+  & .layout-leave-active {
+    transition: opacity .25s
+  }
+
+  & .page-enter-active *,
+  & .layout-leave-active * {
+    transition: opacity .25s
+  }
+
+  & .page-enter *,
+  & .layout-leave-active * {
+    opacity: 0;
+  }
 }
 
 @custom-media --mobile only screen and (max-device-width: 896px), (max-width: 896px);
 
 #nuxt-press.docs {
   display: flex;
-  height: 100vh;
-  min-height: 100vh;
   flex-direction: column;
   width: 100%;
   margin: 0;
@@ -175,6 +189,7 @@ html.docs #__layout {
 
 
     &.has-sidebar {
+      min-height: calc(100vh - 4.4rem);
       padding-left: 15.4rem;
     }
 
@@ -523,19 +538,4 @@ html.docs #__layout {
       }
     }
   }
-}
-
-html.docs .page-enter-active,
-html.docs .layout-leave-active {
-  transition: opacity .25s
-}
-
-html.docs .page-enter-active *,
-html.docs .layout-leave-active * {
-  transition: opacity .25s
-}
-
-html.docs .page-enter *,
-html.docs .layout-leave-active * {
-  opacity: 0;
 }

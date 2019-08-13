@@ -81,6 +81,9 @@ export default {
         text: this.data.actionText
       }
     }
+  },
+  mounted() {
+    this.$emit('mounted')
   }
 }
 </script>
