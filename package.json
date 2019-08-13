@@ -1,6 +1,6 @@
 {
   "name": "@nuxt/press",
-  "version": "0.0.1-alpha.105",
+  "version": "0.0.1-alpha.106",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
   "bin": {
     "nuxt-press": "./bin/cli.js"
