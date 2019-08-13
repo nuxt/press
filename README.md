@@ -2,7 +2,7 @@
 
 <a href="https://circleci.com/gh/nuxt/press/"><img src="https://badgen.net/circleci/github/nuxt/press" alt="Build Status"></a>
 <a href="https://codecov.io/gh/nuxt/press"><img src="https://badgen.net/codecov/c/github/nuxt/press/master" alt="Coverage Status"></a>
-[![npm](https://img.shields.io/npm/dt/tib.svg)](https://www.npmjs.com/package/@nuxt/press)
+[![npm](https://img.shields.io/npm/dt/@nuxt/press.svg)](https://www.npmjs.com/package/@nuxt/press)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/@nuxt/press/latest.svg)](https://www.npmjs.com/package/@nuxt/press)
 
 This is a **work in progress**. See alpha documentation [here][alpha-docs].
