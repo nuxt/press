@@ -198,7 +198,7 @@ html.docs #__layout {
       }
     }
 
-    
+
     & .home {
       padding: 0 2rem 0;
       max-width: 600px;
@@ -344,7 +344,7 @@ html.docs #__layout {
         & th {
           border: 1px solid #dfe2e5;
           padding: 6px 13px;
-          overflow-x: scroll;
+          overflow-x: auto;
           & code {
             font-size: 0.7em;
           }
@@ -420,24 +420,24 @@ html.docs #__layout {
       }
 
       & .nav-right {
-  
+
         & select {
           display: none;
         }
-  
+
         & .search {
           display: none;
         }
-  
+
         & ul.links {
           display: flex;
           margin: 0;
           list-style-type: none;
-  
+
           & li {
             margin: 0;
           }
-  
+
           & .nav-item {
             line-height: 1.5rem;
             padding: 0 .5rem 0 .5rem;
@@ -523,4 +523,19 @@ html.docs #__layout {
       }
     }
   }
+}
+
+html.docs .page-enter-active,
+html.docs .layout-leave-active {
+  transition: opacity .25s
+}
+
+html.docs .page-enter-active *,
+html.docs .layout-leave-active * {
+  transition: opacity .25s
+}
+
+html.docs .page-enter *,
+html.docs .layout-leave-active * {
+  opacity: 0;
 }

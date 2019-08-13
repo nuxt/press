@@ -493,7 +493,7 @@ This is a simplification from [MDX][mdx], which uses `---` as delimiter.
 
 ## Convenience classes
 
-NuxtPress adds classes to slides to make styling easier. 
+NuxtPress adds classes to slides to make styling easier.
 
 ```css
 .slides-<fileName> .slide-<slideNumber> {
