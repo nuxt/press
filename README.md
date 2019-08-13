@@ -37,8 +37,8 @@ help of the **Nuxt Team**.
 <table>
 <tr>
 <td>
-<a href="https://www.qomplx.com/?ref=vuetify-github">
-<img style="display: block" height="100px" src="https://user-images.githubusercontent.com/12291/50407303-987b3180-07bb-11e9-80b8-9609f99023dc.png">
+<a href="https://stored.com.br/?ref=nuxt-press-github">
+<img height="100px" src="https://user-images.githubusercontent.com/12291/50407303-987b3180-07bb-11e9-80b8-9609f99023dc.png">
 </a>
 </td>
 </tr>
