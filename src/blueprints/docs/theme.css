@@ -178,6 +178,27 @@ html.docs #__layout {
       padding-left: 15.4rem;
     }
 
+    & code {
+      font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+      font-size: 0.8em;
+      color: #669900;
+      font-weight: bold;
+      background-color: #faf8f5;
+      padding: 0.2em;
+    }
+
+    & a {
+      font-weight: bold;
+      color: #669900 !important;
+      & code {
+        background: none;
+      }
+      &:hover {
+        color: #93dd00 !important;
+      }
+    }
+
+    
     & .home {
       padding: 0 2rem 0;
       max-width: 600px;
@@ -289,17 +310,6 @@ html.docs #__layout {
         }
       }
 
-      & a {
-        font-weight: bold;
-        color: #669900 !important;
-        & code {
-          background: none;
-        }
-        &:hover {
-          color: #93dd00 !important;
-        }
-      }
-
       & blockquote {
         font-style: italic;
         font-size: 0.9em;
@@ -311,14 +321,6 @@ html.docs #__layout {
         border-left: 3px solid #555555;
       }
 
-      & code {
-        font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-        font-size: 0.8em;
-        color: #669900;
-        font-weight: bold;
-        background-color: #faf8f5;
-        padding: 0.2em;
-      }
       /* prismjs override */
       & pre,
       & pre[class*="language-"] {
