@@ -44,4 +44,4 @@ help of the **Nuxt Team**.
 
 Interested in **adding your logo to this list**? [Reach out][contact] for sponsoring details.
 
-[contact]: maito:jonasgalvez@gmail.com
+[contact]: mailto:jonasgalvez@gmail.com
