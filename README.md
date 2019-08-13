@@ -6,9 +6,7 @@
 [![npm](https://img.shields.io/npm/dt/@nuxt/press.svg)](https://www.npmjs.com/package/@nuxt/press)
 [![npm (scoped with tag)](https://img.shields.io/npm/v/@nuxt/press/latest.svg)](https://www.npmjs.com/package/@nuxt/press)
 
-This is a **work in progress**. See alpha documentation [here][alpha-docs].
-
-[alpha-docs]: https://serene-lamarr-39961d.netlify.com
+See [documentation at](https://nuxt.press)
 
 # Publishing the Nuxt way
 
