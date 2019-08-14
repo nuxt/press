@@ -4,6 +4,6 @@
 
 <script>
 export default {
-  props: ['data']
+  props: ['data', 'path']
 }
 </script>

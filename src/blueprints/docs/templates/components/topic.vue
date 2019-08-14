@@ -3,12 +3,15 @@
     <home
       v-if="isHome"
       :data="$docs.home"
-      v-model="data.body"
+      :value="data.body"
+      :meta="meta"
+      @mounted="templateReady"
     />
     <nuxt-template
       v-else
       tag="article"
-      v-model="data.body"
+      :value="data.body"
+      @mounted="templateReady"
     />
   </main>
 </template>
@@ -22,8 +25,9 @@ import docsMixin from 'press/docs/mixins/docs'
 export default {
   components: { Home },
   layout: 'docs',
-  props: ['data'],
+  props: ['data', 'path'],
   mixins: [docsMixin],
+  transition: () => this.isHome ? '' : 'page',
   head() {
     const meta = [
       { charset: 'utf-8' },
@@ -44,6 +48,20 @@ export default {
       titleTemplate: `%s - ${this.$press.docs.title}`
     }
   },
+  computed: {
+    $title () {
+      return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || 'Hello'
+    },
+    $description () {
+      return this.$page.meta.description || 'Welcome to your NuxtPress site'
+    },
+    meta() {
+      return {
+        title: this.$title,
+        description: this.$description
+      }
+    }
+  },
   created() {
     // make isHome non-reactive
     // otherwise on route change (triggered by the header observer)
@@ -52,57 +70,83 @@ export default {
     // and it alos breaks the observer
     this.isHome = this.$isHome
   },
+  updated() {
+    // no need to add observer for Home component
+    if (this.isHome) {
+      return
+    }
+
+    this.restartObserver()
+  },
   mounted() {
     // no need to add observer for Home component
     if (this.isHome) {
       return
     }
 
-    const elements = `
-      article h1,
-      article h2,
-      article h3,
-      article h4,
-      article h5,
-      article h6
-    `
-
-    const initialId = this.$route.hash.substr(1)
-
-    const observedCallback = (target) => {
-      const targetId = target.id ? `#${target.id}` : ``
-      let targetHeading = `${this.$route.path}${targetId}`
-      let heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
-
-      if (!heading && target.tagName === 'H1') {
-        targetHeading = this.$route.path
-        heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
+    this.startObserver()
+  },
+  methods: {
+    templateReady() {
+      this.$nuxt.$emit('topicReady')
+    },
+    restartObserver() {
+      this.stopObserver()
+      this.startObserver()
+    },
+    stopObserver() {
+      if (!this._observer) {
+        this._observer.disconnect()
+        this._observer = undefined
       }
+    },
+    startObserver() {
+      const elements = `
+        article h1,
+        article h2,
+        article h3,
+        article h4,
+        article h5,
+        article h6
+      `
 
-      if (heading) {
-        const tocLinks = [...document.querySelectorAll('.sidebar a.active')]
-        for (const tocLink of tocLinks) {
-          tocLink.classList.remove('active')
+      const initialId = this.$route.hash.substr(1)
+
+      const observedCallback = (target) => {
+        const targetId = target.id ? `#${target.id}` : ``
+        let targetHeading = `${this.$route.path}${targetId}`
+        let heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
+
+        if (!heading && target.tagName === 'H1') {
+          targetHeading = this.$route.path
+          heading = document.querySelector(`.sidebar a[href="${targetHeading}"`)
         }
-        heading.classList.add('active')
 
-        this.$press.disableScrollBehavior = true
-        this.$router.replace(targetHeading, () => {
-          this.$nextTick(() => {
+        if (heading) {
+          const tocLinks = [...document.querySelectorAll('.sidebar a.active')]
+          for (const tocLink of tocLinks) {
+            tocLink.classList.remove('active')
+          }
+          heading.classList.add('active')
+
+          this.$press.disableScrollBehavior = true
+          this.$router.replace(targetHeading, () => {
+            this.$nextTick(() => {
+              this.$press.disableScrollBehavior = false
+            })
+          }, () => {
             this.$press.disableScrollBehavior = false
           })
-        }, () => {
-          this.$press.disableScrollBehavior = false
-        })
+        }
       }
-    }
 
-    this._observer = startObserver({
-      vm: this,
-      elements,
-      initialId,
-      options: {  }
-    }, observedCallback)
+      this._observer = startObserver({
+        vm: this,
+        elements,
+        initialId,
+        options: {  }
+      }, observedCallback)
+    }
   }
 }
 </script>

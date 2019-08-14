@@ -15,6 +15,7 @@ if (typeof window !== 'undefined' && window.requestIdleCallback) {
 }
 
 export default {
+  functional: true,
   props: {
     tag: {
       type: String,
@@ -30,40 +31,35 @@ export default {
       required: false
     }
   },
-  mounted () {
-    this.$nextTick(() => this.$root.$emit('nuxt-static:rendered'))
-  },
-  render (h) {
-    const data = this.data || this.source
+  render (h, { props, slots, parent }) {
+    const data = props.data || props.source
 
     if (isClient) {
       requestIdleCallback(() => {
-        const pressLinks = [...this.$el.querySelectorAll('[data-press-link]')]
+        const pressLinks = [...parent.$el.querySelectorAll('[data-press-link]')]
         for (const pressLink of pressLinks) {
-          pressLink.addEventListener('click', this.pressLinkHandler)
+          pressLink.addEventListener('click', (e) => {
+            e.preventDefault()
+            parent.$router.push(e.target.attributes.href.value)
+            return false
+          })
         }
       })
     }
-    if (data || this.$isServer) {
-      if (this.source) {
+
+    if (data || parent.$isServer) {
+      if (props.source) {
         return h({
-          template: `<${this.tag}>${this.source}</${this.tag}>`
+          template: `<${props.tag}>${props.source}</${props.tag}>`
         })
-      } else {
-        return h(this.tag, this.$slots.default)
       }
-    } else {
-      const vnode = h('div', [])
-      vnode.asyncFactory = {}
-      vnode.isComment = true
-      return vnode
+
+      return h(props.tag, slots().default)
     }
-  },
-  methods: {
-    pressLinkHandler (e) {
-      e.preventDefault()
-      this.$router.push(e.target.attributes.href.value)
-      return false
-    }
+
+    const vnode = h('div', [])
+    vnode.asyncFactory = {}
+    vnode.isComment = true
+    return vnode
   }
 }
