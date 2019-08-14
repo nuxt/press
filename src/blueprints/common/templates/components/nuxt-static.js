@@ -49,7 +49,7 @@ export default {
       })
     }
 
-    if (data || parent.$isServer) {
+    if (!isClient || data) {
       if (props.source) {
         return h('nuxt-template', {
           props: {
