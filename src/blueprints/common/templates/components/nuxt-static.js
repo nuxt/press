@@ -64,6 +64,9 @@ export default {
 
     // return empty tag on hydration on client
     // to prevent hydration error
+    // this works because although the nuxt-template will contain
+    // more html/vue components, those are not included
+    // within the ssr component tree
     const vnode = h(props.tag)
     /* this should not be needed (anymore?):
     vnode.asyncFactory = {}
