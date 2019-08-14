@@ -62,6 +62,11 @@ if (options.$slides) componentTypes.push('slides')
       return ''
     }
   },
+  mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$emit('press:sourceReady')
+    })
+  },
 <% if (options.dev) { %>
   beforeMount() {
     this.$hotUpdates = new EventSource('/__press/hot')

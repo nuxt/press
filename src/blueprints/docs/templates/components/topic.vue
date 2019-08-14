@@ -5,13 +5,11 @@
       :data="$docs.home"
       :value="data.body"
       :meta="meta"
-      @mounted="templateReady"
     />
     <nuxt-template
       v-else
       tag="article"
       :value="data.body"
-      @mounted="templateReady"
     />
   </main>
 </template>
@@ -27,7 +25,6 @@ export default {
   layout: 'docs',
   props: ['data', 'path'],
   mixins: [docsMixin],
-  transition: () => this.isHome ? '' : 'page',
   head() {
     const meta = [
       { charset: 'utf-8' },
@@ -36,7 +33,7 @@ export default {
     ]
 
     if (this.$description) {
-      meta.push({ name: "description", content: this.$description })
+      meta.push({ name: "description", content: this.meta.description })
     }
 
     return {
@@ -44,21 +41,15 @@ export default {
         class: 'docs'
       },
       meta,
-      title: this.$title,
+      title: this.meta.title,
       titleTemplate: `%s - ${this.$press.docs.title}`
     }
   },
   computed: {
-    $title () {
-      return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || 'Hello'
-    },
-    $description () {
-      return this.$page.meta.description || 'Welcome to your NuxtPress site'
-    },
     meta() {
       return {
-        title: this.$title,
-        description: this.$description
+        title: this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || 'Hello',
+        description: this.$page.meta.description || 'Welcome to your NuxtPress site'
       }
     }
   },
@@ -87,9 +78,6 @@ export default {
     this.startObserver()
   },
   methods: {
-    templateReady() {
-      this.$nuxt.$emit('topicReady')
-    },
     restartObserver() {
       this.stopObserver()
       this.startObserver()

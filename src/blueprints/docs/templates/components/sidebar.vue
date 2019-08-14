@@ -66,9 +66,6 @@ export default {
     }
   },
   mixins: [docsMixin],
-  props: {
-    initial: Boolean
-  },
   data() {
     return {
       sidebar: [],
@@ -78,7 +75,7 @@ export default {
     this._sidebars = []
 
     initSidebar.call(this)
-    this.prepareSidebar(!!this.initial)
+    this.prepareSidebar()
   },
   computed: {
     hash() {
@@ -110,19 +107,19 @@ export default {
     }
   },
   methods: {
-    prepareSidebar(initial) {
+    prepareSidebar() {
       const path = this.normalizedPath
       let sidebar
 
       if (this._sidebars[path]) {
-        this.setSidebar(this._sidebars[path], initial)
+        this.setSidebar(this._sidebars[path])
         return
       }
 
       const { meta, toc } = this.$page
       if (meta && meta.sidebar === 'auto') {
         this._sidebars[path] = tocToTree(toc)
-        this.setSidebar(this._sidebars[path], initial)
+        this.setSidebar(this._sidebars[path])
         return
       }
 
@@ -136,24 +133,13 @@ export default {
             )
           }
 
-          this.setSidebar(this._sidebars[sidebarPath], initial)
+          this.setSidebar(this._sidebars[sidebarPath])
           break
         }
       }
     },
-    setSidebar(sidebar, initial) {
-      if (initial) {
-        this.sidebar = sidebar
-        return
-      }
-
-      const changeSidebar = () => {
-        this.$nextTick(() => {
-          this.sidebar = sidebar
-        })
-      }
-
-      this.$nuxt.$once('topicReady', changeSidebar)
+    setSidebar(sidebar) {
+      this.sidebar = sidebar
     },
     toggleMobile() {
       this.$refs.sidebar.classList.toggle('mobile-visible')
