@@ -1,0 +1,7 @@
+#nuxt-press.docs .content:not(.has-sidebar) {
+  background: inherit;
+}
+
+#nuxt-press.docs .home {
+  background: #fff;
+}
