@@ -8,6 +8,7 @@
     <component :is="injections.components.SidebarSection"
       ref="section"
       v-for="(sectionData, i) in props.data"
+      @active="(...args) => (listeners.active && listeners.active(...args))"
       :key="`topic-${props.depth}-${i}`"
       :active-path="props.activePath"
       :data="sectionData"

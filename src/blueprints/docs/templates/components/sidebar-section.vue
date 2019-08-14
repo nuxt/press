@@ -19,7 +19,9 @@
         :active-path="activePath"
         :data="children"
         :depth="depth + 1"
-        :visible="showChildSection" />
+        :visible="showChildSection"
+        @active="setChildActive"
+      />
     </section>
     <nuxt-link
       v-else
@@ -50,6 +52,16 @@ export default {
       default: 0
     }
   },
+  created() {
+    if (this.isActive) {
+      this.$emit('active', this.isActive, this.name)
+    }
+  },
+  data() {
+    return {
+      activeChilds: 0
+    }
+  },
   computed: {
     name() {
       return this.data[1]
@@ -63,6 +75,12 @@ export default {
     children() {
       return this.data[3]
     },
+    isActive() {
+      return this.url === this.activePath
+    },
+    anyActive() {
+      return this.isActive || this.activeChilds > 0
+    },
     createChildSection() {
       const extraDepth = this.$page.meta.sidebar === 'auto' ? 0 : 1
       if (this.depth < this.$page.meta.sidebarDepth + extraDepth) {
@@ -72,34 +90,20 @@ export default {
       return false
     },
     showChildSection() {
-      return !this.depth || this.$page.meta.sidebar === 'auto' || this.activeChildTree
-    },
-    isActive() {
-      return this.url === this.activePath
-    },
-    activeChildTree() {
-      if (this.isActive) {
-        return true
-      }
-
-      if (!this.$refs.sections) {
-        return false
-      }
-
-      // or maybe better with an up-bubbling event?
-      const sections = this.$refs.sections.$refs.section
-      if (Array.isArray(sections)) {
-        for (const section of sections) {
-          if (section.isActive) {
-            return true
-          }
-        }
-      }
-
-      return false
+      return !this.depth || this.$page.meta.sidebar === 'auto' || this.anyActive
     },
     sectionClass() {
       return this.createChildSection ? 'sidebar-section' : 'sidebar-item'
+    }
+  },
+  watch: {
+    isActive(value) {
+      this.$emit('active', value, this.name)
+    }
+  },
+  methods: {
+    setChildActive(hasActiveChild, name) {
+      this.activeChilds += hasActiveChild ? 1 : -1
     }
   }
 }
