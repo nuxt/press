@@ -49,8 +49,11 @@ export default {
 
     if (data || parent.$isServer) {
       if (props.source) {
-        return h({
-          template: `<${props.tag}>${props.source}</${props.tag}>`
+        return h('nuxt-template', {
+          props: {
+            tag: props.tag,
+            value: props.source
+          }
         })
       }
 
