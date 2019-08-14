@@ -14,6 +14,7 @@ if (typeof window !== 'undefined' && window.requestIdleCallback) {
   requestIdleCallback = window.requestIdleCallback
 }
 
+// @vue/component
 export default {
   functional: true,
   props: {
@@ -28,7 +29,8 @@ export default {
     },
     source: {
       type: String,
-      required: false
+      required: false,
+      default: ''
     }
   },
   render (h, { props, slots, parent }) {
