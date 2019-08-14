@@ -62,10 +62,12 @@ export default {
       return h(props.tag, slots().default)
     }
 
-    return h(null)
-    /* const vnode = h('div', [])
+    // return empty tag on hydration on client
+    // to prevent hydration error
+    const vnode = h(props.tag)
+    /* this should not be needed (anymore?):
     vnode.asyncFactory = {}
-    vnode.isComment = true
-    return vnode */
+    vnode.isComment = true */
+    return vnode
   }
 }
