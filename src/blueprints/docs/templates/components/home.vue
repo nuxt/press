@@ -1,7 +1,7 @@
 // Credit: this component is largely adapted
 // from VuePress to maintain commonality
 
- <template>
+<template>
   <main class="home" aria-labelledby="main-title">
     <header class="hero">
       <img
@@ -88,9 +88,6 @@ export default {
         text: this.data.actionText
       }
     }
-  },
-  mounted() {
-    this.$emit('mounted')
   }
 }
 </script>
