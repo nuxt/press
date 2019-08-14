@@ -62,28 +62,27 @@ export default {
       this.$addPressTheme('blueprints/slides/theme.css')
     },
     async done () {
-      if (this.$isGenerate) {
-        return
+      if (this.nuxt.options.dev) {
+        let updatedSlides
+        const mdProcessor = await this.$press.slides.source.processor()
+        const watchDir = this.$press.slides.dir
+          ? `${this.$press.slides.dir}/`
+          : this.$press.slides.dir
+        chokidar.watch([`${watchDir}*.md`, `${watchDir}**/*.md`], {
+          cwd: this.options.srcDir,
+          ignoreInitial: true,
+          ignored: 'node_modules/**/*'
+        })
+          .on('change', async (path) => {
+            updatedSlides = await parseSlides.call(this, path, mdProcessor)
+            this.$pressSourceEvent('change', 'slides', updatedSlides)
+          })
+          .on('add', async (path) => {
+            updatedSlides = await parseSlides.call(this, path, mdProcessor)
+            this.$pressSourceEvent('add', 'slides', updatedSlides)
+          })
+          .on('unlink', path => this.$pressSourceEvent('unlink', 'slides', { path }))
       }
-      let updatedSlides
-      const mdProcessor = await this.$press.slides.source.processor()
-      const watchDir = this.$press.slides.dir
-        ? `${this.$press.slides.dir}/`
-        : this.$press.slides.dir
-      chokidar.watch([`${watchDir}*.md`, `${watchDir}**/*.md`], {
-        cwd: this.options.srcDir,
-        ignoreInitial: true,
-        ignored: 'node_modules/**/*'
-      })
-        .on('change', async (path) => {
-          updatedSlides = await parseSlides.call(this, path, mdProcessor)
-          this.$pressSourceEvent('change', 'slides', updatedSlides)
-        })
-        .on('add', async (path) => {
-          updatedSlides = await parseSlides.call(this, path, mdProcessor)
-          this.$pressSourceEvent('add', 'slides', updatedSlides)
-        })
-        .on('unlink', path => this.$pressSourceEvent('unlink', 'slides', { path }))
     }
   },
   // Options are merged into the parent module default options

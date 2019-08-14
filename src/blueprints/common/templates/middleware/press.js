@@ -4,7 +4,42 @@ const typeToLayout = {
   'slides': 'slides'
 }
 
+const maxCacheCount = 5
+const sourcesCache = []
 const extraMiddlewares = []
+
+async function getSource ($press, path) {
+  const cache = sourcesCache.find(cache => cache.path === path)
+
+  if (cache) {
+    cache.usedCount++
+    return cache.source
+  }
+
+  if (sourcesCache.length > maxCacheCount) {
+    // sort most used, then shortest url first
+    sourcesCache.sort((a, b) => {
+      if (a.usedCount !== b.usedCount) {
+        return b.usedCount - a.usedCount
+      }
+      return a.path < b.path ? -1 : 1
+    })
+
+    while (sourcesCache.length > maxCacheCount) {
+      sourcesCache.pop()
+    }
+  }
+
+  const source = await $press.get(path)
+
+  sourcesCache.push({
+    path,
+    source,
+    usedCount: 1
+  })
+
+  return source
+}
 
 export default async function pressMiddleware (ctx, plugin = false) {
   if (process.server && !plugin) {
@@ -57,7 +92,7 @@ export default async function pressMiddleware (ctx, plugin = false) {
         }
       }
 
-      source = await $press.get(`api/source${sourcePath}`)
+      source = await getSource($press, `api/source${sourcePath}`)
     }
 
     if (!source) {

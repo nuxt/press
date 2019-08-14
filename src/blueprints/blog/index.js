@@ -91,31 +91,30 @@ export default {
       await updateConfig.call(this, rootId, { blog: this.$press.blog })
     },
     async done () {
-      if (this.$isGenerate) {
-        return
+      if (this.nuxt.options.dev) {
+        let updatedEntry
+        const mdProcessor = await this.$press.blog.source.processor()
+        const watchDir = this.$press.blog.dir
+          ? `${this.$press.blog.dir}/`
+          : this.$press.blog.dir
+        chokidar.watch([
+          `${watchDir}*.md`,
+          `${watchDir}**/*.md`
+        ], {
+          cwd: this.options.srcDir,
+          ignoreInitial: true,
+          ignored: 'node_modules/**/*'
+        })
+          .on('change', async (path) => {
+            updatedEntry = await parseEntry.call(this, path, mdProcessor)
+            this.$pressSourceEvent('change', 'blog', updatedEntry)
+          })
+          .on('add', async (path) => {
+            updatedEntry = await parseEntry.call(this, path, mdProcessor)
+            this.$pressSourceEvent('add', 'blog', updatedEntry)
+          })
+          .on('unlink', path => this.$pressSourceEvent('unlink', 'blog', { path }))
       }
-      let updatedEntry
-      const mdProcessor = await this.$press.blog.source.processor()
-      const watchDir = this.$press.blog.dir
-        ? `${this.$press.blog.dir}/`
-        : this.$press.blog.dir
-      chokidar.watch([
-        `${watchDir}*.md`,
-        `${watchDir}**/*.md`
-      ], {
-        cwd: this.options.srcDir,
-        ignoreInitial: true,
-        ignored: 'node_modules/**/*'
-      })
-        .on('change', async (path) => {
-          updatedEntry = await parseEntry.call(this, path, mdProcessor)
-          this.$pressSourceEvent('change', 'blog', updatedEntry)
-        })
-        .on('add', async (path) => {
-          updatedEntry = await parseEntry.call(this, path, mdProcessor)
-          this.$pressSourceEvent('add', 'blog', updatedEntry)
-        })
-        .on('unlink', path => this.$pressSourceEvent('unlink', 'blog', { path }))
     }
   },
   options: {

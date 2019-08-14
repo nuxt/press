@@ -93,34 +93,33 @@ export default {
       await updateConfig.call(this, rootId, { docs: this.$press.docs })
     },
     done ({ rootId }) {
-      if (this.$isGenerate) {
-        return
-      }
-      const watchDir = this.$press.docs.dir
-        ? `${this.$press.docs.dir}/`
-        : this.$press.docs.dir
+      if (this.nuxt.options.dev) {
+        const watchDir = this.$press.docs.dir
+          ? `${this.$press.docs.dir}/`
+          : this.$press.docs.dir
 
-      const updateDocs = async (path) => {
-        const docsData = await data.call(this, { options: this.$press })
-        if (docsData.options) {
-          Object.assign(this.$press.docs, docsData.options)
+        const updateDocs = async (path) => {
+          const docsData = await data.call(this, { options: this.$press })
+          if (docsData.options) {
+            Object.assign(this.$press.docs, docsData.options)
+          }
+          await updateConfig.call(this, rootId, { docs: docsData.options })
+          const source = Object.values(docsData.sources).find(s => s.src === path) || {}
+          this.$pressSourceEvent('reload', 'docs', { data: docsData, source })
         }
-        await updateConfig.call(this, rootId, { docs: docsData.options })
-        const source = Object.values(docsData.sources).find(s => s.src === path) || {}
-        this.$pressSourceEvent('reload', 'docs', { data: docsData, source })
-      }
 
-      chokidar.watch([
-        `${watchDir}*.md`,
-        `${watchDir}**/*.md`
-      ], {
-        cwd: this.options.srcDir,
-        ignoreInitial: true,
-        ignored: 'node_modules/**/*'
-      })
-        .on('change', updateDocs)
-        .on('add', updateDocs)
-        .on('unlink', updateDocs)
+        chokidar.watch([
+          `${watchDir}*.md`,
+          `${watchDir}**/*.md`
+        ], {
+          cwd: this.options.srcDir,
+          ignoreInitial: true,
+          ignored: 'node_modules/**/*'
+        })
+          .on('change', updateDocs)
+          .on('add', updateDocs)
+          .on('unlink', updateDocs)
+      }
     }
   },
   options: {

@@ -119,14 +119,16 @@ export default {
       }
     },
     async done () {
-      chokidar.watch(['pages/*.md'], {
-        cwd: this.options.srcDir,
-        ignoreInitial: true,
-        ignored: 'node_modules/**/*'
-      })
-        .on('change', async path => this.$pressSourceEvent('change', await loadPage(path)))
-        .on('add', async path => this.$pressSourceEvent('add', await loadPage(path)))
-        .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
+      if (this.nuxt.options.dev) {
+        chokidar.watch(['pages/*.md'], {
+          cwd: this.options.srcDir,
+          ignoreInitial: true,
+          ignored: 'node_modules/**/*'
+        })
+          .on('change', async path => this.$pressSourceEvent('change', await loadPage(path)))
+          .on('add', async path => this.$pressSourceEvent('add', await loadPage(path)))
+          .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
+      }
 
       if (this.$press.$placeholderPagesDir) {
         await remove(this.$press.$placeholderPagesDir)
