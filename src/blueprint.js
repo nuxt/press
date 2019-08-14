@@ -167,10 +167,6 @@ export async function _registerBlueprint (id, rootId, options) {
         }
 
         await buildBefore.call(this, context)
-
-        // TODO: i THINK this can be removed, not sure why its here
-        // const staticRoot = join(this.options.buildDir, rootId, 'static')
-        // await saveDataSources.call(this, staticRoot, id, context.data)
       },
       // build:compile hook
       compile: async ({ name }) => {
@@ -215,7 +211,6 @@ export async function _registerBlueprint (id, rootId, options) {
           if (blueprint.generateRoutes) {
             options.$generateRoutes = options.$generateRoutes || []
 
-            // TODO: why options[id]
             const prefixPath = path => `${options[id].prefix}${path}`
             const routes = await blueprint.generateRoutes.call(
               this,
