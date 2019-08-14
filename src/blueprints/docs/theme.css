@@ -5,24 +5,38 @@
 
 html.docs {
   background: #628fb2;
-}
 
-html.docs body {
-  height: auto;
-  width: 896px;
-  margin: 0 auto;
-}
 
-html.docs #__layout {
-  margin: 0px auto;
+  & body {
+    height: auto;
+    width: 896px;
+    margin: 0 auto;
+  }
+
+  & #__layout {
+    margin: 0px auto;
+  }
+
+  & .page-enter-active,
+  & .layout-leave-active {
+    transition: opacity .25s
+  }
+
+  & .page-enter-active *,
+  & .layout-leave-active * {
+    transition: opacity .25s
+  }
+
+  & .page-enter *,
+  & .layout-leave-active * {
+    opacity: 0;
+  }
 }
 
 @custom-media --mobile only screen and (max-device-width: 896px), (max-width: 896px);
 
 #nuxt-press.docs {
   display: flex;
-  height: 100vh;
-  min-height: 100vh;
   flex-direction: column;
   width: 100%;
   margin: 0;
@@ -175,6 +189,7 @@ html.docs #__layout {
 
 
     &.has-sidebar {
+      min-height: calc(100vh - 4.4rem);
       padding-left: 15.4rem;
     }
 
@@ -198,7 +213,7 @@ html.docs #__layout {
       }
     }
 
-    
+
     & .home {
       padding: 0 2rem 0;
       max-width: 600px;
@@ -344,7 +359,7 @@ html.docs #__layout {
         & th {
           border: 1px solid #dfe2e5;
           padding: 6px 13px;
-          overflow-x: scroll;
+          overflow-x: auto;
           & code {
             font-size: 0.7em;
           }
@@ -420,24 +435,24 @@ html.docs #__layout {
       }
 
       & .nav-right {
-  
+
         & select {
           display: none;
         }
-  
+
         & .search {
           display: none;
         }
-  
+
         & ul.links {
           display: flex;
           margin: 0;
           list-style-type: none;
-  
+
           & li {
             margin: 0;
           }
-  
+
           & .nav-item {
             line-height: 1.5rem;
             padding: 0 .5rem 0 .5rem;

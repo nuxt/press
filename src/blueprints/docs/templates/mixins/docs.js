@@ -1,9 +1,10 @@
+// @vue/component
 export default {
   computed: {
     locale () {
       return this.$press.locale
     },
-    path () {
+    normalizedPath () {
       let path = this.$route.path
       if (this.$docs.prefix) {
         path = path.substr(this.$docs.prefix.length)
@@ -19,7 +20,7 @@ export default {
       return this.$press.docs
     },
     $page () {
-      const path = this.path
+      const path = this.normalizedPath
       if (this.$docs.pages[path]) {
         return this.$docs.pages[path]
       }
@@ -27,18 +28,12 @@ export default {
       const fallbackPath = this.locale ? `/${this.locale}/` : '/'
       return this.$docs.pages[fallbackPath]
     },
-    $title () {
-      return this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || ''
-    },
-    $description () {
-      return this.$page.meta.description || ''
-    },
     $isHome () {
       if (!this.$docs.home) {
         return false
       }
 
-      const path = this.path
+      const path = this.normalizedPath
 
       if (this.locale) {
         return [`/${this.locale}/`, '/'].includes(path)

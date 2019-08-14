@@ -1,24 +1,26 @@
-<template>
-  <ul class="sidebar-links" :class="`sidebar-depth-${depth}`">
-    <sidebar-section
+<template functional>
+  <ul
+    v-show="props.visible"
+    :hidden="!props.visible"
+    class="sidebar-links"
+    :class="`sidebar-depth-${props.depth}`"
+  >
+    <component :is="injections.components.SidebarSection"
       ref="section"
-      v-for="(sectionData, i) in data"
-      :key="`topic-${depth}-${i}`"
-      :active-path="activePath"
+      v-for="(sectionData, i) in props.data"
+      @active="(...args) => (listeners.active && listeners.active(...args))"
+      :key="`topic-${props.depth}-${i}`"
+      :active-path="props.activePath"
       :data="sectionData"
-      :depth="depth"
+      :depth="props.depth"
     />
   </ul>
 </template>
 
 <script>
-import SidebarSection from 'press/docs/components/sidebar-section'
-
 export default {
   name: 'SidebarSections',
-  components: {
-    SidebarSection
-  },
+  inject: ['components'],
   props: {
     activePath: {
       type: String
@@ -30,6 +32,10 @@ export default {
     depth: {
       type: Number,
       default: 0
+    },
+    visible: {
+      type: Boolean,
+      default: true
     }
   }
 }

@@ -1,6 +1,7 @@
+// @vue/component
 export default {
-  functional: true,
   name: 'PressLink',
+  functional: true,
   props: {
     to: {
       type: String,

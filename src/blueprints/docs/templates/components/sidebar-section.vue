@@ -14,13 +14,14 @@
         <span v-else>{{ name }}</span>
       </p>
 
-      <sidebar-sections
+      <component :is="components.SidebarSections"
         ref="sections"
         :active-path="activePath"
         :data="children"
         :depth="depth + 1"
-        :hidden="!showChildSection"
-        v-show="showChildSection" />
+        :visible="showChildSection"
+        @active="setChildActive"
+      />
     </section>
     <nuxt-link
       v-else
@@ -36,10 +37,8 @@
 import docsMixin from 'press/docs/mixins/docs'
 
 export default {
-  components: {
-    SidebarSections: () => import('./sidebar-sections')
-  },
   mixins: [docsMixin],
+  inject: ['components'],
   props: {
     activePath: {
       type: String
@@ -53,6 +52,16 @@ export default {
       default: 0
     }
   },
+  created() {
+    if (this.isActive) {
+      this.$emit('active', this.isActive, this.name)
+    }
+  },
+  data() {
+    return {
+      activeChilds: 0
+    }
+  },
   computed: {
     name() {
       return this.data[1]
@@ -63,12 +72,14 @@ export default {
     fullUrl() {
       return `${this.$docs.prefix}${this.url}`
     },
-    /*path() {
-      const index = this.url.indexOf('#')
-      return index === -1 ? this.url : this.url.substr(0, index)
-    },*/
     children() {
       return this.data[3]
+    },
+    isActive() {
+      return this.url === this.activePath
+    },
+    anyActive() {
+      return this.isActive || this.activeChilds > 0
     },
     createChildSection() {
       const extraDepth = this.$page.meta.sidebar === 'auto' ? 0 : 1
@@ -79,34 +90,20 @@ export default {
       return false
     },
     showChildSection() {
-      return !this.depth || this.$page.meta.sidebar === 'auto' || this.activeChildTree
-    },
-    isActive() {
-      return this.url === this.activePath
-    },
-    activeChildTree() {
-      if (this.isActive) {
-        return true
-      }
-
-      if (!this.$refs.sections) {
-        return false
-      }
-
-      // or maybe better with an up-bubbling event?
-      const sections = this.$refs.sections.$refs.section
-      if (Array.isArray(sections)) {
-        for (const section of sections) {
-          if (section.isActive) {
-            return true
-          }
-        }
-      }
-
-      return false
+      return !this.depth || this.$page.meta.sidebar === 'auto' || this.anyActive
     },
     sectionClass() {
       return this.createChildSection ? 'sidebar-section' : 'sidebar-item'
+    }
+  },
+  watch: {
+    isActive(value) {
+      this.$emit('active', value, this.name)
+    }
+  },
+  methods: {
+    setChildActive(hasActiveChild, name) {
+      this.activeChilds += hasActiveChild ? 1 : -1
     }
   }
 }

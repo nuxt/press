@@ -1,10 +1,10 @@
 <template>
   <div id="nuxt-press" class="docs">
-    <top v-if="!$isHome || $docs.home.header" />
-    <sidebar v-if="!$isHome || $docs.home.sidebar" />
+    <top v-if="hasHeader" />
+    <sidebar v-if="hasSidebar" />
     <nuxt
       class="content wysiwyg"
-      :class="{ 'has-sidebar': !$isHome || $docs.home.sidebar }"
+      :class="{ 'has-sidebar': hasSidebar }"
     />
   </div>
 </template>
@@ -16,6 +16,35 @@ import sidebar from 'press/docs/components/sidebar'
 
 export default {
   components: { top, sidebar },
-  mixins: [docsMixin]
+  mixins: [docsMixin],
+  data() {
+    return {
+      hasHeader: false,
+      hasSidebar: false
+    }
+  },
+  created() {
+    this.hasHeader = this.getHasHeader()
+    this.hasSidebar = this.getHasSidebar()
+
+    // wait until the source page component has been fully mounted
+    // before updating the sidebars
+    this.$nuxt.$on('press:sourceReady', this.sourceReady)
+  },
+  destroyed() {
+    this.$nuxt.$off('press:sourceReady', this.sourceReady)
+  },
+  methods: {
+    sourceReady() {
+      this.hasHeader = this.getHasHeader()
+      this.hasSidebar = this.getHasSidebar()
+    },
+    getHasHeader() {
+      return !this.$isHome || this.$docs.home.header
+    },
+    getHasSidebar() {
+      return !this.$isHome || this.$docs.home.sidebar
+    }
+  }
 }
 </script>

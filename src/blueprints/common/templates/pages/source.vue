@@ -1,44 +1,36 @@
 <template>
+  <component
+    v-if="componentType"
+    :is="componentType"
+    :data="$press.source"
+    :path="$route.params.source" />
   <nuxt-static
-    :data="$press.source">
-    <component
-      v-if="['entry', 'topic', 'slides'].includes($press.source.type)"
-      :is="`press-${$press.source.type}`"
-      :data="$press.source"
-      :path="$route.params.source" />
-    <nuxt-static
-      v-else
-      tag="main"
-      :source="$press.source.body" />
-  </nuxt-static>
+    v-else
+    tag="main"
+    :source="$press.source.body" />
 </template>
 
 <script>
-const components = {}
-
-<% if (options.$docs) { %>
-import PressTopic from 'press/docs/components/topic'
-components['press-topic'] = PressTopic
-<% } %>
-
-<% if (options.$blog) { %>
-import PressEntry from 'press/blog/components/entry'
-components['press-entry'] = PressEntry
-<% } %>
-
-<% if (options.$slides) { %>
-import PressSlides from 'press/slides/components/slides'
-components['press-slides'] = PressSlides
-<% } %>
-
-const component = Object.values(components)[0]
+<%= options.$docs ? `import PressTopic from 'press/docs/components/topic'` : '' %>
+<%= options.$blog ? `import PressEntry from 'press/blog/components/entry'` : '' %>
+<%= options.$slides ? `import PressSlides from 'press/slides/components/slides'` : '' %>
 
 export default {
-  components,
+  components: {
+<%
+const components = []
+if (options.$docs) components.push('PressTopic')
+if (options.$blog) components.push('PressEntry')
+if (options.$slides) components.push('PressSlides')
+%>
+    <%= components.join(',\n    ') %>
+  },
   middleware: 'press',
   layout: ({ $press }) => $press.layout,
   head() {
-    if (component.head) {
+    const componentHasHead = !!<%= components[0] %>.head
+
+    if (componentHasHead) {
       return {}
     }
 
@@ -51,6 +43,29 @@ export default {
   validate({ $press }) {
     // middleware's run before validate
     return !!$press.source
+  },
+  computed: {
+    sourceType() {
+      return this.$press.source.type
+    },
+    componentType() {
+<%
+const componentTypes = []
+if (options.$docs) componentTypes.push('topic')
+if (options.$blog) componentTypes.push('entry')
+if (options.$slides) componentTypes.push('slides')
+%>
+      if (['<%= componentTypes.join(`', '`) %>'].includes(this.sourceType)) {
+        return `press-${this.sourceType}`
+      }
+
+      return ''
+    }
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$emit('press:sourceReady')
+    })
   },
 <% if (options.dev) { %>
   beforeMount() {

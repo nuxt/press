@@ -12,6 +12,7 @@
 <script>
 import docsMixin from 'press/docs/mixins/docs'
 import { createSidebar, tocToTree } from 'press/docs/utils'
+import SidebarSection from 'press/docs/components/sidebar-section'
 import SidebarSections from 'press/docs/components/sidebar-sections'
 
 function initSidebar() {
@@ -58,24 +59,30 @@ export default {
   components: {
     SidebarSections
   },
+  provide: {
+    components: {
+      SidebarSections,
+      SidebarSection
+    }
+  },
   mixins: [docsMixin],
   data() {
     return {
-      sidebar: null,
+      sidebar: [],
     }
   },
   created() {
     this._sidebars = []
 
     initSidebar.call(this)
-    this.prepareSidebar(true)
+    this.prepareSidebar()
   },
   computed: {
     hash() {
       return this.$route.hash
     },
     activePath() {
-      let path = this.path
+      let path = this.normalizedPath
       if (!path.endsWith('/')) {
         path =`${path}/`
       }
@@ -89,7 +96,7 @@ export default {
     locale() {
       initSidebar.call(this)
     },
-    path() {
+    normalizedPath() {
       this.prepareSidebar()
 
       this.$nextTick(() => {
@@ -100,19 +107,19 @@ export default {
     }
   },
   methods: {
-    prepareSidebar(initial) {
-      const path = this.path
+    prepareSidebar() {
+      const path = this.normalizedPath
       let sidebar
 
       if (this._sidebars[path]) {
-        this.setSidebar(this._sidebars[path], initial)
+        this.setSidebar(this._sidebars[path])
         return
       }
 
       const { meta, toc } = this.$page
       if (meta && meta.sidebar === 'auto') {
         this._sidebars[path] = tocToTree(toc)
-        this.setSidebar(this._sidebars[path], initial)
+        this.setSidebar(this._sidebars[path])
         return
       }
 
@@ -126,25 +133,13 @@ export default {
             )
           }
 
-          this.setSidebar(this._sidebars[sidebarPath], initial)
+          this.setSidebar(this._sidebars[sidebarPath])
           break
         }
       }
     },
-    setSidebar(sidebar, initial) {
-      if (initial) {
-        this.sidebar = sidebar
-        return
-      }
-
-      const changeSidebar = () => {
-        this.$nextTick(() => {
-          this.sidebar = sidebar
-        })
-      }
-
-      // this.$nuxt.$once('triggerScroll', changeSidebar)
-      this.$root.$once('nuxt-static:rendered', changeSidebar)
+    setSidebar(sidebar) {
+      this.sidebar = sidebar
     },
     toggleMobile() {
       this.$refs.sidebar.classList.toggle('mobile-visible')
