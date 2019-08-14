@@ -1,7 +1,7 @@
 import defu from 'defu'
 import PromisePool from './pool'
 import resolve from './resolve'
-
+import blueprints from './blueprints'
 import {
   dirname,
   join,
@@ -15,18 +15,14 @@ import {
   importModule
 } from './utils'
 
-import docs from './blueprints/docs'
-import blog from './blueprints/blog'
-import slides from './blueprints/slides'
-import common from './blueprints/common'
-
-const blueprints = { docs, blog, slides, common }
-
-export async function registerBlueprints (rootId, options, blueprints) {
+export async function registerBlueprints (rootId, options, blueprintIds) {
   // this: Nuxt ModuleContainer instance
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
   // blueprints: blueprint loading order
+
+  // Future-compatible flag
+  this.$isGenerate = this.nuxt.options._generate || this.nuxt.options.target === 'static'
 
   // Sets this.options[rootId] ensuring
   // external config files have precendence
@@ -45,12 +41,14 @@ export async function registerBlueprints (rootId, options, blueprints) {
     this.requireModule('nuxt-i18n')
   }
 
-  const devStaticRoot = join(this.options.buildDir, rootId, 'static')
-  this.saveDevDataSources = (...args) => {
-    return new Promise(async (resolve) => {
-      await saveDataSources.call(this, devStaticRoot, ...args)
-      resolve()
-    })
+  if (this.nuxt.options.dev) {
+    const devStaticRoot = join(this.options.buildDir, rootId, 'static')
+    this.saveDevDataSources = (...args) => {
+      return new Promise(async (resolve) => {
+        await saveDataSources.call(this, devStaticRoot, ...args)
+        resolve()
+      })
+    }
   }
 
   this.$addPressTheme = (path) => {
@@ -66,17 +64,14 @@ export async function registerBlueprints (rootId, options, blueprints) {
     this.options.css.splice(addIndex + 1, 0, resolve(path))
   }
 
-  for (const id of blueprints) { // ['slides', 'common']) {
+  for (const id of blueprintIds) {
     await _registerBlueprint.call(this, id, rootId, options)
   }
-
-  // Future-compatible flag
-  this.$isGenerate = this._generate || this.target === 'static'
 }
 
 export async function _registerBlueprint (id, rootId, options) {
   // Load blueprint specification
-  const blueprint = blueprints[id]
+  const blueprint = await blueprints[id]()
 
   // Populate mode default options
   const blueprintOptions = defu(options[id] || {}, blueprint.options)
@@ -98,11 +93,11 @@ export async function _registerBlueprint (id, rootId, options) {
 
   // Register server middleware
   if (blueprint.serverMiddleware) {
-    for (let sm of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
-      sm = sm.bind(this)
+    for (let serverMiddleware of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
+      serverMiddleware = serverMiddleware.bind(this)
       this.addServerMiddleware(async (req, res, next) => {
         try {
-          await sm(req, res, next)
+          await serverMiddleware(req, res, next)
         } catch (err) {
           next(err)
         }
@@ -114,143 +109,192 @@ export async function _registerBlueprint (id, rootId, options) {
     await blueprint.ready.call(this)
   }
 
-  this.nuxt.hook('build:before', async () => {
-    const context = { options, rootId, id }
+  const context = { options, rootId, id, data: undefined }
 
-    context.data = await blueprint.data.call(this, context)
+  let compileHookRan = false
 
-    if (context.data.options) {
-      Object.assign(options[id], context.data.options)
-    }
+  const {
+    before: buildBefore,
+    compile: buildCompile,
+    done: buildDone
+  } = blueprint.build || {}
 
-    if (context.data.static) {
-      if (typeof options[id].extendStaticFiles === 'function') {
-        await options[id].extendStaticFiles.call(this, context.data.static, context)
-      }
-      await saveStaticFiles.call(this, context.data.static)
-    }
+  this.nuxt.addHooks({
+    build: {
+      // build:before hook
+      before: async () => {
+        const data = await blueprint.data.call(this, context)
+        context.data = data
 
-    const templates = await addTemplates.call(this, context, blueprint.templates)
-
-    await updateConfig.call(this, rootId, { [id]: context.data.options })
-
-    if (blueprint.build && blueprint.build.before) {
-      await blueprint.build.before.call(this, context)
-    }
-
-    if (blueprint.routes) {
-      const routes = await blueprint.routes.call(this, templates)
-
-      this.extendRoutes((nuxtRoutes) => {
-        for (const route of routes) {
-          if (exists(route.component)) {
-            // this is a fix for hmr, it already has full path set
-            continue
-          }
-
-          const path = join(this.options.srcDir, route.component)
-          if (exists(path)) {
-            route.component = path
-          } else {
-            route.component = join(this.options.buildDir, route.component)
-          }
+        if (data.options) {
+          Object.assign(options[id], data.options)
         }
-        nuxtRoutes.push(...routes)
-      })
-    }
 
-    const staticRoot = join(this.options.buildDir, rootId, 'static')
-    await saveDataSources.call(this, staticRoot, id, context.data)
-
-    let compileHookRan = false
-    this.nuxt.hook('build:compile', async () => {
-      if (compileHookRan) {
-        return
-      }
-      compileHookRan = true
-
-      const staticRoot = join(this.options.buildDir, rootId, 'static')
-      const staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
-      await saveDataSources.call(this, staticRoot, id, context.data)
-
-      if (blueprint.build) {
-        this.nuxt.hook('build:done', async () => {
-          if (blueprint.build.done) {
-            await blueprint.build.done.call(this, context)
+        if (data.static) {
+          if (typeof options[id].extendStaticFiles === 'function') {
+            await options[id].extendStaticFiles.call(this, data.static, context)
           }
+          await saveStaticFiles.call(this, data.static)
+        }
+
+        const templates = await addTemplates.call(this, context, blueprint.templates)
+
+        await updateConfig.call(this, rootId, { [id]: data.options })
+
+        if (blueprint.routes) {
+          const routes = await blueprint.routes.call(this, templates)
+
+          this.extendRoutes((nuxtRoutes) => {
+            for (const route of routes) {
+              if (exists(route.component)) {
+                // this is a fix for hmr, it already has full path set
+                continue
+              }
+
+              const path = join(this.options.srcDir, route.component)
+              if (exists(path)) {
+                route.component = path
+              } else {
+                route.component = join(this.options.buildDir, route.component)
+              }
+            }
+            nuxtRoutes.push(...routes)
+          })
+        }
+
+        if (!buildBefore) {
+          return
+        }
+
+        await buildBefore.call(this, context)
+
+        // TODO: i THINK this can be removed, not sure why its here
+        // const staticRoot = join(this.options.buildDir, rootId, 'static')
+        // await saveDataSources.call(this, staticRoot, id, context.data)
+      },
+      // build:compile hook
+      compile: async ({ name }) => {
+        // compile hook should only run once for a blueprint
+        if (compileHookRan) {
+          return
+        }
+        compileHookRan = true
+
+        const staticRoot = join(this.options.buildDir, rootId, 'static')
+        await saveDataSources.call(this, staticRoot, id, context.data)
+
+        if (!buildCompile) {
+          return
+        }
+
+        await buildCompile.call(this, context)
+      },
+      // build:done hook
+      done: async () => {
+        if (!buildDone) {
+          return
+        }
+
+        await buildDone.call(this, context)
+      }
+    }
+  })
+
+  if (this.$isGenerate) {
+    let staticRootGenerate
+
+    this.nuxt.addHooks({
+      generate: {
+        // generate:distCopied hook
+        distCopied: async () => {
+          staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
+
+          await ensureDir(staticRootGenerate)
+          await saveDataSources.call(this, staticRootGenerate, id, context.data)
 
           if (blueprint.generateRoutes) {
-            if (!options.$generateRoutes) {
-              options.$generateRoutes = []
-            }
-            const pathPrefix = path => `${options[id].prefix}${path}`
-            options.$generateRoutes.push(async () => {
-              const routes = await blueprint.generateRoutes.call(
-                this,
-                context.data,
-                pathPrefix,
-                staticRootGenerate
-              )
+            options.$generateRoutes = options.$generateRoutes || []
 
-              if (Array.isArray(routes)) {
-                return Promise.all(routes)
-              }
+            // TODO: why options[id]
+            const prefixPath = path => `${options[id].prefix}${path}`
+            const routes = await blueprint.generateRoutes.call(
+              this,
+              context.data,
+              prefixPath,
+              staticRootGenerate
+            )
+
+            if (!Array.isArray(routes)) {
+              options.$generateRoutes.push(routes)
+              return
+            }
+
+            options.$generateRoutes.push(...routes)
+          }
+        },
+        // generate:extendRoutes hook
+        extendRoutes: async (extendRoutes) => {
+          const { extendStaticRoutes } = options[id]
+
+          if (extendStaticRoutes) {
+            options.$extendStaticRoutes = options.$extendStaticRoutes || []
+            options.$extendStaticRoutes.push(async (routes) => {
+              await extendStaticRoutes.call(
+                this,
+                new Proxy(routes, {
+                  get (_, prop) {
+                    return routes[prop].payload
+                  },
+                  set (_, prop, value) {
+                    routes[prop] = {
+                      route: prop,
+                      payload: value
+                    }
+                    return routes[prop].payload
+                  }
+                }),
+                (...args) => {
+                  return importModule(join(staticRootGenerate, 'sources', ...args))
+                }
+              )
 
               return routes
             })
           }
 
-          // TODO move this out of the build:done hook
-          // and onto a global (after all blueprints
-          // build:done hooks finished) handler
-          if (options.$generateRoutes) {
-            const { extendStaticRoutes } = options
-            this.options.generate.routes = async () => {
-              const routes = {}
-              const routeSets = await Promise.all(
-                options.$generateRoutes.map(route => route())
-              )
-              for (const routeSet of routeSets) {
-                for (const route of routeSet) {
-                  routes[route.route] = route
-                }
-              }
-              if (extendStaticRoutes) {
-                await extendStaticRoutes.call(
-                  this,
-                  new Proxy(routes, {
-                    get (_, prop) {
-                      return routes[prop].payload
-                    },
-                    set (_, prop, value) {
-                      routes[prop] = {
-                        route: prop,
-                        payload: value
-                      }
-                      return routes[prop].payload
-                    }
-                  }),
-                  (...args) => {
-                    return importModule(join(staticRootGenerate, ...args))
-                  }
-                )
-              }
-              return Object.values(routes)
+          // only add the routes to generate once
+          if (id !== 'common') {
+            return
+          }
+
+          let routes = await Promise.all(options.$generateRoutes)
+
+          if (options.$extendStaticRoutes) {
+            const routeEntries = routes.map(route => [route.route, route])
+            const routesHashmap = Object.fromEntries(routeEntries)
+
+            for (const $extendStaticRoutes of options.$extendStaticRoutes) {
+              await $extendStaticRoutes(routesHashmap)
+            }
+
+            routes = Object.values(routesHashmap)
+          }
+
+          // remove already listed routes for which we have a static payload
+          for (let index = 0; index < extendRoutes.length; index++) {
+            const found = !!routes.find(route => route.route === extendRoutes[index].route)
+
+            if (found) {
+              extendRoutes.splice(index, 1)
+              index--
             }
           }
-        })
-      }
 
-      if (blueprint.build && blueprint.build.compile) {
-        await blueprint.build.compile.call(this, context)
+          extendRoutes.push(...routes)
+        }
       }
-
-      this.nuxt.hook('generate:distCopied', async () => {
-        await ensureDir(staticRootGenerate)
-        await saveDataSources.call(this, staticRootGenerate, id, context.data)
-      })
     })
-  })
+  }
 }
 
 async function saveStaticFiles (files) {

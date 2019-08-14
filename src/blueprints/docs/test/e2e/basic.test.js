@@ -1,5 +1,9 @@
+import fs from 'fs'
 import path from 'path'
+import util from 'util'
 import { getPort, startBrowser } from '@/utils'
+
+const readFile = util.promisify(fs.readFile)
 
 describe('basic', () => {
   let browser
@@ -84,7 +88,7 @@ describe('basic', () => {
 
     await page.navigate('/a/second/')
 
-    expect(await page.getText('.sidebar-depth-1 .sidebar-section:nth-child(3) .sidebar-links:not([hidden]) .sidebar-link', true)).toEqual('Second Header 1.1')
+    expect(await page.getText('.sidebar-depth-1 .sidebar-section:nth-child(3) .sidebaconsole.log(browser)r-links:not([hidden]) .sidebar-link', true)).toEqual('Second Header 1.1')
   })
 
   test('open /a', async () => {
@@ -126,5 +130,15 @@ describe('basic', () => {
     await page.navigate('/')
 
     await testHome()
+  })
+
+  test('test extendStaticRoutes', async () => {
+    expect.hasAssertions()
+    const fileName = path.join(browser.config.staticServer.folder, 'b-ext', 'index.html')
+
+    try {
+      const content = await readFile(fileName)
+      expect(content).toEqual(expect.stringContaining('<h1>B</h1>'))
+    } catch (err) {}
   })
 })
