@@ -20,11 +20,14 @@ export function tocToTree (toc) {
 
   for (const [level, name, url] of toc) {
     if (level < prevLevel) {
-      const lastIndex = sections[level].length - 1
+      for (;prevLevel > level; prevLevel--) {
+        const currentLevel = prevLevel - 1
+        const lastIndex = sections[currentLevel].length - 1
 
-      if (lastIndex > -1) {
-        sections[level][lastIndex][3] = sections[prevLevel].slice()
-        sections[prevLevel] = []
+        if (lastIndex > -1) {
+          sections[currentLevel][lastIndex][3] = sections[prevLevel].slice()
+          sections[prevLevel] = []
+        }
       }
     }
 
