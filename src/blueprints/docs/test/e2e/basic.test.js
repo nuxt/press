@@ -88,7 +88,7 @@ describe('basic', () => {
 
     await page.navigate('/a/second/')
 
-    expect(await page.getText('.sidebar-depth-1 .sidebar-section:nth-child(3) .sidebaconsole.log(browser)r-links:not([hidden]) .sidebar-link', true)).toEqual('Second Header 1.1')
+    expect(await page.getText('.sidebar-depth-1 .sidebar-section:nth-child(3) .sidebar-links:not([hidden]) .sidebar-link', true)).toEqual('Second Header 1.1')
   })
 
   test('open /a', async () => {
