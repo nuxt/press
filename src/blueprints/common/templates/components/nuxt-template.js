@@ -11,9 +11,8 @@ export default {
       default: 'div'
     }
   },
-  render (h, { props, listeners }) {
+  render (h, { props }) {
     return h({
-      mounted: () => listeners.mounted && listeners.mounted(),
       template: `<${props.tag}>${props.value}</${props.tag}>`
     })
   }
