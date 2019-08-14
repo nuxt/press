@@ -62,9 +62,10 @@ export default {
       return h(props.tag, slots().default)
     }
 
-    const vnode = h('div', [])
+    return h(null)
+    /* const vnode = h('div', [])
     vnode.asyncFactory = {}
     vnode.isComment = true
-    return vnode
+    return vnode */
   }
 }
