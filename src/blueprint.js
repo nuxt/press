@@ -71,7 +71,7 @@ export async function registerBlueprints (rootId, options, blueprintIds) {
 
 export async function _registerBlueprint (id, rootId, options) {
   // Load blueprint specification
-  const blueprint = await blueprints[id]()
+  const blueprint = blueprints[id]
 
   // Populate mode default options
   const blueprintOptions = defu(options[id] || {}, blueprint.options)

@@ -1,10 +1,11 @@
-function importBlueprint (path) {
-  return import(path).then(m => m.default || m)
-}
+import blog from './blog'
+import common from './common'
+import docs from './docs'
+import slides from './slides'
 
 export default {
-  blog: () => importBlueprint('./blog'),
-  common: () => importBlueprint('./common'),
-  docs: () => importBlueprint('./docs'),
-  slides: () => importBlueprint('./slides')
+  blog,
+  common,
+  docs,
+  slides
 }
