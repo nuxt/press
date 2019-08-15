@@ -7,8 +7,7 @@
       <img
         v-if="data.heroImage"
         :src="data.heroImage"
-        :alt="data.heroAlt || 'hero'"
-      >
+        :alt="data.heroAlt || 'hero'">
 
       <h1 v-if="data.heroText !== null" id="main-title">{{ data.heroText || meta.title }}</h1>
 
@@ -18,24 +17,20 @@
 
       <p
         v-if="data.actionText && data.actionLink"
-        class="action"
-      >
+        class="action">
         <nav-link
           class="action-button"
-          :item="actionLink"
-        />
+          :item="actionLink" />
       </p>
     </header>
 
     <div
       v-if="data.features && data.features.length"
-      class="features"
-    >
+      class="features">
       <div
         class="feature"
         v-for="(feature, index) in data.features"
-        :key="index"
-      >
+        :key="index">
         <h2>{{ feature.title }}</h2>
         <p>{{ feature.details }}</p>
       </div>
@@ -43,15 +38,25 @@
 
     <nuxt-template
       class="theme-default-content custom"
-      v-model="value"
-    />
+      v-model="value" />
 
     <div
       v-if="data.footer"
-      class="footer"
-    >
+      class="footer">
       {{ data.footer }}
     </div>
+
+    <div class="lang-select">
+      <select
+        v-if="$press.locales"
+        v-model="lang">
+        <option
+          v-for="locale in $press.locales"
+          :key='`locale-${locale.code}`'
+          :value="locale.code">{{ locale.name }}</option>
+      </select>
+    </div>
+
   </main>
 </template>
 
@@ -79,6 +84,16 @@ export default {
     value: {
       type: String,
       required: true
+    }
+  },
+  watch: {
+    lang (newLocale) {
+      this.$router.push(`/${newLocale}`)
+    }
+  },
+  data () {
+    return {
+      lang: this.$press.locale
     }
   },
   computed: {

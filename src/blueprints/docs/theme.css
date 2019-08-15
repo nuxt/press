@@ -220,6 +220,14 @@ html.docs {
       margin: 0px auto;
       display: block;
 
+      & .lang-select {
+        padding-bottom: 3rem;
+        text-align: center;
+        & select {
+          display: inline-block;
+        }
+      }
+
       & .hero {
         text-align: center;
 
@@ -228,6 +236,7 @@ html.docs {
           max-height: 280px;
           display: block;
           margin: 3rem auto 1.5rem;
+          padding-top: 3rem;
         }
 
         & h1 {
@@ -417,6 +426,7 @@ html.docs {
       display: flex;
       justify-content: space-between;
       padding: .7rem 0.5rem;
+
 
       & .mobile-toggle {
         display: block;
