@@ -1,3 +1,5 @@
+const stdEnv = require('std-env')
+
 module.exports = {
   testEnvironment: 'node',
 
@@ -16,6 +18,7 @@ module.exports = {
   moduleNameMapper: {
     "@/(.*)$": "<rootDir>/test/$1",
     "~/(.*)$": "<rootDir>/src/$1",
+    "^press$": stdEnv.ci ? "<rootDir>/" : "<rootDir>/src/"
   },
 
   transform: {

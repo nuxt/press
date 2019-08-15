@@ -54,6 +54,18 @@ jobs:
           name: Security Audit
           command: yarn audit --groups dependencies || true
 
+  build:
+    executor: node
+    steps:
+      - attach-project
+      - run:
+          name: Type Tests
+          command: yarn dist
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - dist
+
   test-unit:
     executor: node
     steps:
@@ -105,9 +117,10 @@ workflows:
       - setup
       - lint:             { requires: [setup] }
       - audit:            { requires: [setup] }
+      - build:            { requires: [setup] }
 #      - test-unit:        { requires: [lint] }
 #      - test-types:       { requires: [lint] }
-      - test-fixtures:    { requires: [lint] }
+      - test-fixtures:    { requires: [build] }
       - test-e2e:
           name:           test-e2e-firefox
           browserString:  firefox/headless
