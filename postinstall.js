@@ -57,9 +57,10 @@ function updatePackageJson() {
   }
 }
 
-function writeNuxtConfig() {
+function writeNuxtConfig () {
   const nuxtConfig = join(initCwd, 'nuxt.config.js')
-  if (!existsSync(nuxtConfig)) {
+  const nuxtConfigTS = join(initCwd, 'nuxt.config.ts')
+  if (!existsSync(nuxtConfig) && !existsSync(nuxtConfigTS)) {
     writeFileSync(
       nuxtConfig,
       'export default {\n' +
