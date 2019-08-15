@@ -12,7 +12,13 @@ module.exports = {
   coverageDirectory: './coverage',
 
   collectCoverageFrom: [
-    '**/*.js'
+    'src/**/*.js'
+  ],
+
+  coveragePathIgnorePatterns: [
+    'node_modules',
+    '/templates/',
+    '/test/',
   ],
 
   moduleNameMapper: {
