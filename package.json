@@ -18,6 +18,7 @@
   ],
   "scripts": {
     "clean": "rimraf ./**/.nuxt src/**/dist test/**/dist",
+    "coverage": "echo \"todo\"",
     "dev": "nuxt dev",
     "build": "nuxt build",
     "dist": "rimraf dist && rollup -c rollup.config.js && rimraf dist/blueprints/*/test/",
