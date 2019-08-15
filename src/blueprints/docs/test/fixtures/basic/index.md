@@ -1,5 +1,6 @@
 ---
 home: true
+title: Home
 header: true
 heroImage: /hero.png
 actionText: Get Started

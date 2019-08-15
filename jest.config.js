@@ -18,7 +18,11 @@ module.exports = {
   moduleNameMapper: {
     "@/(.*)$": "<rootDir>/test/$1",
     "~/(.*)$": "<rootDir>/src/$1",
-    "^press$": stdEnv.ci ? "<rootDir>/" : "<rootDir>/src/"
+    "^pressModule$": stdEnv.ci ? "<rootDir>/" : "<rootDir>/src/",
+    "^press/blog/(.*)$": "<rootDir>/src/blueprints/blog/templates/$1",
+    "^press/docs/(.*)$": "<rootDir>/src/blueprints/docs/templates/$1",
+    "^press/common/(.*)$": "<rootDir>/src/blueprints/common/templates/$1",
+    "^press/slides/(.*)$": "<rootDir>/src/blueprints/slides/templates/$1"
   },
 
   transform: {

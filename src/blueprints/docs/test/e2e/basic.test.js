@@ -54,7 +54,7 @@ describe('basic', () => {
   async function testHome () {
     expect(await page.getAttribute('.hero img', 'src')).toBe('/hero.png')
     expect(await page.getElementCount('.feature')).toBe(3)
-    expect(await page.getText('h1')).toBe('Lorem Ipsum')
+    expect(await page.getText('.home div h1')).toBe('Lorem Ipsum')
 
     const expectedLinks = [ 'A test', 'B test', 'C test', 'GitHub' ]
     const navLinks = await page.getTexts('.top-menu .links .nav-item a.nav-link', true)

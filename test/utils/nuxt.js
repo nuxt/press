@@ -1,6 +1,6 @@
 import path from 'path'
 import { defaultsDeep } from 'lodash'
-import NuxtPress from 'press'
+import NuxtPress from 'pressModule'
 
 export { Nuxt, Builder, BundleBuilder, Generator } from 'nuxt'
 export * from '@nuxt/utils'

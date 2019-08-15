@@ -118,7 +118,7 @@ workflows:
       - lint:             { requires: [setup] }
       - audit:            { requires: [setup] }
       - build:            { requires: [setup] }
-#      - test-unit:        { requires: [lint] }
+      - test-unit:        { requires: [lint] }
 #      - test-types:       { requires: [lint] }
       - test-fixtures:    { requires: [build] }
       - test-e2e:

@@ -75,7 +75,14 @@ export default {
       return this.data[3]
     },
     isActive() {
-      return this.url === this.activePath
+      let isActive = this.url === this.activePath
+
+      if (!isActive) {
+        const [toc] = this.$page.toc || []
+        isActive = toc && toc[2] === this.url && this.activePath === this.url.substr(0, this.url.indexOf('#'))
+      }
+
+      return isActive
     },
     anyActive() {
       return this.isActive || this.activeChilds > 0

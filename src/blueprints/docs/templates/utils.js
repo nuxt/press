@@ -25,9 +25,11 @@ export function tocToTree (toc) {
         const lastIndex = sections[currentLevel].length - 1
 
         if (lastIndex > -1) {
-          sections[currentLevel][lastIndex][3] = sections[prevLevel].slice()
-          sections[prevLevel] = []
+          sections[currentLevel][lastIndex][3] = sections[prevLevel]
+        } else {
+          sections[currentLevel] = sections[prevLevel]
         }
+        sections[prevLevel] = []
       }
     }
 
@@ -40,13 +42,21 @@ export function tocToTree (toc) {
       continue
     }
 
-    const lowerLevel = level - 1
-    const lastIndex = sections[lowerLevel].length - 1
-    if (lastIndex < 0) {
-      return sections[level]
+    let lowerLevel = level
+    let lastIndex = -1
+    while (lastIndex < 0 && lowerLevel > 1) {
+      lowerLevel = lowerLevel - 1
+
+      if (sections[lowerLevel]) {
+        lastIndex = sections[lowerLevel].length - 1
+      }
     }
 
-    sections[lowerLevel][lastIndex][3] = sections[level]
+    if (lastIndex > -1) {
+      sections[lowerLevel][lastIndex][3] = sections[level]
+    } else {
+      sections[lowerLevel] = sections[level]
+    }
     sections[level] = []
   }
 
@@ -60,14 +70,58 @@ export function createSidebarFromToc (path, title, page, startDepth = 0) {
     return sidebar
   }
 
-  const { meta, toc: [first, ...toc] } = page
+  // eslint-disable-next-line prefer-const
+  let { meta, toc = [] } = page
 
-  if (meta.home) {
+  if (meta.title) {
+    title = meta.title
+  } else if (meta.home) {
     title = 'Home'
   }
 
-  if (first || !toc.length) {
-    sidebar.push([1 + startDepth, meta.title || title || first[1], path])
+  // If the page has no toc, add an item
+  let sidebarAddPage = !toc.length
+  if (!sidebarAddPage && title) {
+    const firstToc = toc[0]
+
+    // if the first item in the toc is not a level 1
+    // and a title has been set, add an item for the page
+    if (firstToc[0] !== 1) {
+      sidebarAddPage = true
+    }
+
+    // always (re-)set the title, this is so meta.title
+    // can overwrite the page title in the sidebar
+    if (firstToc[0] === 1) {
+      toc[0][1] = title
+    }
+  }
+
+  if (sidebarAddPage) {
+    sidebar.push([1, title || path, normalizePath(path)])
+  }
+
+  // normalize skip levels to array
+  let sidebarSkipLevels = meta.sidebarSkipLevels
+  if (!sidebarSkipLevels && meta.sidebarSkipLevel) {
+    sidebarSkipLevels = [meta.sidebarSkipLevel]
+  }
+
+  if (sidebarSkipLevels) {
+    const skipCount = meta.sidebarSkipCount || Infinity
+    let skipCounter = 0
+    toc = toc.filter(([level]) => {
+      if (!sidebarSkipLevels.includes(level)) {
+        return true
+      }
+
+      if (skipCounter < skipCount) {
+        skipCounter++
+        return false
+      }
+
+      return true
+    })
   }
 
   sidebar.push(...toc.map(([level, name, url]) => [level + startDepth, name, normalizePath(url)]))
