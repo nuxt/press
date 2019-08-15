@@ -1,11 +1,19 @@
 <template>
-  <aside ref="sidebar" class="sidebar" :class="sidebarClass">
+  <aside
+    ref="sidebar"
+    class="sidebar"
+    :class="sidebarClass"
+    aria-label="Main navigation"
+  >
     <div
       class="mobile-toggle"
-      @click="toggleMobile">×</div>
+      @click="toggleMobile"
+      aria-hidden="true"
+    >×</div>
     <sidebar-sections
       :data="sidebar"
-      :active-path="activePath" />
+      :active-path="activePath"
+    />
   </aside>
 </template>
 
