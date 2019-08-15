@@ -49,7 +49,8 @@
     <div class="lang-select">
       <select
         v-if="$press.locales"
-        v-model="lang">
+        v-model="lang"
+        @change="(e) => $router.push(`/${e.target.value}/`)">
         <option
           v-for="locale in $press.locales"
           :key='`locale-${locale.code}`'
@@ -87,8 +88,8 @@ export default {
     }
   },
   watch: {
-    lang (newLocale) {
-      this.$router.push(`/${newLocale}/`)
+    route () {
+      this.lang = this.$press.locale
     }
   },
   data () {
