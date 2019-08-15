@@ -88,7 +88,7 @@ export default {
   },
   watch: {
     lang (newLocale) {
-      this.$router.push(`/${newLocale}`)
+      this.$router.push(`/${newLocale}/`)
     }
   },
   data () {
