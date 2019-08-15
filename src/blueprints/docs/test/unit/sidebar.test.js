@@ -1,4 +1,4 @@
-import { tocToTree, createSidebarFromToc } from 'press/docs/utils'
+import { tocToTree, createSidebarFromToc } from '../../sidebar'
 
 describe('tocToTree', () => {
   test('normal tree', () => {

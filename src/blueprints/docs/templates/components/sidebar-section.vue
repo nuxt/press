@@ -16,6 +16,7 @@
 
       <component :is="components.SidebarSections"
         :active-path="activePath"
+        :active-page="activePage"
         :data="children"
         :depth="depth + 1"
         :visible="showChildSection"
@@ -40,6 +41,9 @@ export default {
   inject: ['components'],
   props: {
     activePath: {
+      type: String
+    },
+    activePage: {
       type: String
     },
     data: {
@@ -78,8 +82,7 @@ export default {
       let isActive = this.url === this.activePath
 
       if (!isActive) {
-        const [toc] = this.$page.toc || []
-        isActive = toc && toc[2] === this.url && this.activePath === this.url.substr(0, this.url.indexOf('#'))
+        isActive = this.url === this.activePage
       }
 
       return isActive

@@ -19,8 +19,8 @@ export default {
     'observer': 'components/observer.js',
     'plugin': 'plugins/press.js',
     'plugin:scroll': 'plugins/scroll.client.js',
-    'source': 'pages/source.vue',
-    'utils': 'utils.js'
+    'source': 'pages/source.vue'
+    // 'utils': 'utils.js'
   },
   routes (templates) {
     const $press = this.$press

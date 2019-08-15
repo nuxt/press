@@ -11,6 +11,7 @@
       @active="(...args) => (listeners.active && listeners.active(...args))"
       :key="`topic-${props.depth}-${i}`"
       :active-path="props.activePath"
+      :active-page="props.activePage"
       :data="sectionData"
       :depth="props.depth"
     />
@@ -23,6 +24,9 @@ export default {
   inject: ['components'],
   props: {
     activePath: {
+      type: String
+    },
+    activePage: {
       type: String
     },
     data: {

@@ -13,55 +13,15 @@
     <sidebar-sections
       :data="sidebar"
       :active-path="activePath"
+      :active-page="activePageHash"
     />
   </aside>
 </template>
 
 <script>
-import docsMixin from 'press/docs/mixins/docs'
-import { createSidebar, tocToTree } from 'press/docs/utils'
 import SidebarSection from 'press/docs/components/sidebar-section'
 import SidebarSections from 'press/docs/components/sidebar-sections'
-
-function initSidebar() {
-  let sidebar = this.$docs.sidebar
-
-  const sidebarIsArray = Array.isArray(this.$docs.sidebar)
-  if (sidebarIsArray) {
-    this.$sidebars = this.$sidebars || {}
-    const routePrefix = this.$press.locale ? `/${this.$press.locale}` : ''
-
-    if (!this.$sidebars[routePrefix]) {
-      if (!this.$press.locale) {
-        this.$sidebars[routePrefix] = sidebar
-      } else {
-        const localeSidebar = sidebar.map((item) => {
-          if (typeof item === 'object') {
-            return {
-              ...item,
-              children: item.children.map(p => `${routePrefix}${p}`)
-            }
-          }
-
-          if (item === '/') {
-            item = ''
-          }
-
-          return `${routePrefix}${item}`
-        })
-
-        this.$sidebars[routePrefix] = localeSidebar
-      }
-    }
-  } else {
-    this.$sidebars = sidebar
-  }
-
-  // extract all sidebar paths in reverse order of length
-  this._sidebarPaths = Object.keys(this.$sidebars).sort((a, b) => {
-    return b.length - a.length
-  })
-}
+import docsMixin from 'press/docs/mixins/docs'
 
 export default {
   components: {
@@ -80,10 +40,12 @@ export default {
     }
   },
   created() {
-    this._sidebars = []
+    // extract all sidebar paths in reverse order of length
+    this._sidebarPaths = Object.keys(this.$docs.sidebars).sort((a, b) => {
+      return b.length - a.length
+    })
 
-    initSidebar.call(this)
-    this.prepareSidebar()
+    this.changeSidebar()
   },
   computed: {
     hash() {
@@ -96,16 +58,23 @@ export default {
       }
       return `${path}${this.hash}`
     },
+    // this variable is used to make sure that if we browse to a page
+    // without any hash in the url, the first header of the page will
+    // still be active in the sidebar
+    activePageHash() {
+      if (this.activePath.includes('#')) {
+        return this.activePath
+      }
+
+      return `${this.activePath}${this.$page.hash}`
+    },
     sidebarClass() {
       return this.$page.meta.sidebar === 'auto' ? 'sidebar-auto' : undefined
     }
   },
   watch: {
-    locale() {
-      initSidebar.call(this)
-    },
     normalizedPath() {
-      this.prepareSidebar()
+      this.changeSidebar()
 
       this.$nextTick(() => {
         if (this.$refs.sidebar.classList.contains('mobile-visible')) {
@@ -115,33 +84,18 @@ export default {
     }
   },
   methods: {
-    prepareSidebar() {
+    changeSidebar() {
       const path = this.normalizedPath
-      let sidebar
 
-      if (this._sidebars[path]) {
-        this.setSidebar(this._sidebars[path])
-        return
-      }
-
-      const { meta, toc } = this.$page
+      const { meta } = this.$page
       if (meta && meta.sidebar === 'auto') {
-        this._sidebars[path] = tocToTree(toc)
-        this.setSidebar(this._sidebars[path])
+        this.setSidebar(this.$docs.sidebars[path])
         return
       }
 
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
-          if (!this._sidebars[sidebarPath]) {
-            this._sidebars[sidebarPath] = createSidebar(
-              this.$sidebars[sidebarPath],
-              this.$docs.pages,
-              this.$press.locale
-            )
-          }
-
-          this.setSidebar(this._sidebars[sidebarPath])
+          this.setSidebar(this.$docs.sidebars[sidebarPath])
           break
         }
       }
