@@ -10,7 +10,7 @@ const scripts = {
 
 main()
 
-function updatePackageJson() {
+function updatePackageJson (initCwd) {
   if (!existsSync(join(initCwd, 'package.json'))) {
     writeFileSync(
       join(initCwd, 'package.json'),
@@ -40,9 +40,10 @@ function updatePackageJson() {
   }
 }
 
-function writeNuxtConfig() {
+function writeNuxtConfig (initCwd) {
   const nuxtConfig = join(initCwd, 'nuxt.config.js')
-  if (!existsSync(nuxtConfig)) {
+  const nuxtConfigTS = join(initCwd, 'nuxt.config.ts')
+  if (!existsSync(nuxtConfig) && !existsSync(nuxtConfigTS)) {
     writeFileSync(
       nuxtConfig,
       'export default {\n' +
@@ -52,7 +53,7 @@ function writeNuxtConfig() {
   }
 }
 
-function main() {
+function main () {
   if (!process.env.INIT_CWD) {
     return
   }
@@ -63,11 +64,15 @@ function main() {
     return
   }
 
-  // Detect common presence of docs/nuxt.config.js
+  // Detect common presence of docs/nuxt.config.js or docs/nuxt.config.ts
   if (existsSync(join(initCwd, 'docs', 'nuxt.config.js'))) {
     return
   }
 
-  updatePackageJson()
-  writeNuxtConfig()
+  if (existsSync(join(initCwd, 'docs', 'nuxt.config.ts'))) {
+    return
+  }
+
+  updatePackageJson(initCwd)
+  writeNuxtConfig(initCwd)
 }
