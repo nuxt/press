@@ -4,6 +4,7 @@ import defu from 'defu'
 import { walk, join, exists, readFile, routePath, escapeChars, trimSlash } from '../../utils'
 import PromisePool from '../../pool'
 import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
+import { normalizePaths, tocToTree, createSidebar } from './sidebar'
 
 // DOCS MODE
 // Markdown files can be placed in
@@ -112,8 +113,13 @@ export default async function ({ options: { docs: docOptions } }) {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  const options = { $pages }
+  const options = {
+    $pages,
+    $prefix: trimSlash(this.$press.docs.prefix || '')
+  }
+  const press = this.$press
 
+  // TODO: should this logic need to be moved somewhere else
   options.$asJsonTemplate = new Proxy({}, {
     get (_, prop) {
       let val = options[prop] || options[`$${prop}`] || docOptions[prop]
@@ -130,6 +136,63 @@ export default async function ({ options: { docs: docOptions } }) {
             }
           }
         })
+      } else if (prop === 'pages') {
+        val = {}
+        // only export the minimum of props we need
+        for (const path in options.$pages) {
+          const page = options.$pages[path]
+          const [toc = []] = page.toc || []
+
+          val[path] = {
+            title: page.meta.title || toc[1] || '',
+            hash: (toc[2] && toc[2].substr(path.length)) || '',
+            meta: page.meta
+          }
+        }
+      } else if (prop === 'sidebars') {
+        let createSidebarForEachLocale = false
+        const hasLocales = !!(press.i18n && press.i18n.locales)
+
+        let sidebarConfig = press.docs.sidebar
+        if (typeof sidebarConfig === 'string') {
+          sidebarConfig = [sidebarConfig]
+        }
+
+        if (Array.isArray(sidebarConfig)) {
+          createSidebarForEachLocale = hasLocales
+          sidebarConfig = {
+            '/': sidebarConfig
+          }
+        }
+
+        let routePrefixes = ['']
+        if (createSidebarForEachLocale) {
+          routePrefixes = press.i18n.locales.map(locale => `/${typeof locale === 'object' ? locale.code : locale}`)
+        }
+
+        const sidebars = {}
+        for (const routePrefix of routePrefixes) {
+          for (const path in sidebarConfig) {
+            const normalizedPath = normalizePaths(path)
+
+            const sidebarPath = `${routePrefix}${normalizedPath}`
+
+            sidebars[sidebarPath] = createSidebar(
+              sidebarConfig[path].map(normalizePaths),
+              options.$pages,
+              routePrefix
+            )
+          }
+        }
+
+        for (const path in options.$pages) {
+          const page = options.$pages[path]
+          if (page.meta && page.meta.sidebar === 'auto') {
+            sidebars[path] = tocToTree(page.toc)
+          }
+        }
+
+        val = sidebars
       }
 
       if (val) {

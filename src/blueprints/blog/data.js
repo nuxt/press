@@ -1,4 +1,3 @@
-
 import { parse as parsePath } from 'path'
 import consola from 'consola'
 import lodashTemplate from 'lodash/template'

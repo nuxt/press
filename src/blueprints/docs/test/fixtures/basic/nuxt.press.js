@@ -20,11 +20,11 @@ export default {
       },
       {
         'text': 'B test',
-        'link': '/b'
+        'link': '/b/'
       },
       {
         'text': 'C test',
-        'link': '/c'
+        'link': '/c/'
       },
       {
         'GitHub': 'https://github.com/nuxt/press'

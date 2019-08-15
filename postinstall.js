@@ -1,25 +1,6 @@
 const { existsSync, readFileSync, writeFileSync } = require('fs')
 const { join, resolve } = require('path')
 
-if (!process.env.INIT_CWD) {
-  return
-}
-
-const initCwd = resolve(process.env.INIT_CWD)
-
-if (!existsSync(join(initCwd, 'node_modules'))) {
-  return
-}
-
-// Detect common presence of docs/nuxt.config.js or docs/nuxt.config.ts
-if (existsSync(join(initCwd, 'docs', 'nuxt.config.js'))) {
-  return
-}
-
-if (existsSync(join(initCwd, 'docs', 'nuxt.config.ts'))) {
-  return
-}
-
 const scripts = {
   'dev': 'nuxt dev',
   'build': 'nuxt build',
@@ -27,7 +8,9 @@ const scripts = {
   'press': 'nuxt press'
 }
 
-function updatePackageJson() {
+main()
+
+function updatePackageJson (initCwd) {
   if (!existsSync(join(initCwd, 'package.json'))) {
     writeFileSync(
       join(initCwd, 'package.json'),
@@ -57,7 +40,7 @@ function updatePackageJson() {
   }
 }
 
-function writeNuxtConfig () {
+function writeNuxtConfig (initCwd) {
   const nuxtConfig = join(initCwd, 'nuxt.config.js')
   const nuxtConfigTS = join(initCwd, 'nuxt.config.ts')
   if (!existsSync(nuxtConfig) && !existsSync(nuxtConfigTS)) {
@@ -70,5 +53,26 @@ function writeNuxtConfig () {
   }
 }
 
-updatePackageJson()
-writeNuxtConfig()
+function main () {
+  if (!process.env.INIT_CWD) {
+    return
+  }
+
+  const initCwd = resolve(process.env.INIT_CWD)
+
+  if (!existsSync(join(initCwd, 'node_modules'))) {
+    return
+  }
+
+  // Detect common presence of docs/nuxt.config.js or docs/nuxt.config.ts
+  if (existsSync(join(initCwd, 'docs', 'nuxt.config.js'))) {
+    return
+  }
+
+  if (existsSync(join(initCwd, 'docs', 'nuxt.config.ts'))) {
+    return
+  }
+
+  updatePackageJson(initCwd)
+  writeNuxtConfig(initCwd)
+}

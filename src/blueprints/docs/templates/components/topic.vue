@@ -48,7 +48,7 @@ export default {
   computed: {
     meta() {
       return {
-        title: this.$page.meta.title || (this.$page.toc[0] && this.$page.toc[0][1]) || 'Hello',
+        title: this.$page.title || 'Hello',
         description: this.$page.meta.description || 'Welcome to your NuxtPress site'
       }
     }

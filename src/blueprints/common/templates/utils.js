@@ -1,4 +1,8 @@
-
+/*
+ *
+ * Not used anymore, but leave it for the time being until final release
+ *
+ */
 export function trimEnd (str, chr = '') {
   if (!chr) {
     return str.trimEnd()

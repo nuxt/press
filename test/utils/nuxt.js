@@ -1,11 +1,8 @@
 import path from 'path'
 import { defaultsDeep } from 'lodash'
-import NuxtPress from '../../src'
+import NuxtPress from 'pressModule'
 
-export { Nuxt } from '@nuxt/core'
-export { Builder } from '@nuxt/builder'
-export { Generator } from '@nuxt/generator'
-export { BundleBuilder } from '@nuxt/webpack'
+export { Nuxt, Builder, BundleBuilder, Generator } from 'nuxt'
 export * from '@nuxt/utils'
 
 export async function loadFixture(fixture, overrides) {

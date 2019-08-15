@@ -1,5 +1,5 @@
 import path from 'path'
-import { loadFixture, Nuxt, Builder, BundleBuilder, Generator, listPaths } from './index'
+import { loadFixture, Nuxt, Builder, BundleBuilder, Generator, listPaths } from '.'
 
 export function buildFixture ({ dir, callback, hooks = [], changedPaths = [] }) {
   const pathsBefore = {}

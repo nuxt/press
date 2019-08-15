@@ -2,12 +2,12 @@ import Vue from 'vue'
 import NuxtMiddleware from 'press/../middleware'
 import OutboundLink from 'press/docs/components/outbound-link-icon'
 import config from 'press/config'
-import { normalizePaths, trimSlash } from 'press/common/utils'
 
 Vue.component('OutboundLink', OutboundLink)
 
-const pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
 const nav = JSON.parse(`<%= options.docs.$asJsonTemplate.nav %>`)
+const pages = JSON.parse(`<%= options.docs.$asJsonTemplate.pages %>`)
+const sidebars = JSON.parse(`<%= options.docs.$asJsonTemplate.sidebars %>`)
 
 function docsMiddleware (ctx, plugin = false) {
   if (process.server && !plugin) {
@@ -22,6 +22,8 @@ function docsMiddleware (ctx, plugin = false) {
     home = homePage.meta
   }
 
+  // return if docs has already been set, just set home as it
+  // might have changed due to the locale
   if (ctx.$press.docs) {
     ctx.$press.docs.home = home
     return
@@ -29,11 +31,11 @@ function docsMiddleware (ctx, plugin = false) {
 
   const docs = {
     ...config.docs,
-    prefix: trimSlash(config.docs.prefix),
-    sidebar: normalizePaths(config.docs.sidebar),
-    nav,
     home,
-    pages
+    nav,
+    pages,
+    prefix: '<%= options.docs.$prefix %>',
+    sidebars
   }
 
   ctx.$press.docs = docs

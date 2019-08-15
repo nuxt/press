@@ -20,7 +20,9 @@
 
       <select
         v-if="$press.locales"
-        v-model="lang">
+        v-model="lang"
+        aria-label="Change locale"
+      >
         <option
           v-for="locale in $press.locales"
           :key='`locale-${locale.code}`'
