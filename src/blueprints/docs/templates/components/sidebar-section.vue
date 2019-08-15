@@ -15,7 +15,6 @@
       </p>
 
       <component :is="components.SidebarSections"
-        ref="sections"
         :active-path="activePath"
         :data="children"
         :depth="depth + 1"
