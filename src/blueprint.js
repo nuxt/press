@@ -205,100 +205,109 @@ export async function _registerBlueprint (id, rootId, options) {
     }
   })
 
-  if (this.$isGenerate) {
-    let staticRootGenerate
+  if (!this.$isGenerate) {
+    return
+  }
 
-    this.nuxt.addHooks({
-      generate: {
-        // generate:distCopied hook
-        distCopied: async () => {
-          staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
+  let staticRootGenerate
 
-          await ensureDir(staticRootGenerate)
-          await saveDataSources.call(this, staticRootGenerate, id, context.data)
+  this.nuxt.addHooks({
+    generate: {
+      // generate:distCopied hook
+      distCopied: async () => {
+        staticRootGenerate = join(this.options.generate.dir, `_${rootId}`)
 
-          if (blueprint.generateRoutes) {
-            options.$generateRoutes = options.$generateRoutes || []
+        await ensureDir(staticRootGenerate)
+        await saveDataSources.call(this, staticRootGenerate, id, context.data)
 
-            const prefixPath = path => `${options[id].prefix}${path}`
-            const routes = await blueprint.generateRoutes.call(
-              this,
-              context.data,
-              prefixPath,
-              staticRootGenerate
-            )
+        if (blueprint.generateRoutes) {
+          options.$generateRoutes = options.$generateRoutes || []
 
-            if (!Array.isArray(routes)) {
-              options.$generateRoutes.push(routes)
-              return
-            }
+          const prefixPath = path => `${options[id].prefix}${path}`
+          const routes = await blueprint.generateRoutes.call(
+            this,
+            context.data,
+            prefixPath,
+            staticRootGenerate
+          )
 
-            options.$generateRoutes.push(...routes)
-          }
-        },
-        // generate:extendRoutes hook
-        extendRoutes: async (extendRoutes) => {
-          const { extendStaticRoutes } = options[id]
-
-          if (extendStaticRoutes) {
-            options.$extendStaticRoutes = options.$extendStaticRoutes || []
-            options.$extendStaticRoutes.push(async (routes) => {
-              await extendStaticRoutes.call(
-                this,
-                new Proxy(routes, {
-                  get (_, prop) {
-                    return routes[prop].payload
-                  },
-                  set (_, prop, value) {
-                    routes[prop] = {
-                      route: prop,
-                      payload: value
-                    }
-                    return routes[prop].payload
-                  }
-                }),
-                (...args) => {
-                  return importModule(join(staticRootGenerate, ...args))
-                }
-              )
-
-              return routes
-            })
-          }
-
-          // only add the routes to generate once
-          if (id !== 'common') {
+          if (!Array.isArray(routes)) {
+            options.$generateRoutes.push(routes)
             return
           }
 
-          let routes = await Promise.all(options.$generateRoutes)
-
-          if (options.$extendStaticRoutes) {
-            const routeEntries = routes.map(route => [route.route, route])
-            const routesHashmap = Object.fromEntries(routeEntries)
-
-            for (const $extendStaticRoutes of options.$extendStaticRoutes) {
-              await $extendStaticRoutes(routesHashmap)
-            }
-
-            routes = Object.values(routesHashmap)
-          }
-
-          // remove already listed routes for which we have a static payload
-          for (let index = 0; index < extendRoutes.length; index++) {
-            const found = !!routes.find(route => route.route === extendRoutes[index].route)
-
-            if (found) {
-              extendRoutes.splice(index, 1)
-              index--
-            }
-          }
-
-          extendRoutes.push(...routes)
+          options.$generateRoutes.push(...routes)
         }
+      },
+      // generate:extendRoutes hook
+      extendRoutes: async (extendRoutes) => {
+        const { extendStaticRoutes } = options[id]
+
+        if (extendStaticRoutes) {
+          options.$extendStaticRoutes = options.$extendStaticRoutes || []
+          options.$extendStaticRoutes.push(async (routes) => {
+            await extendStaticRoutes.call(
+              this,
+              new Proxy(routes, {
+                get (_, prop) {
+                  return routes[prop].payload
+                },
+                set (_, prop, value) {
+                  routes[prop] = {
+                    route: prop,
+                    payload: value
+                  }
+                  return routes[prop].payload
+                }
+              }),
+              (...args) => {
+                const pathPrefixes = ['sources', '']
+                while (pathPrefixes.length) {
+                  const pathPrefix = pathPrefixes.pop()
+                  const path = join(staticRootGenerate, pathPrefix, ...args)
+                  if (exists(path)) {
+                    return importModule(path)
+                  }
+                }
+              }
+            )
+
+            return routes
+          })
+        }
+
+        // only add the routes to generate once
+        if (id !== 'common') {
+          return
+        }
+
+        let routes = await Promise.all(options.$generateRoutes)
+
+        if (options.$extendStaticRoutes) {
+          const routeEntries = routes.map(route => [route.route, route])
+          const routesHashmap = Object.fromEntries(routeEntries)
+
+          for (const $extendStaticRoutes of options.$extendStaticRoutes) {
+            await $extendStaticRoutes(routesHashmap)
+          }
+
+          routes = Object.values(routesHashmap)
+        }
+
+        // remove already listed routes for which we have a static payload
+        for (let index = 0; index < extendRoutes.length; index++) {
+          const found = !!routes.find(route => route.route === extendRoutes[index].route)
+
+          if (found) {
+            extendRoutes.splice(index, 1)
+            index--
+          }
+        }
+
+        extendRoutes.push(...routes)
       }
-    })
-  }
+    }
+  })
 }
 
 async function saveStaticFiles (files) {

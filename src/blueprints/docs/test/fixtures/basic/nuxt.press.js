@@ -7,7 +7,7 @@ export default {
     async extendStaticRoutes (routes, staticImport) {
       const path = '/b-ext/'
       const payload = {
-        ...await staticImport('/b'),
+        ...await staticImport('b'),
         path
       }
 
