@@ -15,6 +15,15 @@ import {
   importModule
 } from './utils'
 
+if (!Object.fromEntries) {
+  Object.fromEntries = (iterable) => {
+    return [ ...iterable ].reduce((obj, [key, val]) => {
+      obj[key] = val
+      return obj
+    }, {})
+  }
+}
+
 export async function registerBlueprints (rootId, options, blueprintIds) {
   // this: Nuxt ModuleContainer instance
   // rootId: root id (used to define directory and config key)
@@ -249,7 +258,7 @@ export async function _registerBlueprint (id, rootId, options) {
                   }
                 }),
                 (...args) => {
-                  return importModule(join(staticRootGenerate, 'sources', ...args))
+                  return importModule(join(staticRootGenerate, ...args))
                 }
               )
 
