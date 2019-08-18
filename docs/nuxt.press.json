@@ -6,7 +6,7 @@
     "search": true,
     "nav": [
       {
-        "Guide": "/guide"
+        "Guide": "https://nuxt.press"
       },
       {
         "GitHub": "https://github.com/nuxt/press"
@@ -14,7 +14,8 @@
     ],
     "sidebar": [
       "/guide",
-      "/customize"
+      "/customize",
+      "/roadmap"
     ]
   },
   "i18n": {
