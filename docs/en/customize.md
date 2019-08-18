@@ -254,6 +254,8 @@ In general, NuxtPress expects `<mode>.source.markdown()` to return an object wit
 
 ## Extending the build
 
+You may need to add more static files to the build based on the sources that have been already loaded from the filesystem. For instance, in [my blog](https://hire.jonasgalvez.com.br), I autogenerate a cover SVG for every blog entry. I do so by using the `extendStaticFiles()` function via `nuxt.press.js`:
+
 ```js
 export default {
   blog: {
@@ -263,6 +265,8 @@ export default {
   }
 }
 ```
+
+The first parameter is a hash where files can be assigned to (using path as key and raw file contants as value). The second parameter is the NuxtPress context object, which contains the `data.sources` hash with all loaded and parsed Markdown files. In the example above, I pass them to a `createCovers()` function which populates `staticFiles` with new SVG files based on `data.sources`.
 
 ## Generate overrides
 
