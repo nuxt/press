@@ -24,8 +24,12 @@ export async function parseEntry (sourcePath, processor) {
   const body = await parse.markdown.call(this, metadata.content || raw.substr(raw.indexOf('#')), processor)
   const published = metadata.published
   delete metadata.content
-  const source = { ...metadata, body, title, slug, published }
-  source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
+  const source = { ...metadata, body, title, published }
+  if (slug) {
+    source.path = `${this.$press.blog.prefix}${slug}`
+  } else {
+    source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
+  }
   source.type = 'entry'
   source.id = this.$press.blog.source.id.call(this, source)
   if (this.options.dev) {
