@@ -118,7 +118,7 @@ export default {
         return {}
       },
       path (fileName) {
-        return `${this.$press.slides.prefix}${fileName.toLowerCase()}`
+        return `${this.$press.slides.prefix}${fileName.toLowerCase()}/`
       }
     }
   }
