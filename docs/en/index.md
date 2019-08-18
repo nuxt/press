@@ -15,7 +15,7 @@ footer: MIT License
 
 ⚡Deploy **static** with `nuxt generate` or **live** with a simple API.
 
-⚡Batteries included: **docs**, **blog** and **slides** bundled apps.
+⚡Built-in **docs**, **blog** and **slides** base apps.
 
 ⚡Flexible **Markdown processing** via [@nuxt/markdown][n-md].
 

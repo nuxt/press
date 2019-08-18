@@ -14,13 +14,17 @@ See documentation at **[https://nuxt.press](https://nuxt.press)**.
 
 [1]: https://nuxtjs.org/guide/modules/
 
-⚡Automatic Markdown routes: `pages/foo/bar.md` → `/foo/bar`<br>
-⚡Works in `universal` and `spa` modes, as well as with `nuxt generate`.<br>
-⚡`nuxt generate` is **automatic**: no need to provide routes yourself.<br>
-⚡Batteries included: **docs**, **blog** and **slides** bundled apps.<br>
-⚡Ejectable styles and Vue templates (shadowing).<br>
-⚡Parses **YAML metadata** and supports **Vue template markup**.<br>
-⚡Fully **configurable** **data sources** and **Markdown preprocessing**.<br>
+⚡Hot reloaded Markdown routes: `pages/foo/bar.md` → `/foo/bar`
+
+⚡Deploy **static** with `nuxt generate` or **live** with a simple API.
+
+⚡Built-in **docs**, **blog** and **slides** base apps.
+
+⚡Flexible **Markdown processing** via [@nuxt/markdown][n-md].
+
+⚡Ejectable styles and templates (`nuxt-press eject <anything>`).
+
+[n-md]: https://github.com/nuxt/markdown
 
 ## Credits
 
@@ -30,18 +34,8 @@ help of the **Nuxt Team**.
 [galvez]: https://github.com/galvez
 [pimlie]: https://github.com/pimlie
 
-## Sponsors
+## Sponsoring
 
-<table>
-<tr>
-<td>
-<a href="https://stored.com.br/?ref=nuxt-press-github">
-<img height="100px" src="https://user-images.githubusercontent.com/12291/50407303-987b3180-07bb-11e9-80b8-9609f99023dc.png">
-</a>
-</td>
-</tr>
-</table>
-
-Interested in **adding your logo to this list**? [Reach out][contact] for sponsoring details.
+Interested in **adding your logo here**? [Reach out][contact] for sponsoring details.
 
 [contact]: mailto:jonasgalvez@gmail.com
