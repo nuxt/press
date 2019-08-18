@@ -1,9 +1,11 @@
 {
-  "docs": {
+  "myDocs": {
     "dir": "",
     "prefix": "/",
     "title": "NuxtPress documentation",
     "search": true,
+    "localizedSidebar": false,
+    "configPerLocale": false,
     "nav": [
       {
         "Guide": "/guide"
@@ -12,6 +14,7 @@
         "GitHub": "https://github.com/nuxt/press"
       }
     ],
+    "blueprint": "docs",
     "sidebar": [
       "/guide",
       "/customize"

@@ -1,3 +1,5 @@
+import { getRouteMeta } from 'press/common/utils'
+
 const typeToLayout = {
   'entry': 'blog',
   'topic': 'docs',
@@ -48,49 +50,59 @@ export default async function pressMiddleware (ctx, plugin = false) {
 
   const { app, route, $press, params, payload } = ctx
 
+  // do not run when matched is empty, not our route!
+  if (!route.matched.length) {
+    return
+  }
+
+  const meta = getRouteMeta(route)
+
+  const middlewareContext = {
+    <% if (options.rootOptions.i18n) { %>
+    localeChanged: $press.locale !== params.locale,
+    locale: $press.locale,
+    <% } %>
+    meta
+  }
+
   $press.data = {}
   $press.layout = 'default'
 
-  if (app.i18n) {
-    $press.locales = app.i18n.locales
+  <% if (options.rootOptions.i18n) { %>
+  $press.locales = app.i18n.locales
 
-    // only change locale if it wasnt set or the current route doesnt use the set locale
-    if (!$press.locale || $press.locale !== params.locale) {
-      const locale = app.i18n.locales.find(locale => locale.code === params.locale)
+  // only change locale if it wasnt set or the current route doesnt use the set locale
+  if (!middlewareContext.locale || middlewareContext.localeChanged) {
+    const locale = app.i18n.locales.find(locale => locale.code === params.locale)
 
-      if (locale) {
-        app.i18n.locale = locale.code
-        $press.locale = locale.code
-      } else {
-        $press.locale = app.i18n.locale
-      }
+    if (locale) {
+      app.i18n.locale = locale.code
+      middlewareContext.locale = locale.code
+    } else {
+      middlewareContext.locale = app.i18n.locale
     }
   }
+  <% } %>
 
-  let hasSource = typeof params.source === 'string'
-  if (!hasSource) {
-    const [matched] = route.matched
-
-    hasSource = matched && matched.meta.sourceParam
-  }
-
-  if (hasSource) {
+  let shouldHaveSource = meta.source
+  if (shouldHaveSource) {
     let source = payload
 
     if (!source) {
       let sourcePath = route.path
 
-      if ($press.locale) {
-        let shouldAddLocale = sourcePath === '/'
-
-        if (!shouldAddLocale && params.source) {
-          shouldAddLocale = !sourcePath.match(new RegExp(`/${$press.locale}/?`))
-        }
+      <% if (options.rootOptions.i18n) { %>
+      if (middlewareContext.locale) {
+        const shouldAddLocale = !params.locale && meta.id !== 'common'
 
         if (shouldAddLocale) {
-          sourcePath = `${sourcePath}${$press.locale}`
+          if (!sourcePath.endsWith('/')) {
+            sourcePath += '/'
+          }
+          sourcePath = `${sourcePath}${middlewareContext.locale}`
         }
       }
+      <% } %>
 
       source = await getSource($press, `api/source${sourcePath}`)
     }
@@ -103,9 +115,25 @@ export default async function pressMiddleware (ctx, plugin = false) {
     $press.source = source
   }
 
+  const delayedCallbacks = []
   for (const extraMiddleware of extraMiddlewares) {
-    extraMiddleware(ctx)
+    const cb = await extraMiddleware(ctx, middlewareContext)
+    if (cb) {
+      delayedCallbacks.push(cb)
+    }
   }
+
+  $press.id = meta.id
+  <%
+  // the locale should only be changed when all middlewares have run
+  // because watchers for the locale will otherwise trigger
+  // before the middlewares have updated all settings
+  // (eg for docs we might need to download a config chunk first)
+  if (options.rootOptions.i18n) { %>
+  $press.locale = middlewareContext.locale
+  <% } %>
+
+  await Promise.all(delayedCallbacks.map(cb => cb()))
 }
 
 pressMiddleware.add = middleware => extraMiddlewares.push(middleware)

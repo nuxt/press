@@ -8,15 +8,15 @@ export default {
   // Include data loader
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
-  enabled (options) {
-    if (options.$standalone === 'slides') {
-      options.slides.prefix = '/'
-      if (!exists(join(this.options.srcDir, options.slides.dir))) {
-        options.slides.dir = ''
+  enabled ({ rootOptions, options }) {
+    if (rootOptions.$standalone === 'slides') {
+      options.prefix = '/'
+      if (!exists(join(this.options.srcDir, options.dir))) {
+        options.dir = ''
       }
       return true
     }
-    return exists(join(this.options.srcDir, options.slides.dir))
+    return exists(join(this.options.srcDir, options.dir))
   },
   templates: {
     index: 'pages/index.vue',

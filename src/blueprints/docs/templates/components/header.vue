@@ -9,6 +9,7 @@
     </nuxt-link>
 
     <nav class="nav-right">
+      <% if (options.options.search) { %>
       <lunr-search :locale="locale" class="search">
         <template v-slot:default="{ result, index, maxScore, meta }">
           <nuxt-link v-if="meta" :to="meta.to" role="menuitem">
@@ -17,6 +18,7 @@
           </nuxt-link>
         </template>
       </lunr-search>
+      <% } %>
 
       <select
         v-if="$press.locales"
@@ -49,8 +51,10 @@ import NavLink from 'press/docs/components/nav-link'
 
 export default {
   components: {
-    NavLink,
-    LunrSearch: () => import('lunr-module/search')
+    <% if (options.options.search) { %>
+    LunrSearch: () => import('lunr-module/search'),
+    <% } %>
+    NavLink
   },
   mixins: [docsMixin],
   data () {
@@ -60,8 +64,30 @@ export default {
   },
   watch: {
     lang(newLocale, oldLocale) {
-      const newRoute = this.$route.path.replace(`/${oldLocale}/`, `/${newLocale}/`)
-      this.$router.push(newRoute)
+      // TODO: we should check if the new path exists, but
+      // using $router.resolve is not sufficient because
+      // our routes are greedy. We probably need to check if
+      // a page exists but the pages for the new locale might
+      // not yet have been loaded when this fn runs
+      let { href: newPath } = this.$router.resolve({
+        name: this.$route.name,
+        params: {
+          locale: newLocale,
+          source: this.$route.params.source
+        }
+      })
+
+      if (newPath) {
+        newPath = newPath.replace(/%2F/g, '/')
+      } else {
+        newPath = this.$route.path.replace(`/${oldLocale}/`, `/${newLocale}/`)
+        // if nothing changed, the current route is the home route
+        if (newPath === this.$route.path) {
+          newPath = this.$route.path.replace(/\/$/, `/${newLocale}/`)
+        }
+      }
+
+      this.$router.push(newPath)
     }
   },
   methods: {

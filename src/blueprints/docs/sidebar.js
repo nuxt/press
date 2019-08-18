@@ -1,33 +1,4 @@
-export const normalizePath = str => str.endsWith('/') || str.includes('/#') ? str : `${str}/`
-
-export function normalizePaths (paths) {
-  if (Array.isArray(paths)) {
-    for (const key in paths) {
-      paths[key] = normalizePaths(paths[key])
-    }
-    return paths
-  }
-
-  if (typeof paths === 'object') {
-    if (paths.children) {
-      paths.children = normalizePaths(paths.children)
-      return paths
-    }
-
-    for (const key in paths) {
-      const normalizedKey = normalizePath(key)
-      paths[normalizedKey] = normalizePaths(paths[key])
-
-      if (key !== normalizedKey) {
-        delete paths[key]
-      }
-    }
-
-    return paths
-  }
-
-  return normalizePath(paths)
-}
+import { normalizePath } from '../../utils'
 
 export function tocToTree (toc) {
   const sections = [undefined, [], [], [], [], [], []]
@@ -78,7 +49,7 @@ export function tocToTree (toc) {
   return sections[1]
 }
 
-export function createSidebarFromToc (path, title, page, startDepth = 0) {
+export function createSidebarFromToc (path, page, title, startDepth = 0) {
   const sidebar = []
 
   if (!page) {
@@ -90,7 +61,7 @@ export function createSidebarFromToc (path, title, page, startDepth = 0) {
 
   if (meta.title) {
     title = meta.title
-  } else if (meta.home) {
+  } else if (!title && meta.home) {
     title = 'Home'
   }
 
@@ -144,7 +115,42 @@ export function createSidebarFromToc (path, title, page, startDepth = 0) {
   return tocToTree(sidebar)
 }
 
+export function createSidebarFromRegex (pathOrRegex, routePrefix, pagePaths, pages, title, startDepth = 0) {
+  const isRegex = /[.*?()^$]/.test(pathOrRegex)
+  let re
+  if (isRegex) {
+    const isGlob = isRegex && !/[.?()^$]/.test(pathOrRegex)
+    if (isGlob) {
+      pathOrRegex = pathOrRegex.replace(new RegExp('[*]+', 'g'), '(.*)')
+    }
+    re = new RegExp(pathOrRegex, 'i')
+  }
+
+  const sidebarItems = []
+  for (const pagePath of pagePaths) {
+    let normalizedPagePath = pagePath
+    if (routePrefix && pagePath.startsWith(routePrefix)) {
+      normalizedPagePath = pagePath.substr(routePrefix.length)
+    }
+
+    const isMatch = normalizedPagePath === pathOrRegex || (re && re.test(normalizedPagePath))
+
+    // console.log(routePrefix, pathOrRegex, normalizedPagePath, isMatch ? true : false, pagePath)
+
+    if (isMatch) {
+      let sourcePath = normalizePath(pagePath.replace(/.md$/i, ''))
+
+      sourcePath = `${routePrefix}${sourcePath}`
+      sidebarItems.push(...createSidebarFromToc(sourcePath, pages[pagePath], title, startDepth))
+    }
+  }
+
+  return sidebarItems
+}
+
 export function createSidebar (sidebarConfig, pages, routePrefix) {
+  const pagePaths = extractPagePaths(pages, routePrefix)
+
   const sidebar = []
   for (let sourcePath of sidebarConfig) {
     let title
@@ -154,25 +160,53 @@ export function createSidebar (sidebarConfig, pages, routePrefix) {
 
     if (typeof sourcePath === 'object') {
       const title = sourcePath.title
-      const children = []
 
+      const sidebarChildren = []
       if (sourcePath.children) {
         for (sourcePath of sourcePath.children) {
-          sourcePath = normalizePath(sourcePath.replace(/.md$/i, ''))
+          let sourceTitle
+          if (Array.isArray(sourcePath)) {
+            [sourcePath, sourceTitle] = sourcePath
+          }
 
-          const pagePath = `${routePrefix}${sourcePath}`
-          children.push(...createSidebarFromToc(sourcePath, undefined, pages[pagePath], 1))
+          if (!pages[sourcePath] && sourceTitle) {
+            sidebarChildren.push([2, sourceTitle, sourcePath])
+          } else {
+            sidebarChildren.push(...createSidebarFromRegex(sourcePath, routePrefix, pagePaths, pages, sourceTitle, 1))
+          }
         }
       }
 
-      sidebar.push([1, title, '', children])
+      sidebar.push([1, title, '', sidebarChildren])
       continue
     }
 
-    const pagePath = `${routePrefix}${sourcePath}`
-
-    sidebar.push(...createSidebarFromToc(sourcePath, title, pages[pagePath]))
+    if (!pages[sourcePath] && title) {
+      sidebar.push([1, title, sourcePath])
+    } else {
+      sidebar.push(...createSidebarFromRegex(sourcePath, routePrefix, pagePaths, pages, title))
+    }
   }
 
   return sidebar
+}
+
+export function extractPagePaths (pages, routePrefix = '') {
+  // sort page paths for current routePrefix alphabetically
+  return Object.keys(pages)
+    .filter(path => path.startsWith(`${routePrefix}/`))
+    // remove trailing slash (page paths always have a trailing slash)
+    // this is needed because normally a / sort higher than [a-z-]
+    // and we dont want that
+    //
+    // Correct order:
+    // - /path/
+    // - /path-long/
+    .map(path => path.substr(0, path.length - 1))
+    .sort((a, b) => {
+      if (a === b) { return 0 }
+      return a < b ? -1 : 1
+    })
+    // append slash again
+    .map(path => `${path}/`)
 }

@@ -100,7 +100,7 @@ export default {
   computed: {
     actionLink () {
       return {
-        link: this.data.actionLink,
+        link: `${this.$docs.prefix}${this.data.actionLink}`,
         text: this.data.actionText
       }
     }

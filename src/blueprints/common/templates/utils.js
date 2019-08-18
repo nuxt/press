@@ -1,45 +1,19 @@
-/*
- *
- * Not used anymore, but leave it for the time being until final release
- *
- */
-export function trimEnd (str, chr = '') {
-  if (!chr) {
-    return str.trimEnd()
+export function normalizedPath (path = '', prefix, locale) {
+  if (prefix) {
+    path = path.substr(prefix.length)
   }
 
-  return str.replace(new RegExp(`${chr}+$`), '')
+  if ((!path || path === '/') && locale) {
+    return `/${locale}/`
+  }
+
+  if (!path.endsWith('/')) {
+    path = `${path}/`
+  }
+  return path
 }
 
-export const trimSlash = str => trimEnd(str, '/')
-
-export const normalizePath = str => str.endsWith('/') || str.includes('/#') ? str : `${str}/`
-
-export function normalizePaths (paths) {
-  if (Array.isArray(paths)) {
-    for (const key in paths) {
-      paths[key] = normalizePaths(paths[key])
-    }
-    return paths
-  }
-
-  if (typeof paths === 'object') {
-    if (paths.children) {
-      paths.children = normalizePaths(paths.children)
-      return paths
-    }
-
-    for (const key in paths) {
-      const normalizedKey = normalizePath(key)
-      paths[normalizedKey] = normalizePaths(paths[key])
-
-      if (key !== normalizedKey) {
-        delete paths[key]
-      }
-    }
-
-    return paths
-  }
-
-  return normalizePath(paths)
+export function getRouteMeta (route) {
+  const { meta = {} } = route.matched.find(r => r.name.startsWith('source-')) || {}
+  return meta
 }

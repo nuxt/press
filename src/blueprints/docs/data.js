@@ -1,10 +1,9 @@
 import path from 'path'
 import graymatter from 'gray-matter'
 import defu from 'defu'
-import { walk, join, exists, readFile, routePath, escapeChars, trimSlash } from '../../utils'
+import { walk, join, exists, readFile, routePath, escapeChars, getDirsAsArray, normalizePath } from '../../utils'
 import PromisePool from '../../pool'
 import { indexKeys, defaultMetaSettings, maxSidebarDepth } from './constants'
-import { normalizePaths, tocToTree, createSidebar } from './sidebar'
 
 // DOCS MODE
 // Markdown files can be placed in
@@ -13,9 +12,12 @@ import { normalizePaths, tocToTree, createSidebar } from './sidebar'
 
 const isIndexRE = new RegExp(`(^|/)(${indexKeys.join('|')})$`, 'i')
 
-export async function parsePage (sourcePath, mdProcessor) {
+export async function parsePage ({ rootOptions, id, options }, { root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
   const src = sourcePath
-  let raw = await readFile(this.options.srcDir, sourcePath)
+
+  pagePrefix = normalizePath(pagePrefix, true, false, true)
+
+  let raw = await readFile(join(root, sourcePath))
   const { name: fileName } = path.parse(sourcePath)
 
   let meta
@@ -32,16 +34,16 @@ export async function parsePage (sourcePath, mdProcessor) {
     meta = defu({}, defaultMetaSettings)
   }
 
-  const { toc, html: body } = await this.$press.docs.source.markdown.call(this, raw, mdProcessor)
+  const { toc, html: body } = await options.source.markdown.call(this, raw, mdProcessor)
 
-  const title = await this.$press.docs.source.title.call(this, fileName, raw, toc)
+  const title = await options.source.title.call(this, fileName, raw, toc)
 
   sourcePath = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(isIndexRE, '') || 'index'
 
   const urlPath = sourcePath === 'index' ? '/' : `/${sourcePath.replace(/\/index$/, '')}/`
 
   let locale = ''
-  const locales = this.$press.i18n && this.$press.i18n.locales
+  const locales = rootOptions.i18n && rootOptions.i18n.locales
   if (locales) {
     ({ code: locale } = locales.find(l => l.code === sourcePath || sourcePath.startsWith(`${l.code}/`)) || {})
   }
@@ -51,7 +53,7 @@ export async function parsePage (sourcePath, mdProcessor) {
     locale,
     title,
     body,
-    path: `${trimSlash(this.$press.docs.prefix)}${urlPath}`,
+    path: `${options.$normalizedPrefix}${pagePrefix}${urlPath}`,
     ...this.options.dev && { src }
   }
 
@@ -68,33 +70,66 @@ export async function parsePage (sourcePath, mdProcessor) {
   }
 }
 
-export default async function ({ options: { docs: docOptions } }) {
-  let srcRoot = join(
-    this.options.srcDir,
-    this.$press.docs.dir
-  )
+export default async function (context) {
+  const { options } = context
 
-  if (!exists(srcRoot)) {
-    srcRoot = this.options.srcDir
+  const srcRoots = getDirsAsArray(options.dir)
+  for (const key in srcRoots) {
+    if (!exists(this.options.srcDir, srcRoots[key])) {
+      // eslint-disable-next-line no-console
+      console.warn(`Source Folder ${srcRoots[key]} doesnt exist, ignoring it`)
+      srcRoots.splice(key, 1)
+    }
   }
 
-  const jobs = await walk.call(this, srcRoot, (path) => {
-    if (path.startsWith('pages')) {
-      return false
-    }
-    return path.endsWith('.md')
-  })
+  if (!srcRoots.length) {
+    srcRoots.push(this.options.srcDir)
+  }
+
+  let srcPrefixes = null
+  if (typeof options.dir === 'object') {
+    srcPrefixes = options.dir
+  }
+
+  const jobs = []
+  for (const srcRoot of srcRoots) {
+    const srcPath = join(this.options.srcDir, srcRoot)
+    const paths = await walk.call(this, srcPath, (path) => {
+      // ignore pages folder
+      if (path.startsWith(this.options.dir.pages)) {
+        return false
+      }
+
+      return path.endsWith('.md')
+    }, true)
+
+    jobs.push(...paths.map((path) => {
+      let prefix = ''
+      if (srcPrefixes && srcPrefixes[srcRoot]) {
+        prefix = srcPrefixes[srcRoot]
+      }
+
+      return {
+        root: srcPath,
+        prefix,
+        path
+      }
+    }))
+  }
 
   const sources = {}
   const $pages = {}
+  const mdProcessor = await options.source.processor()
 
-  const mdProcessor = await this.$press.docs.source.processor()
-  const prefix = trimSlash(this.$press.docs.prefix)
+  const handler = async (page) => {
+    const { toc, meta, source } = await parsePage.call(this, context, page, mdProcessor)
 
-  const handler = async (path) => {
-    const { toc, meta, source } = await parsePage.call(this, path, mdProcessor)
-
-    const sourcePath = routePath(source.path, prefix) || '/'
+    // Clarification:
+    // - source.path is the full webpath including configured prefix
+    // - sourcePath is the path without prefix
+    // This is to make it easier to eg match sidebar stuff which
+    // is based on paths without prefiex
+    const sourcePath = routePath(source.path, options.$normalizedPrefix) || '/'
 
     this.nuxt.callHook('press:docs:page', {
       toc,
@@ -113,16 +148,12 @@ export default async function ({ options: { docs: docOptions } }) {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  const options = {
-    $pages,
-    $prefix: trimSlash(this.$press.docs.prefix || '')
-  }
-  const press = this.$press
+  options.$pages = $pages
 
   // TODO: should this logic need to be moved somewhere else
   options.$asJsonTemplate = new Proxy({}, {
     get (_, prop) {
-      let val = options[prop] || options[`$${prop}`] || docOptions[prop]
+      let val = options[prop] || options[`$${prop}`]
 
       if (prop === 'nav') {
         val = val.map((link) => {
@@ -136,63 +167,6 @@ export default async function ({ options: { docs: docOptions } }) {
             }
           }
         })
-      } else if (prop === 'pages') {
-        val = {}
-        // only export the minimum of props we need
-        for (const path in options.$pages) {
-          const page = options.$pages[path]
-          const [toc = []] = page.toc || []
-
-          val[path] = {
-            title: page.meta.title || toc[1] || '',
-            hash: (toc[2] && toc[2].substr(path.length)) || '',
-            meta: page.meta
-          }
-        }
-      } else if (prop === 'sidebars') {
-        let createSidebarForEachLocale = false
-        const hasLocales = !!(press.i18n && press.i18n.locales)
-
-        let sidebarConfig = press.docs.sidebar
-        if (typeof sidebarConfig === 'string') {
-          sidebarConfig = [sidebarConfig]
-        }
-
-        if (Array.isArray(sidebarConfig)) {
-          createSidebarForEachLocale = hasLocales
-          sidebarConfig = {
-            '/': sidebarConfig
-          }
-        }
-
-        let routePrefixes = ['']
-        if (createSidebarForEachLocale) {
-          routePrefixes = press.i18n.locales.map(locale => `/${typeof locale === 'object' ? locale.code : locale}`)
-        }
-
-        const sidebars = {}
-        for (const routePrefix of routePrefixes) {
-          for (const path in sidebarConfig) {
-            const normalizedPath = normalizePaths(path)
-
-            const sidebarPath = `${routePrefix}${normalizedPath}`
-
-            sidebars[sidebarPath] = createSidebar(
-              sidebarConfig[path].map(normalizePaths),
-              options.$pages,
-              routePrefix
-            )
-          }
-        }
-
-        for (const path in options.$pages) {
-          const page = options.$pages[path]
-          if (page.meta && page.meta.sidebar === 'auto') {
-            sidebars[path] = tocToTree(page.toc)
-          }
-        }
-
-        val = sidebars
       }
 
       if (val) {
@@ -205,7 +179,7 @@ export default async function ({ options: { docs: docOptions } }) {
   })
 
   return {
-    options,
+    options: {},
     sources
   }
 }

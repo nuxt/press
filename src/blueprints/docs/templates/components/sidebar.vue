@@ -40,14 +40,13 @@ export default {
     }
   },
   created() {
-    // extract all sidebar paths in reverse order of length
-    this._sidebarPaths = Object.keys(this.$docs.sidebars).sort((a, b) => {
-      return b.length - a.length
-    })
-
+    this.prepareSidebar()
     this.changeSidebar()
   },
   computed: {
+    pressId() {
+      return this.$press.id
+    },
     hash() {
       return this.$route.hash
     },
@@ -73,8 +72,22 @@ export default {
     }
   },
   watch: {
+    locale() {
+      if (this.$docs.ready && this.$docs.configPerLocale) {
+        this.prepareSidebar()
+        this.changeSidebar()
+      }
+    },
+    pressId () {
+      if (this.$docs.ready) {
+        this.prepareSidebar()
+        this.changeSidebar()
+      }
+    },
     normalizedPath() {
-      this.changeSidebar()
+      if (this.$docs.ready) {
+        this.changeSidebar()
+      }
 
       this.$nextTick(() => {
         if (this.$refs.sidebar.classList.contains('mobile-visible')) {
@@ -84,18 +97,30 @@ export default {
     }
   },
   methods: {
+    prepareSidebar() {
+      if (this.$docs.configPerLocale) {
+        this._sidebars = this.$docs.sidebars[this.locale]
+      } else {
+        this._sidebars = this.$docs.sidebars
+      }
+
+      // extract all sidebar paths in reverse order of length
+      this._sidebarPaths = Object.keys(this._sidebars).sort((a, b) => {
+        return b.length - a.length
+      })
+    },
     changeSidebar() {
       const path = this.normalizedPath
 
       const { meta } = this.$page
       if (meta && meta.sidebar === 'auto') {
-        this.setSidebar(this.$docs.sidebars[path])
+        this.setSidebar(this._sidebars[path])
         return
       }
 
       for (const sidebarPath of this._sidebarPaths) {
         if (path.startsWith(sidebarPath)) {
-          this.setSidebar(this.$docs.sidebars[sidebarPath])
+          this.setSidebar(this._sidebars[sidebarPath])
           break
         }
       }

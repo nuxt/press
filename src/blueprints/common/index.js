@@ -2,8 +2,16 @@ import chokidar from 'chokidar'
 import { IgnorePlugin } from 'webpack'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
-import { importModule, ensureDir, exists, join, readJsonSync, remove, trimEnd } from '../../utils'
-import data, { loadPage } from './data'
+import {
+  importModule,
+  ensureDir,
+  exists,
+  join,
+  readJsonSync,
+  remove,
+  trimSlash
+} from '../../utils'
+import data, { parsePage } from './data'
 
 export default {
   // Include data loader
@@ -19,64 +27,61 @@ export default {
     'observer': 'components/observer.js',
     'plugin': 'plugins/press.js',
     'plugin:scroll': 'plugins/scroll.client.js',
-    'source': 'pages/source.vue'
-    // 'utils': 'utils.js'
+    'source': 'pages/source.vue',
+    'utils': 'utils.js'
   },
-  routes (templates) {
-    const $press = this.$press
+  routes ({ rootOptions, registeredBlueprintIds, availableBlueprintIds }, templates) {
+    const hasLocales = rootOptions.i18n && rootOptions.i18n.locales.length > 0
+    let rootAdded = false
 
-    // always add '/' to support pages
-    const prefixes = ['/']
-    for (const blueprint of ['blog', 'docs', 'slides']) {
-      if ($press[blueprint]) {
-        const prefix = $press[blueprint].prefix || '/'
-        if (!prefixes.includes(prefix)) {
-          prefixes.push(prefix)
+    const routes = []
+    for (const key of registeredBlueprintIds) {
+      const options = rootOptions[key]
+      const blueprintId = availableBlueprintIds.includes(key) ? key : (options && options.blueprint)
+
+      if (blueprintId !== 'common') {
+        const prefix = options.$normalizedPrefix || ''
+        const routeName = `source-${key.toLowerCase()}`
+
+        if (hasLocales) {
+          const locales = rootOptions.i18n.locales.map(locale => locale.code || locale)
+          locales.sort()
+
+          routes.push({
+            name: `${routeName}-locales-${locales.join('_')}`,
+            path: `${prefix}/:locale(${locales.join('|')})?/:source(.*)?`,
+            component: templates.source,
+            meta: { id: key, source: true }
+          })
+
+          continue
+        }
+
+        routes.push({
+          name: routeName,
+          path: `${prefix}/:source(.*)?`,
+          component: templates.source,
+          meta: { id: key, source: true }
+        })
+
+        if (!prefix) {
+          rootAdded = true
         }
       }
     }
 
-    const routes = []
-    for (let prefix of prefixes) {
-      prefix = trimEnd(prefix, '/')
-
-      let prefixName = ''
-      if (prefix) {
-        prefixName = `-${prefix.replace('/', '')}`
-
-        if (prefix[0] !== '/') {
-          prefix = `/${prefix}`
-        }
-      }
-
-      const hasLocales = !!$press.i18n
-      if (hasLocales) {
-        routes.push({
-          name: `source-locale${prefixName}`,
-          path: `${prefix}/:locale/:source(.*)`,
-          component: templates.source
-        })
-
-        routes.push({
-          name: `source${prefixName}`,
-          path: `${prefix}/`,
-          meta: { sourceParam: true },
-          component: templates.source
-        })
-
-        continue
-      }
-
+    if (!rootAdded) {
       routes.push({
-        name: `source${prefixName}`,
-        path: `${prefix}/:source(.*)`,
-        component: templates.source
+        name: 'source-pages',
+        path: `/:source(.*)?`,
+        component: templates.source,
+        meta: { id: 'common', source: true }
       })
     }
 
     return routes
   },
-  generateRoutes (data, _, staticRoot) {
+  generateRoutes ({ data }, _, staticRoot) {
     if (!data || !data.sources) {
       return []
     }
@@ -95,13 +100,13 @@ export default {
     })
   },
   serverMiddleware ({ options, rootId, id }) {
-    const { source } = typeof options.common.api === 'function'
-      ? options.common.api.call(this, { rootId, id })
-      : options.common.api
+    const { source } = typeof options.api === 'function'
+      ? options.api.call(this, { rootId, id })
+      : options.api
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/source/')) {
-          const sourcePath = trimEnd(req.url.slice(12), '/')
+          const sourcePath = trimSlash(req.url.slice(12))
           source.call(this, sourcePath, req, res, next)
         } else {
           next()
@@ -110,28 +115,33 @@ export default {
     ]
   },
   build: {
-    async before ({ options }) {
+    async before ({ rootOptions }) {
       this.options.build.plugins.unshift(new IgnorePlugin(/\.md$/))
       const pagesDir = join(this.options.srcDir, this.options.dir.pages)
+
       if (!exists(pagesDir)) {
-        this.$press.$placeholderPagesDir = pagesDir
+        rootOptions.$placeholderPagesDir = pagesDir
         await ensureDir(pagesDir)
       }
     },
-    async done () {
-      if (this.nuxt.options.dev) {
-        chokidar.watch(['pages/*.md'], {
-          cwd: this.options.srcDir,
-          ignoreInitial: true,
-          ignored: 'node_modules/**/*'
-        })
-          .on('change', async path => this.$pressSourceEvent('change', await loadPage(path)))
-          .on('add', async path => this.$pressSourceEvent('add', await loadPage(path)))
-          .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
+    async done (context) {
+      if (!this.nuxt.options.dev) {
+        return
       }
 
-      if (this.$press.$placeholderPagesDir) {
-        await remove(this.$press.$placeholderPagesDir)
+      const { rootOptions } = context
+
+      chokidar.watch(['pages/*.md'], {
+        cwd: this.options.srcDir,
+        ignoreInitial: true,
+        ignored: 'node_modules/**/*'
+      })
+        .on('change', async path => this.$pressSourceEvent('change', await parsePage(context, path)))
+        .on('add', async path => this.$pressSourceEvent('add', await parsePage(context, path)))
+        .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
+
+      if (rootOptions.$placeholderPagesDir) {
+        await remove(rootOptions.$placeholderPagesDir)
       }
     }
   },

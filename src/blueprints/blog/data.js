@@ -9,9 +9,9 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-export async function parseEntry (sourcePath, processor) {
+export async function parseEntry ({ options }, sourcePath, processor) {
   // TODO just completely rewrite this function, please
-  const parse = this.$press.blog.source
+  const parse = options.source
   const fileName = parsePath(sourcePath).name
   const raw = await readFile(this.options.srcDir, sourcePath)
   const metadata = parse.metadata.call(this, fileName, raw)
@@ -25,9 +25,9 @@ export async function parseEntry (sourcePath, processor) {
   const published = metadata.published
   delete metadata.content
   const source = { ...metadata, body, title, slug, published }
-  source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
+  source.path = `${options.prefix}${options.source.path.call(this, fileName, source)}`
   source.type = 'entry'
-  source.id = this.$press.blog.source.id.call(this, source)
+  source.id = options.source.id.call(this, source)
   if (this.options.dev) {
     source.src = sourcePath
   }
@@ -48,10 +48,10 @@ function addArchiveEntry (archive, entry) {
   archive[year][month].push(entry)
 }
 
-async function generateFeed (options, entries) {
-  let srcPath = join(this.options.srcDir, 'press', 'blog', 'static', 'rss.xml')
+async function generateFeed ({ blueprintId, rootId, id, options }, entries) {
+  let srcPath = join(this.options.srcDir, rootId, blueprintId, 'static', 'rss.xml')
   if (!exists(srcPath)) {
-    srcPath = resolve('blueprints', 'blog', 'templates', 'static', 'rss.xml')
+    srcPath = resolve('blueprints', blueprintId, 'templates', 'static', 'rss.xml')
   }
   const template = lodashTemplate(await readFile(srcPath))
   return template({ blog: options, entries })
@@ -64,11 +64,10 @@ function sortEntries (entries) {
     .map(({ $published, ...e }) => e)
 }
 
-export default async function () {
-  const srcRoot = join(
-    this.options.srcDir,
-    this.$press.blog.dir
-  )
+export default async function (context) {
+  const { options } = context
+
+  const srcRoot = join(this.options.srcDir, options.dir)
 
   const sources = {}
   const archive = {}
@@ -80,10 +79,10 @@ export default async function () {
     return /\.md$/.test(path)
   })
 
-  const mdProcessor = await this.$press.blog.source.processor()
+  const mdProcessor = await options.source.processor()
 
   const handler = async (path) => {
-    const entry = await parseEntry.call(this, path, mdProcessor)
+    const entry = await parseEntry.call(this, context, path, mdProcessor)
     if (!entry) {
       return
     }
@@ -110,14 +109,14 @@ export default async function () {
     }
   }
 
-  if (typeof this.$press.blog.feed.path === 'function') {
-    this.$press.blog.feed.path = this.$press.blog.feed.path(this.$press.blog)
+  if (typeof options.feed.path === 'function') {
+    options.feed.path = options.feed.path(options)
   }
 
   return {
     static: {
-      [this.$press.blog.feed.path]: (
-        await generateFeed.call(this, this.$press.blog, index)
+      [options.feed.path]: (
+        await generateFeed.call(this, context, index)
       )
     },
     topLevel: {

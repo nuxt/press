@@ -7,7 +7,7 @@ export const templates = {
   mixin: 'mixins/docs.js',
   'nav-link': 'components/nav-link.vue',
   'outbound-link-icon': 'components/outbound-link-icon.vue',
-  plugin: 'plugins/press.docs.js',
+  plugin: ({ id }) => ({ src: 'plugins/press.docs.js', dest: `plugins/press.${id}.js` }),
   sidebar: 'components/sidebar.vue',
   'sidebar-section': 'components/sidebar-section.vue',
   'sidebar-sections': 'components/sidebar-sections.vue',

@@ -24,7 +24,7 @@
     "dist": "rimraf dist && rollup -c rollup.config.js && rimraf dist/blueprints/*/test/",
     "generate": "nuxt generate",
     "start": "nuxt start",
-    "lint": "eslint --ignore-path .gitignore --fix --ext .js src",
+    "lint": "eslint --fix --ext .js src",
     "postinstall": "node postinstall.js",
     "test": "yarn test:unit && yarn test:fixtures && yarn test:e2e",
     "test:unit": "jest test/unit",
@@ -55,6 +55,7 @@
     "slug": "^1.1.0",
     "swiper": "^4.5.0",
     "vue-awesome-swiper": "^3.1.3",
+    "vue-meta": "2",
     "wysiwyg.css": "^0.0.3"
   },
   "devDependencies": {

@@ -24,7 +24,10 @@ if (!Object.fromEntries) {
   }
 }
 
-export async function registerBlueprints (rootId, options, blueprintIds) {
+const availableBlueprintIds = Object.keys(blueprints)
+const registeredBlueprintIds = []
+
+export async function registerBlueprints (rootId, options, blueprintIds = availableBlueprintIds) {
   // this: Nuxt ModuleContainer instance
   // rootId: root id (used to define directory and config key)
   // options: module options (as captured by the module function)
@@ -73,36 +76,90 @@ export async function registerBlueprints (rootId, options, blueprintIds) {
     this.options.css.splice(addIndex + 1, 0, resolve(path))
   }
 
-  for (const id of blueprintIds) {
-    await _registerBlueprint.call(this, id, rootId, options)
+  // determine the possible blueprints to load
+  // (check by default all to support auto-loading)
+  const possibleBlueprints = blueprintIds
+    // add all option keys if user has defined custom id
+    .concat(Object.keys(options))
+    // add standalone value (not required atm due to auto-loading)
+    // .map(key => key === '$standalone' ? options.$standalone : key)
+    // remove private keys
+    .filter(key => !key.startsWith('$'))
+    // unique keys only
+    .filter((key, index, target) => index === target.findIndex(val => val === key))
+    // common needs to be loaded last, keep others in same order
+    .sort((a, b) => {
+      if (a === 'common') {
+        return 1
+      }
+      if (b === 'common') {
+        return -1
+      }
+
+      return 0
+    })
+
+  for (const key of possibleBlueprints) {
+    // we should only load a bleuprint if its any of the default blueprint ids
+    // or when the blueprint config has a blueprint key which defines the type
+    const blueprintId = (options[key] && options[key].blueprint) || key
+
+    if (blueprintIds.includes(blueprintId)) {
+      if (await registerBlueprint.call(this, blueprintId, rootId, key, options)) {
+        registeredBlueprintIds.push(key)
+      }
+    }
   }
 }
 
-export async function _registerBlueprint (id, rootId, options) {
+export async function registerBlueprint (blueprintId, rootId, id, rootOptions) {
   // Load blueprint specification
-  const blueprint = blueprints[id]
+  const blueprint = blueprints[blueprintId]
 
   // Populate mode default options
-  const blueprintOptions = defu(options[id] || {}, blueprint.options)
+  const options = defu(rootOptions[id] || {}, blueprint.options)
+  // add ref back to rootOptions
+  rootOptions[id] = options
+
+  const context = {
+    blueprintId,
+    rootId,
+    id,
+    rootOptions,
+    options,
+    registeredBlueprintIds,
+    availableBlueprintIds,
+    data: undefined
+  }
 
   // Determine if mode is enabled
-  if (!blueprint.enabled.call(this, { ...options, [id]: blueprintOptions })) {
+  if (!blueprint.enabled.call(this, context)) {
     // Return if blueprint is not enabled
-    return
+    return false
+  }
+
+  // also dont enable a blueprint when a custom id exists
+  // with the same folder (default) configuration
+  // (only applies to default blueprint ids)
+  if (availableBlueprintIds.includes(id)) {
+    for (const key in rootOptions) {
+      if (key !== id &&
+        typeof rootOptions[key] === 'object' &&
+        rootOptions[key].blueprint === id &&
+        rootOptions[key].dir === options.dir
+      ) {
+        return false
+      }
+    }
   }
 
   // Set flag to indicate blueprint was enabled (ie: options.$common = true)
-  options[`$${id}`] = true
-  if (this.options.dev) {
-    options.dev = true
-  }
-
-  // Populate options with defaults
-  options[id] = blueprintOptions
+  rootOptions[`$${blueprintId}`] = true
+  rootOptions.dev = this.options.dev
 
   // Register server middleware
   if (blueprint.serverMiddleware) {
-    for (let serverMiddleware of await blueprint.serverMiddleware.call(this, { options, rootId, id })) {
+    for (let serverMiddleware of await blueprint.serverMiddleware.call(this, context)) {
       serverMiddleware = serverMiddleware.bind(this)
       this.addServerMiddleware(async (req, res, next) => {
         try {
@@ -115,10 +172,8 @@ export async function _registerBlueprint (id, rootId, options) {
   }
 
   if (blueprint.ready) {
-    await blueprint.ready.call(this)
+    await blueprint.ready.call(this, context)
   }
-
-  const context = { options, rootId, id, data: undefined }
 
   let compileHookRan = false
 
@@ -135,23 +190,20 @@ export async function _registerBlueprint (id, rootId, options) {
         const data = await blueprint.data.call(this, context)
         context.data = data
 
-        if (data.options) {
-          Object.assign(options[id], data.options)
-        }
-
         if (data.static) {
-          if (typeof options[id].extendStaticFiles === 'function') {
-            await options[id].extendStaticFiles.call(this, data.static, context)
+          if (typeof options.extendStaticFiles === 'function') {
+            // TODO: NOTE BREAKING CHANGE REVERSED ARGS
+            await options.extendStaticFiles.call(this, context, data.static)
           }
           await saveStaticFiles.call(this, data.static)
         }
 
         const templates = await addTemplates.call(this, context, blueprint.templates)
 
-        await updateConfig.call(this, rootId, { [id]: data.options })
+        await updateConfig.call(this, context)
 
         if (blueprint.routes) {
-          const routes = await blueprint.routes.call(this, templates)
+          const routes = await blueprint.routes.call(this, context, templates)
 
           this.extendRoutes((nuxtRoutes) => {
             for (const route of routes) {
@@ -206,7 +258,7 @@ export async function _registerBlueprint (id, rootId, options) {
   })
 
   if (!this.$isGenerate) {
-    return
+    return true
   }
 
   let staticRootGenerate
@@ -221,31 +273,31 @@ export async function _registerBlueprint (id, rootId, options) {
         await saveDataSources.call(this, staticRootGenerate, id, context.data)
 
         if (blueprint.generateRoutes) {
-          options.$generateRoutes = options.$generateRoutes || []
+          rootOptions.$generateRoutes = rootOptions.$generateRoutes || []
 
-          const prefixPath = path => `${options[id].prefix}${path}`
+          const prefixPath = path => `${options.prefix}${path}`
           const routes = await blueprint.generateRoutes.call(
             this,
-            context.data,
+            context,
             prefixPath,
             staticRootGenerate
           )
 
           if (!Array.isArray(routes)) {
-            options.$generateRoutes.push(routes)
+            rootOptions.$generateRoutes.push(routes)
             return
           }
 
-          options.$generateRoutes.push(...routes)
+          rootOptions.$generateRoutes.push(...routes)
         }
       },
       // generate:extendRoutes hook
       extendRoutes: async (extendRoutes) => {
-        const { extendStaticRoutes } = options[id]
+        const { extendStaticRoutes } = options
 
         if (extendStaticRoutes) {
-          options.$extendStaticRoutes = options.$extendStaticRoutes || []
-          options.$extendStaticRoutes.push(async (routes) => {
+          rootOptions.$extendStaticRoutes = rootOptions.$extendStaticRoutes || []
+          rootOptions.$extendStaticRoutes.push(async (routes) => {
             await extendStaticRoutes.call(
               this,
               new Proxy(routes, {
@@ -281,13 +333,13 @@ export async function _registerBlueprint (id, rootId, options) {
           return
         }
 
-        let routes = await Promise.all(options.$generateRoutes)
+        let routes = await Promise.all(rootOptions.$generateRoutes)
 
-        if (options.$extendStaticRoutes) {
+        if (rootOptions.$extendStaticRoutes) {
           const routeEntries = routes.map(route => [route.route, route])
           const routesHashmap = Object.fromEntries(routeEntries)
 
-          for (const $extendStaticRoutes of options.$extendStaticRoutes) {
+          for (const $extendStaticRoutes of rootOptions.$extendStaticRoutes) {
             await $extendStaticRoutes(routesHashmap)
           }
 
@@ -308,6 +360,8 @@ export async function _registerBlueprint (id, rootId, options) {
       }
     }
   })
+
+  return true
 }
 
 async function saveStaticFiles (files) {
@@ -367,12 +421,13 @@ async function saveDataSources (staticRoot, id, { topLevel, sources } = {}) {
   }
 }
 
-async function addTemplateAssets ({ options, rootId, id }, pattern) {
+async function addTemplateAssets (context, pattern) {
+  const { blueprintId, rootId, id } = context
   const srcDir = resolve('blueprints', id)
   const srcList = await walk.call(this, srcDir, pattern, true)
 
   const pool = new PromisePool(srcList, (src) => {
-    const srcPath = resolve('blueprints', id, src)
+    const srcPath = resolve('blueprints', blueprintId, src)
 
     this.addTemplate({
       src: srcPath,
@@ -382,23 +437,30 @@ async function addTemplateAssets ({ options, rootId, id }, pattern) {
   await pool.done()
 }
 
-async function addTemplates ({ options, rootId, id }, templates) {
+async function addTemplates (context, templates) {
+  const { blueprintId, rootId, id } = context
   const finalTemplates = {}
 
   for (const key in templates) {
-    const type = key.split(':')[0]
     let template = templates[key]
+
+    if (typeof template === 'function') {
+      template = template(context)
+    }
+
     if (typeof template === 'string') {
       if (template.startsWith('static/')) {
         continue
       }
       template = { src: template }
     }
-    template.fileName = join(rootId, id, template.src)
-    template.options = options
 
+    template.fileName = join(rootId, blueprintId, template.dest || template.src)
+    template.options = context
+
+    const [type] = key.split(':')
     if (type === 'assets') {
-      await addTemplateAssets.call(this, { options, rootId, id }, template.src)
+      await addTemplateAssets.call(this, context, template.src)
       continue
     }
 
@@ -407,32 +469,33 @@ async function addTemplates ({ options, rootId, id }, templates) {
     if (exists(userTemplatePath)) {
       template.src = userTemplatePath
     } else {
-      template.src = join(resolve('blueprints'), id, 'templates', template.src)
+      template.src = join(resolve('blueprints'), blueprintId, 'templates', template.src)
     }
 
     // fileName should be like press/common/pages/source.vue, using Webpack alias
     finalTemplates[key] = template.fileName
 
     if (type === 'plugin') {
-      const { dst } = this.addTemplate({ ...template, options })
+      const { dst: dest } = this.addTemplate(template)
+      const pluginPath = join(this.options.buildDir, dest)
 
       if (id !== 'common') {
         this.options.plugins.push({
-          src: join(this.options.buildDir, dst),
-          ssr: template.ssr,
-          mode: template.mode
-        })
-        continue
-      } else {
-        const httpPluginIndex = this.options.plugins
-          .findIndex(p => p.src.match(/\/http\.js$/))
-        this.options.plugins.splice(httpPluginIndex + 1, 0, {
-          src: join(this.options.buildDir, dst),
+          src: pluginPath,
           ssr: template.ssr,
           mode: template.mode
         })
         continue
       }
+
+      const httpPluginIndex = this.options.plugins
+        .findIndex(p => p.src.match(/\/http\.js$/))
+      this.options.plugins.splice(httpPluginIndex + 1, 0, {
+        src: pluginPath,
+        ssr: template.ssr,
+        mode: template.mode
+      })
+      continue
     }
 
     if (type === 'layout') {

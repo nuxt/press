@@ -1,0 +1,58 @@
+{
+  "guide-docs": {
+    "dir": "docs-guide",
+    "prefix": "guide-docs",
+    "title": "Guide Docs Test",
+    "search": false,
+    "localizedSidebar": true,
+    "configPerLocale": false,
+    "nav": [],
+    "blueprint": "docs",
+    "sidebar": {
+      "en": [
+        {
+          "title": "Guide",
+          "children": [
+            "/"
+          ]
+        }
+      ],
+      "nl": [
+        {
+          "title": "Gids",
+          "children": [
+            "/"
+          ]
+        }
+      ]
+    }
+  },
+  "docs": {
+    "dir": {
+      "docs-en": "en",
+      "docs-nl": "nl"
+    },
+    "prefix": "docs",
+    "title": "Localized Docs Test",
+    "search": false,
+    "localizedSidebar": false,
+    "configPerLocale": true,
+    "nav": [],
+    "blueprint": "docs",
+    "sidebar": [
+      "/"
+    ]
+  },
+  "i18n": {
+    "locales": [
+      {
+        "code": "en",
+        "name": "English"
+      },
+      {
+        "code": "nl",
+        "name": "Nederlands"
+      }
+    ]
+  }
+}

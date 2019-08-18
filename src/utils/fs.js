@@ -1,9 +1,10 @@
 import path, { dirname } from 'path'
 import { promisify } from 'util'
-import fs, { writeJson, remove } from 'fs-extra'
+import fs, { readJson, writeJson, remove } from 'fs-extra'
 import klaw from 'klaw'
 
 export {
+  readJson,
   writeJson,
   remove,
   dirname

@@ -4,6 +4,8 @@
     "prefix": "/custom/",
     "title": "Test docs",
     "search": true,
+    "localizedSidebar": false,
+    "configPerLocale": true,
     "nav": [
       {
         "text": "A test",
