@@ -2,6 +2,19 @@
   "name": "@nuxt/press",
   "version": "0.0.1-alpha.116",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
+  "keywords": [
+    "nuxt",
+    "nuxtjs",
+    "nuxtpress",
+    "vue",
+    "vuejs",
+    "markdown",
+    "docs",
+    "documentation",
+    "slides",
+    "slideshow",
+    "blogging"
+  ],
   "bin": {
     "nuxt-press": "./bin/cli.js"
   },
