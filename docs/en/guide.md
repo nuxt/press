@@ -151,9 +151,25 @@ layout: yourLayout
 ---
 ```
 
+### The common bundle
+
+NuxtPress makes this possible by adding the `common` app bundle to your Nuxt app. This bundle will register a middleware that will automaticaly retrieve JSON sources for every requested route. Once a source request is detected and loaded, it's passed on to the [press source route](https://github.com/nuxt/press/blob/master/src/blueprints/common/templates/pages/source.vue). This is the source route registered for this documentation suite, which has i18n enabled:
+
+```js
+{
+  path: "/:locale/:source(.*)",
+  component: _e1c6a3e4,
+  name: "source-locale"
+}
+```
+
+Later in this guide you'll learn how to completely **eject** the [source code for the `common` bundle](https://github.com/nuxt/press/tree/master/src/blueprints/common), which can give you complete control over how NuxtPress works in any given Nuxt app.
+
 ## Beyond pages
 
-Before we move on, keep in mind that **NuxtPress** can be added to and seamlessly extend any existing Nuxt application. **A NuxtPress app is a Nuxt app**. As long as it's the last enabled module, it won't interfere with existing functionality.
+Before we move on, keep in mind that **NuxtPress** can be added to and seamlessly extend any existing Nuxt application.
+
+**A NuxtPress app is a Nuxt app**. As long as it's the last enabled module, it won't interfere with existing functionality.
 
 In **default mode**, in addition to now being able to add Markdown files directly to `pages/`, **you have three new route folders to work with**: **`docs/`**, **`blog/`** and **`slides/`**.  The presence of any of these directories in the **`srcDir`** of a Nuxt project will enable their corresponding NuxtPress modes.
 
