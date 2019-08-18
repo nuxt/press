@@ -29,6 +29,5 @@
       "path": "/rss.xml"
     },
     "tagDomain": "nuxt.press"
-  },
-  "common": {}
+  }
 }

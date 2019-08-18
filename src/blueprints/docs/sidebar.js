@@ -119,7 +119,7 @@ export function createSidebarFromRegex (pathOrRegex, routePrefix, pagePaths, pag
   const isRegex = /[.*?()^$]/.test(pathOrRegex)
   let re
   if (isRegex) {
-    const isGlob = isRegex && !/[.?()^$]/.test(pathOrRegex)
+    const isGlob = !/[.?()^$]/.test(pathOrRegex)
     if (isGlob) {
       pathOrRegex = pathOrRegex.replace(new RegExp('[*]+', 'g'), '(.*)')
     }

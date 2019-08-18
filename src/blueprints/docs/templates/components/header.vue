@@ -64,11 +64,6 @@ export default {
   },
   watch: {
     lang(newLocale, oldLocale) {
-      // TODO: we should check if the new path exists, but
-      // using $router.resolve is not sufficient because
-      // our routes are greedy. We probably need to check if
-      // a page exists but the pages for the new locale might
-      // not yet have been loaded when this fn runs
       let { href: newPath } = this.$router.resolve({
         name: this.$route.name,
         params: {
@@ -78,8 +73,11 @@ export default {
       })
 
       if (newPath) {
+        // vue-router doest know that our source param can only contains /
+        // as path separator and encodes those
         newPath = newPath.replace(/%2F/g, '/')
       } else {
+        // fallback to replacing it router.resolve didnt work somehow
         newPath = this.$route.path.replace(`/${oldLocale}/`, `/${newLocale}/`)
         // if nothing changed, the current route is the home route
         if (newPath === this.$route.path) {

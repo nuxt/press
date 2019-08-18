@@ -93,6 +93,7 @@ export default async function pressMiddleware (ctx, plugin = false) {
 
       <% if (options.rootOptions.i18n) { %>
       if (middlewareContext.locale) {
+        // dont add a locale for sources with id 'common', those are nuxt pages
         const shouldAddLocale = !params.locale && meta.id !== 'common'
 
         if (shouldAddLocale) {

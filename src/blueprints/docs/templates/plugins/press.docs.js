@@ -7,6 +7,8 @@ import { normalizedPath, getRouteMeta } from 'press/common/utils'
 Vue.component('OutboundLink', OutboundLink)
 
 const pluginId = '<%= options.id %>'
+
+// TODO: nav should probably be moved to config.json
 const nav = JSON.parse(`<%= options.options.$asJsonTemplate.nav %>`)
 
 async function docsMiddleware ({ route, $press }, { meta, locale, localeChanged } = {}, plugin = false) {
@@ -23,12 +25,14 @@ async function docsMiddleware ({ route, $press }, { meta, locale, localeChanged 
   }
 
   const options = $press[pluginId]
-
+  <%
   // this is a callback passed back to common middleware
   // because the path needs to be changed _after_ the locale
-  // but the locale cannot already be changed before
+  // to make sure the observers are triggered in the right order
+  // But the locale cannot already be changed before
   // calling the docs middleware (because the config chunk might
   // need to load first)
+  %>
   const middlewareCallback = (_options) => {
     $press.path = normalizedPath(route.path, (_options || options).prefix, locale)
   }
@@ -75,7 +79,7 @@ async function docsMiddleware ({ route, $press }, { meta, locale, localeChanged 
   const docs = {
     ready: true,
     blueprint: '<%= options.options.blueprint %>',
-    title: '<%= options.options.title %>',
+    title: `<%= options.options.title %>`,
     configPerLocale: <%= options.options.configPerLocale ? 'true' : 'false' %>,
     prefix: '<%= options.options.$normalizedPrefix %>',
     home,

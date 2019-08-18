@@ -1,5 +1,5 @@
 {
-  "myDocs": {
+  "docs": {
     "dir": "",
     "prefix": "/",
     "title": "NuxtPress documentation",
@@ -14,7 +14,6 @@
         "GitHub": "https://github.com/nuxt/press"
       }
     ],
-    "blueprint": "docs",
     "sidebar": [
       "/guide",
       "/customize"
