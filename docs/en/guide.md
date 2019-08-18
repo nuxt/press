@@ -451,7 +451,7 @@ Then, update your configuration to define your sidebar for each section.
 }
 ```
 
-####  Auto Sidebar for Single Pages
+#### Single Page Auto Sidebar
 
 If you wish to automatically generate a sidebar that contains only the header links for the current page, you can use YAML meta data for that page:
 
@@ -461,6 +461,42 @@ sidebar: auto
 ---
 ```
 
+### Internationalization
+
+NuxtPress includes limited support to **i18n** via [nuxt-i18n](https://github.com/nuxt-community/nuxt-i18n). If you set the `i18n` top-level key in `nuxt.press.json` with `locales` and `messages`, these are used to populate [VueI18n](https://kazupon.github.io/vue-i18n/).
+
+```js
+"i18n": {
+  "locales": [
+    {
+      "code": "en",
+      "name": "English"
+    },
+    {
+      "code": "pt-BR",
+      "name": "Português (BR)"
+    }
+  ]
+}
+```
+
+NuxtPress will then load content from directories named after each locale.
+
+Internally, `$press.locale` and `$press.locales` are exposed. The language select box on NuxtPress' landing page is rendered with the following:
+
+```html
+<div class="lang-select">
+  <select
+    v-if="$press.locales"
+    v-model="lang"
+    @change="(e) => $router.push(`/${e.target.value}/`)">
+    <option
+      v-for="locale in $press.locales"
+      :key='`locale-${locale.code}`'
+      :value="locale.code">{{ locale.name }}</option>
+  </select>
+</div>
+```
 
 See the full configuration for this documentation suite [here][docs-config].
 
