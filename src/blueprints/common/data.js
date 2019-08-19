@@ -1,4 +1,3 @@
-import { parse } from 'path'
 import { exists, walk, join, readFile, stripP } from '../../utils'
 import PromisePool from '../../pool'
 
@@ -35,7 +34,6 @@ export async function loadPage (pagePath, mdProcessor) {
   body = await this.$press.common.source.markdown.call(this, body, mdProcessor)
   title = stripP(await this.$press.common.source.markdown.call(this, title, mdProcessor))
 
-  console.log('path', path)
   return {
     ...metadata,
     body,
