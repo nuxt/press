@@ -32,6 +32,10 @@ export default {
       { property: 'og:site_name', content: this.$press.docs.title }
     ]
 
+    if (this.$press.docs.image) {
+      meta.push({ property: 'og:image', content: this.$press.docs.image })
+    }
+
     if (this.$description) {
       meta.push({ name: "description", content: this.meta.description })
     }

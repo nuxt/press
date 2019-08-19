@@ -3,6 +3,7 @@
     "dir": "",
     "prefix": "/",
     "title": "NuxtPress documentation",
+    "image": "https://nuxt.press/nuxt-press-cover.png",
     "search": true,
     "nav": [
       {
