@@ -1,4 +1,4 @@
-import { parse as parsePath } from 'path'
+import path from 'path'
 import consola from 'consola'
 import lodashTemplate from 'lodash/template'
 import { exists, walk, join, readFile } from '../../utils'
@@ -9,28 +9,39 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-export async function parseEntry ({ options }, sourcePath, processor) {
+export async function parseEntry ({ options }, sourcePath, mdProcessor) {
   // TODO just completely rewrite this function, please
-  const parse = options.source
-  const fileName = parsePath(sourcePath).name
+  const { name: fileName } = path.parse(sourcePath)
   const raw = await readFile(this.options.srcDir, sourcePath)
-  const metadata = parse.metadata.call(this, fileName, raw)
+
+  const metadata = options.source.metadata.call(this, fileName, raw)
   if (metadata instanceof Error) {
     consola.warn(metadata.message)
     return
   }
-  const title = metadata.title || parse.title.call(this, raw)
+
+  const title = metadata.title || options.source.title.call(this, raw)
   const slug = metadata.slug
-  const body = await parse.markdown.call(this, metadata.content || raw.substr(raw.indexOf('#')), processor)
   const published = metadata.published
+
+  const body = await options.source.markdown.call(this, metadata.content || raw.substr(raw.indexOf('#')), mdProcessor)
   delete metadata.content
-  const source = { ...metadata, body, title, slug, published }
-  source.path = `${options.prefix}${options.source.path.call(this, fileName, source)}`
-  source.type = 'entry'
-  source.id = options.source.id.call(this, source)
-  if (this.options.dev) {
-    source.src = sourcePath
+
+  const source = {
+    ...metadata,
+    type: 'entry',
+    id: undefined,
+    title,
+    body,
+    slug,
+    path: undefined,
+    published,
+    ...this.options.dev && { src: sourcePath }
   }
+
+  source.id = options.source.id.call(this, source)
+  source.path = `${options.prefix}${options.source.path.call(this, fileName, source)}`
+
   return source
 }
 

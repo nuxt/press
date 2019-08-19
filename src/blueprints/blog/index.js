@@ -55,11 +55,11 @@ export default {
       }
     ]
   },
-  generateRoutes ({ data }, prefix, staticRoot) {
+  generateRoutes ({ blueprintId, data }, prefix, staticRoot) {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(routePath(route)),
-        payload: await importModule(join(staticRoot, 'blog', `${trimSlash(route)}.json`))
+        payload: await importModule(join(staticRoot, blueprintId, `${trimSlash(route)}.json`))
       })),
       ...Object.keys(data.sources).map(async route => ({
         route: routePath(route),

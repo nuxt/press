@@ -1,4 +1,8 @@
 {
+  "slides": {
+    "dir": "slides",
+    "prefix": "/"
+  },
   "blog": {
     "meta": {
       "title": "A NuxtPress Blog",

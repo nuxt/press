@@ -1,7 +1,14 @@
 import chokidar from 'chokidar'
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
-import { importModule, exists, join, readJsonSync } from '../../utils'
+import {
+  importModule,
+  exists,
+  join,
+  readJsonSync,
+  routePath,
+  trimSlash
+} from '../../utils'
 import data, { parseSlides } from './data'
 
 export default {
@@ -27,26 +34,32 @@ export default {
     arrowRight: 'assets/arrow-right.svg'
   },
   // Register routes once templates have been added
-  routes (templates) {
+  routes ({ options }, templates) {
     return [
       {
         name: 'slides_index',
-        path: this.$press.slides.prefix,
+        path: options.prefix,
         component: templates.index
       }
     ]
   },
-  generateRoutes (data, prefix, staticRoot) {
-    return Object.keys(data.sources).map(async route => ({
-      route: prefix(route),
-      payload: await importModule(`${staticRoot}/sources${route}`)
-    }))
+  generateRoutes ({ blueprintId, data }, prefix, staticRoot) {
+    return [
+      ...Object.keys(data.topLevel).map(async route => ({
+        route: prefix(routePath(route)),
+        payload: await importModule(join(staticRoot, blueprintId, `${trimSlash(route)}.json`))
+      })),
+      ...Object.keys(data.sources).map(async route => ({
+        route: prefix(route),
+        payload: await importModule(join(staticRoot, 'sources', route))
+      }))
+    ]
   },
   // Register serverMiddleware
   serverMiddleware ({ options, rootId, id }) {
-    const { index } = typeof options.slides.api === 'function'
-      ? options.slides.api.call(this, { rootId, id })
-      : options.slides.api
+    const { index } = typeof options.api === 'function'
+      ? options.api.call(this, { rootId, id })
+      : options.api
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/slides/index')) {
@@ -61,28 +74,32 @@ export default {
     before () {
       this.$addPressTheme('blueprints/slides/theme.css')
     },
-    async done () {
-      if (this.nuxt.options.dev) {
-        let updatedSlides
-        const mdProcessor = await this.$press.slides.source.processor()
-        const watchDir = this.$press.slides.dir
-          ? `${this.$press.slides.dir}/`
-          : this.$press.slides.dir
-        chokidar.watch([`${watchDir}*.md`, `${watchDir}**/*.md`], {
-          cwd: this.options.srcDir,
-          ignoreInitial: true,
-          ignored: 'node_modules/**/*'
-        })
-          .on('change', async (path) => {
-            updatedSlides = await parseSlides.call(this, path, mdProcessor)
-            this.$pressSourceEvent('change', 'slides', updatedSlides)
-          })
-          .on('add', async (path) => {
-            updatedSlides = await parseSlides.call(this, path, mdProcessor)
-            this.$pressSourceEvent('add', 'slides', updatedSlides)
-          })
-          .on('unlink', path => this.$pressSourceEvent('unlink', 'slides', { path }))
+    async done (context) {
+      if (!this.nuxt.options.dev) {
+        return
       }
+
+      const { options } = context
+
+      let updatedSlides
+      const mdProcessor = await options.source.processor()
+      const watchDir = options.dir
+        ? `${options.dir}/`
+        : options.dir
+      const watcher = chokidar.watch([`${watchDir}*.md`, `${watchDir}**/*.md`], {
+        cwd: this.options.srcDir,
+        ignoreInitial: true,
+        ignored: 'node_modules/**/*'
+      })
+      watcher.on('change', async (path) => {
+        updatedSlides = await parseSlides.call(this, context, path, mdProcessor)
+        this.$pressSourceEvent('change', 'slides', updatedSlides)
+      })
+      watcher.on('add', async (path) => {
+        updatedSlides = await parseSlides.call(this, context, path, mdProcessor)
+        this.$pressSourceEvent('add', 'slides', updatedSlides)
+      })
+      watcher.on('unlink', path => this.$pressSourceEvent('unlink', 'slides', { path }))
     }
   },
   // Options are merged into the parent module default options
@@ -118,7 +135,7 @@ export default {
         return {}
       },
       path (fileName) {
-        return `${this.$press.slides.prefix}${fileName.toLowerCase()}`
+        return fileName.toLowerCase()
       }
     }
   }
