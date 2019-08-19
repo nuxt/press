@@ -394,9 +394,8 @@ html.docs {
 @media (--mobile) {
 
   html.docs body {
-    height: auto;
     width: auto;
-    margin:auto;
+    margin: auto;
   }
 
   #nuxt-press.docs {
@@ -453,7 +452,7 @@ html.docs {
         }
 
         & ul.links {
-          display: flex;
+          display: none;
           margin: 0;
           list-style-type: none;
 

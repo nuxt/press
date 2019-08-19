@@ -3,7 +3,6 @@
     "dir": "",
     "prefix": "/",
     "title": "NuxtPress",
-    "image": "https://nuxt.press/nuxt-press-cover.png",
     "search": true,
     "nav": [
       {
@@ -13,6 +12,7 @@
         "GitHub": "https://github.com/nuxt/press"
       }
     ],
+    "image": "https://nuxt.press/nuxt-press-cover.png",
     "sidebar": [
       "/guide",
       "/customize",
