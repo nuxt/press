@@ -1,3 +1,6 @@
+---
+sidebarSkipLevel: 1
+---
 
 # Roadmap
 
@@ -17,7 +20,10 @@ Althought NuxtPress' first release packs many useful features, we've got a much 
   - add custom (ie non nuxt/press page) items to sidebar
   - support source folder aliasing
 
-Work on these [has already taken place](https://github.com/nuxt/press/pull/44) and should be released soon.
+> Work on these [has already taken place](https://github.com/nuxt/press/pull/44) and should be released soon.
+
+- I18n
+  - Complete docs translation to Brazilian portuguese
 
 ## v0.3
 

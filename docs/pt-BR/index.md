@@ -5,19 +5,19 @@ heroImage: /nuxt-press.png
 heroText: NuxtPress
 tagline: Publishing the Nuxt way
 actionText: Get Started →
-actionLink: /pt-BR/guide/
+actionLink: /en/guide/
 footer: MIT License
 ---
 
 <div style="margin: 0 auto; text-align: center; max-width: 700px;">
 
-⚡Markdown routes automáticas: `pages/foo/bar.md` → `/foo/bar`
+⚡Rotas Markdown com hot reload: `pages/foo/bar.md` → `/foo/bar`
 
 ⚡Deploy **static** com `nuxt generate` ou **live** com uma API simples.
 
-⚡Bem equipado: apps **docs**, **blog** e **slides** inclusos.
+⚡Inclui apps **docs**, **blog** and **slides** plugáveis.
 
-⚡**Processamento Markdown** flexível e extensível via [@nuxt/markdown][n-md].
+⚡**Processamento Markdown** flexível via [@nuxt/markdown][n-md].
 
 ⚡Estilos e templates ejetáveis (`nuxt-press eject <anything>`).
 
