@@ -13,8 +13,6 @@ import {
 import { templates, defaultDir, defaultPrefix } from './constants'
 import data from './data'
 
-let mdProcessor
-
 export default {
   data,
   templates,
@@ -130,10 +128,13 @@ export default {
     nav: [],
     source: {
       processor () {
-        const config = { toc: true, sanitize: false }
-        mdProcessor = new Markdown(config).createProcessor()
-        mdProcessor.use(customContainer)
-        return mdProcessor
+        return new Markdown({
+          toc: true,
+          sanitize: false,
+          extend ({ layers }) {
+            layers['remark-container'] = customContainer
+          }
+        })
       },
       markdown (source, processor) {
         return processor.toMarkup(source)
