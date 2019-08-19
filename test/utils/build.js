@@ -40,9 +40,9 @@ export function buildFixture ({ dir, callback, hooks = [], changedPaths = [] }) 
     const allowedPaths = [
       nuxt.options.buildDir,
       nuxt.options.generate.dir,
-      nuxt.options.dir.pages, // TODO: we shouldnt always have to touch pages dir
       `${nuxt.options.srcDir}$`,
       `${nuxt.options.srcDir}/nuxt.press.json$`,
+      path.join(nuxt.options.srcDir, nuxt.options.dir.pages), // TODO: we shouldnt always have to touch pages dir
       ...changedPaths.map(p => path.isAbsolute(p) ? p : path.join(nuxt.options.srcDir, p))
     ]
 
