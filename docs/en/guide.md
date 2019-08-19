@@ -165,6 +165,16 @@ NuxtPress makes this possible by adding the `common` app bundle to your Nuxt app
 
 Later in this guide you'll learn how to completely **eject** the [source code for the `common` bundle](https://github.com/nuxt/press/tree/master/src/blueprints/common), which can give you complete control over how NuxtPress works in any given Nuxt app.
 
+### Learning internals
+
+See the [introductory blog post](https://hire.jonasgalvez.com.br/2019/jul/21/the-story-of-nuxtpress/) to learn about the architectural decisions that are behind NuxtPress, including **_blueprint modules_** which are the mechanism used to register its built-in apps.
+
+Contributing is extremely easy, just pull the [nuxt/press repository](https://github.com/nuxt/press), install NPM dependencies and use the `dev` script to test your changes directly in the bundled examples. If you change something in `src/blueprints/blog`, you'll want to test with your changes with:
+
+```shell
+$ npm run dev examples/blog
+```
+
 ## Beyond pages
 
 Before we move on, keep in mind that **NuxtPress** can be added to and seamlessly extend any existing Nuxt application.
