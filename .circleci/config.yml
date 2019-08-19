@@ -88,7 +88,7 @@ jobs:
       - attach-project
       - run:
           name: Test fixtures
-          command: yarn test:fixtures --coverage && yarn coverage
+          command: yarn test:fixtures --maxWorkers=2 --coverage && yarn coverage
       - persist_to_workspace:
           root: ~/project
           paths:
