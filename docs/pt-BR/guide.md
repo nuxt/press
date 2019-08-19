@@ -12,20 +12,20 @@ Ele automaticamente registrará rotas, templates e opções de configuração na
 
 ## Setup
 
-Install via [npm](http://npmjs.com) or [yarn](https://yarnpkg.com/):
+Instale via [npm](http://npmjs.com) ou [yarn](https://yarnpkg.com/):
 
 ```shell
 $ npm install nuxt @nuxt/press
 $ yarn add nuxt @nuxt/press
 ```
 
-Note that you must also install [Nuxt][nuxt] if you haven't already.
+Note que você também precisa instalar o [Nuxt][nuxt] se ainda não o instalou.
 
 [nuxt]: https://nuxtjs.org
 
-## Configuration
+## Configuração
 
-First, **NuxtPress** needs to be enabled via `nuxt.config.js`:
+Primeiro, o **NuxtPress** precisa ser habilitado via `nuxt.config.js`:
 
 ```js
 export default {
