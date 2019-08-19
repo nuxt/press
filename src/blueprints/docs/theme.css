@@ -401,8 +401,6 @@ html.docs {
 
   #nuxt-press.docs {
     display: flex;
-    height: 100vh;
-    min-height: 100vh;
     flex-direction: column;
     width: 100%;
     margin: 0;
