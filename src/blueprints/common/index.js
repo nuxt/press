@@ -125,8 +125,8 @@ export default {
           ignoreInitial: true,
           ignored: 'node_modules/**/*'
         })
-          .on('change', async path => this.$pressSourceEvent('change', await loadPage(path)))
-          .on('add', async path => this.$pressSourceEvent('add', await loadPage(path)))
+          .on('change', async path => this.$pressSourceEvent('change', await loadPage.call(this, path)))
+          .on('add', async path => this.$pressSourceEvent('add', await loadPage.call(this, path)))
           .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
       }
 

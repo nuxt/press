@@ -28,11 +28,13 @@ if (options.$slides) components.push('PressSlides')
   middleware: 'press',
   layout: ({ $press }) => $press.layout,
   head() {
-    const componentHasHead = !!<%= components[0] || '({})' %>.head
+    <% if (components.length) { %>
+    const componentHasHead = !!<%= components[0] %>.head
 
     if (componentHasHead) {
       return {}
     }
+    <% } %>
 
     return {
       htmlAttrs: {

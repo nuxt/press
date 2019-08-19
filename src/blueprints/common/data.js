@@ -1,3 +1,4 @@
+import { parse } from 'path'
 import { exists, walk, join, readFile, stripP } from '../../utils'
 import PromisePool from '../../pool'
 
@@ -10,15 +11,12 @@ import PromisePool from '../../pool'
 // contents of the .md file become available as $page
 // in the custom Vue component for the page
 
-const isIndexRE = new RegExp(`(^|/)index$`, 'i')
-
 export async function loadPage (pagePath, mdProcessor) {
+  const sliceAt = this.options.dir.pages.length
+  const { name, dir } = parse(pagePath)
+  const path = `${dir.slice(sliceAt)}/${name}/`
+
   let body = await readFile(this.options.srcDir, pagePath)
-  const src = pagePath.slice(this.options.srcDir.length + 1)
-
-  let path = src.substr(0, src.lastIndexOf('.')).replace(isIndexRE, '') || 'index'
-  path = path === 'index' ? '/' : `/${path.replace(/\/index$/, '')}/`
-
   const metadata = await this.$press.common.source.metadata.call(this, body)
   const titleMatch = body.match(/^#\s+(.*)/)
   let title = titleMatch ? titleMatch[1] : ''
@@ -33,6 +31,8 @@ export async function loadPage (pagePath, mdProcessor) {
   }
   body = await this.$press.common.source.markdown.call(this, body, mdProcessor)
   title = stripP(await this.$press.common.source.markdown.call(this, title, mdProcessor))
+
+  const src = pagePath.slice(this.options.srcDir.length + 1)
 
   return {
     ...metadata,
