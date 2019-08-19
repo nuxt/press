@@ -28,7 +28,7 @@ if (options.$slides) components.push('PressSlides')
   middleware: 'press',
   layout: ({ $press }) => $press.layout,
   head() {
-    const componentHasHead = !!<%= components[0] %>.head
+    const componentHasHead = !!<%= components[0] || '({})' %>.head
 
     if (componentHasHead) {
       return {}
