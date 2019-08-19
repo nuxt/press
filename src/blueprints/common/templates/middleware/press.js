@@ -11,6 +11,20 @@ const sourcesCache = []
 const extraMiddlewares = []
 
 async function getSource ($press, path) {
+  if (path.startsWith('api/source/')) {
+    const source = await import(
+      /* webpackInclude: /\.json$/ */
+      <% if (options.rootOptions.dev) { %>
+      /* webpackChunkName: 'source-[request]' */
+      <% } %>
+      /* webpackPreload: true */
+      `../../static/sources/${path.substr(11)}`
+    )
+
+    return source
+  }
+
+  // implement a simple client-side cache for API-sources
   const cache = sourcesCache.find(cache => cache.path === path)
 
   if (cache) {
