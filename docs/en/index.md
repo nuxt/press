@@ -11,13 +11,13 @@ footer: MIT License
 
 <div style="margin: 0 auto; text-align: center; max-width: 700px;">
 
-⚡Automatic Markdown routes: `pages/foo/bar.md` → `/foo/bar`
+⚡Hot reloaded Markdown routes: `pages/foo/bar.md` → `/foo/bar`
 
 ⚡Deploy **static** with `nuxt generate` or **live** with a simple API.
 
-⚡Batteries included: **docs**, **blog** and **slides** bundled apps.
+⚡Built-in **docs**, **blog** and **slides** pluggable apps.
 
-⚡Flexible and extensible **Markdown processing** via [@nuxt/markdown][n-md].
+⚡Flexible **Markdown processing** via [@nuxt/markdown][n-md].
 
 ⚡Ejectable styles and templates (`nuxt-press eject <anything>`).
 

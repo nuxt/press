@@ -151,9 +151,35 @@ layout: yourLayout
 ---
 ```
 
+### The common bundle
+
+NuxtPress makes this possible by adding the `common` app bundle to your Nuxt app. This bundle will register a middleware that will automaticaly retrieve JSON sources for every requested route. Once a source request is detected and loaded, it's passed on to the [press source route](https://github.com/nuxt/press/blob/master/src/blueprints/common/templates/pages/source.vue). This is the source route registered for this documentation suite, which has i18n enabled:
+
+```js
+{
+  path: "/:locale/:source(.*)",
+  component: _e1c6a3e4,
+  name: "source-locale"
+}
+```
+
+Later in this guide you'll learn how to completely **eject** the [source code for the `common` bundle](https://github.com/nuxt/press/tree/master/src/blueprints/common), which can give you complete control over how NuxtPress works in any given Nuxt app.
+
+### Learning internals
+
+See the [introductory blog post](https://hire.jonasgalvez.com.br/2019/jul/21/the-story-of-nuxtpress/) to learn about the architectural decisions that are behind NuxtPress, including **_blueprint modules_** which are the mechanism used to register its built-in apps.
+
+Contributing is extremely easy, just pull the [nuxt/press repository](https://github.com/nuxt/press), install NPM dependencies and use the `dev` script to test your changes directly in the bundled examples. If you change something in `src/blueprints/blog`, you'll want to test with your changes with:
+
+```shell
+$ npm run dev examples/blog
+```
+
 ## Beyond pages
 
-Before we move on, keep in mind that **NuxtPress** can be added to and seamlessly extend any existing Nuxt application. **A NuxtPress app is a Nuxt app**. As long as it's the last enabled module, it won't interfere with existing functionality.
+Before we move on, keep in mind that **NuxtPress** can be added to and seamlessly extend any existing Nuxt application.
+
+**A NuxtPress app is a Nuxt app**. As long as it's the last enabled module, it won't interfere with existing functionality.
 
 In **default mode**, in addition to now being able to add Markdown files directly to `pages/`, **you have three new route folders to work with**: **`docs/`**, **`blog/`** and **`slides/`**.  The presence of any of these directories in the **`srcDir`** of a Nuxt project will enable their corresponding NuxtPress modes.
 
@@ -451,7 +477,7 @@ Then, update your configuration to define your sidebar for each section.
 }
 ```
 
-####  Auto Sidebar for Single Pages
+#### Single Page Auto Sidebar
 
 If you wish to automatically generate a sidebar that contains only the header links for the current page, you can use YAML meta data for that page:
 
@@ -461,6 +487,42 @@ sidebar: auto
 ---
 ```
 
+### Internationalization
+
+NuxtPress includes limited support to **i18n** via [nuxt-i18n](https://github.com/nuxt-community/nuxt-i18n). If you set the `i18n` top-level key in `nuxt.press.json` with `locales` and `messages`, these are used to populate [VueI18n](https://kazupon.github.io/vue-i18n/).
+
+```js
+"i18n": {
+  "locales": [
+    {
+      "code": "en",
+      "name": "English"
+    },
+    {
+      "code": "pt-BR",
+      "name": "Português (BR)"
+    }
+  ]
+}
+```
+
+NuxtPress will then load content from directories named after each locale.
+
+Internally, `$press.locale` and `$press.locales` are exposed. The language select box on NuxtPress' landing page is rendered with the following:
+
+```html
+<div class="lang-select">
+  <select
+    v-if="$press.locales"
+    v-model="lang"
+    @change="(e) => $router.push(`/${e.target.value}/`)">
+    <option
+      v-for="locale in $press.locales"
+      :key='`locale-${locale.code}`'
+      :value="locale.code">{{ locale.name }}</option>
+  </select>
+</div>
+```
 
 See the full configuration for this documentation suite [here][docs-config].
 

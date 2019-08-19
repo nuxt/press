@@ -40,7 +40,7 @@ export async function parseEntry ({ options }, sourcePath, mdProcessor) {
   }
 
   source.id = options.source.id.call(this, source)
-  source.path = `${options.prefix}${options.source.path.call(this, fileName, source)}`
+  source.path = `${options.prefix}${slug || options.source.path.call(this, fileName, source)}`
 
   return source
 }
