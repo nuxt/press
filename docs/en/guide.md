@@ -538,6 +538,10 @@ See the full configuration for this documentation suite [here][docs-config].
 
 ## Publishing slides
 
+Add your markdown files to the `slides` directory.
+
+One markdown file = one full presentation.
+
 NuxtPress will parse each slide from Markdown using `#` as the delimiter. If text follows `#`, it's appended as a `<h1>` tag. If not, it's simply used as the delimiter and no `<h1>` tag is added.
 
 The following example represents four slides. It is a single file, but here it is shown divided in sections to illustrate the processing.
@@ -595,3 +599,5 @@ Use the above CSS selector pattern to style the entire presentation or any speci
 ```
 
 This would modify the styles for the first slide.
+
+<iframe src="https://codesandbox.io/embed/codesandbox-nuxt-gucji?fontsize=14" title="codesandbox-nuxt" allow="geolocation; microphone; camera; midi; vr; accelerometer; gyroscope; payment; ambient-light-sensor; encrypted-media; usb" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" sandbox="allow-modals allow-forms allow-popups allow-scripts allow-same-origin"></iframe>
