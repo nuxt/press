@@ -46,7 +46,7 @@ export default {
       },
       meta,
       title: this.meta.title,
-      titleTemplate: `%s - ${this.$press.docs.title}`
+      titleTemplate: this.$isHome ? '%s' : `%s - ${this.$press.docs.title}`
     }
   },
   computed: {
