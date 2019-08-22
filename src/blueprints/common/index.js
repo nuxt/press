@@ -125,7 +125,7 @@ export default {
       }
     },
     async done (context) {
-      if (!context.rootOptions.dev) {
+      if (!this.nuxt.options.dev) {
         return
       }
 
