@@ -167,15 +167,13 @@ export default {
 
     source: {
       processor () {
-        const config = {
-          skipToc: true,
+        return new Markdown({
+          toc: false,
           sanitize: false
-        }
-        return new Markdown(config).createProcessor()
+        })
       },
-      async markdown (source, processor) {
-        const { contents } = await processor.toHTML(source)
-        return contents
+      markdown (source, processor) {
+        return processor.toMarkup(source).then(({ html }) => html)
       },
 
       // metadata() parses the starting block of text in a Markdown source,

@@ -1231,10 +1231,10 @@
     serve-static "^1.13.2"
     ws "^7.0.0"
 
-"@nuxt/markdown@0.0.10":
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.10.tgz#08c6baccd9da5103c65b64df0e6a1b0afef38f43"
-  integrity sha512-IE4lJT0xkarYj/ccaw/uDfT5H6X1Yg6ocD7lCKccAqkqqrTWc/ziaNaDtFERHsZRAjf9PNFKT1BeyAofi2GXyQ==
+"@nuxt/markdown@0.0.9-b":
+  version "0.0.9-b"
+  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.9-b.tgz#bc2803fab2ed5dad7a596fd0ec2c0a18875dbcd3"
+  integrity sha512-T2KTdVtiNu7QzUjvwYxjpwDte4G+v8dAeVRfP9b2/pb4TKmGhv6ryMb7AkJgB7TJHZeyZG2od7urrBLaL6HO3Q==
   dependencies:
     "@mapbox/rehype-prism" "^0.3.1"
     detab "^2.0.1"
@@ -1257,10 +1257,10 @@
     unist-builder "^1.0.3"
     unist-util-visit "^1.4.0"
 
-"@nuxt/markdown@0.0.9-b":
-  version "0.0.9-b"
-  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.9-b.tgz#bc2803fab2ed5dad7a596fd0ec2c0a18875dbcd3"
-  integrity sha512-T2KTdVtiNu7QzUjvwYxjpwDte4G+v8dAeVRfP9b2/pb4TKmGhv6ryMb7AkJgB7TJHZeyZG2od7urrBLaL6HO3Q==
+"@nuxt/markdown@^0.0.20":
+  version "0.0.20"
+  resolved "https://registry.yarnpkg.com/@nuxt/markdown/-/markdown-0.0.20.tgz#ee250dab5dd9ca6a5182076ef446b22f97dddd64"
+  integrity sha512-fA4ASJODEPQ5KpzQP+7lRM0boLtHrehe2LTThCI8PBlsvDswkwtuqdVIVzmnuIl5b3K2hhwsodngGHPQOnYvEQ==
   dependencies:
     "@mapbox/rehype-prism" "^0.3.1"
     detab "^2.0.1"
@@ -1273,7 +1273,6 @@
     rehype-sort-attribute-values "^1.0.1"
     rehype-sort-attributes "^1.0.1"
     rehype-stringify "^4.0.0"
-    remark-autolink-headings "git+https://github.com/thetutlage/remark-autolink-headings.git"
     remark-macro "^1.0.7"
     remark-parse "^5.0.0"
     remark-rehype "^3.0.1"

@@ -125,8 +125,19 @@ export default {
       }
     },
     async done (context) {
-      if (!this.nuxt.options.dev) {
+      if (!context.rootOptions.dev) {
         return
+      }
+
+      if (this.nuxt.options.dev) {
+        chokidar.watch(['pages/*.md'], {
+          cwd: this.options.srcDir,
+          ignoreInitial: true,
+          ignored: 'node_modules/**/*'
+        })
+          .on('change', async path => this.$pressSourceEvent('change', await loadPage.call(this, path)))
+          .on('add', async path => this.$pressSourceEvent('add', await loadPage.call(this, path)))
+          .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
       }
 
       const { rootOptions } = context
@@ -173,12 +184,13 @@ export default {
     },
     source: {
       processor () {
-        const config = { skipToc: true, sanitize: false }
-        return new Markdown(config).createProcessor()
+        return new Markdown({
+          toc: false,
+          sanitize: false
+        })
       },
-      async markdown (source, processor) {
-        const { contents } = await processor.toHTML(source)
-        return contents
+      markdown (source, processor) {
+        return processor.toMarkup(source).then(({ html }) => html)
       },
       metadata (source) {
         if (source.trimLeft().startsWith('---')) {

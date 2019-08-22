@@ -2,7 +2,7 @@
   "docs": {
     "dir": "",
     "prefix": "/",
-    "title": "NuxtPress documentation",
+    "title": "NuxtPress",
     "search": true,
     "localizedSidebar": false,
     "configPerLocale": false,
@@ -14,6 +14,7 @@
         "GitHub": "https://github.com/nuxt/press"
       }
     ],
+    "image": "https://nuxt.press/nuxt-press-cover.png",
     "sidebar": [
       "/guide",
       "/customize",

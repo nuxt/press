@@ -120,12 +120,10 @@ export default {
     },
     source: {
       processor () {
-        const config = { skipToc: true, sanitize: false }
-        return new Markdown(config).createProcessor()
+        return new Markdown({ toc: false, sanitize: false })
       },
-      async markdown (source, processor) {
-        const { contents } = await processor.toHTML(source)
-        return contents
+      markdown (source, processor) {
+        return processor.toMarkup(source).then(({ html }) => html)
       },
       metadata (source) {
         if (source.trimLeft().startsWith('---')) {

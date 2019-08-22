@@ -394,15 +394,12 @@ html.docs {
 @media (--mobile) {
 
   html.docs body {
-    height: auto;
     width: auto;
-    margin:auto;
+    margin: auto;
   }
 
   #nuxt-press.docs {
     display: flex;
-    height: 100vh;
-    min-height: 100vh;
     flex-direction: column;
     width: 100%;
     margin: 0;
@@ -455,7 +452,7 @@ html.docs {
         }
 
         & ul.links {
-          display: flex;
+          display: none;
           margin: 0;
           list-style-type: none;
 

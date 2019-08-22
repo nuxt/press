@@ -132,7 +132,7 @@ The `common` app bundle also includes the main source route, which in turns load
   </tr>
   <tr>
     <td>
-      <code>common/source</code>
+      <code>common/source</code><br>
       <code>common/nuxt</code><br>
       <code>common/middleware</code><br>
       <code>common/observer</code><br>
