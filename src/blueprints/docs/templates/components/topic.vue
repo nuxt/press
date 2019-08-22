@@ -32,7 +32,7 @@ export default {
     ]
 
     if (this.$docs.image) {
-      meta.push({ property: 'og:image', content: this.$press.docs.image })
+      meta.push({ property: 'og:image', content: this.$docs.image })
     }
 
     if (this.$description) {
