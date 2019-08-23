@@ -129,17 +129,6 @@ export default {
         return
       }
 
-      if (this.nuxt.options.dev) {
-        chokidar.watch(['pages/*.md'], {
-          cwd: this.options.srcDir,
-          ignoreInitial: true,
-          ignored: 'node_modules/**/*'
-        })
-          .on('change', async path => this.$pressSourceEvent('change', await loadPage.call(this, path)))
-          .on('add', async path => this.$pressSourceEvent('add', await loadPage.call(this, path)))
-          .on('unlink', path => this.$pressSourceEvent('unlink', { path }))
-      }
-
       const { rootOptions } = context
 
       chokidar.watch(['pages/*.md'], {
