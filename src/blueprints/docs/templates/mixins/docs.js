@@ -1,32 +1,52 @@
 // @vue/component
 export default {
   computed: {
+    <% if (options.rootOptions.dev) { %>
+    $press_DEV_ONLY () {
+      return this.$press
+    },
+    <% } %>
     locale () {
       return this.$press.locale
     },
     normalizedPath () {
-      let path = this.$route.path
-      if (this.$docs.prefix) {
-        path = path.substr(this.$docs.prefix.length)
-      }
-
-      if (path === '/' && this.locale) {
-        return `/${this.locale}/`
-      }
-
-      return path || '/'
+      return this.$press.path
     },
     $docs () {
-      return this.$press.docs
+      const docsId = this.$press.id
+      const docsConfig = this.$press[docsId]
+
+      if (docsId === 'docs' || (docsConfig && docsConfig.blueprint === 'docs')) {
+        return docsConfig
+      }
+
+      // TODO: find a better way for this
+      // return empty placeholder to prevent errors
+      // as observers in lower components are triggered
+      // before eg the layout had time to disable the sidebar
+      return {}
     },
     $page () {
       const path = this.normalizedPath
-      if (this.$docs.pages[path]) {
-        return this.$docs.pages[path]
+
+      // return empty placeholder to prevent errors
+      if (!this.$docs || !this.$docs.pages) {
+        return { meta: {} }
+      }
+
+      let page
+      if (this.$docs.configPerLocale) {
+        page = this.$docs.pages[this.locale][path]
+      } else {
+        page = this.$docs.pages[path]
+      }
+
+      if (page) {
+        return page
       }
 
       const fallbackPath = this.locale ? `/${this.locale}/` : '/'
-      return this.$docs.pages[fallbackPath]
+      return pages[fallbackPath]
     },
     $isHome () {
       if (!this.$docs.home) {

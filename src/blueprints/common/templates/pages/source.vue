@@ -11,17 +11,18 @@
 </template>
 
 <script>
-<%= options.$docs ? `import PressTopic from 'press/docs/components/topic'` : '' %>
-<%= options.$blog ? `import PressEntry from 'press/blog/components/entry'` : '' %>
-<%= options.$slides ? `import PressSlides from 'press/slides/components/slides'` : '' %>
+<% const rootOptions = options.rootOptions %>
+<%= rootOptions.$docs ? `import PressTopic from 'press/docs/components/topic'` : '' %>
+<%= rootOptions.$blog ? `import PressEntry from 'press/blog/components/entry'` : '' %>
+<%= rootOptions.$slides ? `import PressSlides from 'press/slides/components/slides'` : '' %>
 
 export default {
   components: {
 <%
 const components = []
-if (options.$docs) components.push('PressTopic')
-if (options.$blog) components.push('PressEntry')
-if (options.$slides) components.push('PressSlides')
+if (rootOptions.$docs) components.push('PressTopic')
+if (rootOptions.$blog) components.push('PressEntry')
+if (rootOptions.$slides) components.push('PressSlides')
 %>
     <%= components.join(',\n    ') %>
   },
@@ -53,9 +54,9 @@ if (options.$slides) components.push('PressSlides')
     componentType() {
 <%
 const componentTypes = []
-if (options.$docs) componentTypes.push('topic')
-if (options.$blog) componentTypes.push('entry')
-if (options.$slides) componentTypes.push('slides')
+if (rootOptions.$docs) componentTypes.push('topic')
+if (rootOptions.$blog) componentTypes.push('entry')
+if (rootOptions.$slides) componentTypes.push('slides')
 %>
       if (['<%= componentTypes.join(`', '`) %>'].includes(this.sourceType)) {
         return `press-${this.sourceType}`
@@ -69,7 +70,7 @@ if (options.$slides) componentTypes.push('slides')
       this.$nuxt.$emit('press:sourceReady')
     })
   },
-<% if (options.dev) { %>
+<% if (rootOptions.dev) { %>
   beforeMount() {
     this.$hotUpdates = new EventSource('/__press/hot')
     this.$hotUpdates.addEventListener('message', (event) => {

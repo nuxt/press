@@ -1,10 +1,13 @@
 <template>
   <main>
-    <template v-for="slides in slidesList">
-      <p class="title">
+    <ul>
+      <li
+        v-for="slides in slidesList"
+        :key="slides.path"
+      >
         <nuxt-link :to="slides.path">{{ slides.path }}</nuxt-link>
-      </p>
-    </template>
+      </li>
+    </ul>
   </main>
 </template>
 

@@ -18,19 +18,19 @@ export default {
   // Include data loader
   data,
   // Enable blog if srcDir/blog/ exists
-  enabled (options) {
-    if (options.$standalone === 'blog') {
-      options.blog.dir = ''
-      options.blog.prefix = '/'
+  enabled ({ rootOptions, options }) {
+    if (rootOptions.$standalone === 'blog') {
+      options.dir = ''
+      options.prefix = '/'
       if (exists(this.options.srcDir, 'entries')) {
-        options.blog.dir = 'entries'
+        options.dir = 'entries'
       }
       if (exists(this.options.srcDir, 'posts')) {
-        options.blog.dir = 'posts'
+        options.dir = 'posts'
       }
       return true
     }
-    return exists(this.options.srcDir, options.blog.dir)
+    return exists(this.options.srcDir, options.dir)
   },
   templates: {
     'archive': 'pages/archive.vue',
@@ -41,25 +41,25 @@ export default {
     'head': 'head.js',
     'feed': 'static/rss.xml'
   },
-  routes (templates) {
+  routes ({ options }, templates) {
     return [
       {
         name: 'blog_index',
-        path: this.$press.blog.prefix,
+        path: options.prefix,
         component: templates.index
       },
       {
         name: 'blog_archive',
-        path: `${this.$press.blog.prefix}archive`,
+        path: `${options.prefix}archive`,
         component: templates.archive
       }
     ]
   },
-  generateRoutes (data, prefix, staticRoot) {
+  generateRoutes ({ blueprintId, data }, prefix, staticRoot) {
     return [
       ...Object.keys(data.topLevel).map(async route => ({
         route: prefix(routePath(route)),
-        payload: await importModule(join(staticRoot, 'blog', `${trimSlash(route)}.json`))
+        payload: await importModule(join(staticRoot, blueprintId, `${trimSlash(route)}.json`))
       })),
       ...Object.keys(data.sources).map(async route => ({
         route: routePath(route),
@@ -68,9 +68,9 @@ export default {
     ]
   },
   serverMiddleware ({ options, rootId, id }) {
-    const { index, archive } = typeof options.blog.api === 'function'
-      ? options.blog.api.call(this, { rootId, id })
-      : options.blog.api
+    const { index, archive } = typeof options.api === 'function'
+      ? options.api.call(this, { rootId, id })
+      : options.api
     return [
       (req, res, next) => {
         if (req.url.startsWith('/api/blog/index')) {
@@ -87,34 +87,40 @@ export default {
     before () {
       this.$addPressTheme('blueprints/blog/theme.css')
     },
-    async compile ({ rootId }) {
-      await updateConfig.call(this, rootId, { blog: this.$press.blog })
+    async compile (context) {
+      await updateConfig.call(this, context)
     },
-    async done () {
-      if (this.nuxt.options.dev) {
-        let updatedEntry
-        const mdProcessor = await this.$press.blog.source.processor()
-        const watchDir = this.$press.blog.dir
-          ? `${this.$press.blog.dir}/`
-          : this.$press.blog.dir
-        chokidar.watch([
-          `${watchDir}*.md`,
-          `${watchDir}**/*.md`
-        ], {
-          cwd: this.options.srcDir,
-          ignoreInitial: true,
-          ignored: 'node_modules/**/*'
-        })
-          .on('change', async (path) => {
-            updatedEntry = await parseEntry.call(this, path, mdProcessor)
-            this.$pressSourceEvent('change', 'blog', updatedEntry)
-          })
-          .on('add', async (path) => {
-            updatedEntry = await parseEntry.call(this, path, mdProcessor)
-            this.$pressSourceEvent('add', 'blog', updatedEntry)
-          })
-          .on('unlink', path => this.$pressSourceEvent('unlink', 'blog', { path }))
+    async done (context) {
+      if (!this.nuxt.options.dev) {
+        return
       }
+
+      const { options } = context
+
+      let updatedEntry
+      // TODO: prepare this for multiple instances
+      const mdProcessor = await options.source.processor()
+      const watchDir = options.dir
+        ? `${options.dir}/`
+        : options.dir
+
+      const watcher = chokidar.watch([
+        `${watchDir}*.md`,
+        `${watchDir}**/*.md`
+      ], {
+        cwd: this.options.srcDir,
+        ignoreInitial: true,
+        ignored: 'node_modules/**/*'
+      })
+      watcher.on('add', async (path) => {
+        updatedEntry = await parseEntry.call(this, context, path, mdProcessor)
+        this.$pressSourceEvent('add', 'blog', updatedEntry)
+      })
+      watcher.on('change', async (path) => {
+        updatedEntry = await parseEntry.call(this, context, path, mdProcessor)
+        this.$pressSourceEvent('change', 'blog', updatedEntry)
+      })
+      watcher.on('unlink', path => this.$pressSourceEvent('unlink', 'blog', { path }))
     }
   },
   options: {

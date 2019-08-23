@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import config from 'press/config'
 import Home from 'press/docs/components/home'
 import { startObserver } from 'press/common/components/observer'
 import docsMixin from 'press/docs/mixins/docs'
@@ -29,11 +28,11 @@ export default {
     const meta = [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { property: 'og:site_name', content: this.$press.docs.title }
+      { property: 'og:site_name', content: this.$docs.title }
     ]
 
-    if (this.$press.docs.image) {
-      meta.push({ property: 'og:image', content: this.$press.docs.image })
+    if (this.$docs.image) {
+      meta.push({ property: 'og:image', content: this.$docs.image })
     }
 
     if (this.$description) {
@@ -41,19 +40,19 @@ export default {
     }
 
     return {
-      htmlAttrs: {
+      /* htmlAttrs: {
         class: 'docs'
-      },
+      }, */
       meta,
       title: this.meta.title,
-      titleTemplate: this.$isHome ? '%s' : `%s - ${this.$press.docs.title}`
+      titleTemplate: `%s - ${this.$docs.title}`
     }
   },
   computed: {
     meta() {
       return {
         title: this.$page.title || 'Hello',
-        description: this.$page.meta.description || 'Welcome to your NuxtPress site'
+        description: this.$page.description || 'Welcome to your NuxtPress site'
       }
     }
   },

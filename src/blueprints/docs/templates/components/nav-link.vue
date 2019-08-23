@@ -16,7 +16,7 @@ export default {
       return this.link === '/'
     }
   },
-  render(h, { props }) {
+  render(h, { props, parent }) {
     const { link, text } = props.item
 
     if (isExternal(link)) {
@@ -37,7 +37,7 @@ export default {
     return h('NuxtLink', {
       staticClass: 'nav-link',
       props: {
-        to: link,
+        to: `${parent.$docs.prefix}${link}`,
         exact: link === '/'
       }
     }, [ text ])

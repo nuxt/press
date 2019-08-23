@@ -31,7 +31,9 @@ function $json (url) {
 export default async (ctx, inject) => {
   // only props defined here or which are set with Vue.set are reactive
   const press = ctx.$press || Vue.observable({
-    locale: ''
+    id: '',
+    locale: '',
+    path: ''
   })
 
   if (process.static && process.client) {

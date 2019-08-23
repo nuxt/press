@@ -1,4 +1,4 @@
-import { parse as parsePath } from 'path'
+import path from 'path'
 import consola from 'consola'
 import lodashTemplate from 'lodash/template'
 import { exists, walk, join, readFile } from '../../utils'
@@ -9,32 +9,39 @@ import PromisePool from '../../pool'
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-export async function parseEntry (sourcePath, processor) {
+export async function parseEntry ({ options }, sourcePath, mdProcessor) {
   // TODO just completely rewrite this function, please
-  const parse = this.$press.blog.source
-  const fileName = parsePath(sourcePath).name
+  const { name: fileName } = path.parse(sourcePath)
   const raw = await readFile(this.options.srcDir, sourcePath)
-  const metadata = parse.metadata.call(this, fileName, raw)
+
+  const metadata = options.source.metadata.call(this, fileName, raw)
   if (metadata instanceof Error) {
     consola.warn(metadata.message)
     return
   }
-  const title = metadata.title || parse.title.call(this, raw)
+
+  const title = metadata.title || options.source.title.call(this, raw)
   const slug = metadata.slug
-  const body = await parse.markdown.call(this, metadata.content || raw.substr(raw.indexOf('#')), processor)
   const published = metadata.published
+
+  const body = await options.source.markdown.call(this, metadata.content || raw.substr(raw.indexOf('#')), mdProcessor)
   delete metadata.content
-  const source = { ...metadata, body, title, published }
-  if (slug) {
-    source.path = `${this.$press.blog.prefix}${slug}`
-  } else {
-    source.path = `${this.$press.blog.prefix}${this.$press.blog.source.path.call(this, fileName, source)}`
+
+  const source = {
+    ...metadata,
+    type: 'entry',
+    id: undefined,
+    title,
+    body,
+    slug,
+    path: undefined,
+    published,
+    ...this.options.dev && { src: sourcePath }
   }
-  source.type = 'entry'
-  source.id = this.$press.blog.source.id.call(this, source)
-  if (this.options.dev) {
-    source.src = sourcePath
-  }
+
+  source.id = options.source.id.call(this, source)
+  source.path = `${options.prefix}${slug || options.source.path.call(this, fileName, source)}`
+
   return source
 }
 
@@ -52,10 +59,10 @@ function addArchiveEntry (archive, entry) {
   archive[year][month].push(entry)
 }
 
-async function generateFeed (options, entries) {
-  let srcPath = join(this.options.srcDir, 'press', 'blog', 'static', 'rss.xml')
+async function generateFeed ({ blueprintId, rootId, id, options }, entries) {
+  let srcPath = join(this.options.srcDir, rootId, blueprintId, 'static', 'rss.xml')
   if (!exists(srcPath)) {
-    srcPath = resolve('blueprints', 'blog', 'templates', 'static', 'rss.xml')
+    srcPath = resolve('blueprints', blueprintId, 'templates', 'static', 'rss.xml')
   }
   const template = lodashTemplate(await readFile(srcPath))
   return template({ blog: options, entries })
@@ -68,11 +75,10 @@ function sortEntries (entries) {
     .map(({ $published, ...e }) => e)
 }
 
-export default async function () {
-  const srcRoot = join(
-    this.options.srcDir,
-    this.$press.blog.dir
-  )
+export default async function (context) {
+  const { options } = context
+
+  const srcRoot = join(this.options.srcDir, options.dir)
 
   const sources = {}
   const archive = {}
@@ -84,10 +90,10 @@ export default async function () {
     return /\.md$/.test(path)
   })
 
-  const mdProcessor = await this.$press.blog.source.processor()
+  const mdProcessor = await options.source.processor()
 
   const handler = async (path) => {
-    const entry = await parseEntry.call(this, path, mdProcessor)
+    const entry = await parseEntry.call(this, context, path, mdProcessor)
     if (!entry) {
       return
     }
@@ -114,14 +120,14 @@ export default async function () {
     }
   }
 
-  if (typeof this.$press.blog.feed.path === 'function') {
-    this.$press.blog.feed.path = this.$press.blog.feed.path(this.$press.blog)
+  if (typeof options.feed.path === 'function') {
+    options.feed.path = options.feed.path(options)
   }
 
   return {
     static: {
-      [this.$press.blog.feed.path]: (
-        await generateFeed.call(this, this.$press.blog, index)
+      [options.feed.path]: (
+        await generateFeed.call(this, context, index)
       )
     },
     topLevel: {

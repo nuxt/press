@@ -4,6 +4,8 @@
     "prefix": "/",
     "title": "NuxtPress",
     "search": true,
+    "localizedSidebar": false,
+    "configPerLocale": false,
     "nav": [
       {
         "Guide": "https://nuxt.press"

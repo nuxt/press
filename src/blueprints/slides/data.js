@@ -1,13 +1,13 @@
-
-import { parse } from 'path'
-import { walk, join, readFile } from '../../utils'
+import path from 'path'
+import { walk, join, readFile, trimSlash, normalizePaths } from '../../utils'
 import PromisePool from '../../pool'
 
 // SLIDES MODE
 // Markdown files are loaded from the slides/ directory.
 // Configurable via press.slides.dir
 
-export async function parseSlides (sourcePath, mdProcessor) {
+export async function parseSlides (context, sourcePath, mdProcessor) {
+  const { options } = context
   const raw = await readFile(this.options.srcDir, sourcePath)
   let slides = []
   let c
@@ -42,16 +42,23 @@ export async function parseSlides (sourcePath, mdProcessor) {
       return this.$press.slides.source.markdown.call(this, slide, mdProcessor)
     })
   )
-  const source = { slides, type: 'slides', ...this.options.dev && { src: sourcePath } }
-  source.path = this.$press.slides.source.path
-    .call(this, parse(sourcePath).name.toLowerCase())
-  if (this.options.dev) {
-    source.src = sourcePath
+
+  const { name: fileName } = path.parse(sourcePath)
+  const urlPath = `${trimSlash(options.prefix || '')}${normalizePaths(options.source.path.call(this, fileName), true)}`
+
+  const source = {
+    type: 'slides',
+    slides,
+    path: urlPath,
+    ...this.options.dev && { src: sourcePath }
   }
+
   return source
 }
 
-export default async function () {
+export default async function (context) {
+  const { options } = context
+
   const sources = {}
 
   const srcRoot = join(
@@ -66,10 +73,10 @@ export default async function () {
     return /\.md$/.test(path)
   })
 
-  const mdProcessor = await this.$press.slides.source.processor()
+  const mdProcessor = await options.source.processor()
 
   const handler = async (path) => {
-    const slides = await parseSlides.call(this, path, mdProcessor)
+    const slides = await parseSlides.call(this, context, path, mdProcessor)
     sources[slides.path] = slides
   }
 

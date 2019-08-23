@@ -1,4 +1,4 @@
-import { parse } from 'path'
+import path from 'path'
 import { exists, walk, join, readFile, stripP } from '../../utils'
 import PromisePool from '../../pool'
 
@@ -11,57 +11,67 @@ import PromisePool from '../../pool'
 // contents of the .md file become available as $page
 // in the custom Vue component for the page
 
-export async function loadPage (pagePath, mdProcessor) {
+const indexKeys = ['index', 'readme']
+const isIndexRE = new RegExp(`(^|/)(${indexKeys.join('|')})/?$`, 'i')
+
+export async function parsePage ({ options }, sourcePath, mdProcessor) {
+  const src = sourcePath.slice(this.options.srcDir.length + 1)
+
+  let body = await readFile(this.options.srcDir, sourcePath)
+  const { name: fileName, dir } = path.parse(sourcePath)
+
+  let [, title] = body.match(/^#\s+(.*)/) || []
   const sliceAt = this.options.dir.pages.length
-  const { name, dir } = parse(pagePath)
-  const path = `${dir.slice(sliceAt)}/${name}/`
+  let filePath = `${dir.slice(sliceAt)}/${fileName}/`
 
-  let body = await readFile(this.options.srcDir, pagePath)
-  const metadata = await this.$press.common.source.metadata.call(this, body)
-  const titleMatch = body.match(/^#\s+(.*)/)
-  let title = titleMatch ? titleMatch[1] : ''
+  const metadata = await options.source.metadata.call(this, body)
 
-  // Overwrite body if given as metadata
-  if (metadata.body) {
-    body = metadata.body
-  }
   // Overwrite title if given as metadata
-  if (metadata.title) {
-    title = metadata.title
-  }
-  body = await this.$press.common.source.markdown.call(this, body, mdProcessor)
-  title = stripP(await this.$press.common.source.markdown.call(this, title, mdProcessor))
+  title = metadata.title || title
+  // Overwrite body if given as metadata
+  body = metadata.body || body
 
-  const src = pagePath.slice(this.options.srcDir.length + 1)
+  title = stripP(await options.source.markdown.call(this, title, mdProcessor))
+  body = await options.source.markdown.call(this, body, mdProcessor)
+
+  filePath = filePath.replace(isIndexRE, '') || 'index'
+  const urlPath = filePath === 'index' ? '/' : filePath.replace(/\/index$/, '')
 
   return {
     ...metadata,
-    body,
     title,
-    path,
-    src: this.options.dev ? src : undefined
+    body,
+    path: urlPath,
+    ...this.options.dev && { src }
   }
 }
 
-export default async function () {
+export default async function ({ options }) {
   const pagesRoot = join(
     this.options.srcDir,
     this.options.dir.pages
   )
+
   if (!exists(pagesRoot)) {
     return {}
   }
+
   const pages = {}
-  const mdProcessor = await this.$press.common.source.processor()
+  const mdProcessor = await options.source.processor()
+
   const queue = new PromisePool(
     await walk.call(this, pagesRoot, /\.md$/),
     async (path) => {
       // Somehow eslint doesn't detect func.call(), so:
       // eslint-disable-next-line no-use-before-define
-      const page = await loadPage.call(this, path, mdProcessor)
+      const page = await parsePage.call(this, { options }, path, mdProcessor)
       pages[page.path] = page
     }
   )
+
   await queue.done()
-  return { sources: pages }
+
+  return {
+    sources: pages
+  }
 }
