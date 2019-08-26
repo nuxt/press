@@ -303,11 +303,65 @@ This feature is mostly illustrative. You're likely to benefit more from ejecting
 
 ## Publishing docs
 
-The docs mode of NuxtPress provides similar functionality as VuePress. NuxtPress even borrows config syntax and some components from VuePress, but although NuxtPress aims to provide similar functionality its not meant to be a one to one replacement.
+The docs mode of NuxtPress provides similar functionality as VuePress. NuxtPress even borrows config syntax and some components from VuePress. Although NuxtPress aims to provide similar functionality its not meant to be a one to one replacement (just a very close one).
+
+### Multiple docs for a single Nuxt project
+
+NuxtPress docs support multiple docs configurations for a single Nuxt.js project. Use either the default `docs` key in your `nuxt.press.json` or use any other and specifify `blueprint: 'docs'` in your config:
+
+```json
+{
+  "docs": {
+    "prefix": "/docs-current",
+    "dir": "/docs-v1"
+  },
+  "docs2": {
+    "blueprint": "docs",
+    "prefix": "/docs-next",
+    "dir": "/docs-v2"
+  }
+}
+```
+### Multiple directories
+
+You can also specify an array of directories, then markdown files from all these folders will be loaded
+
+```json
+{
+  "docs": {
+    "dir": [
+      "/docs-v1",
+      "/api-docs-v1"
+  }
+}
+```
+
+> Please note: if the folders contain similar paths then the path from the last folder listed will overwrite the previous one
+
+### Directory aliasing
+
+By default the paths within the dir you configure are prefixed with the configured prefix, that will be the path from which the markdown page will be reachable.
+
+If you specifiy `dir` as an object you can specifiy the dir to load pages from as the key, and an alias for that folder as value:
+
+```
+{
+  "docs": {
+    "prefix": /"
+    "dir": {
+      "docs-v1": "docs-current",
+      "docs-v1": "docs-next",
+    }
+  },
+}
+
+```
+
+The above will result in the same paths as the split configs in the `Multiple docs for a single Nuxt project` example. The difference being that the config using directory aliasing shares sidebar and nav configs, which might or might not be what you want.
 
 ### Path prefix
 
-As you saw before, the URL prefix is automaticaly determined by whether you're running docs mode in NuxtPress standalone or default mode (`/` vs `/docs`).  You can override this by manually setting `docs.prefix` in the configuration:
+As you saw before, the URL prefix is automatically determined by whether you're running docs mode in NuxtPress standalone or default mode (`/` vs `/docs`).  You can override this by manually setting `docs.prefix` in the configuration:
 
 
 ```json
@@ -344,6 +398,47 @@ footer: MIT Licensed
 ```
 
 All additional markdown content will be rendered after the features sections (but before the footer).
+
+### Internationalization
+
+NuxtPress includes limited support to **i18n** via [nuxt-i18n](https://github.com/nuxt-community/nuxt-i18n). If you set the `i18n` top-level key in `nuxt.press.json` with `locales` and `messages`, these are used to populate [VueI18n](https://kazupon.github.io/vue-i18n/).
+
+```js
+"i18n": {
+  "locales": [
+    {
+      "code": "en",
+      "name": "English"
+    },
+    {
+      "code": "pt-BR",
+      "name": "Português (BR)"
+    }
+  ]
+}
+```
+
+NuxtPress will then load content from directories named after each locale.
+
+Internally, `$press.locale` and `$press.locales` are exposed. The language select box on NuxtPress' landing page is rendered with the following:
+
+```html
+<div class="lang-select">
+  <select
+    v-if="$press.locales"
+    v-model="lang"
+    @change="(e) => $router.push(`/${e.target.value}/`)">
+    <option
+      v-for="locale in $press.locales"
+      :key='`locale-${locale.code}`'
+      :value="locale.code">{{ locale.name }}</option>
+  </select>
+</div>
+```
+
+See the full configuration for this documentation suite [here][docs-config].
+
+[docs-config]: https://github.com/nuxt/press/blob/master/docs/nuxt.press.json
 
 ### Navbar
 
@@ -388,7 +483,7 @@ You can also use a shorthand syntax as follows:
 
 ### Sidebar
 
-The docs bundled app also includes a sidebar component that can automatically scroll topics into view when you click them, and highlights which topic is currently into view. A basic sidebar expects an Array of links:
+The docs bundled app also includes a sidebar component that can automatically scroll topics into view when you click them, and highlights which topic is currently into view. A basic sidebar expects an Array of paths to your markdown files:
 
 ```
 {
@@ -396,13 +491,69 @@ The docs bundled app also includes a sidebar component that can automatically sc
     "sidebar": [
       "/",
       "/guide",
-      ["/customize", 'Customize the app']
+      "/customize"
     ]
   }
 }
 ```
 
-You can omit the `.md` extension, and paths ending with `/` are inferred as */README.md or */index.md. The text for the link is automatically inferred (either from the first header in the page or explicit title in YAML meta data). If you wish to explicitly specify the link text, use an Array in form of [link, text].
+You can omit the `.md` extension. When the sidebar config includes paths ending with `/`, we try to match `*/readme.md` or `*/index.md` instead (case insensitive).
+
+The title for the link in the sidebar is automatically extracted from the markdown file, either from the first header in the page or the explicit title set in YAML meta data.
+
+#### Specifying a custom title
+
+The page title is normally also used within the sidebar. If you wish to list your page in the sidebar with a different title, add an array with the link as first item and your new title as second item:
+
+```
+{
+  "docs": {
+    "sidebar": [
+      "/",
+      ["/guide", "For Hitchhiker's only"],
+      ["/customize", "Customise the app"]
+    ]
+  }
+}
+```
+
+#### Pattern matching for paths
+
+You can also use glob's and regexes to match the files to include in the sidebar:
+
+```
+{
+  "docs": {
+    "sidebar": [
+      "/",
+      "/guide-*",
+      "/customize-(it|this)"
+    ]
+  }
+}
+```
+
+The above will match any markdown file starting with `guide-` and the files `customize-it` and `customize-this` but not `customize-that`
+
+#### External links
+
+If you provide a link which cannot be resolved to a file, these links will be removed and wont show unless you specify a custom title
+
+```
+{
+  "docs": {
+    "prefix": "/docs",
+    "sidebar": [
+      "/",
+      "/guide",
+      ["/contact", "Contact us"]
+    ]
+  }
+}
+```
+
+will result in a sidebar with links: `/docs/`, `/docs/guide/` and `/contact/`
+
 
 #### Nested Header Links
 
@@ -415,6 +566,30 @@ A page can also override this value via YAML front matter:
 sidebarDepth: 2
 ---
 ```
+
+#### Skipping Headers
+
+If you wish to omit some headers of your markdown from the sidebar, you can set the meta options `sidebarSkipLevels` and `sidebarSkipCount` to do so.
+
+Use `sidebarSkipLevels` to specifiy which header levels you want to skip, and `sidebarSkipCount` how many headers in total you want to skip. Omitting `sidebarSkipCount` or setting it to 0 means all headers will be skipped.
+
+A markdown file with the following contents
+```markdown
+---
+sidebarSkipLevels: [2, 3]
+sidebarSkipCount: 2
+---
+
+<h1>Header 1</h1>
+
+<h2>Header 2.1</h1>
+
+<h3>Header 3.1</h1>
+
+<h2>Header 2.2</h1>
+```
+
+will only have `Header 1` and `Header 2.2` listed in the sidebar.
 
 #### Sidebar Groups
 
@@ -438,6 +613,7 @@ You can divide sidebar links into multiple groups by using objects:
   }
 }
 ```
+
 #### Multiple Sidebars
 
 If you wish to display different sidebars for different sections of content, first organize your pages into directories for each desired section:
@@ -495,46 +671,11 @@ sidebar: auto
 ---
 ```
 
-### Internationalization
+#### Localization
 
-NuxtPress includes limited support to **i18n** via [nuxt-i18n](https://github.com/nuxt-community/nuxt-i18n). If you set the `i18n` top-level key in `nuxt.press.json` with `locales` and `messages`, these are used to populate [VueI18n](https://kazupon.github.io/vue-i18n/).
 
-```js
-"i18n": {
-  "locales": [
-    {
-      "code": "en",
-      "name": "English"
-    },
-    {
-      "code": "pt-BR",
-      "name": "Português (BR)"
-    }
-  ]
-}
-```
 
-NuxtPress will then load content from directories named after each locale.
 
-Internally, `$press.locale` and `$press.locales` are exposed. The language select box on NuxtPress' landing page is rendered with the following:
-
-```html
-<div class="lang-select">
-  <select
-    v-if="$press.locales"
-    v-model="lang"
-    @change="(e) => $router.push(`/${e.target.value}/`)">
-    <option
-      v-for="locale in $press.locales"
-      :key='`locale-${locale.code}`'
-      :value="locale.code">{{ locale.name }}</option>
-  </select>
-</div>
-```
-
-See the full configuration for this documentation suite [here][docs-config].
-
-[docs-config]: https://github.com/nuxt/press/blob/master/docs/nuxt.press.json
 
 ## Publishing slides
 
