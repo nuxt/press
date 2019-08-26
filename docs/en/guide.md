@@ -305,7 +305,7 @@ This feature is mostly illustrative. You're likely to benefit more from ejecting
 
 The docs mode of NuxtPress provides similar functionality as VuePress. NuxtPress even borrows config syntax and some components from VuePress. Although NuxtPress aims to provide similar functionality its not meant to be a one to one replacement (just a very close one).
 
-### Multiple docs for a single Nuxt project
+### Multi-mode
 
 NuxtPress docs support multiple docs configurations for a single Nuxt.js project. Use either the default `docs` key in your `nuxt.press.json` or use any other and specifify `blueprint: 'docs'` in your config:
 
@@ -575,7 +575,7 @@ If you wish to omit some headers of your markdown from the sidebar, you can set 
 Use `sidebarSkipLevels` to specifiy which header levels you want to skip, and `sidebarSkipCount` how many headers in total you want to skip. Omitting `sidebarSkipCount` or setting it to 0 means all headers will be skipped.
 
 A markdown file with the following contents
-```markdown
+```md
 ---
 sidebarSkipLevels: [2, 3]
 sidebarSkipCount: 2
@@ -674,8 +674,71 @@ sidebar: auto
 
 #### Localization
 
+If you keep the filenames (and thus paths) for all locales the same, you can still use a single sidebar when using localization. NuxtPress will automatically create a sidebar for each locale and use the page titles from the localized file. If needed you can also explicitly tell that you have already configured localized sidebars by setting `localizedSidebar: true` in your config. NuxtPress wont automatically create sidebars for you.
 
+Given a folder structure like this:
+```
+.
+├─ en/
+│  └─ index.md
+└─ nl/
+   └─ index.md
+```
 
+```
+// en/index.md
+# Welcome in English
+
+Hello
+```
+
+```
+// nl/index.md
+# Welkom in het Nederlands
+
+Hallo
+```
+
+and a `nuxt.press.json` as follows
+```json
+{
+  "docs": {
+    dir: "",
+    sidebar: [
+      "/"
+    ]
+  },
+  "i18n": {
+    "locales": [
+      {
+        "code": "en",
+        "name": "English"
+      },
+      {
+        "code": "nl",
+        "name": "Nederlands"
+      }
+    ]
+  }
+}
+```
+
+Will result in two sidebars similar to the following config
+```
+{
+  "docs": {
+    ...
+    "sidebar": {
+      "en": [
+        ["/", "Welcome in English"]
+      ],
+      "nl": [
+        ["/", "Welkom in het Nederlands"]
+      ]
+    }
+  }
+}
+```
 
 
 ## Publishing slides
