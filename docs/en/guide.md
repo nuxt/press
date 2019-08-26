@@ -332,6 +332,7 @@ You can also specify an array of directories, then markdown files from all these
     "dir": [
       "/docs-v1",
       "/api-docs-v1"
+    ]
   }
 }
 ```
