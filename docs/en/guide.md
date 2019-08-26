@@ -345,7 +345,7 @@ By default the paths within the dir you configure are prefixed with the configur
 
 If you specifiy `dir` as an object you can specifiy the dir to load pages from as the key, and an alias for that folder as value:
 
-```
+```json
 {
   "docs": {
     "prefix": /"
