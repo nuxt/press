@@ -351,7 +351,7 @@ If you specifiy `dir` as an object you can specifiy the dir to load pages from a
     "prefix": /"
     "dir": {
       "docs-v1": "docs-current",
-      "docs-v1": "docs-next"
+      "docs-v2": "docs-next"
     }
   },
 }
