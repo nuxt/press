@@ -50,7 +50,8 @@ export function ensureDir (...paths) {
 
 export function walk (root, validate, sliceAtRoot = false) {
   const matches = []
-  const sliceAt = (sliceAtRoot ? root : this.options.srcDir).length + 1
+  const sliceRoot = sliceAtRoot ? root : this.options.srcDir
+  const sliceAt = sliceRoot.length + (sliceRoot.endsWith('/') ? 0 : 1)
 
   if (validate instanceof RegExp) {
     const pattern = validate
