@@ -106,12 +106,6 @@
     "vue-jest": "^3.0.4"
   },
   "peerDependencies": {
-    "chokidar": "^3.0.2",
-    "consola": "^2.10.1",
-    "defu": "^0.0.3",
-    "defy": "^1.1.2",
-    "fs-extra": "^8.1.0",
-    "lodash": "^4.17.15",
-    "webpack": "^4.39.2"
+    "nuxt": "^2.9.0"
   }
 }
