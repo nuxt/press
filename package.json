@@ -52,7 +52,7 @@
   ],
   "dependencies": {
     "@nuxt/http": "^0.3.4",
-    "@nuxt/markdown": "^0.0.20",
+    "@nuxt/markdown": "^0.0.21",
     "@nuxtjs/lunr-module": "^0.2.0",
     "animate.css": "^3.7.2",
     "braces": "^3.0.2",
