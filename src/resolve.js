@@ -1,4 +1,3 @@
-
 import { resolve as _resolve } from 'path'
 import { join } from './utils'
 

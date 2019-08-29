@@ -1,4 +1,3 @@
-
 export function getDirsAsArray (dirs) {
   if (Array.isArray(dirs)) {
     return dirs
