@@ -13,7 +13,7 @@ package-lock.json
 
 # Build/dist folders
 .nuxt*
-dist*
+dist
 
 # Coverage reports
 reports
