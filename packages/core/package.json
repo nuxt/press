@@ -1,0 +1,27 @@
+{
+  "name": "@nuxtpress/core",
+  "version": "0.0.1-beta.4",
+  "main": "src/index.js",
+  "repository": "https://github.com/nuxt/press",
+  "license": "MIT",
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@nuxt/http": "^0.3.4",
+    "@nuxt/markdown": "^0.0.21",
+    "@nuxtpress/utils": "0.0.1-beta.4",
+    "defu": "^0.0.3",
+    "fs-extra": "^8.1.0",
+    "gray-matter": "^4.0.2",
+    "hable": "3.0.0-0",
+    "normalize.css": "^8.0.1",
+    "wysiwyg.css": "^0.0.3"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "press": "nuxt press"
+  }
+}

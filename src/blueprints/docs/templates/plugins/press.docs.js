@@ -5,14 +5,14 @@ import config from 'press/config'
 import { normalizedPath, getRouteMeta } from 'press/common/utils'
 
 Vue.component('OutboundLink', OutboundLink)
-
+<% console.log('OPTS', options) %>
 const pluginId = '<%= options.id %>'
 
 // TODO: nav should probably be moved to config.json
 const nav = JSON.parse(`<%= options.options.$asJsonTemplate.nav %>`)
 
-async function docsMiddleware ({ route, $press }, { meta, locale, localeChanged } = {}, plugin = false) {
-  if (process.server && !plugin) {
+async function docsMiddleware ({ route, $press }, { meta, locale, localeChanged } = {}, fromPlugin = false) {
+  if (process.server && !fromPlugin) {
     return
   }
 
@@ -97,6 +97,7 @@ NuxtMiddleware.press.add(docsMiddleware)
 
 export default function docsPlugin (ctx) {
   const middlewareContext = {
+    meta: { id: pluginId },
     <%
     // make sure to add the default locale or we will have hydration error
     if (options.rootOptions.i18n) { %>

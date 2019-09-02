@@ -1,0 +1,74 @@
+{
+  "blog": {
+    "dir": "blog",
+    "prefix": "/blog",
+    "title": "A NuxtPress Blog",
+    "links": [
+      {
+        "Home": "/blog/"
+      },
+      {
+        "Archive": "/blog/archive/"
+      },
+      {
+        "About": "/about"
+      }
+    ],
+    "icons": [
+      {
+        "github": "http://github.com/nuxt/nuxt.js"
+      },
+      {
+        "twitter": "https://twitter.com/nuxt_js"
+      }
+    ],
+    "feed": {
+      "link": "https://nuxt.press/",
+      "description": "A NuxtPress Blog Description",
+      "tagDomain": "nuxt.press",
+      "path": "/rss.xml"
+    },
+    "tagDomain": "nuxt.press"
+  },
+  "slides": {
+    "dir": "slides",
+    "prefix": "/slides/"
+  },
+  "docs": {
+    "dir": "docs",
+    "prefix": "/docs/",
+    "title": "NuxtPress",
+    "search": true,
+    "localizedSidebar": false,
+    "configPerLocale": false,
+    "nav": [
+      {
+        "Home": "/"
+      },
+      {
+        "Blog": "/blog"
+      },
+      {
+        "Slides": "/slides"
+      }
+    ],
+    "image": "https://nuxt.press/nuxt-press-cover.png",
+    "sidebar": [
+      "/guide",
+      "/customize",
+      "/roadmap"
+    ]
+  },
+  "i18n": {
+    "locales": [
+      {
+        "code": "en",
+        "name": "English"
+      },
+      {
+        "code": "pt-BR",
+        "name": "Português (BR)"
+      }
+    ]
+  }
+}

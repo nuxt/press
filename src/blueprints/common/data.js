@@ -1,5 +1,5 @@
 import path from 'path'
-import { exists, walk, join, readFile, stripP } from '../../utils'
+import { exists, walk, join, readFile, stripParagraph } from '../../utils'
 import PromisePool from '../../pool'
 
 // PAGES
@@ -12,7 +12,7 @@ import PromisePool from '../../pool'
 // in the custom Vue component for the page
 
 const indexKeys = ['index', 'readme']
-const isIndexRE = new RegExp(`(^|/)(${indexKeys.join('|')})/?$`, 'i')
+const isIndexRE = new RegExp(`(${indexKeys.join('|')})/$`, 'i')
 
 export async function parsePage ({ options }, sourcePath, mdProcessor) {
   const src = sourcePath.slice(this.options.srcDir.length + 1)
@@ -23,15 +23,17 @@ export async function parsePage ({ options }, sourcePath, mdProcessor) {
   let [, title] = body.match(/^#\s+(.*)/) || []
   const sliceAt = this.options.dir.pages.length
   let filePath = `${dir.slice(sliceAt)}/${fileName}/`
-
   const metadata = await options.source.metadata.call(this, body)
 
   // Overwrite title if given as metadata
   title = metadata.title || title
+  if (title) {
+    title = await options.source.markdown.call(this, title, mdProcessor)
+    title = stripParagraph(title)
+  }
+
   // Overwrite body if given as metadata
   body = metadata.body || body
-
-  title = stripP(await options.source.markdown.call(this, title, mdProcessor))
   body = await options.source.markdown.call(this, body, mdProcessor)
 
   filePath = filePath.replace(isIndexRE, '') || 'index'
@@ -46,7 +48,7 @@ export async function parsePage ({ options }, sourcePath, mdProcessor) {
   }
 }
 
-export default async function ({ options }) {
+export default async function (context) {
   const pagesRoot = join(
     this.options.srcDir,
     this.options.dir.pages
@@ -56,6 +58,8 @@ export default async function ({ options }) {
     return {}
   }
 
+  const { options } = context
+
   const pages = {}
   const mdProcessor = await options.source.processor()
 
@@ -64,7 +68,7 @@ export default async function ({ options }) {
     async (path) => {
       // Somehow eslint doesn't detect func.call(), so:
       // eslint-disable-next-line no-use-before-define
-      const page = await parsePage.call(this, { options }, path, mdProcessor)
+      const page = await parsePage.call(this, context, path, mdProcessor)
       pages[page.path] = page
     }
   )

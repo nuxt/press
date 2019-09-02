@@ -65,11 +65,6 @@ if (rootOptions.$slides) componentTypes.push('slides')
       return ''
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.$nuxt.$emit('press:sourceReady')
-    })
-  },
 <% if (rootOptions.dev) { %>
   beforeMount() {
     this.$hotUpdates = new EventSource('/__press/hot')
@@ -88,6 +83,13 @@ if (rootOptions.$slides) componentTypes.push('slides')
       }
     })
   },
+<% } %>
+  mounted() {
+    this.$nextTick(() => {
+      this.$nuxt.$emit('press:sourceReady')
+    })
+  },
+<% if (rootOptions.dev) { %>
   destroyed() {
     this.$hotUpdates.close()
   }

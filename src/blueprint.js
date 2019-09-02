@@ -1,8 +1,8 @@
 import defu from 'defu'
 import PromisePool from './pool'
-import resolve from './resolve'
 import blueprints from './blueprints'
 import {
+  resolve,
   dirname,
   join,
   ensureDir,
@@ -15,6 +15,7 @@ import {
   importModule
 } from './utils'
 
+// polyfill
 if (!Object.fromEntries) {
   Object.fromEntries = (iterable) => {
     return [ ...iterable ].reduce((obj, [key, val]) => {
@@ -36,6 +37,10 @@ export async function registerBlueprints (rootId, options, blueprintIds = availa
   // Future-compatible flag
   this.$isGenerate = this.nuxt.options._generate || this.nuxt.options.target === 'static'
 
+  // make sure we can use a standalone blueprint even
+  // when the config has options for multiple
+  const standaloneBlueprint = typeof options === 'string' && options
+
   // Sets this.options[rootId] ensuring
   // external config files have precendence
   options = await loadConfig.call(this, rootId, options)
@@ -56,10 +61,7 @@ export async function registerBlueprints (rootId, options, blueprintIds = availa
   if (this.nuxt.options.dev) {
     const devStaticRoot = join(this.options.buildDir, rootId, 'static')
     this.saveDevDataSources = (...args) => {
-      return new Promise(async (resolve) => {
-        await saveDataSources.call(this, devStaticRoot, ...args)
-        resolve()
-      })
+      return saveDataSources.call(this, devStaticRoot, ...args)
     }
   }
 
@@ -81,6 +83,8 @@ export async function registerBlueprints (rootId, options, blueprintIds = availa
   const possibleBlueprints = blueprintIds
     // add all option keys if user has defined custom id
     .concat(Object.keys(options))
+    // filter if a standalone blueprint was Set
+    .filter(key => !standaloneBlueprint || standaloneBlueprint === key)
     // add standalone value (not required atm due to auto-loading)
     // .map(key => key === '$standalone' ? options.$standalone : key)
     // remove private keys
@@ -189,6 +193,10 @@ export async function registerBlueprint (blueprintId, rootId, id, rootOptions) {
       before: async () => {
         const data = await blueprint.data.call(this, context)
         context.data = data
+
+        if (!context.rootOptions.$hasSources && data) {
+          context.rootOptions.$hasSources = Object.keys(data.sources).length > 0
+        }
 
         if (data.static) {
           if (typeof options.extendStaticFiles === 'function') {

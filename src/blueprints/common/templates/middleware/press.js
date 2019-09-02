@@ -11,18 +11,36 @@ const sourcesCache = []
 const extraMiddlewares = []
 
 async function getSource ($press, path) {
+  <%
+  /* Only load sources from fs when $hasSources is set,
+   * the folder doesnt exists when there arent sources
+   * which results in an error.
+   * Dont like to do a fs.exists cause i/o is heavy
+   */
+  if (options.rootOptions.$hasSources) {
+  %>
   if (path.startsWith('api/source/')) {
-    const source = await import(
-      /* webpackInclude: /\.json$/ */
-      <% if (options.rootOptions.dev) { %>
-      /* webpackChunkName: 'source-[request]' */
-      <% } %>
-      /* webpackPreload: true */
-      `../../static/sources/${path.substr(11)}`
-    )
+    try {
+      const source = await import(
+        /* webpackInclude: /\.json$/ */
+        <% if (options.rootOptions.dev) { %>
+        /* webpackChunkName: 'source-[request]' */
+        <% } %>
+        /* webpackPreload: true */
+        `../../static/sources/${path.substr(11)}`
+      )
 
-    return source
+      return source
+    } catch (err) {
+      // return when the source doesnt exists
+      if (err.code === 'MODULE_NOT_FOUND') {
+        return
+      }
+
+      throw err
+    }
   }
+  <% } %>
 
   // implement a simple client-side cache for API-sources
   const cache = sourcesCache.find(cache => cache.path === path)
@@ -57,8 +75,8 @@ async function getSource ($press, path) {
   return source
 }
 
-export default async function pressMiddleware (ctx, plugin = false) {
-  if (process.server && !plugin) {
+export default async function pressMiddleware (ctx, fromPlugin = false) {
+  if (process.server && !fromPlugin) {
     return
   }
 
@@ -108,8 +126,18 @@ export default async function pressMiddleware (ctx, plugin = false) {
       <% if (options.rootOptions.i18n) { %>
       if (middlewareContext.locale) {
         // dont add a locale for sources with id 'common', those are nuxt pages
-        const shouldAddLocale = !params.locale && meta.id !== 'common'
+        let shouldAddLocale =  false
+        if (!params.locale) {
+          if (meta.id === 'docs') {
+            shouldAddLocale = true
+          }
 
+          if (!shouldAddLocale) {
+            const options = $press[meta.id]
+            shouldAddLocale = options && options.blueprint === 'docs'
+          }
+        }
+console.log(meta, $press[meta.id], shouldAddLocale)
         if (shouldAddLocale) {
           if (!sourcePath.endsWith('/')) {
             sourcePath += '/'

@@ -52,7 +52,7 @@ export async function parsePage ({ rootOptions, id, options }, { root, prefix: p
     type: 'topic',
     locale,
     title,
-    body,
+    body, /*: body.replace(/(<code[^>]*>)([\s\S]+?)(<\/code>)/gi, (_, m1, m2, m3) => `${m1}${m2.replace(/{{/g, '{\u200B{')}${m3}`),/**/
     path: `${options.$normalizedPrefix}${pagePrefix}${urlPath}`,
     ...this.options.dev && { src }
   }

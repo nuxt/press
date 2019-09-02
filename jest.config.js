@@ -12,15 +12,15 @@ module.exports = {
   coverageDirectory: './coverage',
 
   collectCoverageFrom: [
-    'src/**/*.js',
-    '!**/templates/**',
+    'packages/**/*.js',
+    '!**/blueprint/**',
     '!**/test/**'
   ],
 
   moduleNameMapper: {
     "@/(.*)$": "<rootDir>/test/$1",
     "~/(.*)$": "<rootDir>/src/$1",
-    "^pressModule$": stdEnv.ci ? "<rootDir>/" : "<rootDir>/src/"
+    "^pressModule$": stdEnv.ci ? "<rootDir>/" : "<rootDir>/distributions/nuxt-press/src"
   },
 
   transform: {

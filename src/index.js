@@ -1,11 +1,11 @@
 import { registerBlueprints } from './blueprint'
-import { join, exists } from './utils'
-import resolve from './resolve'
+import { resolve, join, exists } from './utils'
 import SSE from './sse'
 
 /**
  * @nuxt/press module for NuxtJS
  */
+
 export default async function NuxtPressModule (options) {
   const nuxt = this.nuxt
   options = nuxt.options.press || options
@@ -68,10 +68,6 @@ export default async function NuxtPressModule (options) {
       res.end()
     }
     next()
-  })
-
-  this.extendBuild((config, { isClient }) => {
-
   })
 
   // Load and register blueprints from './blueprints'

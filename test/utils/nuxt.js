@@ -27,6 +27,15 @@ export async function loadFixture(fixture, overrides) {
   config.dev = false
   config.test = true
 
+  // disable terser to speed-up fixture builds
+  if (config.build) {
+    if (!config.build.terser) {
+      config.build.terser = false
+    }
+  } else {
+    config.build = { terser: false }
+  }
+
   config.modules = config.modules || []
   const moduleName = NuxtPress.name
 

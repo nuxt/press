@@ -43,7 +43,7 @@ export default {
         const prefix = options.$normalizedPrefix || ''
         const routeName = `source-${key.toLowerCase()}`
 
-        if (hasLocales) {
+        if (options.$supportsLocales && hasLocales) {
           const locales = rootOptions.i18n.locales.map(locale => locale.code || locale)
           locales.sort()
 

@@ -1,0 +1,44 @@
+{
+  "docs": {
+    "dir": "",
+    "prefix": "/custom/",
+    "title": "Test docs",
+    "search": true,
+    "localizedSidebar": false,
+    "configPerLocale": true,
+    "nav": [
+      {
+        "text": "A test",
+        "link": "/a"
+      },
+      {
+        "text": "B test",
+        "link": "/b"
+      },
+      {
+        "text": "C test",
+        "link": "/c"
+      },
+      {
+        "GitHub": "https://github.com/nuxt/press"
+      }
+    ],
+    "sidebar": {
+      "/": [
+        "/",
+        {
+          "title": "A test",
+          "children": [
+            "/a",
+            "/a/first",
+            "/a/second"
+          ]
+        }
+      ],
+      "/c": [
+        "/c",
+        "/a/second"
+      ]
+    }
+  }
+}

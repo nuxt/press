@@ -3,27 +3,27 @@ import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import {
   importModule,
-  exists,
   join,
   readJsonSync,
   routePath,
-  trimSlash
+  trimSlash,
+  isBlueprintEnabled
 } from '../../utils'
 import data, { parseSlides } from './data'
+
+const defaultPrefix = '/slides'
+const defaultDir = 'slides'
 
 export default {
   // Include data loader
   data,
   // Enable slides blueprint if srcDir/slides/*.md files exist
-  enabled ({ rootOptions, options }) {
-    if (rootOptions.$standalone === 'slides') {
-      options.prefix = '/'
-      if (!exists(join(this.options.srcDir, options.dir))) {
-        options.dir = ''
-      }
-      return true
-    }
-    return exists(join(this.options.srcDir, options.dir))
+  enabled (context) {
+    return isBlueprintEnabled.call(this, context, {
+      id: 'slides',
+      defaultDir,
+      defaultPrefix
+    })
   },
   templates: {
     index: 'pages/index.vue',
@@ -37,7 +37,7 @@ export default {
   routes ({ options }, templates) {
     return [
       {
-        name: 'slides_index',
+        name: 'slides-index',
         path: options.prefix,
         component: templates.index
       }
@@ -104,8 +104,8 @@ export default {
   },
   // Options are merged into the parent module default options
   options: {
-    dir: 'slides',
-    prefix: '/slides/',
+    dir: undefined,
+    prefix: undefined,
     api ({ rootId }) {
       const cache = {}
       const rootDir = join(this.options.buildDir, rootId, 'static')

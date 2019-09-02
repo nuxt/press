@@ -1,8 +1,7 @@
 import path from 'path'
 import consola from 'consola'
 import lodashTemplate from 'lodash/template'
-import { exists, walk, join, readFile } from '../../utils'
-import resolve from '../../resolve'
+import { resolve, exists, walk, join, readFile } from '../../utils'
 import PromisePool from '../../pool'
 
 // BLOG MODE

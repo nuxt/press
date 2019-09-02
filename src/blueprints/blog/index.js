@@ -3,34 +3,30 @@ import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
 import {
   importModule,
-  exists,
   join,
   slugify,
   updateConfig,
   readJsonSync,
   routePath,
-  trimSlash
+  trimSlash,
+  isBlueprintEnabled
 } from '../../utils'
 
 import data, { parseEntry } from './data'
+
+const defaultPrefix = '/blog/'
+const defaultDir = ['entries', 'post']
 
 export default {
   // Include data loader
   data,
   // Enable blog if srcDir/blog/ exists
-  enabled ({ rootOptions, options }) {
-    if (rootOptions.$standalone === 'blog') {
-      options.dir = ''
-      options.prefix = '/'
-      if (exists(this.options.srcDir, 'entries')) {
-        options.dir = 'entries'
-      }
-      if (exists(this.options.srcDir, 'posts')) {
-        options.dir = 'posts'
-      }
-      return true
-    }
-    return exists(this.options.srcDir, options.dir)
+  enabled (context) {
+    return isBlueprintEnabled.call(this, context, {
+      id: 'blog',
+      defaultDir,
+      defaultPrefix
+    })
   },
   templates: {
     'archive': 'pages/archive.vue',
@@ -44,12 +40,12 @@ export default {
   routes ({ options }, templates) {
     return [
       {
-        name: 'blog_index',
+        name: 'blog-index',
         path: options.prefix,
         component: templates.index
       },
       {
-        name: 'blog_archive',
+        name: 'blog-archive',
         path: `${options.prefix}archive`,
         component: templates.archive
       }
@@ -124,9 +120,8 @@ export default {
     }
   },
   options: {
-    dir: 'blog',
-    prefix: '/blog/',
-
+    dir: undefined,
+    prefix: undefined,
     // Blog metadata
     title: 'A NuxtPress Blog',
     links: [],

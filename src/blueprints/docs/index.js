@@ -5,14 +5,13 @@ import customContainer from 'remark-container'
 import {
   importModule,
   join,
-  exists,
   writeJson,
   updateConfig,
   routePath,
   normalizePaths,
   markdownToText,
-  trimSlash,
-  getDirsAsArray
+  getDirsAsArray,
+  isBlueprintEnabled
 } from '../../utils'
 
 import { templates, defaultDir, defaultPrefix } from './constants'
@@ -22,32 +21,12 @@ import data from './data'
 export default {
   data,
   templates,
-  enabled ({ rootOptions, options }) {
-    if (rootOptions.$standalone === 'docs') {
-      options.dir = options.dir || ''
-      options.prefix = normalizePaths(options.prefix, true) || '/'
-      options.$normalizedPrefix = trimSlash(options.prefix || '')
-      return true
-    }
-
-    if (options.dir === undefined) {
-      options.dir = defaultDir
-    }
-
-    if (!options.prefix) {
-      options.prefix = defaultPrefix
-    } else {
-      options.prefix = normalizePaths(options.prefix, true)
-    }
-
-    options.$normalizedPrefix = trimSlash(options.prefix || '')
-
-    const dirs = getDirsAsArray(options.dir)
-    for (const dir of dirs) {
-      if (exists(this.options.srcDir, dir)) {
-        return true
-      }
-    }
+  enabled (context) {
+    return isBlueprintEnabled.call(this, context, {
+      id: 'docs',
+      defaultDir,
+      defaultPrefix
+    })
   },
   async generateRoutes ({ rootOptions, data }, prefix, staticRoot) {
     let home = '/'
@@ -170,6 +149,7 @@ export default {
             const normalizedPath = normalizePaths(path, true)
 
             const sidebarPath = `${sidebarPrefix}${normalizedPath}`
+
             config.sidebars[sidebarPath] = createSidebar(
               sidebarConfig[path].map(normalizePaths),
               options.$pages,
@@ -222,6 +202,7 @@ export default {
     }
   },
   options: {
+    $supportsLocales: true,
     dir: undefined,
     prefix: undefined,
     title: 'My Documentation',

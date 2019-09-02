@@ -1,5 +1,5 @@
 <template>
-  <no-ssr>
+  <client-only>
     <swiper
       ref="slides"
       :options="swiperOptions"
@@ -18,7 +18,7 @@
       <div class="swiper-button-prev" slot="button-prev"></div>
       <div class="swiper-button-next" slot="button-next"></div>
     </swiper>
-  </no-ssr>
+  </client-only>
 </template>
 
 <script>

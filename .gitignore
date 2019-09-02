@@ -8,6 +8,7 @@ package-lock.json
 */**/yarn.lock
 
 # Logs
+*.log
 *.logs
 
 # Build/dist folders
