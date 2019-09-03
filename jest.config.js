@@ -20,7 +20,8 @@ module.exports = {
   moduleNameMapper: {
     "@/(.*)$": "<rootDir>/test/$1",
     "~/(.*)$": "<rootDir>/src/$1",
-    "^pressModule$": stdEnv.ci ? "<rootDir>/" : "<rootDir>/distributions/nuxt-press/src"
+    // TODO: enable this again when we re-introduce a build step
+    "^pressModule$": false && stdEnv.ci ? "<rootDir>/" : "<rootDir>/distributions/nuxt-press/src"
   },
 
   transform: {

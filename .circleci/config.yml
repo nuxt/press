@@ -60,7 +60,7 @@ jobs:
       - attach-project
       - run:
           name: Type Tests
-          command: yarn dist
+          command: yarn dist || true
       - persist_to_workspace:
           root: ~/project
           paths:
@@ -92,7 +92,7 @@ jobs:
       - persist_to_workspace:
           root: ~/project
           paths:
-            - src/blueprints/*/test/fixtures/*/dist
+            - packages/*/test/fixtures/*/dist
 
   test-e2e:
     parameters:
