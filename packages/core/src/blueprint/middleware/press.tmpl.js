@@ -83,20 +83,21 @@ export default async function pressMiddleware (context) {
   }
 
   const meta = getRouteMeta(route)
-  <% if (options.rootOptions.$docs) { %>
-  const middlewareHookReady = $press.hasHook(`${meta.id}:middleware`)
 
-  // wait for the mode plugin to register itself if it hasnt loaded yet
-  if (!middlewareHookReady) {
-    $press.hook('register', async ({ id }) => {
-      if (meta.id === id) {
-        await pressMiddleware(context)
-        $press.clearHook('register')
-      }
-    })
-    return
+  if (meta.bp === 'docs') {
+    const middlewareHookReady = $press.hasHook(`${meta.id}:middleware`)
+
+    // wait for the mode plugin to register itself if it hasnt loaded yet
+    if (!middlewareHookReady) {
+      $press.hook('register', async ({ id }) => {
+        if (meta.id === id) {
+          await pressMiddleware(context)
+          $press.clearHook('register')
+        }
+      })
+      return
+    }
   }
-  <% } %>
 
   const middlewareContext = {
     path: route.path,

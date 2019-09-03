@@ -443,7 +443,7 @@ export default class PressBlueprint extends Blueprint {
         name: `${routeName}-locales-${locales.join('_')}`,
         path: `${prefix}/:locale(${locales.join('|')})?/:source(.*)?`,
         component: PressBlueprint.templates['pages/source.tmpl.vue'],
-        meta: { id: this.id, source: true }
+        meta: { id: this.id, bp: this.constructor.id, source: true }
       }]
     }
 
@@ -451,7 +451,7 @@ export default class PressBlueprint extends Blueprint {
       name: routeName,
       path: `${prefix}/:source(.*)?`,
       component: PressBlueprint.templates['pages/source.tmpl.vue'],
-      meta: { id: this.id, source: true }
+      meta: { id: this.id, bp: this.constructor.id, source: true }
     }]
   }
 
