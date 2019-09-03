@@ -1,4 +1,4 @@
-import NuxtPress from '../distributions/nuxt-press/'
+import NuxtPress from '@nuxt/press'
 
 export default {
   modules: [

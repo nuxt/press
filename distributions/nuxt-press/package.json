@@ -42,7 +42,7 @@
     "press": "nuxt press"
   },
   "dependencies": {
-    "@nuxt/cli": "^2.9.2",
+    "@nuxt/cli-edge": "^2.9.2",
     "@nuxtpress/docs": "0.0.1-beta.4",
     "consola": "^2.10.1"
   },

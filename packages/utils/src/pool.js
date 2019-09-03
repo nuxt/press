@@ -1,6 +1,6 @@
 import os from 'os'
 import consola from 'consola'
-import { waitFor } from '@nuxt/utils'
+import { waitFor } from '@nuxt/utils-edge'
 
 const failureInterval = 3000
 const maxRetries = 0 // use 0 for debugging

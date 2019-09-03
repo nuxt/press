@@ -1,13 +1,10 @@
 import Vue from 'vue'
 import consola from 'consola'
-import middlewares from 'press/../middleware'
 import NuxtStatic from '../components/nuxt-static'
 import NuxtTemplate from '../components/nuxt-template'
 import PressLink from '../components/press-link'
 import pressMiddleware from '../middleware/press'
 import { createPlugin } from 'press/core/utils'
-
-middlewares.press = pressMiddleware
 
 Vue.component('NuxtStatic', NuxtStatic)
 Vue.component('NuxtTemplate', NuxtTemplate)

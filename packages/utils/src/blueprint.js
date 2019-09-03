@@ -2,7 +2,7 @@ import fs from 'fs'
 import path from 'path'
 import consola from 'consola'
 import defu from 'defu'
-import { Module } from '@nuxt/core'
+import { Module } from '@nuxt/core-edge'
 import {
   createFileFilter,
   walk,
@@ -62,7 +62,7 @@ export default class Blueprint extends Module {
   init() {
     this.setup()
 
-    this.nuxt.hook('build:ready', async () => {
+    this.nuxt.hook('builder:prepared', async () => {
       let files
       if (this.blueprintOptions.autodiscover) {
         files = await this.autodiscover()

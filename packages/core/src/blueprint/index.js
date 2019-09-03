@@ -213,6 +213,7 @@ export default class PressBlueprint extends Blueprint {
       })
     }
 
+    // TODO: clean this up
     let sourceApi
     if (typeof this.config.api === 'function') {
       const rootDir = path.join(this.nuxt.options.buildDir, PressBlueprint.id, 'static');
@@ -271,25 +272,26 @@ export default class PressBlueprint extends Blueprint {
       return this.builderPrepared()
     })
 
-    /* TODO: fix middleware stuff first in Nuxt.js
     if (!PressBlueprint.buildTemplatesHookAdded) {
       this.nuxt.hook('build:templates', (templateContext) => this.buildTemplates(templateContext))
       PressBlueprint.buildTemplatesHookAdded = true
-    }*/
+    }
 
     this.nuxt.hook('build:extendRoutes', (routes) => this.buildExtendRoutes(routes))
     this.nuxt.hook('build:done', () => this.buildDone())
 
     // only add generate hooks if needed
-    if (this.nuxt.options._generate || this.nuxt.options.target === 'static') {
-      this.nuxt.hook('generate:distCopied', () => this.generateDistCopied())
+    if (!(this.nuxt.options._generate || this.nuxt.options.target === 'static')) {
+      return
+    }
 
-      // the generateRoutesHookAdded should only be added once
-      if (!PressBlueprint.generateRoutesHookAdded) {
-        this.nuxt.hook('generate:extendRoutes', (routes) => this.generateExtendRoutes(routes))
+    this.nuxt.hook('generate:distCopied', () => this.generateDistCopied())
 
-        PressBlueprint.generateRoutesHookAdded = true
-      }
+    // the generateRoutesHookAdded should only be added once
+    if (!PressBlueprint.generateRoutesHookAdded) {
+      this.nuxt.hook('generate:extendRoutes', (routes) => this.generateExtendRoutes(routes))
+
+      PressBlueprint.generateRoutesHookAdded = true
     }
   }
 
@@ -398,9 +400,12 @@ export default class PressBlueprint extends Blueprint {
     }
   }
 
-  /*buildTemplates({ templateVars }) {
-    templateVars.middleware.push({ src: this.coreTemplates['middleware/press.tmpl.js'] })
-  }*/
+  buildTemplates({ templateVars }) {
+    templateVars.middleware.push({
+      name: 'press',
+      dst: PressBlueprint.templates['middleware/press.tmpl.js']
+    })
+  }
 
   createRoutes() {
     const routes = []

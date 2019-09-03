@@ -107,7 +107,7 @@ console.log('PRESS MIDD')
 
   // call middleware hooks for current mode first
   await $press.callHook(`${meta.id}:middleware`, middlewareContext)
-console.log('MIDDLEWARE HOOK CALLED')
+
   if (meta.source) {
     // this hook is mostly meant to fix the home page /
     // when only localized home pages like /en/ or /nl/ exists
