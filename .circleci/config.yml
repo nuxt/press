@@ -117,10 +117,10 @@ workflows:
       - setup
       - lint:             { requires: [setup] }
       - audit:            { requires: [setup] }
-      - build:            { requires: [setup] }
+#      - build:            { requires: [setup] }
       - test-unit:        { requires: [lint] }
 #      - test-types:       { requires: [lint] }
-      - test-fixtures:    { requires: [build] }
+      - test-fixtures:    { requires: [setup] }
       - test-e2e:
           name:           test-e2e-firefox
           browserString:  firefox/headless
