@@ -72,7 +72,7 @@ export default {
         if (req.url.startsWith('/api/blog/index')) {
           index.call(this, req, res, next)
         } else if (req.url.startsWith('/api/blog/archive')) {
-          archive.call(this, req, res, next)
+          archive.(this, req, res, next)
         } else {
           next()
         }

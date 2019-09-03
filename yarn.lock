@@ -1696,7 +1696,7 @@
     serialize-javascript "^1.9.0"
     upath "^1.1.2"
 
-"@nuxt/cli-edge@2.10.0-26124491.ad223583":
+"@nuxt/cli-edge@2.10.0-26124491.ad223583", "@nuxt/cli-edge@latest":
   version "2.10.0-26124491.ad223583"
   resolved "https://registry.yarnpkg.com/@nuxt/cli-edge/-/cli-edge-2.10.0-26124491.ad223583.tgz#5567283ed0beede354f61afde0f1ecd4415f6854"
   integrity sha512-VYxlL61W2T85DRfIZ5fZHP5krz23ff+ismvHQ2Fa0qlH+hjZswXmgR5NfEMFLUzqrCLJztEiFXusHVtYL2LduA==
@@ -1717,42 +1717,12 @@
     std-env "^2.2.1"
     wrap-ansi "^6.0.0"
 
-"@nuxt/cli-edge@^2.9.2":
-  version "2.10.0-26124493.e9c4bcfe"
-  resolved "https://registry.yarnpkg.com/@nuxt/cli-edge/-/cli-edge-2.10.0-26124493.e9c4bcfe.tgz#2b3ad9ba5316861c2d2e1a079da6d80b89fabbeb"
-  integrity sha512-AxoaoqPWqQ6kAzSMq+OoYqVVO/8YMRtBrH/tjNY38QyU5WhlRweyP3k8va9elYyi4QwRg669u0Xn28xAlMR4ag==
-  dependencies:
-    "@nuxt/config-edge" "2.10.0-26124493.e9c4bcfe"
-    "@nuxt/utils-edge" "2.10.0-26124493.e9c4bcfe"
-    boxen "^4.1.0"
-    chalk "^2.4.2"
-    consola "^2.10.1"
-    esm "^3.2.25"
-    execa "^2.0.4"
-    exit "^0.1.2"
-    fs-extra "^8.1.0"
-    hable "^2.2.1"
-    minimist "^1.2.0"
-    opener "1.5.1"
-    pretty-bytes "^5.3.0"
-    std-env "^2.2.1"
-    wrap-ansi "^6.0.0"
-
 "@nuxt/config-edge@2.10.0-26124491.ad223583":
   version "2.10.0-26124491.ad223583"
   resolved "https://registry.yarnpkg.com/@nuxt/config-edge/-/config-edge-2.10.0-26124491.ad223583.tgz#63ad022d20785f68d27538edcb0cd63a7a0e6a74"
   integrity sha512-wRpAGzPkxWQNjpJjalNjfJwjGzSLCKJ8Mf3wJmwxzm2MM7SiP3yqvHRjq7cSnqFugSdAhoZdnRZP7cqcz49auQ==
   dependencies:
     "@nuxt/utils-edge" "2.10.0-26124491.ad223583"
-    consola "^2.10.1"
-    std-env "^2.2.1"
-
-"@nuxt/config-edge@2.10.0-26124493.e9c4bcfe":
-  version "2.10.0-26124493.e9c4bcfe"
-  resolved "https://registry.yarnpkg.com/@nuxt/config-edge/-/config-edge-2.10.0-26124493.e9c4bcfe.tgz#09aee3cd73c3300c1549b3ccf819e55c6bb71a69"
-  integrity sha512-GYdMubf+byzSVWi+KGbvWK7IlJcsIDazyJJdyvldpsqqFhoCl7moBDXMQ5huCbh3mKH3yAy4oXWY1A91j+kc7g==
-  dependencies:
-    "@nuxt/utils-edge" "2.10.0-26124493.e9c4bcfe"
     consola "^2.10.1"
     std-env "^2.2.1"
 
@@ -1880,24 +1850,10 @@
     serve-static "^1.14.1"
     server-destroy "^1.0.1"
 
-"@nuxt/utils-edge@2.10.0-26124491.ad223583":
+"@nuxt/utils-edge@2.10.0-26124491.ad223583", "@nuxt/utils-edge@latest":
   version "2.10.0-26124491.ad223583"
   resolved "https://registry.yarnpkg.com/@nuxt/utils-edge/-/utils-edge-2.10.0-26124491.ad223583.tgz#e000fe37622cd662990eb88ca87544582878c72f"
   integrity sha512-mz29rnM4aWuq6jxj8R0YmdvwDHTbQnLe07WlOkkFiGuowF/UHuYhH8oXvuIRCXIlIjR3+wsMg+tC2JEeFFCKbQ==
-  dependencies:
-    consola "^2.10.1"
-    fs-extra "^8.1.0"
-    hash-sum "^2.0.0"
-    proper-lockfile "^4.1.1"
-    semver "^6.3.0"
-    serialize-javascript "^1.9.0"
-    signal-exit "^3.0.2"
-    ua-parser-js "^0.7.20"
-
-"@nuxt/utils-edge@2.10.0-26124493.e9c4bcfe", "@nuxt/utils-edge@^2.9.2":
-  version "2.10.0-26124493.e9c4bcfe"
-  resolved "https://registry.yarnpkg.com/@nuxt/utils-edge/-/utils-edge-2.10.0-26124493.e9c4bcfe.tgz#591ff8098cc9acf92cb10ba1a0d4fd3392076b42"
-  integrity sha512-4x64mf/XpZtX27WwbqJopFXO/GyEC1TvQdRZL7Be4WEWxC9/wFKju6UPJUnYoyGx/Prz73JCEPbGz1bmZxlipw==
   dependencies:
     consola "^2.10.1"
     fs-extra "^8.1.0"
@@ -6303,7 +6259,7 @@ hable@^1.0.1:
     consola "^2.4.0"
     items-promise "^1.0.0"
 
-hable@^2.2.1, hable@^2.3.2:
+hable@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/hable/-/hable-2.3.2.tgz#7867ffec0b67e63136937613d9a0bc646ac9d7fe"
   integrity sha512-qJ9WoXl/15LNlG1KeAuBjCNGStUb+MCQ5biPxOmwRyESH8CSWwZB4xEnzCduuQ3I/mlgui28t8/oMAGT1Rpb2g==
@@ -9319,7 +9275,7 @@ number-is-nan@^1.0.0:
   resolved "https://registry.yarnpkg.com/number-is-nan/-/number-is-nan-1.0.1.tgz#097b602b53422a522c1afb8790318336941a011d"
   integrity sha1-CXtgK1NCKlIsGvuHkDGDNpQaAR0=
 
-nuxt-edge@^2.10.0-26124491.ad223583:
+nuxt-edge@latest:
   version "2.10.0-26124491.ad223583"
   resolved "https://registry.yarnpkg.com/nuxt-edge/-/nuxt-edge-2.10.0-26124491.ad223583.tgz#7d839f45439f20bc3e619b388d813f1e5289fcf0"
   integrity sha512-Mw3wBhl2zreCwKApgAY99k9+QUG/s1HVRg0cGS6XQouBeLd5IgH9xNL9yfni0W4SrGCYbt1T5mdxbTrqRAcc9A==

@@ -1,0 +1,149 @@
+import path from 'path'
+import chokidar from 'chokidar'
+import defu from 'defu'
+import { Blueprint as PressBlueprint } from '@nuxtpress/core'
+import {
+  normalizeConfig,
+  markdownToText,
+  getDirsAsArray,
+  importModule,
+  normalizeSourcePath,
+  normalizePaths,
+  writeJson,
+  ensureDir
+} from '@nuxtpress/utils'
+
+import loadSources from './data'
+import api from './api'
+import source from './source'
+
+export default class PressBlogBlueprint extends PressBlueprint {
+  static id = 'blog'
+
+  static features = {
+    singleton: true,
+    localization: false
+  }
+
+  static defaultConfig = {
+    dir: 'blog',
+    prefix: '/blog/',
+    title: 'A NuxtPress Blog',
+    links: [],
+    icons: [],
+    feed: {
+      // Replace with final link to your feed
+      link: 'https://nuxt.press',
+      // The <description> RSS tag
+      description: 'A NuxtPress Blog Description',
+      // Used in RFC4151-based RSS feed entry tags
+      tagDomain: 'nuxt.press',
+      // Final RSS path
+      path: options => `${options.prefix}rss.xml`
+    }
+  }
+
+  constructor(nuxt, options = {}) {
+    options = {
+      dir: __dirname,
+      ...normalizeConfig(options)
+    }
+
+    super(nuxt, options)
+  }
+
+  async setup() {
+    await super.setup()
+
+    this.addTheme(path.join(__dirname, '..', 'theme.css'))
+
+    const api = this.createApi()
+
+    this.addServerMiddleware((req, res, next) => {
+      console.log('URL', req.url)
+      if (req.url.startsWith('/api/blog/index')) {
+        api.index(req, res, next)
+        return
+      }
+
+      if (req.url.startsWith('/api/blog/archive')) {
+        api.archive(req, res, next)
+        return
+      }
+
+      next()
+    })
+  }
+
+  async loadConfig(extraConfig) {
+    const config = await super.loadConfig(extraConfig)
+
+    return defu({ api, source }, config)
+  }
+
+  loadData() {
+    // this method is externalized to improve readability
+    return loadSources.call(this)
+  }
+
+  createRoutes() {
+    const prefix = this.config.$normalizedPrefix || ''
+    const routeName = `source-${this.id.toLowerCase()}`
+
+    return [{
+      name: `${routeName}-index`,
+      path: `${prefix}/`,
+      component: this.templates['pages/index.vue'],
+    }, {
+      name: `${routeName}-archive`,
+      path: `${prefix}/archive`,
+      component: this.templates['pages/archive.vue'],
+    },
+    ...super.createRoutes()
+    ]
+  }
+
+  async buildDone() {
+    if (!this.nuxt.options.dev) {
+      return
+    }
+
+    let updatedEntry
+
+    const mdProcessor = await this.config.source.processor()
+
+    // make sure watchPaths is an array
+    const watchPaths = getDirsAsArray(this.config.dir)
+
+    const watcher = chokidar.watch(watchPaths.map(path => `${path}${path ? '/' : ''}**/*.md`), {
+      cwd: this.options.srcDir,
+      ignoreInitial: true,
+      ignored: 'node_modules/**/*'
+    })
+
+    watcher.on('add', async (path) => {
+      updatedEntry = await parseEntry.call(this, path, mdProcessor)
+      this.sseSourceEvent('add', updatedEntry)
+    })
+
+    watcher.on('change', async (path) => {
+      updatedEntry = await parseEntry.call(this, path, mdProcessor)
+      this.sseSourceEvent('change', updatedEntry)
+    })
+
+    watcher.on('unlink', path => this.sseSourceEvent('unlink', { path }))
+  }
+
+  async generateRoutes(rootDir, prefix) {
+    return [
+      ...Object.keys(this.data.topLevel).map(async (path) => ({
+        route: prefix(normalizeSourcePath(path)),
+        payload: await importModule(rootDir, this.id, `${path}.json`)
+      })),
+      ...Object.keys(this.data.sources).map(async (path) => ({
+        route: prefix(normalizeSourcePath(path)),
+        payload: await importModule(rootDir, 'sources', path)
+      }))
+    ]
+  }
+}

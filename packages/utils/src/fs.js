@@ -101,7 +101,7 @@ export async function saveFiles (files, rootDir, prepareFilepath, isJson) {
     if (isJson) {
       await writeJson(filePath, content)
     } else {
-      await writeFile(filePath, content)
+      await writeFileAsync(filePath, content)
     }
   })
 

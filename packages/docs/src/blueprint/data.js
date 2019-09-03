@@ -8,23 +8,11 @@ import {
   readFileAsync,
   escapeChars,
   getDirsAsArray,
+  createJobsFromConfig,
   normalizeSourcePath,
   normalizePath,
   PromisePool
 } from '@nuxtpress/utils'
-
-// TODO: move this
-
-
-const defaultDir = 'docs'
-const defaultPrefix = '/docs/'
-
-const maxSidebarDepth = 2
-
-const defaultMetaSettings = {
-  sidebarDepth: 1
-}
-
 
 // DOCS MODE
 // Markdown files can be placed in
@@ -38,6 +26,8 @@ export async function parsePage ({ root, prefix: pagePrefix = '', path: sourcePa
   let raw = await readFileAsync(path.join(root, sourcePath), { encoding: 'utf8' })
   const { name: fileName } = path.parse(sourcePath)
 
+  const defaultMetaSettings = this.constructor.defaultConfig.metaSettings
+
   let meta
   if (raw.trimLeft().startsWith('---')) {
     const { content, data } = graymatter(raw)
@@ -46,7 +36,7 @@ export async function parsePage ({ root, prefix: pagePrefix = '', path: sourcePa
     meta = defu(data, defaultMetaSettings)
 
     if (meta.sidebar === 'auto') {
-      meta.sidebarDepth = maxSidebarDepth
+      meta.sidebarDepth = this.constructor.defaultConfig.maxSidebarDepth
     }
   } else {
     meta = defu({}, defaultMetaSettings)
@@ -89,51 +79,7 @@ export async function parsePage ({ root, prefix: pagePrefix = '', path: sourcePa
 }
 
 export default async function () {
-  const srcRoots = getDirsAsArray(this.config.dir)
-  for (const key in srcRoots) {
-    if (!await existsAsync(this.nuxt.options.srcDir, srcRoots[key])) {
-      // eslint-disable-next-line no-console
-      console.warn(`Source Folder ${srcRoots[key]} doesnt exist, ignoring it`)
-      srcRoots.splice(key, 1)
-    }
-  }
-
-  if (!srcRoots.length) {
-    srcRoots.push(this.nuxt.options.srcDir)
-  }
-
-  let srcPrefixes = null
-  if (typeof this.config.dir === 'object') {
-    srcPrefixes = this.config.dir
-  }
-
-  const jobs = []
-  for (const srcRoot of srcRoots) {
-    const srcPath = path.join(this.nuxt.options.srcDir, srcRoot)
-    const validate = (path) => {
-      // ignore pages folder
-      if (path.startsWith(this.nuxt.options.dir.pages)) {
-        return false
-      }
-
-      return path.endsWith('.md')
-    }
-
-    const paths = await walk(srcPath, { validate })
-
-    jobs.push(...paths.map((path) => {
-      let prefix = ''
-      if (srcPrefixes && srcPrefixes[srcRoot]) {
-        prefix = srcPrefixes[srcRoot]
-      }
-
-      return {
-        root: srcPath,
-        prefix,
-        path
-      }
-    }))
-  }
+  const jobs = await createJobsFromConfig(this.nuxt.options, this.config)
 
   const sources = {}
   const $pages = {}

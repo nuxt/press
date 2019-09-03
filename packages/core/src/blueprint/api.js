@@ -3,7 +3,7 @@ import { existsSync, readJsonSync } from 'fs-extra'
 
 const sourceCache = {}
 
-export default function api ({ rootDir, dev }) {
+export default function coreApi ({ rootDir, dev }) {
   return {
     source (req, res, next, source) {
       const cacheKey = `${rootDir}/${source}`

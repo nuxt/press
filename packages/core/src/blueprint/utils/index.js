@@ -37,6 +37,11 @@ export function createPlugin(id, extendPlugin) {
 
       const bus = new Hookable()
 
+
+      // TODO: this should be moved to mode specific middleware
+      // its used in eg blog but prevents using multiple instances
+      plugin.data = {}
+
       plugin.hook = bus.hook.bind(bus)
       plugin.callHook = bus.callHook.bind(bus)
       plugin.clearHook = bus.clearHook.bind(bus)

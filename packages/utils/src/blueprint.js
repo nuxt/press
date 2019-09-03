@@ -151,7 +151,21 @@ export default class Blueprint extends Module {
       await this.addFiles(typeFiles, type)
     }
 
-    return this.filesMapping
+    // convert aboslute paths in fileMapping
+    // to relative paths from the nuxt.buildDir
+    const relativeFilesMapping = {}
+    for (const key in this.filesMapping) {
+      let filePath = this.filesMapping[key]
+
+      if (path.isAbsolute(filePath)) {
+        relativeFilesMapping[key] = path.relative(this.nuxt.options.buildDir, filePath)
+        continue
+      }
+
+      relativeFilesMapping[key] = filePath
+    }
+
+    return relativeFilesMapping
   }
 
   async copyFile({ src, dst }) {
@@ -255,10 +269,20 @@ export default class Blueprint extends Module {
     })
   }
 
-  addLayouts(layouts) {
+  async addLayouts(layouts) {
     for (const layout of layouts) {
-      const layoutPath = this.addTemplateIfNeeded(layout)
-      this.addLayout(layoutPath)
+      const layoutPath = await this.addTemplateOrCopy(layout)
+
+      const { name: layoutName } = path.parse(layoutPath)
+      const existingLayout = this.nuxt.options.layouts[layoutName]
+
+      if (existingLayout) {
+        consola.warn(`Duplicate layout registration, "${layoutName}" has been registered as "${existingLayout}"`)
+      }
+
+      // Add to nuxt layouts
+      this.nuxt.options.layouts[layoutName] = `./${layoutPath}`
+      // this.addLayout(layoutPath)
     }
   }
 

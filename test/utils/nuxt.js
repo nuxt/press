@@ -2,8 +2,8 @@ import path from 'path'
 import { defaultsDeep } from 'lodash'
 import NuxtPress from 'pressModule'
 
-export { Nuxt, Builder, BundleBuilder, Generator } from 'nuxt'
-export * from '@nuxt/utils'
+export { Nuxt, Builder, BundleBuilder, Generator } from 'nuxt-edge'
+export * from '@nuxt/utils-edge'
 
 export async function loadFixture(fixture, overrides) {
   const rootDir = path.isAbsolute(fixture) ? fixture : path.resolve(__dirname, '..', 'fixtures', fixture)

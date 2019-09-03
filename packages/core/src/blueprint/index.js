@@ -17,7 +17,7 @@ import {
   normalizePaths,
   trimSlash
 } from '@nuxtpress/utils'
-import api from './api'
+import coreApi from './api'
 
 export default class PressBlueprint extends Blueprint {
   static id = 'press'
@@ -89,7 +89,7 @@ export default class PressBlueprint extends Blueprint {
     // but we are running in standalone mode or
     // we are _not_ running in standalone mode and a default dir exists
     if (!modeRegistered) {
-      if (isStandalone || (!config.$standalone && await existsAsync(nuxt.options.srcDir, this.defaultConfig.dir))) {
+      if (isStandalone || (!config.$standalone && await existsAsync(path.join(nuxt.options.srcDir, this.defaultConfig.dir)))) {
         modeInstances[this.id] = new this(nuxt, { id: this.id })
         modeInstances[this.id].requiredModules = moduleContainer.requiredModules
       }
@@ -115,8 +115,7 @@ export default class PressBlueprint extends Blueprint {
       config = this.constructor.defaultConfig
     }
 
-    // add sources api
-    return defu(config, { api })
+    return config
   }
 
   setLocales() {
@@ -213,26 +212,17 @@ export default class PressBlueprint extends Blueprint {
       })
     }
 
-    // TODO: clean this up
-    let sourceApi
-    if (typeof this.config.api === 'function') {
-      const rootDir = path.join(this.nuxt.options.buildDir, PressBlueprint.id, 'static');
-      ({ source: sourceApi } = this.config.api.call(this, {
-        rootDir,
-        dev: this.nuxt.options.dev
-      }))
-    } else {
-      ({ source: sourceApi } = this.config.api)
+    const api = this.createApi()
+    if (api && api.source) {
+      this.addServerMiddleware((req, res, next) => {
+        if (!req.url.startsWith('/api/source/')) {
+          return next()
+        }
+
+        const sourcePath = trimSlash(req.url.slice(12))
+        api.source(req, res, next, sourcePath)
+      })
     }
-
-    this.addServerMiddleware((req, res, next) => {
-      if (!req.url.startsWith('/api/source/')) {
-        return next()
-      }
-
-      const sourcePath = trimSlash(req.url.slice(12))
-      sourceApi(req, res, next, sourcePath)
-    })
   }
 
   async setup() {
@@ -318,6 +308,26 @@ export default class PressBlueprint extends Blueprint {
     return files
   }
 
+  createApi() {
+    const rootDir = path.join(this.nuxt.options.buildDir, PressBlueprint.id, 'static')
+    const apiOptions = {
+      rootDir,
+      id: this.id,
+      dev: this.nuxt.options.dev
+    }
+
+    let api = coreApi.call(this, apiOptions)
+
+    if (typeof this.config.api === 'function') {
+      api = {
+        ...api,
+        ...this.config.api.call(this, apiOptions)
+      }
+    }
+
+    return api
+  }
+
   // TODO: why is the css.splice (and thus this special fn) necessary?
   // Cant we trust push order in that core pushed first,
   // then eg the derived docs mode blueprint?
@@ -353,7 +363,7 @@ export default class PressBlueprint extends Blueprint {
     const { topLevel, sources } = data || this.data
 
     if (topLevel) {
-      await saveJsonFiles(topLevel, rootDir, (fileName) => `${fileName}.json`)
+      await saveJsonFiles(topLevel, path.join(rootDir, this.id), (fileName) => `${fileName}.json`)
     }
 
     if (sources) {

@@ -83,7 +83,7 @@ console.log('PRESS MIDD')
   }
 
   const meta = getRouteMeta(route)
-
+  <% if (options.rootOptions.$docs) { %>
   const middlewareHookReady = $press.hasHook(`${meta.id}:middleware`)
 
   // wait for the mode plugin to register itself if it hasnt loaded yet
@@ -96,6 +96,7 @@ console.log('PRESS MIDD')
     })
     return
   }
+  <% } %>
 
   const middlewareContext = {
     path: route.path,

@@ -50,7 +50,7 @@ export default createPlugin('press', async (plugin, context) => {
       return context.$http.$get(url).catch(err => consola.warn(err))
     }
   }
-
+console.log('PRESS PLUGIN')
   // this is a workaround to prevent hydration errors
   // due to middlewares not running on first load on the client
   // TODO: try to understand why returning the pressMiddleware

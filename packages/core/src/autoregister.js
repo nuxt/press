@@ -1,7 +1,7 @@
 import { normalizeConfig, importModule } from '@nuxtpress/utils'
 import PressBlueprint from './blueprint'
 
-const modes = ['docs']
+const modes = ['docs', 'blog']
 
 export default async function autoregister(options) {
   // Note:`this` refers to the ModuleContainer instance

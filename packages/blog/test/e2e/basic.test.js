@@ -65,7 +65,7 @@ describe('basic', () => {
     await testPageArchive()
   })
 
-  test('nav /about', async () => {
+  /*test('nav /about', async () => {
     await page.navigate('/about')
 
     await testPageAbout()
@@ -77,7 +77,7 @@ describe('basic', () => {
     page = await browser.page(url)
 
     await testPageAbout()
-  })
+  })*/
 
   test('nav /', async () => {
     await page.navigate('/')
