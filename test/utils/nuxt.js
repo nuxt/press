@@ -5,7 +5,7 @@ import NuxtPress from 'pressModule'
 export { Nuxt, Builder, BundleBuilder, Generator } from 'nuxt-edge'
 export * from '@nuxt/utils-edge'
 
-export async function loadFixture(fixture, overrides) {
+export async function loadFixture (fixture, overrides) {
   const rootDir = path.isAbsolute(fixture) ? fixture : path.resolve(__dirname, '..', 'fixtures', fixture)
   let config = {}
 
@@ -41,7 +41,7 @@ export async function loadFixture(fixture, overrides) {
 
   let hasNuxtPress = false
   if (config.modules) {
-    hasNuxtPress = config.modules.some(m => {
+    hasNuxtPress = config.modules.some((m) => {
       return (typeof m === 'function' && m.name === moduleName) || (Array.isArray(m) && m[0].name === moduleName)
     })
   }

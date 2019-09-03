@@ -37,7 +37,7 @@ function removePrivateKeys (source, target = {}) {
   return target
 }
 
-export function normalizeConfig(config) {
+export function normalizeConfig (config) {
   // TODO: improve this
   if (typeof config === 'string') {
     config = { mode: config }
@@ -92,18 +92,18 @@ export async function saveConfig ({ rootId, id, options }) {
     return
   }
 
-  const path = path.join(this.options.rootDir, `nuxt.${rootId}.json`)
-  if (!await existsAsync(path)) {
-    await writeJson(path, config, { spaces: 2 })
+  const configPath = path.join(this.options.rootDir, `nuxt.${rootId}.json`)
+  if (!await existsAsync(configPath)) {
+    await writeJson(configPath, config, { spaces: 2 })
     return
   }
 
   try {
-    const existingConfig = await readJson(path, { throws: true })
+    const existingConfig = await readJson(configPath, { throws: true })
 
     const updated = defu(existingConfig || {}, config)
 
-    await writeJson(path, updated, { spaces: 2 })
+    await writeJson(configPath, updated, { spaces: 2 })
     await writeJson(path.join(buildDirRoot, 'config.json'), updated, { spaces: 2 })
   } catch (err) {
     // eslint-disable-next-line no-console

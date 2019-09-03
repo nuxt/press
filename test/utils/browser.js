@@ -4,7 +4,7 @@ import env from 'node-env-file'
 import { createBrowser } from 'tib'
 import { browserString, useBrowserstackLocal } from '.'
 
-export async function startBrowser({ folder, port, extendPage = {} }) {
+export function startBrowser ({ folder, port, extendPage = {} }) {
   if (useBrowserstackLocal) {
     const envFile = path.resolve(__dirname, '..', '..', '.env-browserstack')
 
@@ -18,13 +18,13 @@ export async function startBrowser({ folder, port, extendPage = {} }) {
       folder,
       port
     },
-    extendPage(page) {
+    extendPage (page) {
       return {
-        async navigate(path) {
+        async navigate (path) {
           await page.runAsyncScript((path) => {
             return new Promise((resolve) => {
               // timeout after 10s
-              const timeout = setTimeout(function() {
+              const timeout = setTimeout(function () {
                 console.error('browser: nuxt navigation timed out')
                 window.$nuxt.$emit('triggerScroll')
               }, 10000)
@@ -37,7 +37,7 @@ export async function startBrowser({ folder, port, extendPage = {} }) {
             })
           }, path)
         },
-        routeData() {
+        routeData () {
           return page.runScript(() => ({
             path: window.$nuxt.$route.path,
             query: window.$nuxt.$route.query

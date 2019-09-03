@@ -1,24 +1,18 @@
 import path from 'path'
 import chokidar from 'chokidar'
-import defu from 'defu'
 import { Blueprint as PressBlueprint } from '@nuxtpress/core'
 import {
   normalizeConfig,
-  markdownToText,
   getDirsAsArray,
   importModule,
-  normalizeSourcePath,
-  normalizePaths,
-  writeJson,
-  ensureDir
+  normalizeSourcePath
 } from '@nuxtpress/utils'
 
-import loadSources from './data'
+import loadSources, { _parseSlides } from './data'
 import api from './api'
-import source from './source'
 
-export default class PressBlogBlueprint extends PressBlueprint {
-  static id = 'blog'
+export default class PressSlidesBlueprint extends PressBlueprint {
+  static id = 'slides'
 
   static features = {
     singleton: true,
@@ -26,21 +20,8 @@ export default class PressBlogBlueprint extends PressBlueprint {
   }
 
   static defaultConfig = {
-    dir: 'blog',
-    prefix: '/blog/',
-    title: 'A NuxtPress Blog',
-    links: [],
-    icons: [],
-    feed: {
-      // Replace with final link to your feed
-      link: 'https://nuxt.press',
-      // The <description> RSS tag
-      description: 'A NuxtPress Blog Description',
-      // Used in RFC4151-based RSS feed entry tags
-      tagDomain: 'nuxt.press',
-      // Final RSS path
-      path: options => `${options.prefix}rss.xml`
-    }
+    dir: 'slides',
+    prefix: '/slides/'
   }
 
   constructor (nuxt, options = {}) {
@@ -60,14 +41,8 @@ export default class PressBlogBlueprint extends PressBlueprint {
     const api = this.createApi()
 
     this.addServerMiddleware((req, res, next) => {
-      console.log('URL', req.url)
-      if (req.url.startsWith('/api/blog/index')) {
+      if (req.url.startsWith('/api/slides/index')) {
         api.index(req, res, next)
-        return
-      }
-
-      if (req.url.startsWith('/api/blog/archive')) {
-        api.archive(req, res, next)
         return
       }
 
@@ -79,8 +54,6 @@ export default class PressBlogBlueprint extends PressBlueprint {
     const config = await super.loadConfig(extraConfig)
 
     config.api = api
-    config.source = source
-
     return config
   }
 
@@ -94,13 +67,9 @@ export default class PressBlogBlueprint extends PressBlueprint {
     const routeName = `source-${this.id.toLowerCase()}`
 
     return [{
-      name: `${routeName}-index`,
+      name: `${routeName}-archive`,
       path: `${prefix}/`,
       component: this.templates['pages/index.vue']
-    }, {
-      name: `${routeName}-archive`,
-      path: `${prefix}/archive`,
-      component: this.templates['pages/archive.vue']
     },
     ...super.createRoutes()
     ]
@@ -110,8 +79,6 @@ export default class PressBlogBlueprint extends PressBlueprint {
     if (!this.nuxt.options.dev) {
       return
     }
-
-    let updatedEntry
 
     const mdProcessor = await this.config.source.processor()
 
@@ -124,20 +91,20 @@ export default class PressBlogBlueprint extends PressBlueprint {
       ignored: 'node_modules/**/*'
     })
 
-    watcher.on('add', async (path) => {
-      updatedEntry = await parseEntry.call(this, path, mdProcessor)
-      this.sseSourceEvent('add', updatedEntry)
-    })
+    const parseSlides = _parseSlides.bind(this)
 
     watcher.on('change', async (path) => {
-      updatedEntry = await parseEntry.call(this, path, mdProcessor)
-      this.sseSourceEvent('change', updatedEntry)
+      const updatedSlides = await parseSlides.call(this, path, mdProcessor)
+      this.sseSourceEvent('change', updatedSlides)
     })
-
+    watcher.on('add', async (path) => {
+      const updatedSlides = await parseSlides.call(this, path, mdProcessor)
+      this.sseSourceEvent('add', updatedSlides)
+    })
     watcher.on('unlink', path => this.sseSourceEvent('unlink', { path }))
   }
 
-  async generateRoutes (rootDir, prefix) {
+  generateRoutes (rootDir, prefix) {
     return [
       ...Object.keys(this.data.topLevel).map(async path => ({
         route: prefix(normalizeSourcePath(path)),

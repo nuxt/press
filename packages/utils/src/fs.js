@@ -14,7 +14,7 @@ export const readFileAsync = util.promisify(fs.readFile)
 export const writeFileAsync = util.promisify(fs.writeFile)
 export const copyFileAsync = util.promisify(fs.copyFile)
 
-export function existsAsync(p) {
+export function existsAsync (p) {
   return new Promise((resolve, reject) => {
     fs.access(p, fs.constants.F_OK, (err) => {
       if (err) {
@@ -27,7 +27,7 @@ export function existsAsync(p) {
   })
 }
 
-export function createFileFilter(filter) {
+export function createFileFilter (filter) {
   if (!filter) {
     return
   }

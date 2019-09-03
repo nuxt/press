@@ -5,7 +5,7 @@ import {
   walk
 } from './fs'
 
-export async function createJobsFromConfig(nuxtOptions, config) {
+export async function createJobsFromConfig (nuxtOptions, config) {
   const srcRoots = getDirsAsArray(config.dir)
 
   for (const key in srcRoots) {

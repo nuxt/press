@@ -53,19 +53,12 @@ describe('full', () => {
     expect(sidebarLinks).toEqual(expectedLinks)
   }
 
-  /*test('open home', async () => {
+  test('open home', async () => {
     const url = browser.getUrl('/')
 
     page = await browser.page(url)
 
     await testPageHome()
-  })*/
-
-  test('open /guide-docs/en', async () => {
-    const url = browser.getUrl('/guide-docs/en')
-    page = await browser.page(url)
-
-    await testPageGuideDocsEN()
   })
 
   test('nav /docs', async () => {
@@ -143,7 +136,7 @@ describe('full', () => {
     await testPageGuideDocsEN()
   })
 
-  /*test('open /guide-docs/en', async () => {
+  test('open /guide-docs/en', async () => {
     const url = browser.getUrl('/guide-docs/en')
     page = await browser.page(url)
 
@@ -154,5 +147,5 @@ describe('full', () => {
     await page.navigate('/')
 
     await testPageHome()
-  })*/
+  })
 })

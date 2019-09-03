@@ -18,20 +18,12 @@
     "dist": "rimraf dist && rollup -c rollup.config.js && rimraf dist/blueprints/*/test/",
     "generate": "nuxt generate",
     "start": "nuxt start",
-    "lint": "eslint --fix --ext .js src",
+    "lint": "eslint --fix --ext .js packages test",
     "postinstall": "lerna link",
     "test": "yarn test:unit && yarn test:fixtures && yarn test:e2e",
     "test:unit": "jest test/unit",
     "test:e2e": "jest packages/*/test/e2e",
     "test:fixtures": "jest packages/*/test/fixtures"
-  },
-  "dependencies": {
-    "animate.css": "^3.7.2",
-    "hable": "3.0.0-0",
-    "keymaster": "^1.6.2",
-    "prismjs": "^1.17.1",
-    "swiper": "^4.5.0",
-    "vue-awesome-swiper": "^3.1.3"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -70,5 +62,8 @@
     "std-env": "^2.2.1",
     "tib": "^0.7.1",
     "vue-jest": "^3.0.4"
+  },
+  "dependencies": {
+    "hable": "3.0.0-0"
   }
 }

@@ -1,10 +1,10 @@
 import Vue from 'vue'
 import consola from 'consola'
+import { createPlugin } from 'press/core/utils'
 import NuxtStatic from '../components/nuxt-static'
 import NuxtTemplate from '../components/nuxt-template'
 import PressLink from '../components/press-link'
 import pressMiddleware from '../middleware/press'
-import { createPlugin } from 'press/core/utils'
 
 Vue.component('NuxtStatic', NuxtStatic)
 Vue.component('NuxtTemplate', NuxtTemplate)
@@ -50,7 +50,7 @@ export default createPlugin('press', async (plugin, context) => {
       return context.$http.$get(url).catch(err => consola.warn(err))
     }
   }
-console.log('PRESS PLUGIN')
+
   // this is a workaround to prevent hydration errors
   // due to middlewares not running on first load on the client
   // TODO: try to understand why returning the pressMiddleware

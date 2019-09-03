@@ -17,7 +17,9 @@ import {
   normalizePaths,
   trimSlash
 } from '@nuxtpress/utils'
+
 import coreApi from './api'
+import source from './source'
 
 export default class PressBlueprint extends Blueprint {
   static id = 'press'
@@ -25,7 +27,7 @@ export default class PressBlueprint extends Blueprint {
   static autodiscovered = false
   static coreSetupDone = false
 
-  constructor(nuxt, options) {
+  constructor (nuxt, options) {
     if (new.target === 'PressBlueprint') {
       throw new Error('PressBlueprint is an abstract class, do not instantiate it directly')
     }
@@ -43,7 +45,7 @@ export default class PressBlueprint extends Blueprint {
     this.coreDir = __dirname
   }
 
-  static async loadRootConfig({ rootDir, options: nuxtOptions, config }) {
+  static async loadRootConfig ({ rootDir, options: nuxtOptions, config }) {
     // Note: for clarity, in static methods `this` refers to
     // the static this, not the this of the instance
     if (!this.configs[rootDir]) {
@@ -63,7 +65,7 @@ export default class PressBlueprint extends Blueprint {
     return this.configs[rootDir]
   }
 
-  static async register(moduleContainer, config) {
+  static async register (moduleContainer, config) {
     const nuxt = moduleContainer.nuxt
 
     // TODO: isStandalone is not correctly implemented yet for custom id's
@@ -98,7 +100,7 @@ export default class PressBlueprint extends Blueprint {
     return modeInstances
   }
 
-  async loadConfig(extraConfig = {}) {
+  async loadConfig (extraConfig = {}) {
     // retrieve rootConfig from static instance
     this.rootConfig = await this.constructor.loadRootConfig({
       rootDir: this.nuxt.options.rootDir,
@@ -112,13 +114,15 @@ export default class PressBlueprint extends Blueprint {
     if (this.rootConfig[this.id]) {
       config = this.rootConfig[this.id]
     } else {
-      config = this.constructor.defaultConfig
+      config = this.constructor.defaultConfig || {}
     }
+
+    config.source = source
 
     return config
   }
 
-  setLocales() {
+  setLocales () {
     // dont bother if the blueprint doesnt support localization
     if (!this.constructor.features.localization) {
       this.config.$hasLocales = false
@@ -127,7 +131,7 @@ export default class PressBlueprint extends Blueprint {
 
     // prefer locales defined in the current mode config,
     // otherwise use the root conf
-    let locales = this.config.locales || this.rootConfig.locales || (this.rootConfig.i18n && this.rootConfig.i18n.locales)
+    const locales = this.config.locales || this.rootConfig.locales || (this.rootConfig.i18n && this.rootConfig.i18n.locales)
 
     // validate locales so from now on we know its an array
     if (locales && Array.isArray(locales)) {
@@ -138,7 +142,7 @@ export default class PressBlueprint extends Blueprint {
   }
 
   // coreSetup only need to run once
-  async coreSetup() {
+  async coreSetup () {
     if (PressBlueprint.coreSetupDone) {
       return
     }
@@ -225,13 +229,22 @@ export default class PressBlueprint extends Blueprint {
     }
   }
 
-  async setup() {
+  async setup () {
     // load the saved configuration
     this.config = await this.loadConfig()
 
     // try to set/validate locales so we dont
     // have to do that later anyjore
     this.setLocales()
+
+    // bind all source functions to this context
+    // is a small improvement instead of using
+    // .call(this) every time later on
+    if (this.config.source) {
+      for (const key in this.config.source) {
+        this.config.source[key] = this.config.source[key].bind(this)
+      }
+    }
 
     // create backwards compatible template options
     this.templateOptions = {
@@ -250,7 +263,7 @@ export default class PressBlueprint extends Blueprint {
   }
 
   // init needs to run for each derived nuxt/press module
-  async init() {
+  async init () {
     await this.setup()
 
     this.nuxt.hook('build:before', () => this.buildBefore())
@@ -263,11 +276,11 @@ export default class PressBlueprint extends Blueprint {
     })
 
     if (!PressBlueprint.buildTemplatesHookAdded) {
-      this.nuxt.hook('build:templates', (templateContext) => this.buildTemplates(templateContext))
+      this.nuxt.hook('build:templates', templateContext => this.buildTemplates(templateContext))
       PressBlueprint.buildTemplatesHookAdded = true
     }
 
-    this.nuxt.hook('build:extendRoutes', (routes) => this.buildExtendRoutes(routes))
+    this.nuxt.hook('build:extendRoutes', routes => this.buildExtendRoutes(routes))
     this.nuxt.hook('build:done', () => this.buildDone())
 
     // only add generate hooks if needed
@@ -279,13 +292,13 @@ export default class PressBlueprint extends Blueprint {
 
     // the generateRoutesHookAdded should only be added once
     if (!PressBlueprint.generateRoutesHookAdded) {
-      this.nuxt.hook('generate:extendRoutes', (routes) => this.generateExtendRoutes(routes))
+      this.nuxt.hook('generate:extendRoutes', routes => this.generateExtendRoutes(routes))
 
       PressBlueprint.generateRoutesHookAdded = true
     }
   }
 
-  async autodiscover(rootDir) {
+  async autodiscover (rootDir) {
     const files = [undefined, undefined]
     const autodiscoverOpts = {
       // ignore all files in the root of the blueprint folder
@@ -308,7 +321,7 @@ export default class PressBlueprint extends Blueprint {
     return files
   }
 
-  createApi() {
+  createApi () {
     const rootDir = path.join(this.nuxt.options.buildDir, PressBlueprint.id, 'static')
     const apiOptions = {
       rootDir,
@@ -331,7 +344,7 @@ export default class PressBlueprint extends Blueprint {
   // TODO: why is the css.splice (and thus this special fn) necessary?
   // Cant we trust push order in that core pushed first,
   // then eg the derived docs mode blueprint?
-  addTheme(themePath) {
+  addTheme (themePath) {
     if (this.blueprintOptions.naked) {
       return
     }
@@ -348,7 +361,7 @@ export default class PressBlueprint extends Blueprint {
 
   // auto wrap in an error handlerimport { createSidebar } from '../sidebar'
 
-  addServerMiddleware(middleware) {
+  addServerMiddleware (middleware) {
     super.addServerMiddleware((req, res, next) => {
       try {
         middleware(req, res, next)
@@ -363,7 +376,7 @@ export default class PressBlueprint extends Blueprint {
     const { topLevel, sources } = data || this.data
 
     if (topLevel) {
-      await saveJsonFiles(topLevel, path.join(rootDir, this.id), (fileName) => `${fileName}.json`)
+      await saveJsonFiles(topLevel, path.join(rootDir, this.id), fileName => `${fileName}.json`)
     }
 
     if (sources) {
@@ -380,22 +393,23 @@ export default class PressBlueprint extends Blueprint {
   }
 
   // abstract methods for mode derivates to implement
-  loadData() {}
-  buildBefore() {}
-  buildDone() {}
-  generateRoutes() {}
+  loadData () {}
+  buildBefore () {}
+  buildDone () {}
+  generateRoutes () {}
 
-  async builderPrepared() {
+  async builderPrepared () {
     const [coreFiles, files] = await this.autodiscover()
 
     if (coreFiles) {
       PressBlueprint.templates = await this.resolveFiles(coreFiles, `${PressBlueprint.id}/core`)
     }
 
-    this.templates = await this.resolveFiles(files, `${PressBlueprint.id}/${this.constructor.id}`)
+    if (files) {
+      this.templates = await this.resolveFiles(files, `${PressBlueprint.id}/${this.constructor.id}`)
+    }
 
-    // TODO: remove: || {}
-    this.data = await this.loadData() || {}
+    this.data = await this.loadData()
 
     const rootDir = path.join(this.nuxt.options.buildDir, PressBlueprint.id, 'static')
     await this.saveDataSources(rootDir)
@@ -410,16 +424,14 @@ export default class PressBlueprint extends Blueprint {
     }
   }
 
-  buildTemplates({ templateVars }) {
+  buildTemplates ({ templateVars }) {
     templateVars.middleware.push({
       name: 'press',
       dst: PressBlueprint.templates['middleware/press.tmpl.js']
     })
   }
 
-  createRoutes() {
-    const routes = []
-
+  createRoutes () {
     const prefix = this.config.$normalizedPrefix || ''
     const routeName = `source-${this.id.toLowerCase()}`
 
@@ -427,30 +439,27 @@ export default class PressBlueprint extends Blueprint {
       const locales = this.config.$locales.map(locale => locale.code)
       locales.sort()
 
-      routes.push({
+      return [{
         name: `${routeName}-locales-${locales.join('_')}`,
         path: `${prefix}/:locale(${locales.join('|')})?/:source(.*)?`,
         component: PressBlueprint.templates['pages/source.tmpl.vue'],
         meta: { id: this.id, source: true }
-      })
-    } else {
-      routes.push({
-        name: routeName,
-        path: `${prefix}/:source(.*)?`,
-        component: PressBlueprint.templates['pages/source.tmpl.vue'],
-        meta: { id: this.id, source: true }
-      })
+      }]
     }
 
-    return routes
+    return [{
+      name: routeName,
+      path: `${prefix}/:source(.*)?`,
+      component: PressBlueprint.templates['pages/source.tmpl.vue'],
+      meta: { id: this.id, source: true }
+    }]
   }
 
   // routes are split up as core provides both default routes
   // as a wrapper to make sure only valid routes are added
   // TODO: maybe we can just remove the below?
-  async buildExtendRoutes(nuxtRoutes) {
+  async buildExtendRoutes (nuxtRoutes) {
     const routes = this.createRoutes()
-
     if (routes) {
       for (const route of routes) {
         if (
@@ -474,11 +483,11 @@ export default class PressBlueprint extends Blueprint {
     }
   }
 
-  getGenerateRoot() {
+  getGenerateRoot () {
     return path.join(this.nuxt.options.generate.dir, `_${PressBlueprint.id}`)
   }
 
-  async generateDistCopied() {
+  async generateDistCopied () {
     const rootDirGenerate = this.getGenerateRoot()
 
     await ensureDir(rootDirGenerate)
@@ -543,7 +552,7 @@ export default class PressBlueprint extends Blueprint {
     })
   }
 
-  async generateExtendRoutes(extendRoutes) {
+  async generateExtendRoutes (extendRoutes) {
     let routes = await Promise.all(this.rootConfig.$generateRoutes)
 
     if (this.rootConfig.$extendStaticRoutes) {

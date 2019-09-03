@@ -76,7 +76,7 @@ async function getSource ($press, path) {
 
 export default async function pressMiddleware (context) {
   const { app, route, $press, params, payload } = context
-console.log('PRESS MIDD')
+
   // do not run when matched is empty, not our route!
   if (!route.matched.length) {
     return

@@ -23,8 +23,8 @@ export function getRouteMeta (route) {
 
 // this functions creates the basic nuxt/press plugin dynamically
 // so it doesnt matter which plugin file is loaded first
-export function createPlugin(id, extendPlugin) {
-  return function _createPlugin(context, inject) {
+export function createPlugin (id, extendPlugin) {
+  return function _createPlugin (context, inject) {
     const pluginId = `$${id}`
 
     if (!context[pluginId]) {
@@ -37,7 +37,6 @@ export function createPlugin(id, extendPlugin) {
 
       const bus = new Hookable()
 
-
       // TODO: this should be moved to mode specific middleware
       // its used in eg blog but prevents using multiple instances
       plugin.data = {}
@@ -45,8 +44,7 @@ export function createPlugin(id, extendPlugin) {
       plugin.hook = bus.hook.bind(bus)
       plugin.callHook = bus.callHook.bind(bus)
       plugin.clearHook = bus.clearHook.bind(bus)
-      plugin.hasHook = hookName => {
-        console.log('HOOKS', Object.keys(bus._hooks))
+      plugin.hasHook = (hookName) => {
         return Array.isArray(bus._hooks[hookName]) && bus._hooks[hookName].length > 0
       }
 
@@ -72,7 +70,7 @@ export function createPlugin(id, extendPlugin) {
   }
 }
 
-export function prepareLocalePath({ $press, params }, middlewareContext) {
+export function prepareLocalePath ({ $press, params }, middlewareContext) {
   if (!params.locale) {
     const config = $press[middlewareContext.meta.id]
 

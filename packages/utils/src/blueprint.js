@@ -15,7 +15,7 @@ import {
 export default class Blueprint extends Module {
   static features = {}
 
-  constructor(nuxt, options = {}) {
+  constructor (nuxt, options = {}) {
     // singleton blueprints dont support being loaded twice
     if (new.target.features.singleton) {
       if (new.target.features._loaded) {
@@ -36,7 +36,7 @@ export default class Blueprint extends Module {
     this.templateOptions = this.blueprintOptions
   }
 
-  setup() {
+  setup () {
     if (this.setupDone) {
       return
     }
@@ -59,7 +59,7 @@ export default class Blueprint extends Module {
     }
   }
 
-  init() {
+  init () {
     this.setup()
 
     this.nuxt.hook('builder:prepared', async () => {
@@ -72,7 +72,7 @@ export default class Blueprint extends Module {
     })
   }
 
-  createTemplatePaths(filePath, rootDir, prefix) {
+  createTemplatePaths (filePath, rootDir, prefix) {
     if (typeof filePath !== 'string') {
       return filePath
     }
@@ -85,7 +85,7 @@ export default class Blueprint extends Module {
     }
   }
 
-  async autodiscover(rootDir, { validate, filter } = {}) {
+  async autodiscover (rootDir, { validate, filter } = {}) {
     rootDir = rootDir || this.blueprintOptions.dir
 
     if (!rootDir || !await existsAsync(rootDir)) {
@@ -116,7 +116,7 @@ export default class Blueprint extends Module {
     return filesByType
   }
 
-  async resolveFiles(files, pathPrefix) {
+  async resolveFiles (files, pathPrefix) {
     pathPrefix = pathPrefix || this.id
 
     // use an instance var to keep track
@@ -125,7 +125,7 @@ export default class Blueprint extends Module {
 
     for (const type in files) {
       // TODO: load ejected user templates instead---
-      const typeFiles = files[type].map(file => {
+      const typeFiles = files[type].map((file) => {
         if (typeof file === 'string') {
           return this.createTemplatePaths(file, undefined, pathPrefix)
         }
@@ -155,7 +155,7 @@ export default class Blueprint extends Module {
     // to relative paths from the nuxt.buildDir
     const relativeFilesMapping = {}
     for (const key in this.filesMapping) {
-      let filePath = this.filesMapping[key]
+      const filePath = this.filesMapping[key]
 
       if (path.isAbsolute(filePath)) {
         relativeFilesMapping[key] = path.relative(this.nuxt.options.buildDir, filePath)
@@ -168,7 +168,7 @@ export default class Blueprint extends Module {
     return relativeFilesMapping
   }
 
-  async copyFile({ src, dst }) {
+  async copyFile ({ src, dst }) {
     // TODO: can this be removed?
     if (!path.isAbsolute(dst)) {
       dst = path.join(this.nuxt.options.buildDir, dst)
@@ -186,7 +186,7 @@ export default class Blueprint extends Module {
     }
   }
 
-  addTemplateIfNeeded({ src, dst, dstRelative } = {}) {
+  addTemplateIfNeeded ({ src, dst, dstRelative } = {}) {
     if (!src) {
       return
     }
@@ -232,7 +232,7 @@ export default class Blueprint extends Module {
     return src
   }
 
-  async addTemplateOrCopy({ src, dst, dstRelative } = {}) {
+  async addTemplateOrCopy ({ src, dst, dstRelative } = {}) {
     const dest = this.addTemplateIfNeeded({ src, dst, dstRelative })
 
     if (dest === src) {
@@ -243,11 +243,11 @@ export default class Blueprint extends Module {
     return dest
   }
 
-  addFiles(files, type) {
-    return Promise.all(files.map((file) => this.addTemplateOrCopy(file)))
+  addFiles (files, type) {
+    return Promise.all(files.map(file => this.addTemplateOrCopy(file)))
   }
 
-  addAssets(assets) {
+  addAssets (assets) {
     // TODO: run addAssets more than once while adding just one plugin
     // or set unique webpack plugin name
     const emitAssets = (compilation) => {
@@ -269,7 +269,7 @@ export default class Blueprint extends Module {
     })
   }
 
-  async addLayouts(layouts) {
+  async addLayouts (layouts) {
     for (const layout of layouts) {
       const layoutPath = await this.addTemplateOrCopy(layout)
 
@@ -286,17 +286,17 @@ export default class Blueprint extends Module {
     }
   }
 
-  async addModules(modules) {
+  async addModules (modules) {
     for (const module of modules) {
       const modulePath = this.addTemplateIfNeeded(module)
       await this.addModule(modulePath)
     }
   }
 
-  async addPlugins(plugins) {
+  async addPlugins (plugins) {
     // dont use addPlugin here due to its addTemplate use
     for (const plugin of plugins) {
-      let pluginPath = await this.addTemplateOrCopy(plugin)
+      const pluginPath = await this.addTemplateOrCopy(plugin)
 
       // Add to nuxt plugins
       this.nuxt.options.plugins.push({
@@ -308,7 +308,7 @@ export default class Blueprint extends Module {
     }
   }
 
-  addStatic(staticFiles) {
+  addStatic (staticFiles) {
     this.nuxt.hook('build:done', () => {
       return Promise.all(staticFiles.map((file) => {
         return this.copyFile(this.createTemplatePaths(file))
@@ -316,7 +316,7 @@ export default class Blueprint extends Module {
     })
   }
 
-  addStyles(stylesheets) {
+  addStyles (stylesheets) {
     for (const stylesheet of stylesheets) {
       if (!this.nuxt.options.css.includes(stylesheet)) {
         this.nuxt.options.css.push(stylesheet)
@@ -324,12 +324,13 @@ export default class Blueprint extends Module {
     }
   }
 
-  addApp() {
+  addApp () {
+    // eslint-disable-next-line no-console
     console.warn(`${this.constructor.name}: app overrides are not yet implemented`)
   }
 
-  addStore() {
+  addStore () {
+    // eslint-disable-next-line no-console
     console.warn(`${this.constructor.name}: adding store modules from blueprints is not yet implemented`)
   }
-
 }

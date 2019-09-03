@@ -10,8 +10,6 @@ import {
 Vue.component('OutboundLink', OutboundLink)
 
 async function docsMiddleware ({ route, params, $press }, middlewareContext = {}) {
-  console.log('DOCS MIDDD', middlewareContext)
-
   const meta = middlewareContext.meta
   <% if (options.options.$hasLocales) {
   // nothing todo when locale hasnt changed
@@ -27,7 +25,7 @@ async function docsMiddleware ({ route, params, $press }, middlewareContext = {}
   const options = $press[`<%= options.id %>`]
 
   const shouldLoadConfig = !options<% if (options.options.configPerLocale) { %> || !options.pages[locale]<% } %>
-console.log('SHOULD LOAD CONFIG', shouldLoadConfig)
+
   let config
   if (shouldLoadConfig) {
     config = await import(
@@ -82,7 +80,6 @@ console.log('SHOULD LOAD CONFIG', shouldLoadConfig)
 }
 
 export default createPlugin('press', (plugin, context) => {
-  console.log('DOCS PLUGIN')
   return plugin.register({
     id: `<%= options.id %>`,
     middleware: (middlewareContext) => docsMiddleware(context, middlewareContext),
@@ -90,7 +87,6 @@ export default createPlugin('press', (plugin, context) => {
     preparePath: (middlewareContext) => prepareLocalePath(context, middlewareContext),
     <% } %>
     done: ({ locale }) => {
-      console.log('DOCS DONE')
       const { $press, route, params } = context
       <% if (options.options.$hasLocales) { %>
       $press.locale = params.locale || locale

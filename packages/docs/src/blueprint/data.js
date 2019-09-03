@@ -19,7 +19,7 @@ import {
 // Nuxt's srcDir or the docs/ directory.
 // Directory configurable via press.docs.dir
 
-export async function parsePage ({ root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
+export async function _parsePage ({ root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
   const src = sourcePath
 
   pagePrefix = normalizePath(pagePrefix, true, false, true)
@@ -42,9 +42,9 @@ export async function parsePage ({ root, prefix: pagePrefix = '', path: sourcePa
     meta = defu({}, defaultMetaSettings)
   }
 
-  const { toc, html: body } = await this.config.source.markdown.call(this, raw, mdProcessor)
+  const { toc, html: body } = await this.config.source.markdown(raw, mdProcessor)
 
-  const title = await this.config.source.title.call(this, fileName, raw, toc)
+  const title = await this.config.source.title(fileName, raw, toc)
 
   sourcePath = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(indexKeysRE, '') || 'index'
 
@@ -78,15 +78,16 @@ export async function parsePage ({ root, prefix: pagePrefix = '', path: sourcePa
   }
 }
 
-export default async function () {
+export default async function docsData () {
   const jobs = await createJobsFromConfig(this.nuxt.options, this.config)
 
   const sources = {}
   const $pages = {}
   const mdProcessor = await this.config.source.processor()
 
+  const parsePage = _parsePage.bind(this)
   const handler = async (page) => {
-    const { toc, meta, source } = await parsePage.call(this, page, mdProcessor)
+    const { toc, meta, source } = await parsePage(page, mdProcessor)
 
     // Clarification:
     // - source.path is the full webpath including configured prefix

@@ -39,7 +39,7 @@ export default class PressDocsBlueprint extends PressBlueprint {
     }
   }
 
-  constructor(nuxt, options = {}) {
+  constructor (nuxt, options = {}) {
     options = {
       dir: __dirname,
       ...normalizeConfig(options)
@@ -48,11 +48,10 @@ export default class PressDocsBlueprint extends PressBlueprint {
     super(nuxt, options)
   }
 
-  async setup() {
+  async setup () {
     await super.setup()
 
     this.addTheme(path.join(__dirname, '..', 'theme.css'))
-
 
     let languages
     if (this.config.$locales) {
@@ -94,18 +93,19 @@ export default class PressDocsBlueprint extends PressBlueprint {
     })
   }
 
-  async loadConfig(extraConfig) {
+  async loadConfig (extraConfig) {
     const config = await super.loadConfig(extraConfig)
+    config.source = source
 
-    return defu(config, { source })
+    return config
   }
 
-  loadData() {
+  loadData () {
     // this method is externalized to improve readability
     return loadSources.call(this)
   }
 
-  async builderPrepared() {
+  async builderPrepared () {
     await super.builderPrepared()
 
     const pluginPath = path.join(this.nuxt.options.buildDir, PressBlueprint.id, this.constructor.id, 'plugins')
@@ -204,10 +204,10 @@ export default class PressDocsBlueprint extends PressBlueprint {
       )
     }
 
-    //await updateConfig.call(this, context)
+    // await updateConfig.call(this, context)
   }
 
-  async buildDone() {
+  async buildDone () {
     if (!this.nuxt.options.dev) {
       return
     }
@@ -238,7 +238,7 @@ export default class PressDocsBlueprint extends PressBlueprint {
     watcher.on('unlink', updateDocs)
   }
 
-  async generateRoutes(rootDir, prefix) {
+  async generateRoutes (rootDir, prefix) {
     let home = '/'
     if (this.config.$hasLocales) {
       const [{ code: locale }] = this.config.$locales

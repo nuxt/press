@@ -13,23 +13,23 @@ import {
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-export async function parseEntry ({ root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
+export async function _parseEntry ({ root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
   // TODO just completely rewrite this function, please
   const { name: fileName } = path.parse(sourcePath)
 
   const raw = await readFileAsync(path.join(root, sourcePath), { encoding: 'utf8' })
 
-  const metadata = this.config.source.metadata.call(this, fileName, raw)
+  const metadata = this.config.source.metadata(fileName, raw)
   if (metadata instanceof Error) {
     consola.warn(metadata.message)
     return
   }
 
-  const title = metadata.title || this.config.source.title.call(this, raw)
+  const title = metadata.title || this.config.source.title(raw)
   const slug = metadata.slug
   const published = metadata.published
 
-  const body = await this.config.source.markdown.call(this, metadata.content || raw.substr(raw.indexOf('#')), mdProcessor)
+  const body = await this.config.source.markdown(metadata.content || raw.substr(raw.indexOf('#')), mdProcessor)
   delete metadata.content
 
   const source = {
@@ -44,8 +44,8 @@ export async function parseEntry ({ root, prefix: pagePrefix = '', path: sourceP
     ...this.nuxt.options.dev && { src: sourcePath }
   }
 
-  source.id = this.config.source.id.call(this, source)
-  source.path = `${this.config.prefix}${slug || this.config.source.path.call(this, fileName, source)}`
+  source.id = this.config.source.id(source)
+  source.path = `${this.config.prefix}${slug || this.config.source.path(fileName, source)}`
 
   return source
 }
@@ -81,19 +81,20 @@ function sortEntries (entries) {
     .map(({ $published, ...e }) => e)
 }
 
-export default async function data () {
+export default async function blogData () {
   const sources = {}
   const archive = {}
 
+  const parseEntry = _parseEntry.bind(this)
+  const mdProcessor = await this.config.source.processor()
   const jobs = await createJobsFromConfig(this.nuxt.options, this.config)
 
-  const mdProcessor = await this.config.source.processor()
-
   const handler = async (path) => {
-    const entry = await parseEntry.call(this, path, mdProcessor)
+    const entry = await parseEntry(path, mdProcessor)
     if (!entry) {
       return
     }
+
     addArchiveEntry(archive, entry)
     sources[entry.path] = entry
   }
