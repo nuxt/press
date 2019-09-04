@@ -13,12 +13,42 @@ Vue.component('PressLink', PressLink)
 // TODO: remove this
 const apiToStatic = {
   // Blog-only API endpoints
-  'api/blog/index': '/_press/blog/index.json',
-  'api/blog/archive': '/_press/blog/archive.json',
+  <% for (const id in options.rootOptions.blogPrefixes) {
+    const prefix = options.rootOptions.blogPrefixes[id]
+  %>
+  '<%= id %>': {
+    'api/blog/index': '/_press/blog<%= prefix %>/index.json',
+    'api/blog/archive': '/_press/blog<%= prefix %>/archive.json'
+  },
+  <% } %>
   // Slides-only API endpoints
-  'api/slides/index': '/_press/slides/index.json',
+  <% for (const id in options.rootOptions.slidesPrefixes) {
+    const prefix = options.rootOptions.slidesPrefixes[id]
+  %>
+  '<%= id %>': {
+    'api/slides/index': '/_press/slides<%= prefix %>/index.json',
+  },
+  <% } %>
   // Common API endpoints
-  'api/source': path => `/_press/sources/${path}${path ? '/' : ''}index.json`
+  'api/source': path => `/_press/sources/${path}/index.json`
+}
+
+function getUrl(apiPaths, url) {
+  for (const apiPath in apiPaths) {
+    if (url.startsWith(apiPath)) {
+      const staticPath = apiPaths[apiPath]
+
+      if (typeof staticPath === 'function') {
+        const startSlice = apiPath.length + 1
+        const endSlice = url.endsWith('/') ? 1 : 0
+
+        url = url.slice(startSlice, url.length - endSlice)
+        return staticPath(url)
+      }
+
+      return staticPath
+    }
+  }
 }
 
 function $json (url) {
@@ -26,29 +56,26 @@ function $json (url) {
 }
 
 export default createPlugin('press', async (plugin, context) => {
-  if (process.static && process.client) {
-    plugin.get = function get (url) {
-      for (const apiPath in apiToStatic) {
-        const staticPath = apiToStatic[apiPath]
+  plugin.get = function get (url) {
+    const { route: { path, matched } } = context
+    const [{ meta }] = matched || []
 
-        if (url.startsWith(apiPath)) {
-          if (typeof staticPath === 'function') {
-            const startSlice = apiPath.length + 1
-            const endSlice = url.endsWith('/') ? 1 : 0
-            url = url.slice(startSlice, url.length - endSlice)
-
-            const apiUrl = staticPath(url)
-            return $json(apiUrl)
-          }
-
-          return $json(staticPath)
-        }
-      }
+    let apiUrl
+    if (meta && !meta.source && apiToStatic[meta.id]) {
+      apiUrl = getUrl(apiToStatic[meta.id], url)
     }
-  } else {
-    plugin.get = function get (url) {
-      return context.$http.$get(url).catch(err => consola.warn(err))
+
+    if (!apiUrl) {
+      apiUrl = getUrl(apiToStatic, url)
     }
+
+    if (process.static && process.client) {
+      return $json(apiUrl)
+    }
+
+    // strip first slash
+    apiUrl = apiUrl[0] === '/' ? apiUrl.slice(1) : apiUrl
+    return context.$http.$get(apiUrl).catch(err => consola.warn(err))
   }
 
   // this is a workaround to prevent hydration errors

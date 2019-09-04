@@ -238,7 +238,7 @@ export default class PressDocsBlueprint extends PressBlueprint {
     watcher.on('unlink', updateDocs)
   }
 
-  async generateRoutes (rootDir, prefix) {
+  async createGenerateRoutes (rootDir, prefix) {
     let home = '/'
     if (this.config.$hasLocales) {
       const [{ code: locale }] = this.config.$locales
@@ -249,12 +249,12 @@ export default class PressDocsBlueprint extends PressBlueprint {
 
     return [
       {
-        route: prefix(''),
+        route: prefix('/'),
         payload: await importModule(rootDir, 'sources', home)
       },
-      ...Object.values(this.data.sources).map(async ({ path }) => ({
-        route: normalizeSourcePath(path),
-        payload: await importModule(rootDir, 'sources', path)
+      ...Object.values(this.data.sources).map(async ({ path: route }) => ({
+        route: normalizeSourcePath(route),
+        payload: await importModule(rootDir, 'sources', route)
       }))
     ]
   }

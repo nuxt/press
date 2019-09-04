@@ -1,29 +1,33 @@
 import path from 'path'
 import { existsSync, readJsonSync } from 'fs-extra'
+import { trimSlash } from '@nuxtpress/utils'
 
 const sourceCache = {}
+
+const suffixes = ['/index.json', '.json', '']
 
 export default function coreApi ({ rootDir, dev }) {
   return {
     source (req, res, next) {
-      const source = req.url
+      const source = trimSlash(req.url)
       const cacheKey = `${rootDir}/${source}`
 
       if (dev || !sourceCache[cacheKey]) {
-        let sourceFile = path.join(rootDir, 'sources', `${source}/index.json`)
+        for (const suffix of suffixes) {
+          const sourceFile = path.join(rootDir, 'sources', `${source}${suffix}`)
 
-        if (!existsSync(sourceFile)) {
-          sourceFile = path.join(rootDir, 'sources', `${source}.json`)
-
-          if (!existsSync(sourceFile)) {
-            const err = new Error('NuxtPress: source not found')
-            err.statusCode = 404
-            next(err)
-            return
+          if (existsSync(sourceFile)) {
+            sourceCache[cacheKey] = readJsonSync(sourceFile)
+            break
           }
         }
 
-        sourceCache[cacheKey] = readJsonSync(sourceFile)
+        if (!sourceCache[cacheKey]) {
+          const err = new Error('NuxtPress: source not found')
+          err.statusCode = 404
+          next(err)
+          return
+        }
       }
 
       res.json(sourceCache[cacheKey])

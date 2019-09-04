@@ -70,7 +70,7 @@ async function generateFeed (entries) {
   if (!await existsAsync(srcPath)) {
     srcPath = path.join(__dirname, 'static', 'rss.xml')
   }
-  const template = lodashTemplate(await readFileAsync(srcPath))
+  const template = lodashTemplate(await readFileAsync(srcPath, { encoding: 'utf8' }))
   return template({ blog: this.config, entries })
 }
 
@@ -129,8 +129,8 @@ export default async function blogData () {
       )
     },
     topLevel: {
-      index,
-      archive
+      [`${this.config.prefix}/index`]: index,
+      [`${this.config.prefix}/archive`]: archive
     },
     sources
   }

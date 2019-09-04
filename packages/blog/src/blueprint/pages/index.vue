@@ -22,9 +22,10 @@ export default {
   layout: 'blog',
   async fetch ({ $press, payload }) {
     const index = payload || await $press.get('api/blog/index')
+    const latest = (index || []).shift()
 
-    $press.data.latest = index[0].body
-    $press.data.entries = index.slice(1)
+    $press.data.latest = latest && latest.body
+    $press.data.entries = index
   }
 }
 </script>

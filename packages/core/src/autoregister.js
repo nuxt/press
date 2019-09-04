@@ -34,6 +34,11 @@ export default async function autoregister (options) {
     }
   }
 
+  // first run all setups
+  const setupPromises = Object.values(pressInstances).map(modeInstance => modeInstance.setup())
+  await Promise.all(setupPromises)
+
+  // then init the mode instances
   const initPromises = Object.values(pressInstances).map(modeInstance => modeInstance.init())
   await Promise.all(initPromises)
 

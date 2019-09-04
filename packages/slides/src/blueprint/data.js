@@ -81,7 +81,7 @@ export default async function slidesData () {
 
   return {
     topLevel: {
-      index
+      [`${this.config.prefix}/index`]: index
     },
     sources
   }

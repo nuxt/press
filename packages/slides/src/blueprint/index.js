@@ -5,6 +5,7 @@ import {
   normalizeConfig,
   getDirsAsArray,
   importModule,
+  normalizePath,
   normalizeSourcePath
 } from '@nuxtpress/utils'
 
@@ -38,15 +39,23 @@ export default class PressSlidesBlueprint extends PressBlueprint {
 
     this.addTheme(path.join(__dirname, '..', 'theme.css'))
 
+    // we need this for index pages
+    // see core/blueprint/plugins/press
+    this.rootConfig.slidesPrefixes = this.rootConfig.slidesPrefixes || {}
+    this.rootConfig.slidesPrefixes[this.id] = this.config.prefix
+
     const api = this.createApi()
 
-    this.addServerMiddleware((req, res, next) => {
-      if (req.url.startsWith('/api/slides/index')) {
-        api.index(req, res, next)
-        return
-      }
+    this.addServerMiddleware({
+      path: `/_press/slides${this.config.prefix}`,
+      handler: (req, res, next) => {
+        if (req.url === '/index.json') {
+          api.index(req, res, next)
+          return
+        }
 
-      next()
+        next()
+      }
     })
   }
 
@@ -68,9 +77,26 @@ export default class PressSlidesBlueprint extends PressBlueprint {
     return [{
       name: `${routeName}-archive`,
       path: `${this.config.prefix}/`,
-      component: this.templates['pages/index.vue']
+      component: this.templates['pages/index.vue'],
+      meta: { id: this.id, bp: this.constructor.id }
     },
     ...super.createRoutes()
+    ]
+  }
+
+  createGenerateRoutes (rootDir, prefix) {
+    return [
+      ...Object.keys(this.data.topLevel).map(async route => {
+        route = normalizePath(route, true, false)
+        return {
+          route: normalizePath(normalizeSourcePath(route)),
+          payload: await importModule(rootDir, this.id, `${route}.json`)
+        }
+      }),
+      ...Object.keys(this.data.sources).map(async route => ({
+        route: normalizePath(route),
+        payload: await importModule(rootDir, 'sources', route)
+      }))
     ]
   }
 
@@ -101,18 +127,5 @@ export default class PressSlidesBlueprint extends PressBlueprint {
       this.sseSourceEvent('add', updatedSlides)
     })
     watcher.on('unlink', path => this.sseSourceEvent('unlink', { path }))
-  }
-
-  generateRoutes (rootDir, prefix) {
-    return [
-      ...Object.keys(this.data.topLevel).map(async path => ({
-        route: prefix(normalizeSourcePath(path)),
-        payload: await importModule(rootDir, this.id, `${path}.json`)
-      })),
-      ...Object.keys(this.data.sources).map(async path => ({
-        route: prefix(normalizeSourcePath(path)),
-        payload: await importModule(rootDir, 'sources', path)
-      }))
-    ]
   }
 }

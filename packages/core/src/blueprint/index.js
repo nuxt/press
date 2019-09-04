@@ -18,6 +18,7 @@ import {
   saveJsonFiles,
   normalizeConfig,
   normalizePathPrefix,
+  normalizePath,
   normalizePaths,
   trimSlash
 } from '@nuxtpress/utils'
@@ -221,7 +222,7 @@ export default class PressBlueprint extends Blueprint {
     const api = this.createApi()
     if (api && api.source) {
       this.addServerMiddleware({
-        path: '/api/source/',
+        path: '/_press/sources/',
         handler: api.source
       })
     }
@@ -272,8 +273,6 @@ export default class PressBlueprint extends Blueprint {
 
   // init needs to run for each derived nuxt/press module
   async init () {
-    await this.setup()
-
     this.nuxt.hook('build:before', () => this.buildBefore())
     this.nuxt.hook('build:done', () => this.buildDone())
     this.nuxt.hook('builder:prepared', (builder) => {
@@ -325,6 +324,7 @@ export default class PressBlueprint extends Blueprint {
     const apiOptions = {
       rootDir,
       id: this.id,
+      prefix: this.config.prefix,
       dev: this.nuxt.options.dev
     }
 
@@ -383,7 +383,7 @@ export default class PressBlueprint extends Blueprint {
   loadData () {}
   buildBefore () {}
   buildDone () {}
-  generateRoutes () {}
+  createGenerateRoutes () {}
 
   async builderPrepared () {
     const [coreFiles, files] = await this.autodiscover()
@@ -450,6 +450,7 @@ export default class PressBlueprint extends Blueprint {
         for (const route of routes) {
           if (
             // TODO: test if this still works
+            !route.component ||
             route.component.startsWith(srcDir) ||
             route.component.startsWith(buildDir)
           ) {
@@ -471,7 +472,20 @@ export default class PressBlueprint extends Blueprint {
 
     // sort the routes as the pages blueprint
     // adds a very greedy route
-    nuxtRoutes.push(...sortRoutes(allRoutes))
+    const sortedRoutes = sortRoutes(allRoutes)
+
+    // fix sort issue in nuxt.sortRoutes
+    nuxtRoutes.push(...allRoutes.sort((a, b) => {
+      if (a.name === 'source-pages') {
+        return 1
+      }
+
+      if (b.name === 'source-pages') {
+        return -1
+      }
+
+      return 0
+    }))
   }
 
   getGenerateRoot () {
@@ -483,34 +497,28 @@ export default class PressBlueprint extends Blueprint {
 
     await ensureDir(rootDirGenerate)
     await this.saveDataSources(rootDirGenerate)
+  }
 
+  // the instance method generateExtendRoutes created the routes
+  // which needs to be generate for a single mode instance
+  async generateExtendRoutes() {
+    const rootDirGenerate = this.getGenerateRoot()
     const prefixRoute = route => `${this.config.prefix}${route}`
-    const routes = await this.generateRoutes(rootDirGenerate, prefixRoute)
-    if (routes) {
-      this.rootConfig.$generateRoutes = this.rootConfig.$generateRoutes || []
 
-      if (Array.isArray(routes)) {
-        this.rootConfig.$generateRoutes.push(...routes)
-        return
-      }
+    let routes = await this.createGenerateRoutes(rootDirGenerate, prefixRoute)
 
-      this.rootConfig.$generateRoutes.push(routes)
-    }
+    // we could maybe do this in static generateExtendRoutes?
+    if (this.config.extendStaticRoutes) {
+      routes = await Promise.all(routes)
 
-    if (!this.config.extendStaticRoutes) {
-      return
-    }
+      const routeEntries = routes.map(route => [route.route, route])
+      const routesHashmap = Object.fromEntries(routeEntries)
 
-    // we call extendStaticRoutes in generate:before hook we means a user
-    // probably doesnt have access to cross-press-mode source file
-    // (i.e. he/she cant use blog source files for the docs mode)
-    this.rootConfig.$extendStaticRoutes = this.rootConfig.$extendStaticRoutes || []
-    this.rootConfig.$extendStaticRoutes.push(async (routes) => {
       // a proxy is used so users can assign static imports
       // by simple using key,value assignment where the key is the path
       // and the value the static source, thus without knowing the underlying
       // structure of our routes object
-      const routeProxy = new Proxy(routes, {
+      const routeProxy = new Proxy(routesHashmap, {
         get (_, prop) {
           return routes[prop].payload
         },
@@ -529,37 +537,36 @@ export default class PressBlueprint extends Blueprint {
         const pathPrefixes = ['sources', '']
         while (pathPrefixes.length) {
           const pathPrefix = pathPrefixes.pop()
-          const path = path.join(rootDirGenerate, pathPrefix, ...args)
+          const source = path.join(rootDirGenerate, pathPrefix, ...args)
 
-          if (await existsAsync(path)) {
-            return importModule(path)
+          if (await existsAsync(source)) {
+            return importModule(source)
           }
         }
       }
 
       await this.config.extendStaticRoutes.call(this, routeProxy, staticImport)
 
-      return routes
-    })
-  }
-
-  async generateExtendRoutes (extendRoutes) {
-    let routes = await Promise.all(this.rootConfig.$generateRoutes)
-
-    if (this.rootConfig.$extendStaticRoutes) {
-      const routeEntries = routes.map(route => [route.route, route])
-      const routesHashmap = Object.fromEntries(routeEntries)
-
-      for (const $extendStaticRoutes of this.rootConfig.$extendStaticRoutes) {
-        await $extendStaticRoutes(routesHashmap)
-      }
-
       routes = Object.values(routesHashmap)
     }
 
+    return routes
+  }
+
+  // the static generateExtendRoutes method calls the similar named
+  // instance method on all the mode instances which have been loaded
+  static async generateExtendRoutes (extendRoutes) {
+    let routes = []
+    await Promise.all(this.modeInstances.map(async (instance) => {
+      const instanceRoutes = await instance.generateExtendRoutes()
+      routes.push(...instanceRoutes)
+    }))
+
+    routes = await Promise.all(routes)
+
     // remove already listed routes for which we have a static payload
     for (let index = 0; index < extendRoutes.length; index++) {
-      const found = !!routes.find(route => route.route === extendRoutes[index].route)
+      const found = !!routes.find(({ route }) => route === extendRoutes[index].route || route === normalizePath(extendRoutes[index].route))
 
       if (found) {
         extendRoutes.splice(index, 1)

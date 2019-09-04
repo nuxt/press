@@ -56,7 +56,7 @@ export default class PressPagesBlueprint extends PressBlueprint {
     watcher.on('unlink', path => this.sseSourceEvent('unlink', { path }))
   }
 
-  generateRoutes (rootDir, prefix) {
+  createGenerateRoutes (rootDir, prefix) {
     if (!this.data || !this.data.sources) {
       return []
     }

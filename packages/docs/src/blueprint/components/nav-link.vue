@@ -6,7 +6,8 @@ export default {
   props: {
     item: {
       required: true
-    }
+    },
+    noPrefix: Boolean
   },
   computed: {
     link() {
@@ -37,7 +38,7 @@ export default {
     return h('NuxtLink', {
       staticClass: 'nav-link',
       props: {
-        to: `${parent.$docs.prefix}${link}`,
+        to: props.noPrefix ? link : `${parent.$docs.prefix}${link}`,
         exact: link === '/'
       }
     }, [ text ])

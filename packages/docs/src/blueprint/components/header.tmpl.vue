@@ -40,6 +40,7 @@
           class="nav-item">
           <nav-link
             :class="activeClass(item.link)"
+            :no-prefix="true"
             :item="item" />
         </li>
       </ul>

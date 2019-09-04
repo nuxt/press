@@ -31,6 +31,6 @@ export function runOnceBlockingGuard (instance, name) {
   instance._runGuards[name] = []
 
   return Promise.resolve(() => {
-    instance._runGuards[name].map(r => r())
+    instance._runGuards[name].forEach(r => r())
   })
 }
