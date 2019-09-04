@@ -66,7 +66,7 @@ async function docsMiddleware ({ route, params, $press }, middlewareContext = {}
     blueprint: '<%= options.options.blueprint %>',
     title: `<%= options.options.title %>`,
     configPerLocale: <%= options.options.configPerLocale ? 'true' : 'false' %>,
-    prefix: '<%= options.options.$normalizedPrefix %>',
+    prefix: '<%= options.options.prefix %>',
     home,
     <% if (options.options.$hasLocales) { %>
     locales: <%= JSON.stringify(options.options.$locales).replace(/"/g, '\'') %>,

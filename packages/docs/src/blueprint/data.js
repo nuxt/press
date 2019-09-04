@@ -61,7 +61,7 @@ export async function _parsePage ({ root, prefix: pagePrefix = '', path: sourceP
     locale,
     title,
     body, /*: body.replace(/(<code[^>]*>)([\s\S]+?)(<\/code>)/gi, (_, m1, m2, m3) => `${m1}${m2.replace(/{{/g, '{\u200B{')}${m3}`),/**/
-    path: `${this.config.$normalizedPrefix || ''}${pagePrefix}${urlPath}`,
+    path: `${this.config.prefix}${pagePrefix}${urlPath}`,
     ...this.nuxt.options.dev && { src }
   }
 
@@ -81,8 +81,8 @@ export async function _parsePage ({ root, prefix: pagePrefix = '', path: sourceP
 export default async function docsData () {
   const jobs = await createJobsFromConfig(this.nuxt.options, this.config)
 
+  const pages = {}
   const sources = {}
-  const $pages = {}
   const mdProcessor = await this.config.source.processor()
 
   const parsePage = _parsePage.bind(this)
@@ -94,7 +94,7 @@ export default async function docsData () {
     // - sourcePath is the path without prefix
     // This is to make it easier to eg match sidebar stuff which
     // is based on paths without prefiex
-    const sourcePath = normalizeSourcePath(source.path, this.config.$normalizedPrefix) || '/'
+    const sourcePath = normalizeSourcePath(source.path, this.config.prefix) || '/'
 
     this.nuxt.callHook('press:docs:page', {
       toc,
@@ -103,7 +103,7 @@ export default async function docsData () {
       source
     })
 
-    $pages[sourcePath] = {
+    pages[sourcePath] = {
       meta,
       toc
     }
@@ -113,37 +113,8 @@ export default async function docsData () {
   const queue = new PromisePool(jobs, handler)
   await queue.done()
 
-  this.config.$pages = $pages
-
-  // TODO: should this logic need to be moved somewhere else
-  this.config.$asJsonTemplate = new Proxy({}, {
-    get (_, prop) {
-      let val = this.config[prop] || this.config[`$${prop}`]
-
-      if (prop === 'nav') {
-        val = val.map((link) => {
-          const keys = Object.keys(link)
-          if (keys.length > 1) {
-            return link
-          } else {
-            return {
-              text: keys[0],
-              link: Object.values(link)[0]
-            }
-          }
-        })
-      }
-
-      if (val) {
-        const jsonStr = JSON.stringify(val, null, 2)
-        return escapeChars(jsonStr, '`')
-      }
-
-      return val
-    }
-  })
-
   return {
+    pages,
     sources
   }
 }

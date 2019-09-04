@@ -5,7 +5,8 @@ const sourceCache = {}
 
 export default function coreApi ({ rootDir, dev }) {
   return {
-    source (req, res, next, source) {
+    source (req, res, next) {
+      const source = req.url
       const cacheKey = `${rootDir}/${source}`
 
       if (dev || !sourceCache[cacheKey]) {

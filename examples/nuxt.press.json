@@ -1,6 +1,6 @@
 {
   "blog": {
-    "dir": "blog",
+    "dir": "blog-posts",
     "prefix": "/blog",
     "title": "A NuxtPress Blog",
     "links": [
@@ -11,7 +11,7 @@
         "Archive": "/blog/archive/"
       },
       {
-        "About": "/about"
+        "About": "/blog/about"
       }
     ],
     "icons": [
@@ -41,6 +41,16 @@
     "search": true,
     "localizedSidebar": false,
     "configPerLocale": false,
+    "locales": [
+      {
+        "code": "en",
+        "name": "English"
+      },
+      {
+        "code": "pt-BR",
+        "name": "Português (BR)"
+      }
+    ],
     "nav": [
       {
         "Home": "/"
@@ -57,18 +67,6 @@
       "/guide",
       "/customize",
       "/roadmap"
-    ]
-  },
-  "i18n": {
-    "locales": [
-      {
-        "code": "en",
-        "name": "English"
-      },
-      {
-        "code": "pt-BR",
-        "name": "Português (BR)"
-      }
     ]
   }
 }

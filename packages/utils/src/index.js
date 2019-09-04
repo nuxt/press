@@ -1,3 +1,4 @@
+export * from './class'
 export * from './config'
 export * from './fs'
 export * from './jobs'

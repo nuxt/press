@@ -1,9 +1,13 @@
 import path from 'path'
 import defu from 'defu'
+import { sortRoutes } from '@nuxt/utils-edge'
 import {
   Blueprint,
   SSE,
   PromisePool,
+  abstractGuard,
+  runOnceGuard,
+  runOnceBlockingGuard,
   getDirsAsArray,
   existsAsync,
   ensureDir,
@@ -24,13 +28,11 @@ import source from './source'
 export default class PressBlueprint extends Blueprint {
   static id = 'press'
   static configs = {}
-  static autodiscovered = false
-  static coreSetupDone = false
+
+  static modeInstances = []
 
   constructor (nuxt, options) {
-    if (new.target === 'PressBlueprint') {
-      throw new Error('PressBlueprint is an abstract class, do not instantiate it directly')
-    }
+    abstractGuard(new.target, 'PressBlueprint')
 
     options = {
       webpackAliases: [
@@ -41,6 +43,8 @@ export default class PressBlueprint extends Blueprint {
     }
 
     super(nuxt, options)
+
+    this.constructor.modeInstances.push(this)
 
     this.coreDir = __dirname
   }
@@ -143,10 +147,8 @@ export default class PressBlueprint extends Blueprint {
 
   // coreSetup only need to run once
   async coreSetup () {
-    if (PressBlueprint.coreSetupDone) {
-      return
-    }
-    PressBlueprint.coreSetupDone = true
+    // track if nuxt is going to generate the project
+    this.rootConfig.isGenerating = this.nuxt.options._generate || this.nuxt.options.target === 'static'
 
     // Enable all of https://preset-env.cssdb.org/features
     this.nuxt.options.build.postcss.preset.stage = 0
@@ -182,7 +184,7 @@ export default class PressBlueprint extends Blueprint {
 
     // Add a helper for writing JSON responses
     // Note: this should be added as first
-    super.addServerMiddleware((_, res, next) => {
+    this.addServerMiddleware((_, res, next) => {
       res.json = (data) => {
         res.type = 'application/json'
         res.write(JSON.stringify(data))
@@ -210,7 +212,7 @@ export default class PressBlueprint extends Blueprint {
 
       // call this on super and not this due to error
       // handler we always add as convenience
-      super.addServerMiddleware({
+      this.addServerMiddleware({
         path: '/__press/hot',
         handler: (req, res) => ssePool.subscribe(req, res)
       })
@@ -218,13 +220,9 @@ export default class PressBlueprint extends Blueprint {
 
     const api = this.createApi()
     if (api && api.source) {
-      this.addServerMiddleware((req, res, next) => {
-        if (!req.url.startsWith('/api/source/')) {
-          return next()
-        }
-
-        const sourcePath = trimSlash(req.url.slice(12))
-        api.source(req, res, next, sourcePath)
+      this.addServerMiddleware({
+        path: '/api/source/',
+        handler: api.source
       })
     }
   }
@@ -236,6 +234,19 @@ export default class PressBlueprint extends Blueprint {
     // try to set/validate locales so we dont
     // have to do that later anyjore
     this.setLocales()
+
+    // we need to use a blocking runOnce guard here,
+    // i.e. the setups for all blueprints run at once
+    // but we really need the coreSetup to finish first
+    // before any other setup stuff is run
+    // so eg the json middleware function is added first
+    const resolveGuard = await runOnceBlockingGuard(PressBlueprint, 'coreSetup')
+    if (resolveGuard) {
+      await this.coreSetup()
+      resolveGuard()
+    }
+
+    await super.setup()
 
     // bind all source functions to this context
     // is a small improvement instead of using
@@ -256,10 +267,7 @@ export default class PressBlueprint extends Blueprint {
 
     this.rootConfig[`$${this.constructor.id}`] = true
 
-    this.config.$normalizedPrefix = normalizePathPrefix(this.config.prefix)
-
-    await this.coreSetup()
-    await super.setup()
+    this.config.prefix = normalizePathPrefix(this.config.prefix) || ''
   }
 
   // init needs to run for each derived nuxt/press module
@@ -267,6 +275,7 @@ export default class PressBlueprint extends Blueprint {
     await this.setup()
 
     this.nuxt.hook('build:before', () => this.buildBefore())
+    this.nuxt.hook('build:done', () => this.buildDone())
     this.nuxt.hook('builder:prepared', (builder) => {
       // Always turn-off the default page, as Nuxt.js will
       // falsely think there are no pages/routes
@@ -275,26 +284,18 @@ export default class PressBlueprint extends Blueprint {
       return this.builderPrepared()
     })
 
-    if (!PressBlueprint.buildTemplatesHookAdded) {
-      this.nuxt.hook('build:templates', templateContext => this.buildTemplates(templateContext))
-      PressBlueprint.buildTemplatesHookAdded = true
-    }
-
-    this.nuxt.hook('build:extendRoutes', routes => this.buildExtendRoutes(routes))
-    this.nuxt.hook('build:done', () => this.buildDone())
-
     // only add generate hooks if needed
-    if (!(this.nuxt.options._generate || this.nuxt.options.target === 'static')) {
-      return
+    if (this.rootConfig.isGenerating) {
+      this.nuxt.hook('generate:distCopied', () => this.generateDistCopied())
     }
 
-    this.nuxt.hook('generate:distCopied', () => this.generateDistCopied())
+    if (runOnceGuard(PressBlueprint, 'coreInit')) {
+      this.nuxt.hook('build:templates', templateContext => PressBlueprint.buildTemplates(templateContext))
+      this.nuxt.hook('build:extendRoutes', routes => PressBlueprint.buildExtendRoutes(routes))
 
-    // the generateRoutesHookAdded should only be added once
-    if (!PressBlueprint.generateRoutesHookAdded) {
-      this.nuxt.hook('generate:extendRoutes', routes => this.generateExtendRoutes(routes))
-
-      PressBlueprint.generateRoutesHookAdded = true
+      if (this.rootConfig.isGenerating) {
+        this.nuxt.hook('generate:extendRoutes', routes => PressBlueprint.generateExtendRoutes(routes))
+      }
     }
   }
 
@@ -305,11 +306,9 @@ export default class PressBlueprint extends Blueprint {
       filter: ({ dir }) => !!dir
     }
 
-    if (!PressBlueprint.autodiscovered) {
+    if (runOnceGuard(PressBlueprint, 'autodiscover')) {
       PressBlueprint.files = await super.autodiscover(this.coreDir, autodiscoverOpts)
       files[0] = PressBlueprint.files
-
-      PressBlueprint.autodiscovered = true
     }
 
     if (!this.files) {
@@ -357,18 +356,6 @@ export default class PressBlueprint extends Blueprint {
     }
 
     this.nuxt.options.css.splice(addIndex + 1, 0, themePath)
-  }
-
-  // auto wrap in an error handlerimport { createSidebar } from '../sidebar'
-
-  addServerMiddleware (middleware) {
-    super.addServerMiddleware((req, res, next) => {
-      try {
-        middleware(req, res, next)
-      } catch (err) {
-        next(err)
-      }
-    })
   }
 
   // hot reloading passes data through as arg
@@ -424,15 +411,14 @@ export default class PressBlueprint extends Blueprint {
     }
   }
 
-  buildTemplates ({ templateVars }) {
+  static buildTemplates ({ templateVars }) {
     templateVars.middleware.push({
       name: 'press',
-      dst: PressBlueprint.templates['middleware/press.tmpl.js']
+      dst: this.templates['middleware/press.tmpl.js']
     })
   }
 
   createRoutes () {
-    const prefix = this.config.$normalizedPrefix || ''
     const routeName = `source-${this.id.toLowerCase()}`
 
     if (this.config.$hasLocales) {
@@ -441,7 +427,7 @@ export default class PressBlueprint extends Blueprint {
 
       return [{
         name: `${routeName}-locales-${locales.join('_')}`,
-        path: `${prefix}/:locale(${locales.join('|')})?/:source(.*)?`,
+        path: `${this.config.prefix}/:locale(${locales.join('|')})?/:source(.*)?`,
         component: PressBlueprint.templates['pages/source.tmpl.vue'],
         meta: { id: this.id, bp: this.constructor.id, source: true }
       }]
@@ -449,38 +435,43 @@ export default class PressBlueprint extends Blueprint {
 
     return [{
       name: routeName,
-      path: `${prefix}/:source(.*)?`,
+      path: `${this.config.prefix}/:source(.*)?`,
       component: PressBlueprint.templates['pages/source.tmpl.vue'],
       meta: { id: this.id, bp: this.constructor.id, source: true }
     }]
   }
 
-  // routes are split up as core provides both default routes
-  // as a wrapper to make sure only valid routes are added
-  // TODO: maybe we can just remove the below?
-  async buildExtendRoutes (nuxtRoutes) {
-    const routes = this.createRoutes()
-    if (routes) {
-      for (const route of routes) {
-        if (
-          // TODO: test if this still works
-          route.component.startsWith(this.nuxt.options.srcDir) ||
-          route.component.startsWith(this.nuxt.options.buildDir)
-        ) {
-          // this is a fix for hmr, it already has full path set
-          continue
+  static async buildExtendRoutes (nuxtRoutes) {
+    const allRoutes = []
+    for (const modeInstance of this.modeInstances) {
+      const routes = modeInstance.createRoutes()
+      if (routes) {
+        const { srcDir, buildDir } = modeInstance.nuxt.options
+        for (const route of routes) {
+          if (
+            // TODO: test if this still works
+            route.component.startsWith(srcDir) ||
+            route.component.startsWith(buildDir)
+          ) {
+            // this is a fix for hmr, it already has full path set
+            continue
+          }
+
+          const componentPath = path.join(srcDir, route.component)
+          if (await existsAsync(componentPath)) {
+            route.component = componentPath
+          } else {
+            route.component = path.join(buildDir, route.component)
+          }
         }
 
-        const componentPath = path.join(this.nuxt.options.srcDir, route.component)
-        if (await existsAsync(componentPath)) {
-          route.component = componentPath
-        } else {
-          route.component = path.join(this.nuxt.options.buildDir, route.component)
-        }
+        allRoutes.push(...routes)
       }
-
-      nuxtRoutes.push(...routes)
     }
+
+    // sort the routes as the pages blueprint
+    // adds a very greedy route
+    nuxtRoutes.push(...sortRoutes(allRoutes))
   }
 
   getGenerateRoot () {

@@ -13,7 +13,7 @@ import {
   ensureDir
 } from '@nuxtpress/utils'
 
-import loadSources from './data'
+import loadSources, { _parseEntry } from './data'
 import api from './api'
 import source from './source'
 
@@ -60,7 +60,6 @@ export default class PressBlogBlueprint extends PressBlueprint {
     const api = this.createApi()
 
     this.addServerMiddleware((req, res, next) => {
-      console.log('URL', req.url)
       if (req.url.startsWith('/api/blog/index')) {
         api.index(req, res, next)
         return
@@ -90,16 +89,15 @@ export default class PressBlogBlueprint extends PressBlueprint {
   }
 
   createRoutes () {
-    const prefix = this.config.$normalizedPrefix || ''
     const routeName = `source-${this.id.toLowerCase()}`
 
     return [{
       name: `${routeName}-index`,
-      path: `${prefix}/`,
+      path: `${this.config.prefix}/`,
       component: this.templates['pages/index.vue']
     }, {
       name: `${routeName}-archive`,
-      path: `${prefix}/archive`,
+      path: `${this.config.prefix}/archive`,
       component: this.templates['pages/archive.vue']
     },
     ...super.createRoutes()
@@ -123,6 +121,8 @@ export default class PressBlogBlueprint extends PressBlueprint {
       ignoreInitial: true,
       ignored: 'node_modules/**/*'
     })
+
+    const parseEntry = _parseEntry.bind(this)
 
     watcher.on('add', async (path) => {
       updatedEntry = await parseEntry.call(this, path, mdProcessor)

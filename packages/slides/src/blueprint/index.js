@@ -63,12 +63,11 @@ export default class PressSlidesBlueprint extends PressBlueprint {
   }
 
   createRoutes () {
-    const prefix = this.config.$normalizedPrefix || ''
     const routeName = `source-${this.id.toLowerCase()}`
 
     return [{
       name: `${routeName}-archive`,
-      path: `${prefix}/`,
+      path: `${this.config.prefix}/`,
       component: this.templates['pages/index.vue']
     },
     ...super.createRoutes()

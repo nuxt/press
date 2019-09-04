@@ -2,7 +2,6 @@ import path from 'path'
 import {
   readFileAsync,
   createJobsFromConfig,
-  trimSlash,
   normalizePaths,
   PromisePool
 } from '@nuxtpress/utils'
@@ -51,7 +50,7 @@ export async function _parseSlides ({ root, prefix: pagePrefix = '', path: sourc
   )
 
   const { name: fileName } = path.parse(sourcePath)
-  const urlPath = `${trimSlash(this.config.prefix || '')}${normalizePaths(this.config.source.path(fileName), true)}`
+  const urlPath = `${this.config.prefix}${normalizePaths(this.config.source.path(fileName), true)}`
 
   const source = {
     type: 'slides',

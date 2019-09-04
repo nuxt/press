@@ -140,13 +140,13 @@ export default class PressDocsBlueprint extends PressBlueprint {
       }
 
       // only export the minimum of props we need
-      for (const path in this.config.$pages) {
+      for (const path in this.data.pages) {
         // only export pages starting with the (locale) prefix for this config
         if (!path.startsWith(configPrefix)) {
           continue
         }
 
-        const page = this.config.$pages[path]
+        const page = this.data.pages[path]
         const [toc = []] = page.toc || []
 
         config.pages[path] = {
@@ -184,14 +184,14 @@ export default class PressDocsBlueprint extends PressBlueprint {
 
           config.sidebars[sidebarPath] = createSidebar(
             sidebarConfig[path].map(normalizePaths),
-            this.config.$pages,
+            this.data.pages,
             sidebarPrefix
           )
         }
       }
 
-      for (const path in this.config.$pages) {
-        const page = this.config.$pages[path]
+      for (const path in this.data.pages) {
+        const page = this.data.pages[path]
         if (page.meta && page.meta.sidebar === 'auto') {
           config.sidebars[path] = tocToTree(page.toc)
         }

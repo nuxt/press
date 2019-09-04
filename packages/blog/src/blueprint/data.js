@@ -45,7 +45,7 @@ export async function _parseEntry ({ root, prefix: pagePrefix = '', path: source
   }
 
   source.id = this.config.source.id(source)
-  source.path = `${this.config.prefix}${slug || this.config.source.path(fileName, source)}`
+  source.path = `${this.config.prefix}/${slug || this.config.source.path(fileName, source)}`
 
   return source
 }
