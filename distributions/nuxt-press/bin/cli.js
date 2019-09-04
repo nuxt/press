@@ -1,7 +1,6 @@
 #!/usr/bin/env node
 
-const consola = require('consola')
 const { NuxtCommand } = require('@nuxt/cli')
-const cli = require('../dist/nuxt-press-cli')
+const cli = require('@nuxtpress/cli')
 
 NuxtCommand.run(cli)

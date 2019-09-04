@@ -18,7 +18,7 @@
     "dist": "rimraf dist && rollup -c rollup.config.js && rimraf dist/blueprints/*/test/",
     "generate": "nuxt generate",
     "start": "nuxt start",
-    "lint": "eslint --fix --ext .js packages test",
+    "lint": "eslint --fix --ext .js packages test distributions",
     "postinstall": "lerna link",
     "test": "yarn test:unit && yarn test:fixtures && yarn test:e2e",
     "test:unit": "jest test/unit",

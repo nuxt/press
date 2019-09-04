@@ -23,7 +23,7 @@ function updatePackageJson (initCwd) {
     packageJson = JSON.parse(
       readFileSync(join(initCwd, 'package.json')).toString()
     )
-  } catch(_) {
+  } catch (_) {
     packageJson = {}
   }
   if (!packageJson.scripts) {
