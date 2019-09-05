@@ -1,16 +1,10 @@
 import path from 'path'
-import defu from 'defu'
-import graymatter from 'gray-matter'
 import {
-  indexKeysRE,
   walk,
-  existsAsync,
-  readFileAsync,
-  escapeChars,
+  readTextFile,
   getDirsAsArray,
   createJobsFromConfig,
-  normalizeSourcePath,
-  normalizePath,
+  filePathToWebpath,
   PromisePool
 } from '@nuxtpress/utils'
 
@@ -19,58 +13,35 @@ import {
 // Nuxt's srcDir or the docs/ directory.
 // Directory configurable via press.docs.dir
 
-export async function _parsePage ({ root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
-  const src = sourcePath
+export async function _parsePage ({ root, prefix = '', path: sourcePath }, mdProcessor) {
+  let raw = await readTextFile(root, sourcePath)
 
-  pagePrefix = normalizePath(pagePrefix, true, false, true)
-  let raw = await readFileAsync(path.join(root, sourcePath), { encoding: 'utf8' })
-  const { name: fileName } = path.parse(sourcePath)
-
-  const defaultMetaSettings = this.constructor.defaultConfig.metaSettings
-
-  let meta
-  if (raw.trimLeft().startsWith('---')) {
-    const { content, data } = graymatter(raw)
-    raw = content
-
-    meta = defu(data, defaultMetaSettings)
-
-    if (meta.sidebar === 'auto') {
-      meta.sidebarDepth = this.constructor.defaultConfig.maxSidebarDepth
-    }
-  } else {
-    meta = defu({}, defaultMetaSettings)
-  }
-
-  const { toc, html: body } = await this.config.source.markdown(raw, mdProcessor)
-
-  const title = await this.config.source.title(fileName, raw, toc)
-
-  sourcePath = sourcePath.substr(0, sourcePath.lastIndexOf('.')).replace(indexKeysRE, '') || 'index'
-
-  const urlPath = sourcePath === 'index' ? '/' : `/${sourcePath.replace(/\/index$/, '')}/`
+  const { content, meta } = this.config.source.metadata(raw)
+  const { toc, html: body } = await this.config.source.markdown(content || raw, mdProcessor)
+  const title = await this.config.source.title(body, toc, sourcePath)
+  const webpath = filePathToWebpath(sourcePath, { prefix })
 
   let locale = ''
   const locales = this.config.locales
   if (locales) {
-    ({ code: locale } = locales.find(l => l.code === sourcePath || sourcePath.startsWith(`${l.code}/`)) || {})
+    ({ code: locale } = locales.find(l => webpath.startsWith(`/${l.code}/`)) || {})
   }
 
   const source = {
     type: 'topic',
     locale,
     title,
-    body, /*: body.replace(/(<code[^>]*>)([\s\S]+?)(<\/code>)/gi, (_, m1, m2, m3) => `${m1}${m2.replace(/{{/g, '{\u200B{')}${m3}`),/**/
-    path: `${this.config.prefix}${pagePrefix}${urlPath}`,
-    ...this.nuxt.options.dev && { src }
+    body,
+    src: this.nuxt.options.dev ? path.join(root, prefix, sourcePath) : undefined,
+    path: `${this.config.prefix}${webpath}`,
   }
 
   return {
     toc: toc.map((h) => {
+      // convert toc links to full but prefix-less urls
       if (h[2].substr(0, 1) === '#') {
-        h[2] = `${urlPath}${h[2]}`
+        h[2] = `${webpath}${h[2]}`
       }
-
       return h
     }),
     meta,
@@ -93,8 +64,8 @@ export default async function docsData () {
     // - source.path is the full webpath including configured prefix
     // - sourcePath is the path without prefix
     // This is to make it easier to eg match sidebar stuff which
-    // is based on paths without prefiex
-    const sourcePath = normalizeSourcePath(source.path, this.config.prefix) || '/'
+    // is based on paths without prefix
+    const sourcePath = source.path.slice(this.config.prefix.length)
 
     this.nuxt.callHook('press:docs:page', {
       toc,

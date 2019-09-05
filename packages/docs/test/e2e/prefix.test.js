@@ -1,5 +1,5 @@
 import path from 'path'
-import { getPort, startBrowser } from '@/utils'
+import { getPort, startBrowser } from 'test-utils'
 
 describe('prefix', () => {
   let browser

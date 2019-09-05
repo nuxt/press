@@ -10,17 +10,16 @@ const source = {
   },
   metadata (source) {
     if (source.trimLeft().startsWith('---')) {
-      const { content: body, data } = graymatter(source)
-      return { ...data, body }
+      const { data: meta, content } = graymatter(source)
+      return { meta, content }
     }
-    return {}
+    return {
+      meta: {}
+    }
   },
   title (body) {
     const [, title] = body.substr(body.indexOf('# ')).match(/^#\s+(.*)/)
     return title || ''
-  },
-  path (fileName) {
-    return fileName.toLowerCase()
   }
 }
 

@@ -5,8 +5,7 @@ import {
   normalizeConfig,
   getDirsAsArray,
   importModule,
-  normalizePath,
-  normalizeSourcePath
+  normalizePath
 } from '@nuxtpress/utils'
 
 import loadSources, { _parseSlides } from './data'
@@ -75,7 +74,7 @@ export default class PressSlidesBlueprint extends PressBlueprint {
     const routeName = `source-${this.id.toLowerCase()}`
 
     return [{
-      name: `${routeName}-archive`,
+      name: `${routeName}-index`,
       path: `${this.config.prefix}/`,
       component: this.templates['pages/index.vue'],
       meta: { id: this.id, bp: this.constructor.id }
@@ -86,16 +85,13 @@ export default class PressSlidesBlueprint extends PressBlueprint {
 
   createGenerateRoutes (rootDir, prefix) {
     return [
-      ...Object.keys(this.data.topLevel).map(async route => {
-        route = normalizePath(route, true, false)
-        return {
-          route: normalizePath(normalizeSourcePath(route)),
-          payload: await importModule(rootDir, this.id, `${route}.json`)
-        }
-      }),
-      ...Object.keys(this.data.sources).map(async route => ({
-        route: normalizePath(route),
-        payload: await importModule(rootDir, 'sources', route)
+      ...Object.keys(this.data.topLevel).map(route => ({
+        route: normalizePath(route, { index: false }),
+        payload: importModule(rootDir, this.id, `${route}.json`)
+      })),
+      ...Object.keys(this.data.sources).map(route => ({
+        route,
+        payload: importModule(rootDir, 'sources', route)
       }))
     ]
   }

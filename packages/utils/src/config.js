@@ -1,7 +1,7 @@
 import path from 'path'
 import defu from 'defu'
 import { importModule } from './module'
-import { existsAsync, readJson, writeJson, ensureDir } from './fs'
+import { exists, readJson, writeJson, ensureDir } from './fs'
 
 export const isPureObject = value => typeof value === 'object' && value !== null && !Array.isArray(value)
 
@@ -53,7 +53,7 @@ export async function loadConfig ({ rootId, rootDir, config }) {
     const jsConfigPath = path.join(rootDir, `nuxt.${rootId}.${fileExtension}`)
 
     // JavaScript config has precedence over JSON config
-    if (await existsAsync(jsConfigPath)) {
+    if (await exists(jsConfigPath)) {
       // load external config
       const externalConfig = await importModule(jsConfigPath)
 
@@ -85,7 +85,7 @@ export async function saveConfig ({ rootId, id, options }) {
 
   // If .js config found, do nothing
   // we only update JSON files, not JavaScript
-  if (await existsAsync(path.join(this.options.rootDir, `nuxt.${rootId}.js`))) {
+  if (await exists(path.join(this.options.rootDir, `nuxt.${rootId}.js`))) {
     const config = await importModule(path.join(this.options.rootDir, `nuxt.${rootId}.js`))
 
     await writeJson(path.join(buildDirRoot, 'config.json'), config, { spaces: 2 })
@@ -93,7 +93,7 @@ export async function saveConfig ({ rootId, id, options }) {
   }
 
   const configPath = path.join(this.options.rootDir, `nuxt.${rootId}.json`)
-  if (!await existsAsync(configPath)) {
+  if (!await exists(configPath)) {
     await writeJson(configPath, config, { spaces: 2 })
     return
   }

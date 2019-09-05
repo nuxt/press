@@ -8,7 +8,6 @@ import {
   getDirsAsArray,
   importModule,
   normalizePath,
-  normalizeSourcePath,
   writeJson,
   ensureDir
 } from '@nuxtpress/utils'
@@ -108,7 +107,7 @@ export default class PressBlogBlueprint extends PressBlueprint {
       meta
     }, {
       name: `${routeName}-archive`,
-      path: `${this.config.prefix}/archive`,
+      path: `${this.config.prefix}/archive/`,
       component: this.templates['pages/archive.vue'],
       meta
     },
@@ -118,16 +117,13 @@ export default class PressBlogBlueprint extends PressBlueprint {
 
   async createGenerateRoutes (rootDir, prefix) {
     return [
-      ...Object.keys(this.data.topLevel).map(async route => {
-        route = normalizePath(route, true, false)
-        return {
-          route: normalizePath(normalizeSourcePath(route)),
-          payload: await importModule(rootDir, this.id, `${route}.json`)
-        }
-      }),
-      ...Object.keys(this.data.sources).map(async route => ({
-        route: normalizePath(route),
-        payload: await importModule(rootDir, 'sources', route)
+      ...Object.keys(this.data.topLevel).map(route => ({
+        route: normalizePath(route, { index: false }),
+        payload: importModule(rootDir, this.id, `${route}.json`)
+      })),
+      ...Object.keys(this.data.sources).map(route => ({
+        route,
+        payload: importModule(rootDir, 'sources', route)
       }))
     ]
   }

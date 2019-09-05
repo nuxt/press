@@ -1,11 +1,10 @@
 import path from 'path'
 import {
-  indexKeysRE,
   stripParagraph,
-  normalizePath,
+  filePathToWebpath,
   walk,
-  existsAsync,
-  readFileAsync,
+  exists,
+  readTextFile,
   PromisePool
 } from '@nuxtpress/utils'
 
@@ -14,38 +13,39 @@ import {
 // Configurable via press.slides.dir
 
 export async function _parsePage ({ root, path: sourcePath }, mdProcessor) {
-  const raw = await readFileAsync(path.join(root, sourcePath), { encoding: 'utf8' })
+  const raw = await readTextFile(root, sourcePath)
 
-  const metadata = await this.config.source.metadata(raw)
+  const { meta, content } = await this.config.source.metadata(raw)
 
-  // Use metadata.title if given, otherwise use first H1 from body
-  let title = metadata.title
+  // Use meta.title if given, otherwise use first H1 from body
+  let title = meta.title
   if (!title) {
     [, title] = raw.match(/^#\s+(.*)/) || []
   }
 
   if (title) {
+    // TODO: why calling markdown on title?
     title = await this.config.source.markdown(title, mdProcessor)
     title = stripParagraph(title)
   }
 
   // Use metadata.body if given
-  const body = await this.config.source.markdown(metadata.body || raw, mdProcessor)
+  const body = await this.config.source.markdown(content || raw, mdProcessor)
 
   // Create the proper source path
-  const urlPath = normalizePath(sourcePath.slice(0, -3).replace(indexKeysRE, '') || '/', true)
+  const webpath = filePathToWebpath(sourcePath)
 
   let src
   if (this.nuxt.options.dev) {
-    src = sourcePath.slice(this.nuxt.options.srcDir.length + 1)
+    src = path.join(root, sourcePath)
   }
 
   return {
-    ...metadata,
+    ...meta,
     title,
     body,
     src,
-    path: urlPath
+    path: webpath
   }
 }
 
@@ -55,7 +55,7 @@ export default async function pagesData () {
     this.options.dir.pages
   )
 
-  if (!await existsAsync(pagesRoot)) {
+  if (!await exists(pagesRoot)) {
     return {}
   }
 

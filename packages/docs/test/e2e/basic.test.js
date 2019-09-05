@@ -1,7 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import util from 'util'
-import { getPort, startBrowser } from '@/utils'
+import { getPort, startBrowser } from 'test-utils'
 
 const readFile = util.promisify(fs.readFile)
 

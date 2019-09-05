@@ -1,8 +1,9 @@
 import path from 'path'
 import {
-  readFileAsync,
+  readTextFile,
   createJobsFromConfig,
-  normalizePaths,
+  filePathToWebpath,
+  normalizePath,
   PromisePool
 } from '@nuxtpress/utils'
 
@@ -10,8 +11,8 @@ import {
 // Markdown files are loaded from the slides/ directory.
 // Configurable via press.slides.dir
 
-export async function _parseSlides ({ root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
-  const raw = await readFileAsync(path.join(root, sourcePath), { encoding: 'utf8' })
+export async function _parseSlides ({ root, prefix = '', path: sourcePath }, mdProcessor) {
+  const raw = await readTextFile(root, sourcePath)
 
   let slides = []
   let c
@@ -43,20 +44,18 @@ export async function _parseSlides ({ root, prefix: pagePrefix = '', path: sourc
     : raw
   )
 
-  const markdown = this.config.source.markdown.bind(this)
-
   slides = await Promise.all(
-    slides.filter(Boolean).map(slide => markdown(slide, mdProcessor))
+    slides.filter(Boolean).map(slide => this.config.source.markdown(slide, mdProcessor))
   )
 
   const { name: fileName } = path.parse(sourcePath)
-  const urlPath = `${this.config.prefix}${normalizePaths(this.config.source.path(fileName), true)}`
+  const webpath = `${this.config.prefix}${filePathToWebpath(sourcePath, { prefix })}`
 
   const source = {
     type: 'slides',
     slides,
-    path: urlPath,
-    ...this.nuxt.options.dev && { src: sourcePath }
+    path: webpath,
+    ...this.nuxt.options.dev && { src: path.join(root, prefix, sourcePath) }
   }
 
   return source

@@ -1,6 +1,6 @@
 import path from 'path'
 import { existsSync, readJsonSync } from 'fs-extra'
-import { trimSlash } from '@nuxtpress/utils'
+import { trimSlashEnd } from '@nuxtpress/utils'
 
 const sourceCache = {}
 
@@ -9,7 +9,7 @@ const suffixes = ['/index.json', '.json', '']
 export default function coreApi ({ rootDir, dev }) {
   return {
     source (req, res, next) {
-      const source = trimSlash(req.url)
+      const source = trimSlashEnd(req.url)
       const cacheKey = `${rootDir}/${source}`
 
       if (dev || !sourceCache[cacheKey]) {

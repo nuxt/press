@@ -6,9 +6,9 @@ import { Module } from '@nuxt/core-edge'
 import {
   createFileFilter,
   walk,
-  existsAsync,
-  readFileAsync,
-  copyFileAsync,
+  exists,
+  readFile,
+  copyFile,
   ensureDir
 } from './fs'
 
@@ -88,7 +88,7 @@ export default class Blueprint extends Module {
   async autodiscover (rootDir, { validate, filter } = {}) {
     rootDir = rootDir || this.blueprintOptions.dir
 
-    if (!rootDir || !await existsAsync(rootDir)) {
+    if (!rootDir || !await exists(rootDir)) {
       return {}
     }
 
@@ -178,7 +178,7 @@ export default class Blueprint extends Module {
       consola.debug(`${this.constructor.name}: Copying '${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'`)
 
       await ensureDir(path.dirname(dst))
-      await copyFileAsync(src, dst, fs.constants.COPYFILE_FICLONE)
+      await copyFile(src, dst, fs.constants.COPYFILE_FICLONE)
       return dst
     } catch (err) {
       consola.error(`${this.constructor.name}: An error occured while copying ${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'\n`, err)
@@ -253,7 +253,7 @@ export default class Blueprint extends Module {
     const emitAssets = (compilation) => {
       // Note: the order in which assets are emitted is not stable
       return Promise.all(assets.map(async ({ src, dst }) => {
-        const assetBuffer = await readFileAsync(src)
+        const assetBuffer = await readFile(src)
 
         compilation.assets[dst] = {
           source: () => assetBuffer,

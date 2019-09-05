@@ -16,23 +16,30 @@ const source = {
   // metadata() parses the starting block of text in a Markdown source,
   // considering the first and (optionally) second lines as
   // publishing date and summary respectively
-  metadata (fileName, source) {
+  metadata (source, fileName) {
     if (source.trimLeft().startsWith('---')) {
-      const { content, data } = graymatter(source)
-      if (data.date) {
-        data.published = new Date(Date.parse(data.date))
+      const { content, data: meta } = graymatter(source)
+      if (meta.date) {
+        meta.published = new Date(Date.parse(meta.date))
       }
-      delete data.date
-      return { ...data, content }
+      delete meta.date
+
+      return {
+        content,
+        meta
+      }
     }
+
     let published
     published = source.substr(0, source.indexOf('#')).trim()
     published = Date.parse(published)
     if (isNaN(published)) {
-      return new Error(`Missing or invalid publication date in ${fileName} -- see documentation at https://nuxt.press`)
+      throw new Error(`Missing or invalid publication date in ${fileName} -- see documentation at https://nuxt.press`)
     }
     return {
-      published: new Date(published)
+      meta: {
+        published: new Date(published)
+      }
     }
   },
 

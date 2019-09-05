@@ -9,18 +9,16 @@ import {
   runOnceGuard,
   runOnceBlockingGuard,
   getDirsAsArray,
-  existsAsync,
+  exists,
   ensureDir,
   importModule,
   loadConfig,
   saveConfig,
   saveFiles,
   saveJsonFiles,
-  normalizeConfig,
   normalizePathPrefix,
   normalizePath,
-  normalizePaths,
-  trimSlash
+  normalizePaths
 } from '@nuxtpress/utils'
 
 import coreApi from './api'
@@ -96,7 +94,7 @@ export default class PressBlueprint extends Blueprint {
     // but we are running in standalone mode or
     // we are _not_ running in standalone mode and a default dir exists
     if (!modeRegistered) {
-      if (isStandalone || (!config.$standalone && await existsAsync(path.join(nuxt.options.srcDir, this.defaultConfig.dir)))) {
+      if (isStandalone || (!config.$standalone && await exists(path.join(nuxt.options.srcDir, this.defaultConfig.dir)))) {
         modeInstances[this.id] = new this(nuxt, { id: this.id })
         modeInstances[this.id].requiredModules = moduleContainer.requiredModules
       }
@@ -169,7 +167,7 @@ export default class PressBlueprint extends Blueprint {
     }
 
     // Always add nuxt.press.css if it exists
-    if (await existsAsync(path.join(this.nuxt.options.srcDir, 'nuxt.press.css'))) {
+    if (await exists(path.join(this.nuxt.options.srcDir, 'nuxt.press.css'))) {
       styles.push('~/nuxt.press.css')
     }
 
@@ -267,8 +265,7 @@ export default class PressBlueprint extends Blueprint {
     }
 
     this.rootConfig[`$${this.constructor.id}`] = true
-
-    this.config.prefix = normalizePathPrefix(this.config.prefix) || ''
+    this.config.prefix = normalizePathPrefix(this.config.prefix)
   }
 
   // init needs to run for each derived nuxt/press module
@@ -459,7 +456,7 @@ export default class PressBlueprint extends Blueprint {
           }
 
           const componentPath = path.join(srcDir, route.component)
-          if (await existsAsync(componentPath)) {
+          if (await exists(componentPath)) {
             route.component = componentPath
           } else {
             route.component = path.join(buildDir, route.component)
@@ -509,7 +506,9 @@ export default class PressBlueprint extends Blueprint {
 
     // we could maybe do this in static generateExtendRoutes?
     if (this.config.extendStaticRoutes) {
-      routes = await Promise.all(routes)
+      await Promise.all(routes.map(async route => {
+        route.payload = await route.payload
+      }))
 
       const routeEntries = routes.map(route => [route.route, route])
       const routesHashmap = Object.fromEntries(routeEntries)
@@ -539,7 +538,7 @@ export default class PressBlueprint extends Blueprint {
           const pathPrefix = pathPrefixes.pop()
           const source = path.join(rootDirGenerate, pathPrefix, ...args)
 
-          if (await existsAsync(source)) {
+          if (await exists(source)) {
             return importModule(source)
           }
         }
@@ -562,7 +561,9 @@ export default class PressBlueprint extends Blueprint {
       routes.push(...instanceRoutes)
     }))
 
-    routes = await Promise.all(routes)
+    await Promise.all(routes.map(async route => {
+      route.payload = await route.payload
+    }))
 
     // remove already listed routes for which we have a static payload
     for (let index = 0; index < extendRoutes.length; index++) {

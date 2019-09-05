@@ -1,70 +1,41 @@
-import { trimSlash } from './string'
+import path from 'path'
+import { normalizePathPrefix, normalizePath } from './normalize'
 
 export const indexKeys = ['index', 'readme']
 
-export const indexKeysRE = new RegExp(`(^|/)(${indexKeys.join('|')})$`, 'i')
+export const indexKeysRE = new RegExp(`(^|/)(${indexKeys.join('|')})/?$`, 'i')
 
-export function normalizeSourcePath (routePath, prefix) {
-  if (prefix && routePath.startsWith(prefix)) {
-    routePath = routePath.substr(prefix.length)
+export function filePathToWebpath (filePath, opts = {}) {
+  const {
+    extension = '',
+    prefix,
+    strip = indexKeysRE,
+    sep = path.sep
+  } = opts
+
+  let webpath = filePath
+
+  if (sep === '\\') {
+    webpath = webpath.replace(/\\/g, '/')
   }
 
-  if (routePath.endsWith('/index')) {
-    return routePath.slice(0, routePath.indexOf('/index'))
+  // strip extension
+  if (extension && webpath.endsWith(extension)) {
+    webpath = webpath.slice(0, -1 * extension.length)
+  } else {
+    webpath = webpath.substr(0, webpath.lastIndexOf('.'))
   }
 
-  if (routePath === 'index') {
-    return ''
+  if (strip) {
+    webpath = webpath.replace(strip, '')
   }
 
-  return routePath
-}
-
-export const normalizePathPrefix = (prefix) => {
-  return normalizePath(trimSlash(prefix || ''), true, false, true)
-}
-
-export const normalizePath = (str, startsToo, endsToo = true, notIfEmpty) => {
-  if (notIfEmpty && !str) {
-    return ''
+  let webprefix
+  if (prefix) {
+    webprefix = normalizePathPrefix(prefix)
+  } else {
+    webprefix = ''
   }
 
-  if (endsToo && (!(str.endsWith('/') || str.includes('/#')))) {
-    str = `${str}/`
-  }
-
-  if (startsToo && !str.startsWith('/')) {
-    str = `/${str}`
-  }
-
-  return str
-}
-
-export function normalizePaths (paths, startsToo) {
-  if (Array.isArray(paths)) {
-    for (const key in paths) {
-      paths[key] = normalizePaths(paths[key])
-    }
-    return paths
-  }
-
-  if (typeof paths === 'object') {
-    if (paths.children) {
-      paths.children = normalizePaths(paths.children)
-      return paths
-    }
-
-    for (const key in paths) {
-      const normalizedKey = normalizePath(key, startsToo)
-      paths[normalizedKey] = normalizePaths(paths[key])
-
-      if (key !== normalizedKey) {
-        delete paths[key]
-      }
-    }
-
-    return paths
-  }
-
-  return normalizePath(paths, startsToo)
+  return `${webprefix}${normalizePath(webpath.toLowerCase())}`
 }

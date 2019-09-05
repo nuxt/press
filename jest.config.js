@@ -13,13 +13,12 @@ module.exports = {
 
   collectCoverageFrom: [
     'packages/**/*.js',
-    '!**/blueprint/**',
+    '!**/blueprint/*/**',
     '!**/test/**'
   ],
 
   moduleNameMapper: {
-    "@/(.*)$": "<rootDir>/test/$1",
-    "~/(.*)$": "<rootDir>/src/$1",
+    "test-utils(.*)$": "<rootDir>/test/utils$1",
     // TODO: enable this again when we re-introduce a build step
     "^pressModule$": false && stdEnv.ci ? "<rootDir>/" : "<rootDir>/distributions/nuxt-press/src"
   },

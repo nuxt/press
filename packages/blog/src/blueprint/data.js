@@ -1,10 +1,10 @@
 import path from 'path'
-import consola from 'consola'
 import lodashTemplate from 'lodash/template'
 import {
   walk,
-  existsAsync,
-  readFileAsync,
+  exists,
+  readTextFile,
+  normalizePath,
   createJobsFromConfig,
   PromisePool
 } from '@nuxtpress/utils'
@@ -13,41 +13,38 @@ import {
 // Markdown files are loaded from the blog/ directory.
 // Configurable via press.blog.dir
 
-export async function _parseEntry ({ root, prefix: pagePrefix = '', path: sourcePath }, mdProcessor) {
-  // TODO just completely rewrite this function, please
-  const { name: fileName } = path.parse(sourcePath)
+export async function _parseEntry ({ root, prefix = '', path: sourcePath }, mdProcessor) {
+  const raw = await readTextFile(root, sourcePath)
 
-  const raw = await readFileAsync(path.join(root, sourcePath), { encoding: 'utf8' })
+  try {
+    const { name: fileName } = path.parse(sourcePath)
+    const { meta, content } = this.config.source.metadata(raw, fileName)
 
-  const metadata = this.config.source.metadata(fileName, raw)
-  if (metadata instanceof Error) {
-    consola.warn(metadata.message)
-    return
+    const title = meta.title || this.config.source.title(content || raw)
+    const slug = meta.slug
+    const published = meta.published
+
+    const body = await this.config.source.markdown(content || raw.substr(raw.indexOf('#')), mdProcessor)
+
+    const source = {
+      ...meta,
+      type: 'entry',
+      id: undefined,
+      title,
+      body,
+      slug,
+      path: undefined,
+      published,
+      ...this.nuxt.options.dev && { src: path.join(root, prefix, sourcePath) }
+    }
+
+    source.id = this.config.source.id(source)
+    source.path = `${this.config.prefix}${normalizePath(slug || this.config.source.path(fileName, source))}`
+
+    return source
+  } catch (error) {
+    console.warn(error)
   }
-
-  const title = metadata.title || this.config.source.title(raw)
-  const slug = metadata.slug
-  const published = metadata.published
-
-  const body = await this.config.source.markdown(metadata.content || raw.substr(raw.indexOf('#')), mdProcessor)
-  delete metadata.content
-
-  const source = {
-    ...metadata,
-    type: 'entry',
-    id: undefined,
-    title,
-    body,
-    slug,
-    path: undefined,
-    published,
-    ...this.nuxt.options.dev && { src: sourcePath }
-  }
-
-  source.id = this.config.source.id(source)
-  source.path = `${this.config.prefix}/${slug || this.config.source.path(fileName, source)}`
-
-  return source
 }
 
 function addArchiveEntry (archive, entry) {
@@ -55,22 +52,25 @@ function addArchiveEntry (archive, entry) {
   const month = (entry.published.getMonth() + 1)
     .toString()
     .padStart(2, '0')
+
   if (!archive[year]) {
     archive[year] = {}
   }
+
   if (!archive[year][month]) {
     archive[year][month] = []
   }
+
   archive[year][month].push(entry)
 }
 
 async function generateFeed (entries) {
   // TODO: get 'press'/rootId from core?
   let srcPath = path.join(this.nuxt.options.srcDir, 'press', this.id, 'static', 'rss.xml')
-  if (!await existsAsync(srcPath)) {
+  if (!await exists(srcPath)) {
     srcPath = path.join(__dirname, 'static', 'rss.xml')
   }
-  const template = lodashTemplate(await readFileAsync(srcPath, { encoding: 'utf8' }))
+  const template = lodashTemplate(await readTextFile(srcPath))
   return template({ blog: this.config, entries })
 }
 

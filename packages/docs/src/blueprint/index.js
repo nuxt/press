@@ -7,7 +7,8 @@ import {
   markdownToText,
   getDirsAsArray,
   importModule,
-  normalizeSourcePath,
+  normalizeURL,
+  normalizePath,
   normalizePaths,
   writeJson,
   ensureDir
@@ -178,7 +179,7 @@ export default class PressDocsBlueprint extends PressBlueprint {
         }
 
         for (const path in sidebarConfig) {
-          const normalizedPath = normalizePaths(path, true)
+          const normalizedPath = normalizePath(path)
 
           const sidebarPath = `${sidebarPrefix}${normalizedPath}`
 
@@ -238,7 +239,7 @@ export default class PressDocsBlueprint extends PressBlueprint {
     watcher.on('unlink', updateDocs)
   }
 
-  async createGenerateRoutes (rootDir, prefix) {
+  createGenerateRoutes (rootDir, prefix) {
     let home = '/'
     if (this.config.$hasLocales) {
       const [{ code: locale }] = this.config.$locales
@@ -250,11 +251,11 @@ export default class PressDocsBlueprint extends PressBlueprint {
     return [
       {
         route: prefix('/'),
-        payload: await importModule(rootDir, 'sources', home)
+        payload: importModule(rootDir, 'sources', home)
       },
-      ...Object.values(this.data.sources).map(async ({ path: route }) => ({
-        route: normalizeSourcePath(route),
-        payload: await importModule(rootDir, 'sources', route)
+      ...Object.values(this.data.sources).map(({ path: route }) => ({
+        route,
+        payload: importModule(rootDir, 'sources', route)
       }))
     ]
   }

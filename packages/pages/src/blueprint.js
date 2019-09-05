@@ -3,7 +3,7 @@ import chokidar from 'chokidar'
 import { Blueprint as PressBlueprint } from '@nuxtpress/core'
 import {
   normalizeConfig,
-  existsAsync,
+  exists,
   importModule
 } from '@nuxtpress/utils'
 
@@ -29,7 +29,7 @@ export default class PressPagesBlueprint extends PressBlueprint {
       nuxt.options.dir.pages
     )
 
-    if (await existsAsync(pagesRoot)) {
+    if (await exists(pagesRoot)) {
       return { [this.id]: new this(nuxt, { id: this.id }) }
     }
   }
@@ -61,10 +61,10 @@ export default class PressPagesBlueprint extends PressBlueprint {
       return []
     }
 
-    return Object.keys(this.data.sources).map(async (route) => {
+    return Object.keys(this.data.sources).map((route) => {
       return {
         route,
-        payload: await importModule(rootDir, 'sources', route)
+        payload: importModule(rootDir, 'sources', route)
       }
     })
   }

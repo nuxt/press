@@ -1,15 +1,15 @@
 import path from 'path'
 import {
-  existsAsync,
-  getDirsAsArray,
-  walk
+  walk,
+  exists,
+  getDirsAsArray
 } from './fs'
 
 export async function createJobsFromConfig (nuxtOptions, config) {
   const srcRoots = getDirsAsArray(config.dir)
 
   for (const key in srcRoots) {
-    if (!await existsAsync(nuxtOptions.srcDir, srcRoots[key])) {
+    if (!await exists(nuxtOptions.srcDir, srcRoots[key])) {
       // eslint-disable-next-line no-console
       console.warn(`Source Folder ${srcRoots[key]} doesnt exist, ignoring it`)
       srcRoots.splice(key, 1)

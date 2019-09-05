@@ -1,4 +1,4 @@
-import { normalizePath } from '@nuxtpress/utils'
+import { normalizeURL, normalizePath } from '@nuxtpress/utils'
 
 export function tocToTree (toc) {
   const sections = [undefined, [], [], [], [], [], []]
@@ -110,7 +110,7 @@ export function createSidebarFromToc (path, page, title, startDepth = 0) {
     })
   }
 
-  sidebar.push(...toc.map(([level, name, url]) => [level + startDepth, name, normalizePath(url)]))
+  sidebar.push(...toc.map(([level, name, url]) => [level + startDepth, name, normalizeURL(url)]))
 
   return tocToTree(sidebar)
 }

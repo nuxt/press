@@ -1,20 +1,21 @@
 import path from 'path'
 import util from 'util'
-import fs, { ensureDir, readJson, writeJson } from 'fs-extra'
+import fs from 'fs-extra'
 import klaw from 'klaw'
 import PromisePool from './pool'
 
 export {
-  ensureDir,
+  readFile,
+  writeFile,
   readJson,
-  writeJson
-}
+  writeJson,
+  ensureDir
+} from 'fs-extra'
 
-export const readFileAsync = util.promisify(fs.readFile)
-export const writeFileAsync = util.promisify(fs.writeFile)
-export const copyFileAsync = util.promisify(fs.copyFile)
+export const readTextFile = (...paths) => fs.readFile(path.join(...paths), { encoding: 'utf8' })
+export const copyFile = util.promisify(fs.copyFile)
 
-export function existsAsync (p) {
+export function exists (p) {
   return new Promise((resolve, reject) => {
     fs.access(p, fs.constants.F_OK, (err) => {
       if (err) {
@@ -95,13 +96,13 @@ export async function saveFiles (files, rootDir, prepareFilepath, isJson) {
 
     const fileDir = path.dirname(filePath)
 
-    await ensureDir(fileDir)
+    await fs.ensureDir(fileDir)
     const content = await files[fileName]
 
     if (isJson) {
-      await writeJson(filePath, content)
+      await fs.writeJson(filePath, content)
     } else {
-      await writeFileAsync(filePath, content)
+      await fs.writeFile(filePath, content)
     }
   })
 

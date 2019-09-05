@@ -5,15 +5,24 @@ export function stripParagraph (str) {
   return str.replace(/<\/p>$/, '')
 }
 
+export function trimStart (str, chr = '') {
+  if (!chr) {
+    return str.trimStart()
+  }
+
+  return str.replace(new RegExp(`^(${chr})+`, 'i'), '')
+}
+
 export function trimEnd (str, chr = '') {
   if (!chr) {
     return str.trimEnd()
   }
 
-  return str.replace(new RegExp(`${chr}+$`), '')
+  return str.replace(new RegExp(`(${chr})+$`, 'i'), '')
 }
 
-export const trimSlash = str => trimEnd(str, '/')
+export const trimSlashStart = str => str.replace(new RegExp(`^/+`), '')
+export const trimSlashEnd = str => str.replace(new RegExp(`/+$`), '')
 
 const escapeREs = {}
 export function escapeChars (str, chars = '"') {

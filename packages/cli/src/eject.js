@@ -1,7 +1,7 @@
 import { join, dirname } from 'path'
 import consola from 'consola'
 import { ensureDir, appendFile, writeFile } from 'fs-extra'
-import { readFileAsync } from '@nuxtpress/utils'
+import { readTextFile } from '@nuxtpress/utils'
 
 const cwd = process.cwd()
 
@@ -12,7 +12,7 @@ export async function ejectTemplate (blueprint, templatePath) {
 
   await writeFile(
     join(cwd, 'press', blueprint, templatePath),
-    await readFileAsync(join(blueprintsPath, blueprint, 'templates', templatePath), { encoding: 'utf8' })
+    await readTextFile(blueprintsPath, blueprint, 'templates', templatePath)
   )
 
   consola.info(`Ejected ${join('press', blueprint, templatePath)}`)
@@ -23,7 +23,7 @@ export async function ejectTheme (filePath) {
 
   await appendFile(
     join(cwd, 'nuxt.press.css'),
-    await readFileAsync(join(blueprintsPath, filePath, 'theme.css'), { encoding: 'utf8' })
+    await readTextFile(blueprintsPath, filePath, 'theme.css')
   )
 
   consola.info(`Ejected to ./nuxt.press.css`)
