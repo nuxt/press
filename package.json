@@ -11,7 +11,7 @@
   ],
   "license": "MIT",
   "scripts": {
-    "clean": "rimraf ./**/.nuxt packages/**/dist test/**/dist",
+    "clean": "rimraf ./**/.nuxt packages/**/dist test/**/dist packages/**/node_modules",
     "coverage": "echo \"todo\"",
     "dev": "nuxt dev",
     "build": "nuxt build",

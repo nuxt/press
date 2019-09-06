@@ -12,17 +12,14 @@
       "/guide"
     ]
   },
-  "mode": "docs",
-  "i18n": {
-    "locales": [
-      {
-        "code": "en",
-        "name": "English"
-      },
-      {
-        "code": "nl",
-        "name": "Nederlands"
-      }
-    ]
-  }
+  "locales": [
+    {
+      "code": "en",
+      "name": "English"
+    },
+    {
+      "code": "nl",
+      "name": "Nederlands"
+    }
+  ]
 }
