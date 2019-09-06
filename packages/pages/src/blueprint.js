@@ -1,9 +1,9 @@
 import path from 'path'
 import chokidar from 'chokidar'
 import { Blueprint as PressBlueprint } from '@nuxtpress/core'
+import { exists } from '@nuxt/blueprint'
 import {
   normalizeConfig,
-  exists,
   importModule
 } from '@nuxtpress/utils'
 

@@ -1,28 +1,25 @@
 import fs from 'fs'
 import path from 'path'
-import consola from 'consola'
 import defu from 'defu'
 import { Module } from '@nuxt/core-edge'
 import {
+  ucfirst,
+  runOnceGuard,
   createFileFilter,
   walk,
   exists,
   readFile,
   copyFile,
   ensureDir
-} from './fs'
+} from './utils'
 
 export default class Blueprint extends Module {
   static features = {}
 
   constructor (nuxt, options = {}) {
     // singleton blueprints dont support being loaded twice
-    if (new.target.features.singleton) {
-      if (new.target.features._loaded) {
-        throw new Error(`${new.target.name}: trying to load a singleton blueprint which is already loaded`)
-      }
-
-      new.target.features._loaded = true
+    if (new.target.features.singleton && !runOnceGuard(new.target, 'constructed')) {
+      throw new Error(`${new.target.name}: trying to load a singleton blueprint which is already loaded`)
     }
 
     super(nuxt)
@@ -37,10 +34,9 @@ export default class Blueprint extends Module {
   }
 
   setup () {
-    if (this.setupDone) {
+    if (!runOnceGuard(Blueprint, 'setup')) {
       return
     }
-    this.setupDone = true
 
     const webpackAliases = this.blueprintOptions.webpackAliases
     if (webpackAliases) {
@@ -59,16 +55,18 @@ export default class Blueprint extends Module {
     }
   }
 
-  init () {
+  init (files) {
     this.setup()
 
     this.nuxt.hook('builder:prepared', async () => {
-      let files
       if (this.blueprintOptions.autodiscover) {
-        files = await this.autodiscover()
+        const autodiscoveredFiles = await this.autodiscover()
+        await this.resolveFiles(autodiscoveredFiles)
       }
 
-      await this.resolveFiles(files)
+      if (files) {
+        await this.resolveFiles(files)
+      }
     })
   }
 
@@ -102,10 +100,16 @@ export default class Blueprint extends Module {
       }
 
       const parsedFile = path.parse(file)
+
+      // TODO: fix sub folders
       const { dir: type, ext } = parsedFile
-      // dont copy anything without an extension -> not a proper file
-      // TODO: maybe add possibility for user to filter here?
-      if ((!type && !ext) || (filter && !filter(parsedFile))) {
+
+      // dont add anything without an extension -> not a proper file
+      if (!type && !ext) {
+        continue
+      }
+      // filter files
+      if (filter && !filter(parsedFile)) {
         continue
       }
 
@@ -138,7 +142,7 @@ export default class Blueprint extends Module {
       })
 
       // Turns 'modules' into 'addModules'
-      const methodName = `add${type.charAt(0).toUpperCase()}${type.slice(1)}`
+      const methodName = `add${ucfirst(type)}`
 
       // If methodName function exists that means there are
       // files with a special meaning for Nuxt.js (ie modules, plugins)
@@ -151,8 +155,11 @@ export default class Blueprint extends Module {
       await this.addFiles(typeFiles, type)
     }
 
-    // convert aboslute paths in fileMapping
+    // convert absolute paths in fileMapping
     // to relative paths from the nuxt.buildDir
+    // also creates a copy of filesMapping in the process
+    // so successive resolveFiles calls dont overwrite the
+    // same object already returned to the user
     const relativeFilesMapping = {}
     for (const key in this.filesMapping) {
       const filePath = this.filesMapping[key]
@@ -175,13 +182,13 @@ export default class Blueprint extends Module {
     }
 
     try {
-      consola.debug(`${this.constructor.name}: Copying '${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'`)
+      console.debug(`${this.constructor.name}: Copying '${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'`)
 
       await ensureDir(path.dirname(dst))
       await copyFile(src, dst, fs.constants.COPYFILE_FICLONE)
       return dst
     } catch (err) {
-      consola.error(`${this.constructor.name}: An error occured while copying ${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'\n`, err)
+      console.error(`${this.constructor.name}: An error occured while copying ${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'\n`, err)
       return false
     }
   }
@@ -202,13 +209,12 @@ export default class Blueprint extends Module {
           break
         }
 
-        // create a unique but predictable name by replacing
-        // the template indicator by this.blueprintOptions.id
         const { name, ext } = path.parse(src)
 
-        // if template suffix starts with $, replace it
-        // with the current id
-        // TODO: normalize id
+        // if template suffix starts with $
+        // create a unique but predictable name by replacing
+        // the template indicator by this.id
+        // TODO: normalize id?
         const id = suffix[0] === '$' ? `.${this.id}` : ''
         templatePath = path.join(path.dirname(dst), `${path.basename(name, `.${suffix}`)}${id}${ext}`)
         break
@@ -262,6 +268,7 @@ export default class Blueprint extends Module {
       }))
     }
 
+    // add webpack plugin
     this.nuxt.options.build.plugins.push({
       apply (compiler) {
         compiler.hooks.emit.tapPromise(`${this.id}BlueprintPlugin`, emitAssets)
@@ -277,12 +284,12 @@ export default class Blueprint extends Module {
       const existingLayout = this.nuxt.options.layouts[layoutName]
 
       if (existingLayout) {
-        consola.warn(`Duplicate layout registration, "${layoutName}" has been registered as "${existingLayout}"`)
+        console.warn(`Duplicate layout registration, "${layoutName}" has been registered as "${existingLayout}"`)
+        continue
       }
 
       // Add to nuxt layouts
       this.nuxt.options.layouts[layoutName] = `./${layoutPath}`
-      // this.addLayout(layoutPath)
     }
   }
 
@@ -294,18 +301,26 @@ export default class Blueprint extends Module {
   }
 
   async addPlugins (plugins) {
+    const newPlugins = []
     // dont use addPlugin here due to its addTemplate use
     for (const plugin of plugins) {
       const pluginPath = await this.addTemplateOrCopy(plugin)
 
       // Add to nuxt plugins
-      this.nuxt.options.plugins.push({
+      newPlugins.push({
         src: path.join(this.nuxt.options.buildDir, pluginPath),
         // TODO: remove deprecated option in Nuxt 3
         ssr: plugin.ssr,
         mode: plugin.mode
       })
     }
+
+    // nuxt default behaviour is to put new plugins
+    // at the front of the array, so thats what we
+    // want do as well. But we want to maintain
+    // order of the files
+    // TODO: check if walk is stable in the order of resolving files
+    this.nuxt.options.plugins.unshift(...newPlugins)
   }
 
   addStatic (staticFiles) {

@@ -1,0 +1,50 @@
+{
+  "name": "@nuxt/blueprint",
+  "version": "0.0.1-beta.4",
+  "description": "Blueprint module for  Nuxt.js",
+  "main": "src/index.js",
+  "repository": "https://github.com/nuxt/press",
+  "license": "MIT",
+  "bin": {
+    "nuxt-blueprint": "bin/cli.js",
+    "nuxt-bp": "bin/cli.js"
+  },
+  "contributors": [
+    {
+      "name": "Jonas Galvez (@galvez)"
+    },
+    {
+      "name": "Pim (@pimlie)"
+    }
+  ],
+  "files": [
+    "bin",
+    "src"
+  ],
+  "keywords": [
+    "nuxt",
+    "nuxtjs",
+    "nuxtpress",
+    "vue",
+    "vuejs",
+    "module",
+    "micro-framework"
+  ],
+  "scripts": {
+    "build": "bili --file-name cli.js --input src/cli/index.js"
+  },
+  "dependencies": {
+    "@nuxt/cli-edge": "latest",
+    "@nuxt/core-edge": "latest",
+    "consola": "^2.10.1",
+    "defu": "^0.0.3",
+    "fs-extra": "^8.1.0",
+    "inquirer": "^7.0.0"
+  },
+  "peerDependencies": {
+    "nuxt": "^2.9.1"
+  },
+  "devDependencies": {
+    "bili": "^4.8.1"
+  }
+}

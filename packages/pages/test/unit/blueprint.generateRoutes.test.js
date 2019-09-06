@@ -24,7 +24,7 @@ async function createInstance (config = {}, options) {
   return bp
 }
 
-describe('docs blueprint', () => {
+describe('pages blueprint', () => {
   test('createGenerateRoutes', async () => {
     const { normalizePath } = jest.requireActual('@nuxtpress/utils')
     utils.normalizePath.mockImplementation(normalizePath)

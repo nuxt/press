@@ -1,4 +1,3 @@
-export * from './class'
 export * from './config'
 export * from './fs'
 export * from './jobs'
@@ -7,6 +6,5 @@ export * from './normalize'
 export * from './route'
 export * from './string'
 
-export { default as Blueprint } from './blueprint'
 export { default as PromisePool } from './pool'
 export { default as SSE } from './sse'

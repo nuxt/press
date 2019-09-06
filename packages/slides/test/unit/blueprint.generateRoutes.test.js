@@ -18,13 +18,14 @@ async function createInstance (config = {}, options) {
   bp.setLocales = _ => _
   bp.coreSetup = _ => _
   bp.createApi = _ => _
+  bp.addServerMiddleware = _ => _
   bp.rootConfig = {}
   await bp.setup()
 
   return bp
 }
 
-describe('docs blueprint', () => {
+describe('slides blueprint', () => {
   test('createGenerateRoutes', async () => {
     const { normalizePath } = jest.requireActual('@nuxtpress/utils')
     utils.normalizePath.mockImplementation(normalizePath)

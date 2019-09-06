@@ -3,10 +3,10 @@ import { Blueprint as PressBlueprint } from '@nuxtpress/core'
 import Blueprint from '../../src/blueprint'
 
 async function createInstance (config = {}, options) {
-  PressBlueprint._runGuards = undefined
   PressBlueprint.templates = {
     'pages/source.tmpl.vue': '/var/nuxt/source.vue'
   }
+  Blueprint._runGuards = undefined
   Blueprint.features._loaded = false
 
   const nuxt = { options: { buildDir: '/var/.nuxt' } }
@@ -30,7 +30,7 @@ async function createInstance (config = {}, options) {
   return bp
 }
 
-describe('core blueprint', () => {
+describe('blog blueprint', () => {
   test('createRoutes (no prefix)', async () => {
     const bp = await createInstance()
 

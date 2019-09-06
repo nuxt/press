@@ -1,7 +1,8 @@
 import path from 'path'
 import defu from 'defu'
+import { exists } from '@nuxt/blueprint'
 import { importModule } from './module'
-import { exists, readJson, writeJson, ensureDir } from './fs'
+import { readJson, writeJson, ensureDir } from './fs'
 
 export const isPureObject = value => typeof value === 'object' && value !== null && !Array.isArray(value)
 

@@ -1,9 +1,8 @@
 import path from 'path'
+import { exists, walk } from '@nuxt/blueprint'
 import {
   stripParagraph,
   filePathToWebpath,
-  walk,
-  exists,
   readTextFile,
   PromisePool
 } from '@nuxtpress/utils'

@@ -1,9 +1,10 @@
 module.exports = {
+  "plugins": [
+    "@babel/plugin-proposal-class-properties",
+    "@babel/plugin-syntax-dynamic-import"
+  ],
   "env": {
     "test": {
-      "plugins": [
-        "@babel/plugin-proposal-class-properties"
-      ],
       "presets": [
         [ "@babel/env", {
           "targets": {

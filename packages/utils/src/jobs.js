@@ -1,9 +1,6 @@
 import path from 'path'
-import {
-  walk,
-  exists,
-  getDirsAsArray
-} from './fs'
+import { exists, walk } from '@nuxt/blueprint'
+import { getDirsAsArray } from './fs'
 
 export async function createJobsFromConfig (nuxtOptions, config) {
   const srcRoots = getDirsAsArray(config.dir)

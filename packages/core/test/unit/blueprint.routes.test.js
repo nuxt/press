@@ -6,7 +6,7 @@ class TestBlueprint extends Blueprint {
 
 describe('core blueprint', () => {
   beforeEach(() => {
-    Blueprint._runGuards = undefined
+    TestBlueprint._runGuards = undefined
     Blueprint.templates = {
       'pages/source.tmpl.vue': '/var/nuxt/source.vue'
     }

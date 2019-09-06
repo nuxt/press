@@ -3,13 +3,15 @@ import defu from 'defu'
 import { sortRoutes } from '@nuxt/utils-edge'
 import {
   Blueprint,
-  SSE,
-  PromisePool,
   abstractGuard,
   runOnceGuard,
-  runOnceBlockingGuard,
+  runOnceGuardBlocking,
+  exists
+} from '@nuxt/blueprint'
+import {
+  SSE,
+  PromisePool,
   getDirsAsArray,
-  exists,
   ensureDir,
   importModule,
   loadConfig,
@@ -239,7 +241,7 @@ export default class PressBlueprint extends Blueprint {
     // but we really need the coreSetup to finish first
     // before any other setup stuff is run
     // so eg the json middleware function is added first
-    const resolveGuard = await runOnceBlockingGuard(PressBlueprint, 'coreSetup')
+    const resolveGuard = await runOnceGuardBlocking(PressBlueprint, 'coreSetup')
     if (resolveGuard) {
       await this.coreSetup()
       resolveGuard()

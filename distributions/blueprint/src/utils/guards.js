@@ -17,9 +17,13 @@ export function runOnceGuard (instance, name) {
   return true
 }
 
-export function runOnceBlockingGuard (instance, name) {
+export function runOnceGuardBlocking (instance, name) {
   if (!instance._runGuards) {
     instance._runGuards = {}
+  }
+
+  if (instance._runGuards[name] === true) {
+    return false
   }
 
   if (instance._runGuards[name]) {
@@ -32,5 +36,6 @@ export function runOnceBlockingGuard (instance, name) {
 
   return Promise.resolve(() => {
     instance._runGuards[name].forEach(r => r())
+    instance._runGuards[name] = true
   })
 }
