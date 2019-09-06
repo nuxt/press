@@ -1,5 +1,6 @@
 import fs from 'fs'
 import path from 'path'
+import consola from 'consola'
 import defu from 'defu'
 import { Module } from '@nuxt/core-edge'
 import {
@@ -182,13 +183,13 @@ export default class Blueprint extends Module {
     }
 
     try {
-      console.debug(`${this.constructor.name}: Copying '${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'`)
+      consola.debug(`${this.constructor.name}: Copying '${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'`)
 
       await ensureDir(path.dirname(dst))
       await copyFile(src, dst, fs.constants.COPYFILE_FICLONE)
       return dst
     } catch (err) {
-      console.error(`${this.constructor.name}: An error occured while copying ${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'\n`, err)
+      consola.error(`${this.constructor.name}: An error occured while copying ${path.relative(this.nuxt.options.srcDir, src)}' to '${path.relative(this.nuxt.options.buildDir, dst)}'\n`, err)
       return false
     }
   }
@@ -284,7 +285,7 @@ export default class Blueprint extends Module {
       const existingLayout = this.nuxt.options.layouts[layoutName]
 
       if (existingLayout) {
-        console.warn(`Duplicate layout registration, "${layoutName}" has been registered as "${existingLayout}"`)
+        consola.warn(`Duplicate layout registration, "${layoutName}" has been registered as "${existingLayout}"`)
         continue
       }
 
@@ -340,12 +341,12 @@ export default class Blueprint extends Module {
   }
 
   addApp () {
-    // eslint-disable-next-line no-console
-    console.warn(`${this.constructor.name}: app overrides are not yet implemented`)
+    // eslint-disable-next-line no-consola
+    consola.warn(`${this.constructor.name}: app overrides are not yet implemented`)
   }
 
   addStore () {
-    // eslint-disable-next-line no-console
-    console.warn(`${this.constructor.name}: adding store modules from blueprints is not yet implemented`)
+    // eslint-disable-next-line no-consola
+    consola.warn(`${this.constructor.name}: adding store modules from blueprints is not yet implemented`)
   }
 }

@@ -1,6 +1,6 @@
 import path from 'path'
+import { walk } from '@nuxt/blueprint'
 import {
-  walk,
   readTextFile,
   getDirsAsArray,
   createJobsFromConfig,
