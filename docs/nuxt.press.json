@@ -19,9 +19,7 @@
       "/guide",
       "/customize",
       "/roadmap"
-    ]
-  },
-  "i18n": {
+    ],
     "locales": [
       {
         "code": "en",

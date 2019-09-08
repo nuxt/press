@@ -2,10 +2,10 @@ import path from 'path'
 import { defaultsDeep } from 'lodash'
 import NuxtPress from 'pressModule'
 
-export { Nuxt, Builder, BundleBuilder, Generator } from 'nuxt'
-export * from '@nuxt/utils'
+export { Nuxt, Builder, BundleBuilder, Generator } from 'nuxt-edge'
+export * from '@nuxt/utils-edge'
 
-export async function loadFixture(fixture, overrides) {
+export async function loadFixture (fixture, overrides) {
   const rootDir = path.isAbsolute(fixture) ? fixture : path.resolve(__dirname, '..', 'fixtures', fixture)
   let config = {}
 
@@ -27,12 +27,21 @@ export async function loadFixture(fixture, overrides) {
   config.dev = false
   config.test = true
 
+  // disable terser to speed-up fixture builds
+  if (config.build) {
+    if (!config.build.terser) {
+      config.build.terser = false
+    }
+  } else {
+    config.build = { terser: false }
+  }
+
   config.modules = config.modules || []
   const moduleName = NuxtPress.name
 
   let hasNuxtPress = false
   if (config.modules) {
-    hasNuxtPress = config.modules.some(m => {
+    hasNuxtPress = config.modules.some((m) => {
       return (typeof m === 'function' && m.name === moduleName) || (Array.isArray(m) && m[0].name === moduleName)
     })
   }

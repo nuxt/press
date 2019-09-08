@@ -1,0 +1,25 @@
+{
+  "docs": {
+    "dir": "",
+    "prefix": "prefixed",
+    "title": "Docs Test Localization",
+    "search": false,
+    "localizedSidebar": false,
+    "configPerLocale": false,
+    "nav": [],
+    "sidebar": [
+      "/",
+      "/guide"
+    ]
+  },
+  "locales": [
+    {
+      "code": "en",
+      "name": "English"
+    },
+    {
+      "code": "nl",
+      "name": "Nederlands"
+    }
+  ]
+}

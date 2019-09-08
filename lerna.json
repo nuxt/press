@@ -1,0 +1,19 @@
+{
+  "version": "0.0.1-beta.4",
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "conventionalCommits": true,
+  "exact": true,
+  "packages": [
+    "packages/*",
+    "distributions/*"
+  ],
+  "command": {
+    "publish": {
+      "npmClient": "npm"
+    },
+    "init": {
+      "exact": true
+    }
+  }
+}

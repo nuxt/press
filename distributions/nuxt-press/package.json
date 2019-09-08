@@ -1,0 +1,53 @@
+{
+  "name": "@nuxt/press",
+  "version": "0.0.1-beta.4",
+  "description": "Minimalist Markdown Publishing for Nuxt.js",
+  "main": "src/index.js",
+  "repository": "https://github.com/nuxt/press",
+  "license": "MIT",
+  "bin": {
+    "nuxt-press": "./bin/cli.js"
+  },
+  "contributors": [
+    {
+      "name": "Jonas Galvez (@galvez)"
+    },
+    {
+      "name": "Pim (@pimlie)"
+    }
+  ],
+  "files": [
+    "bin",
+    "src",
+    "postinstall.js"
+  ],
+  "keywords": [
+    "nuxt",
+    "nuxtjs",
+    "nuxtpress",
+    "vue",
+    "vuejs",
+    "markdown",
+    "docs",
+    "documentation",
+    "slides",
+    "slideshow",
+    "blogging"
+  ],
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "postinstall": "node postinstall.js",
+    "press": "nuxt press"
+  },
+  "dependencies": {
+    "@nuxt/cli-edge": "latest",
+    "@nuxtpress/cli": "0.0.1-beta.4",
+    "@nuxtpress/docs": "0.0.1-beta.4",
+    "consola": "^2.10.1"
+  },
+  "peerDependencies": {
+    "nuxt": "^2.9.1"
+  }
+}
