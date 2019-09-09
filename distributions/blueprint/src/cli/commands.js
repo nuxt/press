@@ -1,42 +1,81 @@
 import consola from 'consola'
 import { ejectTheme, ejectTemplate } from './eject'
+import Blueprint from '../blueprint'
+import { exists } from '../utils'
 
 // TODO: fill blueprint templates from running autodiscover
 const blueprints = {}
 
 export default class Commands {
-  static async eject (args) {
-    const [blueprint, key] = args[0].split('/')
+  static async eject (args, options) {
+    const {
+      name,
+      dir,
+      bundles,
+      pluralize = true
+    } = options
+    let templates = options.templates
 
-    if (!(blueprint in blueprints)) {
-      consola.fatal('Unrecognized template bundle -- see docs at https://nuxt.press/')
+    let discoveryPath = dir
+    let key = args[0]
+    let bundleName
+
+    if (bundles) {
+      [bundleName, key] = args[0].split('/')
+
+      discoveryPath = bundles[bundleName]
+
+      if (!discoveryPath) {
+        consola.fatal(`Unrecognized template bundle '${bundleName}'`)
+        return
+      }
+    }
+
+    if (!await exists(discoveryPath)) {
+      consola.fatal(`Blueprint path '${discoveryPath}' does not exists`)
       return
     }
 
+    if (!templates) {
+      templates = await Blueprint.autodiscover(discoveryPath)
+
+      if (!templates) {
+        consola.fatal(`Unrecognized blueprint path, autodiscovery failed for '${discoveryPath}'`)
+        return
+      }
+    }
+
+    // pluralize key
+    if (pluralize && !key.endsWith('s')) {
+      key = `${key}s`
+    }
+
     if (key === 'theme') {
-      await ejectTheme(blueprint)
+      await ejectTheme(bundleName)
       return
     }
 
     if (key) {
-      if (!blueprints[blueprint].templates[key]) {
-        consola.fatal('Unrecognized template key -- see docs at https://nuxt.press/')
+      if (!templates[key]) {
+        consola.fatal('Unrecognized template key')
         return
       }
 
-      let template = blueprints[blueprint].templates[key]
+      let template = templates[key]
       if (Array.isArray(template)) {
-        template = template[0]
+        [template] = template
       }
-      await ejectTemplate(blueprint, template)
+
+      await ejectTemplate(bundleName, template)
       return
     }
 
-    for (let template of Object.values(blueprints[blueprint].templates)) {
+    for (let template of Object.values(templates)) {
       if (Array.isArray(template)) {
-        template = template[0]
+        [template] = template
       }
-      await ejectTemplate(blueprint, template)
+
+      await ejectTemplate(bundleName, template)
     }
   }
 }

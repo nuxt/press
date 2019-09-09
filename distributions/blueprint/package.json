@@ -6,8 +6,8 @@
   "repository": "https://github.com/nuxt/press",
   "license": "MIT",
   "bin": {
-    "nuxt-blueprint": "bin/cli.js",
-    "nuxt-bp": "bin/cli.js"
+    "nuxt-blueprint": "bin/nuxt-bp.js",
+    "nuxt-bp": "bin/nuxt-bp.js"
   },
   "contributors": [
     {
@@ -31,7 +31,7 @@
     "micro-framework"
   ],
   "scripts": {
-    "build": "bili --file-name cli.js --input src/cli/index.js"
+    "build": "bili --file-name run-blueprint.js --input src/cli/index.js"
   },
   "dependencies": {
     "@nuxt/cli-edge": "latest",

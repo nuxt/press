@@ -87,6 +87,10 @@ export default class Blueprint extends Module {
     }
   }
 
+  static autodiscover(...args) {
+    return new Blueprint({}).autodiscover(...args)
+  }
+
   async autodiscover (rootDir, { validate, filter } = {}) {
     rootDir = rootDir || this.blueprintOptions.dir
 
