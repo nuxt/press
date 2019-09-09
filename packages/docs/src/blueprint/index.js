@@ -150,7 +150,7 @@ export default class PressDocsBlueprint extends PressBlueprint {
         const page = this.data.pages[path]
         const [toc = []] = page.toc || []
 
-        config.pages[path] = {
+        config.pages[path.toLowerCase()] = {
           title: page.meta.title || toc[1] || '',
           description: page.meta.description || '',
           hash: (toc[2] && toc[2].substr(path.length)) || '',
@@ -183,8 +183,8 @@ export default class PressDocsBlueprint extends PressBlueprint {
 
           const sidebarPath = `${sidebarPrefix}${normalizedPath}`
 
-          config.sidebars[sidebarPath] = createSidebar(
-            sidebarConfig[path].map(normalizePaths),
+          config.sidebars[sidebarPath.toLowerCase()] = createSidebar(
+            sidebarConfig[path.toLowerCase()].map(normalizePaths),
             this.data.pages,
             sidebarPrefix
           )
@@ -194,7 +194,7 @@ export default class PressDocsBlueprint extends PressBlueprint {
       for (const path in this.data.pages) {
         const page = this.data.pages[path]
         if (page.meta && page.meta.sidebar === 'auto') {
-          config.sidebars[path] = tocToTree(page.toc)
+          config.sidebars[path.toLowerCase()] = tocToTree(page.toc)
         }
       }
 

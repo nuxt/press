@@ -34,12 +34,12 @@ export default {
       return this.$docs.nav
     },
     $page () {
-      const path = this.normalizedPath
-
       // return empty placeholder to prevent errors
       if (!this.$docs || !this.$docs.pages) {
         return { meta: {} }
       }
+
+      const path = this.normalizedPath.toLowerCase()
 
       let page
       if (this.$docs.configPerLocale) {
@@ -53,7 +53,12 @@ export default {
       }
 
       const fallbackPath = this.locale ? `/${this.locale}/` : '/'
-      return pages[fallbackPath]
+      if (this.$docs.pages[fallbackPath]) {
+        return this.$docs.pages[fallbackPath]
+      }
+
+      // return empty placeholder to prevent errors
+      return { meta: {} }
     },
     $isHome () {
       if (!this.$docs.home) {

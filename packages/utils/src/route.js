@@ -37,5 +37,5 @@ export function filePathToWebpath (filePath, opts = {}) {
     webprefix = ''
   }
 
-  return `${webprefix}${normalizePath(webpath.toLowerCase())}`
+  return `${webprefix}${normalizePath(webpath)}`
 }

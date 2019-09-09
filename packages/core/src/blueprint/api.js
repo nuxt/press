@@ -9,7 +9,7 @@ const suffixes = ['/index.json', '.json', '']
 export default function coreApi ({ rootDir, dev }) {
   return {
     source (req, res, next) {
-      const source = trimSlashEnd(req.url)
+      const source = trimSlashEnd(req.url).toLowerCase()
       const cacheKey = `${rootDir}/${source}`
 
       if (dev || !sourceCache[cacheKey]) {

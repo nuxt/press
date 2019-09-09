@@ -114,7 +114,7 @@ export default {
       })
     },
     changeSidebar() {
-      const path = this.normalizedPath
+      const path = this.normalizedPath.toLowerCase()
 
       const { meta } = this.$page
       if (meta && meta.sidebar === 'auto') {
