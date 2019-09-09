@@ -42,7 +42,7 @@
     "inquirer": "^7.0.0"
   },
   "peerDependencies": {
-    "nuxt": "^2.9.1"
+    "nuxt": "^2.9.2"
   },
   "devDependencies": {
     "bili": "^4.8.1"
