@@ -46,7 +46,7 @@ describe('route', () => {
 
     expect(outputs).toEqual([
       '/index/',
-      '/readme/',
+      '/README/',
       '/a-path/',
       '/sub.folder/sub.path/'
     ])
