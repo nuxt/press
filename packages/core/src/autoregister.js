@@ -2,15 +2,21 @@ import consola from 'consola'
 import { normalizeConfig, importModule } from '@nuxt-press/utils'
 import PressBlueprint from './blueprint'
 
-const modes = ['docs', 'blog', 'slides', 'pages']
+const allModes = ['docs', 'blog', 'slides', 'pages']
 
-export default async function autoregister (options) {
+export default async function autoregister (options, modes) {
   // Note:`this` refers to the ModuleContainer instance
   const config = await PressBlueprint.loadRootConfig({
     rootDir: this.nuxt.options.rootDir,
     options: this.nuxt.options,
     config: normalizeConfig(options)
   })
+
+  if (Array.isArray(modes)) {
+    modes = modes.filter(mode => allModes.includes(mode))
+  } else {
+    modes = allModes
+  }
 
   let pressInstances = {}
   for (const mode of modes) {
