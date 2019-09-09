@@ -36,6 +36,7 @@ export default class PressBlueprint extends Blueprint {
     abstractGuard(new.target, 'PressBlueprint')
 
     options = {
+      pluginStrategy: 'push',
       webpackAliases: [
         PressBlueprint.id,
         ['vue$', 'vue/dist/vue.esm.js']

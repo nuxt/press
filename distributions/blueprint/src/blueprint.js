@@ -14,6 +14,11 @@ import {
   ensureDir
 } from './utils'
 
+const defaultOptions = {
+  autodiscover: true,
+  pluginStrategy: 'unshift'
+}
+
 export default class Blueprint extends Module {
   static features = {}
 
@@ -27,9 +32,7 @@ export default class Blueprint extends Module {
 
     this.id = options.id || this.constructor.id || 'blueprint'
 
-    this.blueprintOptions = defu(options, {
-      autodiscover: true
-    })
+    this.blueprintOptions = defu(options, defaultOptions)
 
     this.templateOptions = this.blueprintOptions
   }
@@ -321,7 +324,13 @@ export default class Blueprint extends Module {
     // want do as well. But we want to maintain
     // order of the files
     // TODO: check if walk is stable in the order of resolving files
-    this.nuxt.options.plugins.unshift(...newPlugins)
+    const pluginStrategy = this.blueprintOptions.pluginStrategy
+    if (typeof pluginStrategy === 'function') {
+      pluginStrategy(this.nuxt.options.plugins, newPlugins)
+      return
+    }
+
+    this.nuxt.options.plugins[pluginStrategy](...newPlugins)
   }
 
   addStatic (staticFiles) {
