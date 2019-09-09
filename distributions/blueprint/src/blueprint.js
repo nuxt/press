@@ -16,7 +16,7 @@ import {
 
 const defaultOptions = {
   autodiscover: true,
-  pluginStrategy: 'unshift'
+  pluginsStrategy: 'unshift'
 }
 
 export default class Blueprint extends Module {
@@ -324,13 +324,17 @@ export default class Blueprint extends Module {
     // want do as well. But we want to maintain
     // order of the files
     // TODO: check if walk is stable in the order of resolving files
-    const pluginStrategy = this.blueprintOptions.pluginStrategy
-    if (typeof pluginStrategy === 'function') {
-      pluginStrategy(this.nuxt.options.plugins, newPlugins)
+    const pluginsStrategy = this.blueprintOptions.pluginsStrategy
+    if (typeof pluginsStrategy === 'function') {
+      pluginsStrategy(this.nuxt.options.plugins, newPlugins)
       return
     }
 
-    this.nuxt.options.plugins[pluginStrategy](...newPlugins)
+    if (!this.nuxt.options.plugins[pluginsStrategy]) {
+      throw new Error(`Unsupported plugin strategy ${pluginsStrategy}`)
+    }
+
+    this.nuxt.options.plugins[pluginsStrategy](...newPlugins)
   }
 
   addStatic (staticFiles) {

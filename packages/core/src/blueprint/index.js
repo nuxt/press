@@ -36,7 +36,13 @@ export default class PressBlueprint extends Blueprint {
     abstractGuard(new.target, 'PressBlueprint')
 
     options = {
-      pluginStrategy: 'push',
+      pluginsStrategy(nuxtPlugins, newPlugins) {
+        const corePlugins = newPlugins.filter(p => p.src.includes('/core/plugins'))
+        nuxtPlugins.push(...corePlugins)
+
+        const modePlugins = newPlugins.filter(p => !p.src.includes('/core/plugins'))
+        nuxtPlugins.push(...modePlugins)
+      },
       webpackAliases: [
         PressBlueprint.id,
         ['vue$', 'vue/dist/vue.esm.js']
@@ -364,7 +370,7 @@ export default class PressBlueprint extends Blueprint {
     const { topLevel, sources } = data || this.data
 
     if (topLevel) {
-      await saveJsonFiles(topLevel, path.join(rootDir, this.id), fileName => `${fileName}.json`)
+      await saveJsonFiles(topLevel, path.join(rootDir, this.id), fileName => `${fileName.toLowerCase()}.json`)
     }
 
     if (sources) {
@@ -375,7 +381,7 @@ export default class PressBlueprint extends Blueprint {
           sourceFile = `index${sourceFile}`
         }
 
-        return path.join(staticRoot, `${source.path}`, sourceFile)
+        return path.join(staticRoot, `${source.path.toLowerCase()}`, sourceFile)
       })
     }
   }
