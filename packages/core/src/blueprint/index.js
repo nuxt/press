@@ -158,6 +158,7 @@ export default class PressBlueprint extends Blueprint {
     // Hable is used in plugin middleware but needs to be transpiled
     this.nuxt.options.build.transpile = this.nuxt.options.build.transpile || []
     this.nuxt.options.build.transpile.push('hable')
+    this.nuxt.options.build.transpile.push(/^@nuxt-press\//)
 
     // Register default stylesheets
     const styles = []
