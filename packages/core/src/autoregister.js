@@ -1,5 +1,5 @@
 import consola from 'consola'
-import { normalizeConfig, importModule } from '@nuxtpress/utils'
+import { normalizeConfig, importModule } from '@nuxt-press/utils'
 import PressBlueprint from './blueprint'
 
 const modes = ['docs', 'blog', 'slides', 'pages']
@@ -15,7 +15,7 @@ export default async function autoregister (options) {
   let pressInstances = {}
   for (const mode of modes) {
     try {
-      const { Blueprint } = await importModule(`@nuxtpress/${mode}`)
+      const { Blueprint } = await importModule(`@nuxt-press/${mode}`)
 
       const modeInstances = await Blueprint.register(this, config)
       if (modeInstances) {
@@ -27,7 +27,7 @@ export default async function autoregister (options) {
     } catch (error) {
       // TODO: improve message
       if (error.code === 'MODULE_NOT_FOUND') {
-        consola.warn(`Please install @nuxtpress/${mode}`, error)
+        consola.warn(`Please install @nuxt-press/${mode}`, error)
       } else {
         consola.error(error)
       }

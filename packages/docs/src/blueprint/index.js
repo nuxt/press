@@ -1,7 +1,7 @@
 import path from 'path'
 import chokidar from 'chokidar'
 import defu from 'defu'
-import { Blueprint as PressBlueprint } from '@nuxtpress/core'
+import { Blueprint as PressBlueprint } from '@nuxt-press/core'
 import {
   normalizeConfig,
   markdownToText,
@@ -12,7 +12,7 @@ import {
   normalizePaths,
   writeJson,
   ensureDir
-} from '@nuxtpress/utils'
+} from '@nuxt-press/utils'
 
 import { createSidebar, tocToTree } from '../sidebar'
 import loadSources from './data'

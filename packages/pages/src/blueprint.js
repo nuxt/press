@@ -1,11 +1,11 @@
 import path from 'path'
 import chokidar from 'chokidar'
-import { Blueprint as PressBlueprint } from '@nuxtpress/core'
+import { Blueprint as PressBlueprint } from '@nuxt-press/core'
 import { exists } from '@nuxt/blueprint'
 import {
   normalizeConfig,
   importModule
-} from '@nuxtpress/utils'
+} from '@nuxt-press/utils'
 
 import loadSources, { _parsePage } from './data'
 

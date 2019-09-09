@@ -21,7 +21,7 @@ import {
   normalizePathPrefix,
   normalizePath,
   normalizePaths
-} from '@nuxtpress/utils'
+} from '@nuxt-press/utils'
 
 import coreApi from './api'
 import source from './source'

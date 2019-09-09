@@ -1,7 +1,7 @@
 import { join, dirname } from 'path'
 import consola from 'consola'
 import { ensureDir, appendFile, writeFile } from 'fs-extra'
-import { readTextFile } from '@nuxtpress/utils'
+import { readTextFile } from '@nuxt-press/utils'
 
 const cwd = process.cwd()
 

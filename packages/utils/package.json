@@ -1,5 +1,5 @@
 {
-  "name": "@nuxtpress/utils",
+  "name": "@nuxt-press/utils",
   "version": "0.0.1-beta.4",
   "main": "src/index.js",
   "repository": "https://github.com/nuxt/press",

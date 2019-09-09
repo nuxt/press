@@ -1,4 +1,4 @@
-import { normalizeURL, normalizePath } from '@nuxtpress/utils'
+import { normalizeURL, normalizePath } from '@nuxt-press/utils'
 
 export function tocToTree (toc) {
   const sections = [undefined, [], [], [], [], [], []]

@@ -1,2 +1,2 @@
-export { autoregister } from '@nuxtpress/core'
+export { autoregister } from '@nuxt-press/core'
 export { default as Blueprint } from './blueprint'

@@ -6,7 +6,7 @@ import {
   normalizePath,
   createJobsFromConfig,
   PromisePool
-} from '@nuxtpress/utils'
+} from '@nuxt-press/utils'
 
 // BLOG MODE
 // Markdown files are loaded from the blog/ directory.

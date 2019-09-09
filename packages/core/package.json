@@ -1,5 +1,5 @@
 {
-  "name": "@nuxtpress/core",
+  "name": "@nuxt-press/core",
   "version": "0.0.1-beta.4",
   "main": "src/index.js",
   "repository": "https://github.com/nuxt/press",
@@ -10,7 +10,7 @@
   "dependencies": {
     "@nuxt/http": "^0.3.4",
     "@nuxt/markdown": "^0.0.21",
-    "@nuxtpress/utils": "0.0.1-beta.4",
+    "@nuxt-press/utils": "0.0.1-beta.4",
     "defu": "^0.0.3",
     "fs-extra": "^8.1.0",
     "gray-matter": "^4.0.2",

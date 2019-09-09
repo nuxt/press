@@ -1,6 +1,6 @@
 import Markdown from '@nuxt/markdown'
 import graymatter from 'gray-matter'
-import { slugify } from '@nuxtpress/utils'
+import { slugify } from '@nuxt-press/utils'
 
 const source = {
   processor () {

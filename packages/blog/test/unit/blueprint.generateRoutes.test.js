@@ -1,8 +1,8 @@
 import defu from 'defu'
-import * as utils from '@nuxtpress/utils'
+import * as utils from '@nuxt-press/utils'
 import Blueprint from '../../src/blueprint'
 
-jest.mock('@nuxtpress/utils')
+jest.mock('@nuxt-press/utils')
 
 async function createInstance (config = {}, options) {
   Blueprint._runGuards = undefined
@@ -27,7 +27,7 @@ async function createInstance (config = {}, options) {
 
 describe('blog blueprint', () => {
   test('createGenerateRoutes', async () => {
-    const { normalizePath } = jest.requireActual('@nuxtpress/utils')
+    const { normalizePath } = jest.requireActual('@nuxt-press/utils')
     utils.normalizePath.mockImplementation(normalizePath)
 
     const bp = await createInstance()
@@ -55,7 +55,7 @@ describe('blog blueprint', () => {
   })
 
   test('generateExtendRoutes', async () => {
-    const { normalizePathPrefix } = jest.requireActual('@nuxtpress/utils')
+    const { normalizePathPrefix } = jest.requireActual('@nuxt-press/utils')
     utils.normalizePathPrefix.mockImplementation(normalizePathPrefix)
 
     const bp = await createInstance({

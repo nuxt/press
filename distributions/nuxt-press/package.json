@@ -43,8 +43,8 @@
   },
   "dependencies": {
     "@nuxt/cli-edge": "latest",
-    "@nuxtpress/cli": "0.0.1-beta.4",
-    "@nuxtpress/docs": "0.0.1-beta.4",
+    "@nuxt-press/cli": "0.0.1-beta.4",
+    "@nuxt-press/docs": "0.0.1-beta.4",
     "consola": "^2.10.1"
   },
   "peerDependencies": {

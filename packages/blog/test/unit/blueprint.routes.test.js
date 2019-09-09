@@ -1,5 +1,5 @@
 import defu from 'defu'
-import { Blueprint as PressBlueprint } from '@nuxtpress/core'
+import { Blueprint as PressBlueprint } from '@nuxt-press/core'
 import Blueprint from '../../src/blueprint'
 
 async function createInstance (config = {}, options) {

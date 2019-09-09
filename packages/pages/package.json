@@ -1,5 +1,5 @@
 {
-  "name": "@nuxtpress/pages",
+  "name": "@nuxt-press/pages",
   "version": "0.0.1-beta.4",
   "main": "src/index.js",
   "repository": "https://github.com/nuxt/press",
@@ -8,6 +8,6 @@
     "src"
   ],
   "dependencies": {
-    "@nuxtpress/core": "0.0.1-beta.4"
+    "@nuxt-press/core": "0.0.1-beta.4"
   }
 }

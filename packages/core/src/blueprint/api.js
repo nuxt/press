@@ -1,6 +1,6 @@
 import path from 'path'
 import { existsSync, readJsonSync } from 'fs-extra'
-import { trimSlashEnd } from '@nuxtpress/utils'
+import { trimSlashEnd } from '@nuxt-press/utils'
 
 const sourceCache = {}
 

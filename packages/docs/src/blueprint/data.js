@@ -6,7 +6,7 @@ import {
   createJobsFromConfig,
   filePathToWebpath,
   PromisePool
-} from '@nuxtpress/utils'
+} from '@nuxt-press/utils'
 
 // DOCS MODE
 // Markdown files can be placed in

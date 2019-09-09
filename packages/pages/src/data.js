@@ -5,7 +5,7 @@ import {
   filePathToWebpath,
   readTextFile,
   PromisePool
-} from '@nuxtpress/utils'
+} from '@nuxt-press/utils'
 
 // SLIDES MODE
 // Markdown files are loaded from the slides/ directory.
