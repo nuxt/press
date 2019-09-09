@@ -12,7 +12,7 @@ export default class Commands {
       name,
       dir,
       bundles,
-      pluralize = true
+      pluralize = str => str.endsWith('s') ? str : `${str}s`
     } = options
     let templates = options.templates
 
@@ -46,8 +46,8 @@ export default class Commands {
     }
 
     // pluralize key
-    if (pluralize && !key.endsWith('s')) {
-      key = `${key}s`
+    if (typeof pluralize === 'function') {
+      key = pluralize(key)
     }
 
     if (key === 'theme') {
