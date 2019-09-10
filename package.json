@@ -53,13 +53,13 @@
     "nuxt-edge": "^2.10.0-26133132.794536e0",
     "puppeteer-core": "^1.19.0",
     "rimraf": "^3.0.0",
-    "rollup": "^1.21.1",
+    "rollup": "^1.21.2",
     "rollup-plugin-auto-external": "^2.0.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-copy": "^3.1.0",
     "selenium-webdriver": "^4.0.0-alpha.4",
     "std-env": "^2.2.1",
-    "tib": "^0.7.1",
+    "tib": "^0.7.2",
     "vue-jest": "^3.0.5"
   },
   "dependencies": {

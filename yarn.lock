@@ -9,7 +9,7 @@
   dependencies:
     "@babel/highlight" "^7.0.0"
 
-"@babel/core@^7.1.0", "@babel/core@^7.2.2", "@babel/core@^7.5.5", "@babel/core@^7.6.0":
+"@babel/core@^7.1.0", "@babel/core@^7.2.2", "@babel/core@^7.6.0":
   version "7.6.0"
   resolved "https://registry.yarnpkg.com/@babel/core/-/core-7.6.0.tgz#9b00f73554edd67bebc86df8303ef678be3d7b48"
   integrity sha512-FuRhDRtsd6IptKpHXAa+4WPZYY2ZzgowkbLBecEDDSje1X/apG7jQM33or3NdOmjXBKWGOg4JmSiRfUfuTtHXw==
@@ -4059,7 +4059,7 @@ connect@^3.7.0:
     parseurl "~1.3.3"
     utils-merge "1.0.1"
 
-consola@^2.10.0, consola@^2.10.1, consola@^2.4.0, consola@^2.5.6, consola@^2.6.0, consola@^2.9.0:
+consola@^2.10.0, consola@^2.10.1, consola@^2.5.6, consola@^2.6.0, consola@^2.9.0:
   version "2.10.1"
   resolved "https://registry.yarnpkg.com/consola/-/consola-2.10.1.tgz#4693edba714677c878d520e4c7e4f69306b4b927"
   integrity sha512-4sxpH6SGFYLADfUip4vuY65f/gEogrzJoniVhNUYkJHtng0l8ZjnDCqxxrSVRHOHwKxsy8Vm5ONZh1wOR3/l/w==
@@ -6413,14 +6413,6 @@ hable@3.0.0-0:
   resolved "https://registry.yarnpkg.com/hable/-/hable-3.0.0-0.tgz#f4599b6ef56e676e9d57b34f0b2b9fc0cb1aadb5"
   integrity sha512-5wLrQP/SMBkVslX7ODFMecfjo//HiHPz4jzS8fjLbJrGHuHKl5TLJWAKJScZzNcfXp7akXlgGMu2fNaXMB+Gzw==
 
-hable@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/hable/-/hable-1.0.1.tgz#bb3251e830ce083c85cf45216f92a588df1e9028"
-  integrity sha512-7OM/78kpwkNRPRniuQ9qdq8iXZmvzv/j2d2BRWX+3NeLWZ9hqiPZSyI38bWCs2BAiat+a1tWjGVdSu9iiKKunw==
-  dependencies:
-    consola "^2.4.0"
-    items-promise "^1.0.0"
-
 hable@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/hable/-/hable-2.3.2.tgz#7867ffec0b67e63136937613d9a0bc646ac9d7fe"
@@ -7647,11 +7639,6 @@ istanbul-reports@^2.2.6:
   integrity sha512-SKi4rnMyLBKe0Jy2uUdx28h8oG7ph2PPuQPvIAh31d+Ci+lSiEu4C+h3oBPuJ9+mPKhOyW0M8gY4U5NM1WLeXA==
   dependencies:
     handlebars "^4.1.2"
-
-items-promise@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/items-promise/-/items-promise-1.0.0.tgz#a71ff03063078eb82db468f1e2f12df4da34dc01"
-  integrity sha512-t+3w4E51IlviTn1b/gesEsH9Jf0gEs2+VhSbwgMaVyK2IxXYSwZkL6sOmr+FBhMT0sSFzcc4Rn5X7sz6NvS2GQ==
 
 jest-changed-files@^24.9.0:
   version "24.9.0"
@@ -11947,10 +11934,19 @@ rollup-pluginutils@^2.0.1, rollup-pluginutils@^2.3.1, rollup-pluginutils@^2.3.3,
   dependencies:
     estree-walker "^0.6.1"
 
-rollup@^1.1.2, rollup@^1.21.1:
+rollup@^1.1.2:
   version "1.21.1"
   resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.21.1.tgz#b27a19b2bd0b3712bdfc76ef7357d915e1860c82"
   integrity sha512-gM1EK/TsXES5xPYk7YG8VxM160DKMs2zSpSD3TBR1pdqYn/uKK85lJrsTIVXEYORR4xxzJdHzphkMFHRGNRxsw==
+  dependencies:
+    "@types/estree" "0.0.39"
+    "@types/node" "^12.7.4"
+    acorn "^7.0.0"
+
+rollup@^1.21.2:
+  version "1.21.2"
+  resolved "https://registry.yarnpkg.com/rollup/-/rollup-1.21.2.tgz#eaabd07d0bd309587ad8bebf731fca6fcb96f4d0"
+  integrity sha512-sCAHlcQ/PExU5t/kRwkEWHdhGmQrZ2IgdQzbjPVNfhWbKHMMZGYqkASVTpQqRPLtQKg15xzEscc+BnIK/TE7/Q==
   dependencies:
     "@types/estree" "0.0.39"
     "@types/node" "^12.7.4"
@@ -13062,20 +13058,20 @@ through@2, "through@>=2.2.7 <3", through@^2.3.4, through@^2.3.6, through@~2.3, t
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
 
-tib@^0.7.1:
-  version "0.7.1"
-  resolved "https://registry.yarnpkg.com/tib/-/tib-0.7.1.tgz#a72a396283bd73fee7e3f97dae5eb671f817fc02"
-  integrity sha512-Mxawgip8FXw4KKqnIVSB2tGPRsPrm6WFE26c0dEOhZHQsoaiOQ0MBVpcDzFtcITEEASemIVeBwMp0yA3AgsHVA==
+tib@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/tib/-/tib-0.7.2.tgz#a68b3cb6bbd6e6d04d81ab77262e602dd5093570"
+  integrity sha512-r7sSulPyLh6rN/HdWEp0PJ0887fEXxMHJe88436UtlyuWy1vbhZjTB/TH+m7dxOPPMKEVMfRIlz55Z/SwCXiQw==
   dependencies:
-    "@babel/core" "^7.5.5"
+    "@babel/core" "^7.6.0"
     "@babel/parser" "^7.5.5"
     babel-loader "^8.0.6"
     glob "^7.1.4"
-    hable "^1.0.1"
+    hable "^2.3.2"
     signal-exit "^3.0.2"
     tree-kill "^1.2.1"
     vue-template-compiler "^2.6.10"
-    webpack "^4.39.2"
+    webpack "^4.39.3"
 
 time-fix-plugin@^2.0.6:
   version "2.0.6"
@@ -13963,7 +13959,7 @@ webpack-sources@^1.0.1, webpack-sources@^1.1.0, webpack-sources@^1.4.0, webpack-
     source-list-map "^2.0.0"
     source-map "~0.6.1"
 
-webpack@^4.39.2, webpack@^4.39.3:
+webpack@^4.39.3:
   version "4.39.3"
   resolved "https://registry.yarnpkg.com/webpack/-/webpack-4.39.3.tgz#a02179d1032156b713b6ec2da7e0df9d037def50"
   integrity sha512-BXSI9M211JyCVc3JxHWDpze85CvjC842EvpRsVTc/d15YJGlox7GIDd38kJgWrb3ZluyvIjgenbLDMBQPDcxYQ==
