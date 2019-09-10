@@ -83,7 +83,8 @@ export default class Blueprint extends Module {
 
     return {
       src: path.join(rootDir, filePath),
-      dst: prefix ? path.join(prefix || '', filePath) : filePath
+      dst: prefix ? path.join(prefix || '', filePath) : filePath,
+      dstRelative: filePath
     }
   }
 
@@ -128,6 +129,29 @@ export default class Blueprint extends Module {
     return filesByType
   }
 
+  resolveAppPath ({ dstRelative }) {
+    const nuxtOptions = this.nuxt.options
+    return path.join(nuxtOptions.srcDir, nuxtOptions.dir.app, this.id, dstRelative)
+  }
+
+  async resolveAppOverrides (templates) {
+    // Early return if the main app dir doesnt exists
+    const appDir = this.resolveAppPath({ dstRelative: '' })
+    if (!await exists(appDir)) {
+      return templates
+    }
+
+    return Promise.all(templates.map(async (paths) => {
+      // Use ejected template from nuxt's app dir if it exists
+      const appPath = this.resolveAppPath(paths)
+      if (await exists(appPath)) {
+        paths.src = appPath
+      }
+
+      return paths
+    }))
+  }
+
   async resolveFiles (files, pathPrefix) {
     pathPrefix = pathPrefix || this.id
 
@@ -136,8 +160,7 @@ export default class Blueprint extends Module {
     this.filesMapping = {}
 
     for (const type in files) {
-      // TODO: load ejected user templates instead---
-      const typeFiles = files[type].map((file) => {
+      let typeFiles = files[type].map((file) => {
         if (typeof file === 'string') {
           return this.createTemplatePaths(file, undefined, pathPrefix)
         }
@@ -148,6 +171,8 @@ export default class Blueprint extends Module {
           dstRelative: file.dst
         }
       })
+
+      typeFiles = await this.resolveAppOverrides(typeFiles)
 
       // Turns 'modules' into 'addModules'
       const methodName = `add${ucfirst(type)}`
@@ -165,7 +190,7 @@ export default class Blueprint extends Module {
 
     // convert absolute paths in fileMapping
     // to relative paths from the nuxt.buildDir
-    // also creates a copy of filesMapping in the process
+    // this also creates a copy of filesMapping in the process
     // so successive resolveFiles calls dont overwrite the
     // same object already returned to the user
     const relativeFilesMapping = {}
@@ -184,7 +209,6 @@ export default class Blueprint extends Module {
   }
 
   async copyFile ({ src, dst }) {
-    // TODO: can this be removed?
     if (!path.isAbsolute(dst)) {
       dst = path.join(this.nuxt.options.buildDir, dst)
     }
