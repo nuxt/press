@@ -2,13 +2,9 @@
   "name": "@nuxt/blueprint",
   "version": "0.0.1-beta.4",
   "description": "Blueprint module for  Nuxt.js",
-  "main": "src/index.js",
+  "main": "dist/blueprint.js",
   "repository": "https://github.com/nuxt/press",
   "license": "MIT",
-  "bin": {
-    "nuxt-blueprint": "bin/nuxt-bp.js",
-    "nuxt-bp": "bin/nuxt-bp.js"
-  },
   "contributors": [
     {
       "name": "Jonas Galvez (@galvez)"
@@ -31,7 +27,7 @@
     "micro-framework"
   ],
   "scripts": {
-    "build": "bili --file-name run-blueprint.js --input src/cli/index.js"
+    "build": "bili --file-name blueprint.js"
   },
   "dependencies": {
     "@nuxt/cli-edge": "latest",

@@ -87,7 +87,7 @@ export default class Blueprint extends Module {
     }
   }
 
-  static autodiscover(...args) {
+  static autodiscover (...args) {
     return new Blueprint({}).autodiscover(...args)
   }
 
@@ -358,12 +358,10 @@ export default class Blueprint extends Module {
   }
 
   addApp () {
-    // eslint-disable-next-line no-consola
     consola.warn(`${this.constructor.name}: app overrides are not yet implemented`)
   }
 
   addStore () {
-    // eslint-disable-next-line no-consola
     consola.warn(`${this.constructor.name}: adding store modules from blueprints is not yet implemented`)
   }
 }
