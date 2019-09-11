@@ -1,5 +1,5 @@
 import path from 'path'
-import { walk } from '@nuxt/blueprint'
+import { walk } from '@nuxt/blueprints'
 import {
   readTextFile,
   getDirsAsArray,

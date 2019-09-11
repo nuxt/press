@@ -1,6 +1,6 @@
 import path from 'path'
 import defu from 'defu'
-import { exists } from '@nuxt/blueprint'
+import { exists } from '@nuxt/blueprints'
 import { importModule } from './module'
 import { readJson, writeJson, ensureDir } from './fs'
 

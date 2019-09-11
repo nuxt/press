@@ -1,6 +1,6 @@
 import path from 'path'
 import lodashTemplate from 'lodash/template'
-import { exists, walk } from '@nuxt/blueprint'
+import { exists, walk } from '@nuxt/blueprints'
 import {
   readTextFile,
   normalizePath,

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 const { join, dirname } = require('path')
-const { run } = require('@nuxt/blueprint')
+const { run } = require('@nuxt/blueprints')
 
 const r = mode => join(dirname(require.resolve(`@nuxt-press/${mode}`)), 'blueprint')
 

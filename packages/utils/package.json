@@ -8,6 +8,7 @@
     "src"
   ],
   "dependencies": {
+    "@nuxt/blueprints": "^0.1.0-alpha.1",
     "@nuxt/utils-edge": "latest",
     "consola": "^2.10.1",
     "defu": "^0.0.3",

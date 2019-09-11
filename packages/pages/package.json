@@ -8,6 +8,7 @@
     "src"
   ],
   "dependencies": {
-    "@nuxt-press/core": "0.0.1-beta.4"
+    "@nuxt-press/core": "0.0.1-beta.4",
+    "@nuxt/blueprints": "^0.1.0-alpha.1"
   }
 }

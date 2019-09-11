@@ -1,5 +1,5 @@
 import path from 'path'
-import { exists, walk } from '@nuxt/blueprint'
+import { exists, walk } from '@nuxt/blueprints'
 import { getDirsAsArray } from './fs'
 
 export async function createJobsFromConfig (nuxtOptions, config) {

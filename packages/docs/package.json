@@ -8,8 +8,9 @@
     "src"
   ],
   "dependencies": {
-    "@nuxtjs/lunr-module": "^0.2.0",
     "@nuxt-press/core": "0.0.1-beta.4",
+    "@nuxt/blueprints": "^0.1.0-alpha.1",
+    "@nuxtjs/lunr-module": "^0.2.0",
     "remark-container": "^0.1.1"
   }
 }

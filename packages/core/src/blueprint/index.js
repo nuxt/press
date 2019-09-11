@@ -7,7 +7,7 @@ import {
   runOnceGuard,
   runOnceGuardBlocking,
   exists
-} from '@nuxt/blueprint'
+} from '@nuxt/blueprints'
 import {
   SSE,
   PromisePool,
