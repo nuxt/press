@@ -12,6 +12,7 @@ run({
   },
   blueprints: {
     blog: r('blog'),
+    core: r('core'),
     docs: r('docs'),
     slides: r('slides')
   }
