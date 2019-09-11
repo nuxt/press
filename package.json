@@ -12,7 +12,7 @@
   "license": "MIT",
   "scripts": {
     "clean": "rimraf ./**/.nuxt packages/**/dist test/**/dist packages/**/node_modules",
-    "coverage": "echo \"todo\"",
+    "coverage": "codecov",
     "dev": "nuxt dev",
     "build": "nuxt build",
     "dist": "rimraf dist && rollup -c rollup.config.js && rimraf dist/blueprints/*/test/",
@@ -36,6 +36,7 @@
     "babel-plugin-dynamic-import-node": "^2.3.0",
     "browserstack-local": "^1.4.2",
     "chromedriver": "^76.0.1",
+    "codecov": "^3.5.0",
     "eslint": "^6.3.0",
     "eslint-config-standard": "^14.1.0",
     "eslint-plugin-import": "^2.18.2",
