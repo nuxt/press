@@ -2075,10 +2075,10 @@
     eslint-plugin-unicorn "^9.1.1"
     eslint-plugin-vue "^5.2.3"
 
-"@nuxtjs/lunr-module@^0.2.0":
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@nuxtjs/lunr-module/-/lunr-module-0.2.0.tgz#d4b357772da01ada348d091dc62218f9b7660fa0"
-  integrity sha512-/kiUmJu7+gpPIu7avqweSQeIUeyyt501JY8p5Y2PQAPC2iNHz1I+zBF+NmeGG0zoeyLT2fH2GZq2OZGprbDtaA==
+"@nuxtjs/lunr-module@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/lunr-module/-/lunr-module-0.3.0.tgz#042ef92b0201ff503f9fde7f732bb8284b166832"
+  integrity sha512-AYVd3QwNg0YpuDX0a0+lSjmTzC3/QfYuwBEbZFx5SOZUeT7Q6h0Mq3CMfPYCx+0Rkm4JlHEuh6eGzsCeaOwRvw==
   dependencies:
     consola "^2.10.1"
     lunr "^2.3.6"
