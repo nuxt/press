@@ -18,7 +18,7 @@ export async function _parsePage ({ root, prefix = '', path: sourcePath }, mdPro
 
   const { content, meta } = this.config.source.metadata(raw)
   const { toc, html: body } = await this.config.source.markdown(content || raw, mdProcessor)
-  const title = await this.config.source.title(body, toc, sourcePath)
+  const title = await this.config.source.title(body, sourcePath, toc)
   const webpath = filePathToWebpath(sourcePath, { prefix })
 
   let locale = ''

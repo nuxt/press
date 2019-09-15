@@ -1,3 +1,4 @@
+import path from 'path'
 import Markdown from '@nuxt/markdown'
 import customContainer from 'remark-container'
 import graymatter from 'gray-matter'
