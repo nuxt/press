@@ -1673,19 +1673,6 @@
     "@vue/babel-preset-jsx" "^1.1.0"
     core-js "^2.6.5"
 
-"@nuxt/blueprints@^0.1.0-alpha.0":
-  version "0.1.0-alpha.0"
-  resolved "https://registry.yarnpkg.com/@nuxt/blueprints/-/blueprints-0.1.0-alpha.0.tgz#bd4557b9374d92c79800e341524fb16891994b3c"
-  integrity sha512-OpYwas/urKgDCOdJcIyNym74lxDLevHvfW5X/jNiHZmRMWKQ0iBA0xVmNzXcRWEFvHH7QGwA1xsVyW4YbQFoYQ==
-  dependencies:
-    "@nuxt/cli-edge" latest
-    "@nuxt/core-edge" latest
-    consola "^2.10.1"
-    defu "^0.0.3"
-    fs-extra "^8.1.0"
-    inquirer "^7.0.0"
-    klaw "^3.0.0"
-
 "@nuxt/blueprints@^0.1.0-alpha.1":
   version "0.1.0-alpha.1"
   resolved "https://registry.yarnpkg.com/@nuxt/blueprints/-/blueprints-0.1.0-alpha.1.tgz#9df464cf530944625f51c5779608e3a6849e4c6b"
