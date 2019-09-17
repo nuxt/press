@@ -12597,10 +12597,10 @@ swiper@^4.0.7:
     dom7 "^2.1.3"
     ssr-window "^1.0.1"
 
-swiper@^4.5.1:
-  version "4.5.1"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-4.5.1.tgz#ed43998e780ceb478610079c8d23fd425eca636f"
-  integrity sha512-se6I7PWWu950NAMXXT+ENtF/6SVb8mPyO+bTfNxbQBILSeLqsYp3Ndap+YOA0EczOIUlea274PKejT6gKZDseA==
+swiper@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/swiper/-/swiper-5.0.0.tgz#54a03382611daddee3fc9ae912f61b1dd7652e30"
+  integrity sha512-axMPcu127pQ86eDsBsZlbqjm1TBvQzo18vOLINDYC3vc2AOUQxfAYm1DTesfCwt0W0mKd7cXLHq4BX6ewnwW5A==
   dependencies:
     dom7 "^2.1.3"
     ssr-window "^1.0.1"
