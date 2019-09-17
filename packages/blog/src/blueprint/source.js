@@ -45,7 +45,11 @@ const source = {
 
   // path() determines the final URL path of a Markdown source
   // In `blog` mode, the default format is /YYYY/MM/DD/<slug>
-  path (fileName, { title, published }) {
+  path (fileName, { title, published, meta = {} }) {
+    if (meta.slug) {
+      return meta.slug
+    }
+
     const slug = slugify(title || fileName)
     const date = published.toString().split(/\s+/).slice(1, 4).reverse()
     return `${date[0]}/${date[2].toLowerCase()}/${date[1]}/${slug}/`

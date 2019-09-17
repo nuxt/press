@@ -48,6 +48,18 @@ describe('source.path', () => {
     expect(source.path('post', data))
       .toEqual('2019/jun/01/post/')
   })
+
+  test('with meta.slug', () => {
+    const data = {
+      published: new Date(Date.parse('June 01, 2019')),
+      meta: {
+        slug: 'xyz/my/big/post'
+      }
+    }
+
+    expect(source.path('post', data))
+      .toEqual('xyz/my/big/post')
+  })
 })
 
 describe('source.title', () => {

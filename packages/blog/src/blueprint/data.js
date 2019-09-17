@@ -38,7 +38,7 @@ export async function _parseEntry ({ root, prefix = '', path: sourcePath }, mdPr
     }
 
     source.id = this.config.source.id(source)
-    source.path = `${this.config.prefix}${normalizePath(slug || this.config.source.path(fileName, source))}`
+    source.path = `${this.config.prefix}${normalizePath(this.config.source.path(fileName, source, meta))}`
 
     return source
   } catch (error) {
