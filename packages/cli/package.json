@@ -1,0 +1,15 @@
+{
+  "name": "@nuxt-press/cli",
+  "version": "0.2.0-beta.0",
+  "repository": "https://github.com/nuxt/press",
+  "license": "MIT",
+  "bin": {
+    "nuxt-press": "bin/nuxt-press.js"
+  },
+  "files": [
+    "bin"
+  ],
+  "dependencies": {
+    "@nuxt/blueprints": "^0.1.0-alpha.1"
+  }
+}

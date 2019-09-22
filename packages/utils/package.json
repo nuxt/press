@@ -1,0 +1,20 @@
+{
+  "name": "@nuxt-press/utils",
+  "version": "0.2.0-beta.0",
+  "main": "src/index.js",
+  "repository": "https://github.com/nuxt/press",
+  "license": "MIT",
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "@nuxt/blueprints": "^0.1.0-alpha.1",
+    "@nuxt/utils-edge": "latest",
+    "consola": "^2.10.1",
+    "defu": "^0.0.3",
+    "fs-extra": "^8.1.0",
+    "klaw": "^3.0.0",
+    "node-res": "^5.0.1",
+    "slug": "^1.1.0"
+  }
+}

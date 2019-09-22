@@ -1,3 +1,5 @@
+sandbox
+
 # Dependencies
 node_modules
 
@@ -6,11 +8,13 @@ package-lock.json
 */**/yarn.lock
 
 # Logs
+*.log
 *.logs
 
 # Build/dist folders
 .nuxt*
-dist*
+dist
+CHANGELOG.md
 
 # Coverage reports
 reports

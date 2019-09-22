@@ -4,6 +4,8 @@
     "prefix": "/",
     "title": "NuxtPress",
     "search": true,
+    "localizedSidebar": false,
+    "configPerLocale": false,
     "nav": [
       {
         "Guide": "https://nuxt.press"
@@ -17,9 +19,7 @@
       "/guide",
       "/customize",
       "/roadmap"
-    ]
-  },
-  "i18n": {
+    ],
     "locales": [
       {
         "code": "en",

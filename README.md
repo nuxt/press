@@ -1,10 +1,9 @@
 ![nuxt-press](https://user-images.githubusercontent.com/904724/59497906-a2d9d680-8e94-11e9-8fac-a7172827f349.png)
 
-<!--uncomment after release-->
-<!--a href="https://circleci.com/gh/nuxt/press/"><img src="https://badgen.net/circleci/github/nuxt/press" alt="Build Status"></a>
-<a href="https://codecov.io/gh/nuxt/press"><img src="https://badgen.net/codecov/c/github/nuxt/press/master" alt="Coverage Status"></a-->
-[![npm](https://img.shields.io/npm/dt/@nuxt/press.svg)](https://www.npmjs.com/package/@nuxt/press)
-[![npm (scoped with tag)](https://img.shields.io/npm/v/@nuxt/press/latest.svg)](https://www.npmjs.com/package/@nuxt/press)
+[![npm version][npm-version-src]][npm-version-href]
+[![npm downloads][npm-downloads-src]][npm-downloads-href]
+[![Circle CI][circle-ci-src]][circle-ci-href]
+[![Codecov][codecov-src]][codecov-href]
 
 See documentation at **[https://nuxt.press](https://nuxt.press)**.
 
@@ -28,7 +27,7 @@ See documentation at **[https://nuxt.press](https://nuxt.press)**.
 
 ## Credits
 
-Created and maintained by [@galvez][galvez] and [@pimlie][pimlie] with the 
+Created and maintained by [@galvez][galvez] and [@pimlie][pimlie] with the
 help of the **Nuxt Team**.
 
 [galvez]: https://github.com/galvez
@@ -39,3 +38,17 @@ help of the **Nuxt Team**.
 Interested in **adding your logo here**? [Reach out][contact] for sponsoring details.
 
 [contact]: mailto:jonasgalvez@gmail.com
+
+<!-- Badges -->
+[npm-version-src]: https://img.shields.io/npm/v/@nuxt/press/latest.svg?style=flat-square
+[npm-version-href]: https://npmjs.com/package/@nuxt/press
+
+[npm-downloads-src]: https://img.shields.io/npm/dt/@nuxt/press.svg?style=flat-square
+[npm-downloads-href]: https://npmjs.com/package/@nuxt/press
+
+[circle-ci-src]: https://img.shields.io/circleci/project/github/nuxt/press.svg?style=flat-square
+[circle-ci-href]: https://circleci.com/gh/nuxt/press
+
+[codecov-src]: https://img.shields.io/codecov/c/github/nuxt/press.svg?style=flat-square
+[codecov-href]: https://codecov.io/gh/nuxt/press
+

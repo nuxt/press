@@ -1,15 +1,17 @@
 module.exports = {
-  "plugins": ["@babel/plugin-syntax-dynamic-import"],
-  "env": {
-    "test": {
-      "plugins": ["dynamic-import-node"],
-      "presets": [
-        [ "@babel/env", {
-          "targets": {
-            "node": "current"
+  'plugins': [
+    '@babel/plugin-proposal-class-properties',
+    '@babel/plugin-syntax-dynamic-import'
+  ],
+  'env': {
+    'test': {
+      'presets': [
+        [ '@babel/env', {
+          'targets': {
+            'node': 'current'
           }
         }]
       ]
     }
-  },
+  }
 }
