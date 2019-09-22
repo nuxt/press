@@ -1,6 +1,6 @@
 {
   "name": "@nuxt-press/core",
-  "version": "0.0.1-beta.4",
+  "version": "0.2.0-beta.0",
   "main": "src/index.js",
   "repository": "https://github.com/nuxt/press",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "src"
   ],
   "dependencies": {
-    "@nuxt-press/utils": "0.0.1-beta.4",
+    "@nuxt-press/utils": "0.2.0-beta.0",
     "@nuxt/blueprints": "^0.1.0-alpha.1",
     "@nuxt/http": "^0.3.5",
     "@nuxt/markdown": "^0.0.21",

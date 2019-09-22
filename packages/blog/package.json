@@ -1,6 +1,6 @@
 {
   "name": "@nuxt-press/blog",
-  "version": "0.0.1-beta.4",
+  "version": "0.2.0-beta.0",
   "main": "src/index.js",
   "repository": "https://github.com/nuxt/press",
   "license": "MIT",
@@ -8,7 +8,7 @@
     "src"
   ],
   "dependencies": {
-    "@nuxt-press/core": "0.0.1-beta.4",
+    "@nuxt-press/core": "0.2.0-beta.0",
     "@nuxt/blueprints": "^0.1.0-alpha.1",
     "lodash": "^4.17.15"
   }

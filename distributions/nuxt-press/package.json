@@ -1,6 +1,6 @@
 {
   "name": "@nuxt/press",
-  "version": "0.0.1-beta.4",
+  "version": "0.2.0-beta.0",
   "description": "Minimalist Markdown Publishing for Nuxt.js",
   "main": "src/index.js",
   "repository": "https://github.com/nuxt/press",
@@ -42,11 +42,11 @@
     "press": "nuxt press"
   },
   "dependencies": {
-    "@nuxt-press/cli": "0.0.1-beta.4",
-    "@nuxt-press/blog": "0.0.1-beta.4",
-    "@nuxt-press/docs": "0.0.1-beta.4",
-    "@nuxt-press/pages": "0.0.1-beta.4",
-    "@nuxt-press/slides": "0.0.1-beta.4",
+    "@nuxt-press/blog": "0.2.0-beta.0",
+    "@nuxt-press/cli": "0.2.0-beta.0",
+    "@nuxt-press/docs": "0.2.0-beta.0",
+    "@nuxt-press/pages": "0.2.0-beta.0",
+    "@nuxt-press/slides": "0.2.0-beta.0",
     "consola": "^2.10.1"
   },
   "peerDependencies": {
