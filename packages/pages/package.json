@@ -10,5 +10,8 @@
   "dependencies": {
     "@nuxt-press/core": "0.2.0-beta.0",
     "@nuxt/blueprints": "^0.1.0-alpha.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

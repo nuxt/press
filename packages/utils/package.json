@@ -16,5 +16,8 @@
     "klaw": "^3.0.0",
     "node-res": "^5.0.1",
     "slug": "^1.1.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

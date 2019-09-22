@@ -11,5 +11,8 @@
   ],
   "dependencies": {
     "@nuxt/blueprints": "^0.1.0-alpha.1"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

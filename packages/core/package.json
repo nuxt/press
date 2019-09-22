@@ -25,5 +25,8 @@
     "build": "nuxt build",
     "start": "nuxt start",
     "press": "nuxt press"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
