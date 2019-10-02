@@ -8,8 +8,7 @@
     "src"
   ],
   "dependencies": {
-    "@nuxt/blueprints": "^0.1.0-alpha.1",
-    "@nuxt/utils-edge": "latest",
+    "@nuxt/utils": "^2.10.0",
     "consola": "^2.10.1",
     "defu": "^0.0.3",
     "fs-extra": "^8.1.0",
@@ -19,5 +18,11 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "start": "nuxt start",
+    "press": "nuxt press"
   }
 }

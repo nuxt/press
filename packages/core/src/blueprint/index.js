@@ -1,6 +1,6 @@
 import path from 'path'
 import defu from 'defu'
-import { sortRoutes } from '@nuxt/utils-edge'
+import { sortRoutes } from '@nuxt/utils'
 import {
   Blueprint,
   abstractGuard,
