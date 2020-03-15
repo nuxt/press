@@ -64,6 +64,6 @@
     "vue-jest": "^3.0.5"
   },
   "dependencies": {
-    "hable": "3.0.0-0"
+    "hable": "3.0.0"
   }
 }
