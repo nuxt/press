@@ -159,7 +159,9 @@ export default class PressBlueprint extends Blueprint {
     this.rootConfig.isGenerating = this.nuxt.options._generate || this.nuxt.options.target === 'static'
 
     // Enable all of https://preset-env.cssdb.org/features
-    this.nuxt.options.build.postcss.preset.stage = 0
+    if (typeof this.nuxt.options.build.postcss === "object") {
+      this.nuxt.options.build.postcss.preset.stage = 0
+    }
 
     // Hable is used in plugin middleware but needs to be transpiled
     this.nuxt.options.build.transpile = this.nuxt.options.build.transpile || []
