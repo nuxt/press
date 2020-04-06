@@ -14,7 +14,6 @@
     }
   ],
   "files": [
-    "bin",
     "src",
     "postinstall.js"
   ],
