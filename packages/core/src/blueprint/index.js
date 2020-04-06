@@ -92,7 +92,7 @@ export default class PressBlueprint extends Blueprint {
       // always register the blueprint mode if config exists for it
       // dont bother checking dir
       if (key === this.id || config[key].blueprint === this.id) {
-        modeInstances[key] = new this(nuxt, { id: key })
+        modeInstances[key] = new this(nuxt, { ...config, id: key })
         modeInstances[key].requiredModules = moduleContainer.requiredModules
 
         modeRegistered = true
@@ -104,7 +104,7 @@ export default class PressBlueprint extends Blueprint {
     // we are _not_ running in standalone mode and a default dir exists
     if (!modeRegistered) {
       if (isStandalone || (!config.$standalone && await exists(path.join(nuxt.options.srcDir, this.defaultConfig.dir)))) {
-        modeInstances[this.id] = new this(nuxt, { id: this.id })
+        modeInstances[this.id] = new this(nuxt, { ...config, id: this.id })
         modeInstances[this.id].requiredModules = moduleContainer.requiredModules
       }
     }

@@ -30,7 +30,7 @@ export default class PressPagesBlueprint extends PressBlueprint {
     )
 
     if (await exists(pagesRoot)) {
-      return { [this.id]: new this(nuxt, { id: this.id }) }
+      return { [this.id]: new this(nuxt, { ...config, id: this.id }) }
     }
   }
 
