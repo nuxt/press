@@ -82,7 +82,7 @@ export default {
       this.startObserver()
     },
     stopObserver() {
-      if (!this._observer) {
+      if (this._observer) {
         this._observer.disconnect()
         this._observer = undefined
       }
