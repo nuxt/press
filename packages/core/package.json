@@ -15,7 +15,7 @@
     "defu": "^0.0.3",
     "fs-extra": "^8.1.0",
     "gray-matter": "^4.0.2",
-    "hable": "3.0.0-0",
+    "hable": "3.0.0",
     "normalize.css": "^8.0.1",
     "prismjs": "^1.17.1",
     "wysiwyg.css": "^0.0.3"
