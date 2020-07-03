@@ -281,7 +281,7 @@ You can **disable filesystem loading** altogether by providing your own custom  
 | `/api/slides/index`                 | `slides.api.index`                    |
 | `/api/source/:source`               | `common.api.source`                   |
 
-Note however that when overriding API handlers, all API handlers must be provided. If your using NuxtPress docs bundled app, you can't for instance override `docs.api.index` and not also override `common.api.source`.
+Note however that when overriding API handlers, all API handlers must be provided. If you're using NuxtPress docs bundled app, you can't for instance override `docs.api.index` and not also override `common.api.source`.
 
 For overriding API handlers, use `nuxt.press.js`:
 
