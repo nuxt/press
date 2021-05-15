@@ -33,7 +33,7 @@
     "@nuxtjs/eslint-config": "^1.1.2",
     "babel-eslint": "^10.0.3",
     "babel-jest": "^24.9.0",
-    "babel-plugin-dynamic-import-node": "^2.3.0",
+    "babel-plugin-dynamic-import-node": "2.3.3",
     "browserstack-local": "^1.4.2",
     "chromedriver": "^77.0.0",
     "codecov": "^3.6.1",
