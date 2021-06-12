@@ -44,7 +44,7 @@
     "eslint-plugin-node": "^10.0.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "eslint-plugin-vue": "^5.2.3",
+    "eslint-plugin-vue": "7.11.0",
     "exit": "^0.1.2",
     "geckodriver": "^1.19.0",
     "get-port": "^5.0.0",
